@@ -86,6 +86,7 @@ export default function BingoUsers() {
     const [bingoNumbersIn, setbingoNumbers] = useState([])
     const [posSave, setposSave] = useState(-1)
     const [pagefuntion, setPageFuntion] = useState(false)
+    const [bingoMusic, setbingoMusic] = useState('https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/y2mate.com%20-%20Sneaky%20Sneaky%20Final%20Cut.mp3?alt=media&token=adba54e0-e8fe-400e-b221-2c2c7cf3f49f')
     const [Data, setData] = useState({
         text: '',
         user: '',
@@ -193,15 +194,15 @@ export default function BingoUsers() {
             })
         }
     }
-    const playforce2=()=>{
+    const playforce2 = () => {
         setIsPlaying(true)
     }
-    const playforce=()=>{
+    const playforce = () => {
         if (!isPlaying) {
             setIsPlaying(true)
-            setTimeout(playforce2,7000)
+            setTimeout(playforce2, 7000)
         }
-       
+
     }
     const prepareGame = () => {
         setstartedGameNow(true)
@@ -495,7 +496,7 @@ export default function BingoUsers() {
                 'dataIn': true,
                 actionTodo: "newpc"
             });
-            
+
             coming = false
         }
 
@@ -504,7 +505,7 @@ export default function BingoUsers() {
     useEffect(() => {
         socket.on("url", (url) => {
             console.log('recibe', url.url || url);
-            setbingoMovie(true); setsrcVideo( url.url || url);setIsPlaying(true)
+            setbingoMovie(true); setsrcVideo(url.url || url); setIsPlaying(true)
         })
         socket.on("goMovie", (url) => {
             console.log('recibe', url);
@@ -523,11 +524,11 @@ export default function BingoUsers() {
                         setcreatedGame(true)
                     }
                     break;
-                    case 'goMovie':
-                        setbingoMovie(true)
-                        setsrcVideo(msg.dataIn)
-                        setTimeout(playforce,4000)
-                        break;
+                case 'goMovie':
+                    setbingoMovie(true)
+                    setsrcVideo(msg.dataIn)
+                    setTimeout(playforce, 4000)
+                    break;
                 case 'numbers':
                     console.log('numeros', dataIn);
                     let arraytoIn = dataIn.array
@@ -564,6 +565,9 @@ export default function BingoUsers() {
                     setPlayersIn(dataIn);
 
                     break;
+                case "bingoSongEmit":
+                    setbingoMusic(dataIn)
+                    break;
                 case "startedGame":
                     setstartedGameNow(true); /*  setPlayingGame(true) */
 
@@ -581,7 +585,7 @@ export default function BingoUsers() {
 
                     break;
                 case 'createdGame':
-                    setPlayerOne(false); setcreatedGame(true);setbingoMovie(false)
+                    setPlayerOne(false); setcreatedGame(true); setbingoMovie(false)
 
                     break;
                 case 'test':
@@ -709,7 +713,7 @@ export default function BingoUsers() {
                 page ?
                     <>
                         <Head>
-                        <title>Aztecflix</title>
+                            <title>Aztecflix</title>
                             <meta name="description" content="FullStack app" />
                             <link rel="icon" href="/favicon.ico" />
                         </Head>
@@ -791,6 +795,7 @@ export default function BingoUsers() {
                                             </div>
                                         }
                                         <br />
+                                        {createdGame || playingGame ? <audio className='hide' src={bingoMusic} autoPlay></audio> : <></>}
                                         <div className={playingGame ? 'flex-column gapin' : 'hide'}>                                            {
                                             bingoNumbersIn.map((numberIn, i) => {
                                                 const numberCheck = getCookie('numbers')

@@ -115,6 +115,12 @@ export default function Master() {
         "https://www.pornhub.com/embed/ph5f1b2d084a8c8?autoplay=1",
         "https://www.pornhub.com/embed/ph5faa607f1cf7b?autoplay=1",
     ]
+    const bingoSongs = [
+        'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/y2mate.com%20-%20Sneaky%20Sneaky%20Final%20Cut.mp3?alt=media&token=adba54e0-e8fe-400e-b221-2c2c7cf3f49f',
+        'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/y2mate.com%20-%20Scott%20Pilgrim%20Vs%20The%20World%20%20Black%20Sheep%20HD.mp3?alt=media&token=56395911-b07b-4358-8758-25ea3168ec26',
+        'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/y2mate.com%20-%20Counting%20Crows%20%20Mr%20Jones%20Official%20Music%20Video.mp3?alt=media&token=29ede07e-face-4340-a1b5-3e8a3d4ddb83',
+        'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/y2mate.com%20-%20Nightcrawlers%20%20Push%20The%20Feeling%20On%20Official%20Video.mp3?alt=media&token=e71f511f-f3a2-44ae-b2c3-ab1201abdac6'
+    ]
     let pushed = false
     const arrayinuse = ['']
     const [theBoss, settheBoss] = useState(false)
@@ -145,6 +151,8 @@ export default function Master() {
     const [playingGame, setPlayingGame] = useState(false)
     const [bingoNumbersIn, setbingoNumbers] = useState([])
     const [posSave, setposSave] = useState(-1)
+    const [bingoMusic, setbingoMusic] = useState('https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/y2mate.com%20-%20Nightcrawlers%20%20Push%20The%20Feeling%20On%20Official%20Video.mp3?alt=media&token=e71f511f-f3a2-44ae-b2c3-ab1201abdac6')
+    const [changingSong, setchangingSong] = useState(false)
     const [pagefuntion, setPageFuntion] = useState(false)
     const [Data, setData] = useState({
         text: '',
@@ -812,7 +820,7 @@ export default function Master() {
                                             <button className='nexflix-url' onClick={(e) => {
                                                 e.preventDefault(),
                                                     setbingoMovie(!bingoMovie);
-                                                 socket.emit("onVideo", false); setStreamer(false)
+                                                socket.emit("onVideo", false); setStreamer(false)
                                             }}>BINGO</button>
                                             <button className='nexflix-url' onClick={(e) => {
                                                 e.preventDefault(),
@@ -935,6 +943,29 @@ export default function Master() {
                                                         });
                                                 }}>---Crear----</button> : <></>
                                             }
+                                            {
+                                                !changingSong ? <><button className={playerOne ? 'nexflix-url' : 'hide'} onClick={(e) => {
+                                                    e.preventDefault();
+                                                    setchangingSong(true);
+
+                                                }}>---musica----</button></> : <div className='flex column'>
+                                                    {
+                                                        bingoSongs.map((key, i) => {
+                                                            return (
+                                                                <li key={i} className={'nexflix-url'} onClick={(e) => {
+                                                                    e.preventDefault(),
+                                                                        setbingoMusic(key),
+                                                                        setchangingSong(false),
+                                                                        socket.emit('BINGO', {
+                                                                            'dataIn': key,
+                                                                            actionTodo: "bingoSong"
+                                                                        });
+                                                                }}>Cancion - {i}</li>
+                                                            )
+                                                        })
+                                                    }
+                                                </div>
+                                            }
                                         </div>
                                         {getWon ?
                                             <>
@@ -951,6 +982,8 @@ export default function Master() {
                                             </div>
                                         }
                                         <br />
+                                        {createdGame || playingGame ? <audio src={bingoMusic} autoPlay></audio> : <></>}
+
                                         <div className={playingGame ? 'flex-column gapin' : 'hide'}>                                            {
                                             bingoNumbersIn.map((numberIn, i) => {
                                                 const numberCheck = getCookie('numbers')
