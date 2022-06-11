@@ -41,7 +41,7 @@ export default function Master() {
         `https://www.youtube.com/embed/TzvbA_Ecd9k?autoplay=1&loop=1`,
         `https://www.youtube.com/embed/7-BnB3xxUoA?autoplay=1&loop=1`,
         `https://www.youtube.com/embed/BS46C2z5lVE?autoplay=1&loop=1`,
-        "https://www.youtube.com/embed/Hwkacrln26o",
+        "https://www.youtube.com/embed/7qhy1iE2KcE?autoplay=1&loop=1&list=PLV3n77i0I0ZB8X4A36xZGBgtF2r9hLl3I",
         `https://www.youtube.com/embed/PWgvGjAhvIw?autoplay=1&loop=1`,
         `https://www.youtube.com/embed/2K8T2Ip6W2w?autoplay=1&loop=1`,
         `https://www.youtube.com/embed/rWzjrM9m0As?autoplay=1&loop=1`,
