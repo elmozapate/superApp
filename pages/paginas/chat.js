@@ -25,6 +25,8 @@ export default function Chat(props) {
     const time2 = hora();
     const [recorded, setRecorded] = useState(false)
     const [ip, setIp] = useState(props.ip || false)
+    const [aceptStream, setAceptStream] = useState(false)
+    const [warningPreStream, setwarningPreStream] = useState(false)
     const [myName, setmyName] = useState('')
     const [isActive, setisActive] = useState(false)
     const [mediaAsk, setmediaAsk] = useState(false)
@@ -75,6 +77,12 @@ export default function Chat(props) {
         const time = hora();
         socket.emit('chat', {
             'dataIn': {
+                ip: ip,
+                user: mensaje.user,
+                date: time,
+                privAdress: mensaje.privAdress,
+                adress: socket.id,
+                privateMsg: privateChat,
                 video: stream,
                 actionTodo: "stream"
             },
@@ -173,7 +181,7 @@ export default function Chat(props) {
                 chat: 'audioItem',
                 adress: socket.id,
                 privAdress: mensaje.privAdress,
-                video: urlAudio
+                video: url
 
             })
             setprivArray(privateArray)
@@ -219,7 +227,7 @@ export default function Chat(props) {
                 chat: 'videoItem',
                 adress: socket.id,
                 privAdress: mensaje.privAdress,
-                video: urlVideo
+                video: url
 
             })
             setprivArray(privateArray)
@@ -403,6 +411,23 @@ export default function Chat(props) {
                         privArrayAux = privateArray
                     }
                     break;
+                case 'privteMsgstreaming':
+                    console.log('privteMsgstreaming',chat.dataIn.mensaje.privAdress,socket.id);
+                    if (chat.dataIn.mensaje.privAdress === socket.id) {
+                        if (activePrva !== chat.dataIn.mensaje.adress) {
+                            if (chat.dataIn.mensaje.user !== '') {
+                                seturName({
+                                    user: chat.dataIn.mensaje.user,
+                                    adress: chat.dataIn.mensaje.adress
+                                })
+                                setwarningPreStream(true)
+                            }
+                        } else {
+                            setStreamImg(chat.dataIn.mensaje.video)
+                        }
+
+                    }
+                    break;
                 case 'inMessage':
                     setinMessage(chat.dataIn)
                     break;
@@ -480,7 +505,7 @@ export default function Chat(props) {
         setwarningPre(false)
         setPrivateChat(true)
     }
-    const acceptPrv = () => {
+    const acceptPrv = (stream) => {
         activePrva = urName.adress
         setuser(urName)
         setOfline(false)
@@ -489,7 +514,9 @@ export default function Chat(props) {
             ...mensaje,
             privAdress: urName.adress
         })
-        setprivArray(privArrayAux);
+        if (!stream) {
+            setprivArray(privArrayAux);
+        }
         setTimeout(confirm, 1000);
     }
 
@@ -515,6 +542,27 @@ export default function Chat(props) {
                             </div>
                             <div className='accept_green' onClick={(e) => {
                                 e.preventDefault(); acceptPrv();
+                            }}>
+                                <svg aria-hidden='true' focusable='false' data-prefix='fas' data-icon='check' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' className='svg-inline--fa fa-check fa-w-16 fa-9x'><path fill='currentColor' d='M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z' className='' /></svg><span>Ver</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className={warningPreStream ? 'warning_pop' : 'hide'}>
+                    <div className={warningPreStream ? 'warning_popout' : 'hide'}>
+                        <p className='warning_tittle'>Stream Entrante</p>
+                        <div className='warning_msg'>
+                            <>Recibes Stream de<span>{urName.user} </span></>
+                        </div>
+                        DESEAS VERLO YA?
+                        <img className={aceptStream ? 'chat-stream' : 'hide'} src={streamImg} alt="" />
+
+                        <div className='accept_pop'>
+                            <div className='accept_red' onClick={(e) => { e.preventDefault(); setwarningPreStream(false); setAceptStream(false) }}>
+                                <svg aria-hidden='true' focusable='false' data-prefix='fas' data-icon='times' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 352 512' className='svg-inline--fa fa-times fa-w-11 fa-9x'><path fill='currentColor' d='M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z' className='' /></svg> <span>despues</span>
+                            </div>
+                            <div className='accept_green' onClick={(e) => {
+                                e.preventDefault(); setAceptStream(true); acceptPrv(true);
                             }}>
                                 <svg aria-hidden='true' focusable='false' data-prefix='fas' data-icon='check' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' className='svg-inline--fa fa-check fa-w-16 fa-9x'><path fill='currentColor' d='M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z' className='' /></svg><span>Ver</span>
                             </div>
@@ -564,34 +612,34 @@ export default function Chat(props) {
                                             >ENVIAR</button>
                                             {mediaAsk ? <>
 
-                                                {mediaAsk ? mediaAskSelect===1?<>
-                                                    <Streaming  setmediaAskSelect={setmediaAskSelect} imageSrc={streamImg} getStreming={getStreming} userName={mensaje.user} setmediaAsk={setmediaAsk} inMedia={inMedia} setinMedia={setinMedia} urlVideo={urlVideo} recorded={recorded} setRecorded={setRecorded} seturlVideo={seturlVideo} sendVideo={sendVideo} /></> :
-                                                    mediaAskSelect===2?
-                                                    <VideoRecorder getStreming={getStreming} userName={mensaje.user} setmediaAsk={setmediaAsk} inMedia={inMedia} setinMedia={setinMedia} urlVideo={urlVideo} recorded={recorded} setRecorded={setRecorded} seturlVideo={seturlVideo} sendVideo={sendVideo} />:<><button
-                                                    className={mediaAskSelect !== 0 ? 'hide' :  'btn-azteca pointer' }
-                                                    onClick={(e) => {
-                                                        e.preventDefault(); setmediaAskSelect(2);
-                                                    }}
+                                                {mediaAsk ? mediaAskSelect === 1 ? <>
+                                                    <Streaming setmediaAskSelect={setmediaAskSelect} imageSrc={streamImg} getStreming={getStreming} userName={mensaje.user} setmediaAsk={setmediaAsk} inMedia={inMedia} setinMedia={setinMedia} urlVideo={urlVideo} recorded={recorded} setRecorded={setRecorded} seturlVideo={seturlVideo} sendVideo={sendVideo} /></> :
+                                                    mediaAskSelect === 2 ?
+                                                        <VideoRecorder getStreming={getStreming} userName={mensaje.user} setmediaAsk={setmediaAsk} inMedia={inMedia} setinMedia={setinMedia} urlVideo={urlVideo} recorded={recorded} setRecorded={setRecorded} seturlVideo={seturlVideo} sendVideo={sendVideo} /> : <><button
+                                                            className={mediaAskSelect !== 0 ? 'hide' : 'btn-azteca pointer'}
+                                                            onClick={(e) => {
+                                                                e.preventDefault(); setmediaAskSelect(2);
+                                                            }}
 
-                                                >VIDEO</button>
-                                                    <button
-                                                        className={mediaAskSelect !== 0?  'hide' : 'btn-azteca pointer' }
-                                                        onClick={(e) => {
-                                                            e.preventDefault(); setmediaAskSelect(1);
-                                                        }}
+                                                        >VIDEO</button>
+                                                            <button
+                                                                className={mediaAskSelect !== 0 ? 'hide' : 'btn-azteca pointer'}
+                                                                onClick={(e) => {
+                                                                    e.preventDefault(); setmediaAskSelect(1);
+                                                                }}
 
-                                                    >STREAM</button>
-                                                    <button
-                                                className={inMedia !== 0 ? 'hide' : !mediaAsk ? 'btn-azteca pointer' : 'hide'}
-                                                onClick={(e) => {
-                                                    e.preventDefault(); setmediaAsk(false);
-                                                }}
+                                                            >STREAM</button>
+                                                            <button
+                                                                className={inMedia !== 0 ? 'hide' : !mediaAsk ? 'btn-azteca pointer' : 'hide'}
+                                                                onClick={(e) => {
+                                                                    e.preventDefault(); setmediaAsk(false);
+                                                                }}
 
-                                            >Volver</button>
+                                                            >Volver</button>
+                                                        </>
+                                                    : <>
+
                                                     </>
-                                                : <>
-
-                                                </>
                                                 }
 
                                             </> : <><button
@@ -601,7 +649,7 @@ export default function Chat(props) {
                                                 }}
 
                                             >Stream o Video</button>
-                                            
+
                                                 <VoiceRecorder userName={mensaje.user} setmediaAsk={setmediaAsk} inMedia={inMedia} setinMedia={setinMedia} urlAudio={urlAudio} recordingVoice={recordingVoice} setrecordingVoice={setrecordingVoice} seturlAudio={seturlAudio} sendVideo={sendAudio} />
 
                                             </>
@@ -761,7 +809,7 @@ export async function getServerSideProps({ req }) {
     let max = 9000000000
     return {
         props: {
-            ip:/*  Math.floor(Math.random() * (max - min)) + min */ip
+            ip: Math.floor(Math.random() * (max - min)) + min /* ip*/
             ,
         },
     }

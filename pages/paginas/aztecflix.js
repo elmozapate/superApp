@@ -193,8 +193,15 @@ export default function BingoUsers() {
             })
         }
     }
-    const playforce=()=>{
+    const playforce2=()=>{
         setIsPlaying(true)
+    }
+    const playforce=()=>{
+        if (!isPlaying) {
+            setIsPlaying(true)
+            setTimeout(playforce2,7000)
+        }
+       
     }
     const prepareGame = () => {
         setstartedGameNow(true)
