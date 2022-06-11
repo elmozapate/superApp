@@ -193,6 +193,9 @@ export default function BingoUsers() {
             })
         }
     }
+    const playforce=()=>{
+        setIsPlaying(true)
+    }
     const prepareGame = () => {
         setstartedGameNow(true)
         socket.emit('BINGO', {
@@ -516,6 +519,7 @@ export default function BingoUsers() {
                     case 'goMovie':
                         setbingoMovie(true)
                         setsrcVideo(msg.dataIn)
+                        setTimeout(playforce,4000)
                         break;
                 case 'numbers':
                     console.log('numeros', dataIn);
