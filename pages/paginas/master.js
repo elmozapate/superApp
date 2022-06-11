@@ -808,7 +808,7 @@ export default function Master() {
                                                 }
                                             }}
                                             playing={isPlaying} />
-                                        <div className='flex-col-260'>
+                                        <div className='flex-col-260 h100vh'>
                                             <button className='nexflix-url' onClick={(e) => {
                                                 e.preventDefault(),
                                                     setbingoMovie(!bingoMovie);
