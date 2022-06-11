@@ -234,6 +234,10 @@ input{
     outline: none;
     border: gray 1px solid !important;
 }
+.inputSong{
+    height: getRemSize(60px);
+    font-size: getRemSize(40px);
+}
 .IDiv-main {
     display: flex;
     align-items: center;

@@ -154,6 +154,7 @@ export default function Master() {
     const [bingoMusic, setbingoMusic] = useState('https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/y2mate.com%20-%20Nightcrawlers%20%20Push%20The%20Feeling%20On%20Official%20Video.mp3?alt=media&token=e71f511f-f3a2-44ae-b2c3-ab1201abdac6')
     const [changingSong, setchangingSong] = useState(false)
     const [pagefuntion, setPageFuntion] = useState(false)
+    const [songtoput, setsongtoput] = useState('')
     const [Data, setData] = useState({
         text: '',
         user: '',
@@ -733,7 +734,10 @@ export default function Master() {
             name: value
         })
     }
-
+    const handleSong = (e) => {
+        let value = e.target.value
+        setsongtoput(value)
+    }
 
     const sendPlayer = () => {
         setCookies('bingo', playerData.name, {
@@ -948,23 +952,34 @@ export default function Master() {
                                                     e.preventDefault();
                                                     setchangingSong(true);
 
-                                                }}>---musica----</button></> : <div className='flex column'>
-                                                    {
-                                                        bingoSongs.map((key, i) => {
-                                                            return (
-                                                                <li key={i} className={'nexflix-url'} onClick={(e) => {
-                                                                    e.preventDefault(),
-                                                                        setbingoMusic(key),
-                                                                        setchangingSong(false),
-                                                                        socket.emit('BINGO', {
-                                                                            'dataIn': key,
-                                                                            actionTodo: "bingoSong"
-                                                                        });
-                                                                }}>Cancion - {i}</li>
-                                                            )
-                                                        })
-                                                    }
-                                                </div>
+                                                }}>---musica----</button></> :
+                                                    <div className='flex column'>
+                                                        {
+                                                            bingoSongs.map((key, i) => {
+                                                                return (
+                                                                    <li key={i} className={'nexflix-url'} onClick={(e) => {
+                                                                        e.preventDefault(),
+                                                                            setbingoMusic(key),
+                                                                            setchangingSong(false),
+                                                                            socket.emit('BINGO', {
+                                                                                'dataIn': key,
+                                                                                actionTodo: "bingoSong"
+                                                                            });
+                                                                    }}>Cancion - {i}</li>
+                                                                )
+                                                            })
+                                                        }
+                                                        <input className={'inputSong'} onChange={handleSong}  value={songtoput} />
+                                                        <button className={'nexflix-url'} onClick={(e) => {
+                                                    e.preventDefault();
+                                                    setbingoMusic(songtoput),
+                                                    setchangingSong(false),
+                                                    socket.emit('BINGO', {
+                                                        'dataIn': songtoput,
+                                                        actionTodo: "bingoSong"
+                                                    });
+                                                }}>---ingresar otro----</button>
+                                                    </div>
                                             }
                                         </div>
                                         {getWon ?
