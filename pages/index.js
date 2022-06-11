@@ -566,7 +566,7 @@ export default function Home() {
         page ?
           <>
             <Head>
-              <title>Proto v1</title>
+              <title>Aztecflix</title>
               <meta name="description" content="FullStack app" />
               <link rel="icon" href="/favicon.ico" />
             </Head>

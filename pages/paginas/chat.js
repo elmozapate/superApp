@@ -496,7 +496,7 @@ export default function Chat(props) {
     return (
         <div className='main bgcolor-transparent '>
             <Head>
-                <title>Proto v1</title>
+                <title>CHAT AZTECA</title>
                 <meta name="description" content="FullStack app" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
