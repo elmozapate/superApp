@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react';
 import io from "socket.io-client"
 import { SelectedNumber } from '../creador/tools/selectedNumber';
 import ReactPlayer from 'react-player';
+import { useRouter } from 'next/router'
 
 const socket = io("https://serverazteca.herokuapp.com/")
 let posAct = -1
@@ -26,6 +27,7 @@ let fullParticipants = []
 let srcVideourl = ''
 
 export default function BingoUsers() {
+    const router = useRouter()
     const player = useRef(null);
 
     const [playerOne, setPlayerOne] = useState(true)
@@ -627,8 +629,11 @@ export default function BingoUsers() {
     }, [posSave, posSaveAux])
     const handlePlayer = (e) => {
         let value = e.target.value
-        if (value === 'elmomanda') {
-            setPlayerOne(true)
+        if (value === 'elmoreset') {
+            resetGame()
+        }
+        if (value === 'elmoAdmin') {
+            router.push(`/paginas/master`)
         }
         setPlayerData({
             ...playerData,
