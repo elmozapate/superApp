@@ -44,7 +44,7 @@ export default function Master() {
         `https://www.youtube.com/embed/TzvbA_Ecd9k?autoplay=1&t=1&loop=1`,
         `https://www.youtube.com/embed/7-BnB3xxUoA?autoplay=1&t=1&loop=1`,
         `https://www.youtube.com/embed/BS46C2z5lVE?autoplay=1&t=1&loop=1`,
-        `https://www.youtube.com/embed/7qhy1iE2KcE?autoplay=1&t=1&loop=1`,
+        `https://www.youtube.com/embed/Hwkacrln26o?autoplay=1&t=1&loop=1`,
         `https://www.youtube.com/embed/PWgvGjAhvIw?autoplay=1&t=1&loop=1`,
         `https://www.youtube.com/embed/2K8T2Ip6W2w?autoplay=1&t=1&loop=1`,
         `https://www.youtube.com/embed/rWzjrM9m0As?autoplay=1&t=1&loop=1`,
@@ -54,7 +54,7 @@ export default function Master() {
         `https://www.youtube.com/embed/TzvbA_Ecd9k?autoplay=1&t=`,
         `https://www.youtube.com/embed/7-BnB3xxUoA?autoplay=1&t=`,
         `https://www.youtube.com/embed/BS46C2z5lVE?autoplay=1&t=`,
-        `https://www.youtube.com/embed/7qhy1iE2KcE?autoplay=1&t=`,
+        `https://www.youtube.com/embed/Hwkacrln26o?autoplay=1&t=`,
         `https://www.youtube.com/embed/PWgvGjAhvIw?autoplay=1&t=`,
         `https://www.youtube.com/embed/2K8T2Ip6W2w?autoplay=1&t=`,
         `https://www.youtube.com/embed/rWzjrM9m0As?autoplay=1&t=`,
@@ -212,8 +212,8 @@ export default function Master() {
                 'dataIn': what,
                 actionTodo: "taketime"
             });
+            setTimeout(startSendingUrl, 3000)
         }
-        setTimeout(startSendingUrl, 3000)
 
         /*  */  /* `https://www.youtube.com/embed/W6bcNEWXM1s?autoplay=1&t=1&loop=1`,
     ]
@@ -762,7 +762,7 @@ export default function Master() {
                                             <button className='nexflix-url' onClick={(e) => {
                                                 e.preventDefault(),
                                                     setbingoMovie(!bingoMovie);
-                                                streamer ? socket.emit("onVideo", false) : console.log; setStreamer(false)
+                                                 socket.emit("onVideo", false); setStreamer(false)
                                             }}>BINGO</button>
                                             <button className='nexflix-url' onClick={(e) => {
                                                 e.preventDefault(),
