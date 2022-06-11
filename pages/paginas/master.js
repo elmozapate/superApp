@@ -13,6 +13,8 @@ import ReactPlayer from 'react-player';
 
 const socket = io("https://serverazteca.herokuapp.com/")
 let posAct = -1
+let az = -1
+let bz = 1
 let n = 0;
 let cont = 0
 let sizeWinAux = []
@@ -26,6 +28,7 @@ let srcVideourl = ''
 
 export default function Master() {
     const player = useRef(null);
+    const [played, setPlayed] = useState(0);
 
     const [playerOne, setPlayerOne] = useState(true)
     const [videoIntime, setVideoIntime] = useState(0)
@@ -38,14 +41,24 @@ export default function Master() {
         `https://www.youtube.com/embed/qJOFyWMZf_w?autoplay=1&loop=1`,
     ]
     const musicUrls = [
-        `https://www.youtube.com/embed/TzvbA_Ecd9k?autoplay=1&loop=1`,
-        `https://www.youtube.com/embed/7-BnB3xxUoA?autoplay=1&loop=1`,
-        `https://www.youtube.com/embed/BS46C2z5lVE?autoplay=1&loop=1`,
-        "https://www.youtube.com/embed/7qhy1iE2KcE?autoplay=1&loop=1&list=PLV3n77i0I0ZB8X4A36xZGBgtF2r9hLl3I",
-        `https://www.youtube.com/embed/PWgvGjAhvIw?autoplay=1&loop=1`,
-        `https://www.youtube.com/embed/2K8T2Ip6W2w?autoplay=1&loop=1`,
-        `https://www.youtube.com/embed/rWzjrM9m0As?autoplay=1&loop=1`,
-        `https://www.youtube.com/embed/W6bcNEWXM1s?autoplay=1&loop=1`,
+        `https://www.youtube.com/embed/TzvbA_Ecd9k?autoplay=1&t=1&loop=1`,
+        `https://www.youtube.com/embed/7-BnB3xxUoA?autoplay=1&t=1&loop=1`,
+        `https://www.youtube.com/embed/BS46C2z5lVE?autoplay=1&t=1&loop=1`,
+        `https://www.youtube.com/embed/7qhy1iE2KcE?autoplay=1&t=1&loop=1`,
+        `https://www.youtube.com/embed/PWgvGjAhvIw?autoplay=1&t=1&loop=1`,
+        `https://www.youtube.com/embed/2K8T2Ip6W2w?autoplay=1&t=1&loop=1`,
+        `https://www.youtube.com/embed/rWzjrM9m0As?autoplay=1&t=1&loop=1`,
+        `https://www.youtube.com/embed/W6bcNEWXM1s?autoplay=1&t=1&loop=1`,
+    ]
+    const musicUrls2 = [
+        `https://www.youtube.com/embed/TzvbA_Ecd9k?autoplay=1&t=`,
+        `https://www.youtube.com/embed/7-BnB3xxUoA?autoplay=1&t=`,
+        `https://www.youtube.com/embed/BS46C2z5lVE?autoplay=1&t=`,
+        `https://www.youtube.com/embed/7qhy1iE2KcE?autoplay=1&t=`,
+        `https://www.youtube.com/embed/PWgvGjAhvIw?autoplay=1&t=`,
+        `https://www.youtube.com/embed/2K8T2Ip6W2w?autoplay=1&t=`,
+        `https://www.youtube.com/embed/rWzjrM9m0As?autoplay=1&t=`,
+        `https://www.youtube.com/embed/W6bcNEWXM1s?autoplay=1&t=`,
     ]
     const pornUrls = [
         "https://www.pornhub.com/embed/ph625c64eee4325?autoplay=true",
@@ -55,7 +68,7 @@ export default function Master() {
     let pushed = false
     const arrayinuse = ['']
     const [theBoss, settheBoss] = useState(false)
-    const [streamer, setStreamer] = useState(false)
+    const [streamer, setStreamer] = useState(true)
     const [movienum, setMovienum] = useState(-1)
     const [selectedNumbers, setSelectedNumbers] = useState(arrayHere)
     const [startedGameNow, setstartedGameNow] = useState(false)
@@ -189,6 +202,24 @@ export default function Master() {
                 name: playerNameSave
             })
         }
+    }
+    const startSendingUrl = () => {
+        if (streamer) {
+            console.log(musicUrls2[az], bz.toFixed(), az);
+            console.log(`${musicUrls2[az]}${bz.toFixed()}&loop=1`);
+            let what = `${musicUrls2[az]}${bz.toFixed()}&loop=1`
+            socket.emit('BINGO', {
+                'dataIn': what,
+                actionTodo: "taketime"
+            });
+        }
+        setTimeout(startSendingUrl, 3000)
+
+        /*  */  /* `https://www.youtube.com/embed/W6bcNEWXM1s?autoplay=1&t=1&loop=1`,
+    ]
+    const musicUrls2 = [
+        `https://www.youtube.com/embed/TzvbA_Ecd9k?autoplay=1&t=`, */
+
     }
     const prepareGame = () => {
         setstartedGameNow(true)
@@ -637,7 +668,8 @@ export default function Master() {
             socket.emit('BINGO', {
                 'dataIn': true,
                 actionTodo: "restart"
-            });        }
+            });
+        }
         setPlayerData({
             ...playerData,
             name: value
@@ -693,7 +725,7 @@ export default function Master() {
                 page ?
                     <>
                         <Head>
-                        <title>Aztecflix-Master</title>
+                            <title>Aztecflix-Master</title>
                             <meta name="description" content="FullStack app" />
                             <link rel="icon" href="/favicon.ico" />
                         </Head>
@@ -711,6 +743,10 @@ export default function Master() {
                                         <ReactPlayer
                                             ref={player}
                                             onPause={playerPause}
+                                            onProgress={(progress) => {
+                                                bz = progress.playedSeconds
+                                                setPlayed(progress.playedSeconds);
+                                            }}
                                             width={'1720px'}
                                             height={'900px'}
                                             url={srcVideo}
@@ -726,7 +762,7 @@ export default function Master() {
                                             <button className='nexflix-url' onClick={(e) => {
                                                 e.preventDefault(),
                                                     setbingoMovie(!bingoMovie);
-                                                streamer ? socket.emit("onVideo", false) : console.log;
+                                                streamer ? socket.emit("onVideo", false) : console.log; setStreamer(false)
                                             }}>BINGO</button>
                                             <button className='nexflix-url' onClick={(e) => {
                                                 e.preventDefault(),
@@ -737,9 +773,10 @@ export default function Master() {
                                                         /* httpOnly: true, */
                                                         // secure: true
                                                     }),
-                                                    setStreamer(true)
+                                                    setStreamer(true);
+                                                startSendingUrl()
                                             }}>streamer</button>
-                                            {`in minute ${videoIntime}`}
+                                            {`in minute ${played}`}
                                             {movieUrls.map((url, i) => {
                                                 return (<button key={i} className={movienum === i ? 'nexflix-url url-active' : 'nexflix-url'} onClick={(e) => {
                                                     e.preventDefault();
@@ -772,6 +809,8 @@ export default function Master() {
                                             {musicUrls.map((url, i) => {
                                                 return (<button key={i} className={musicnum === i ? 'nexflix-url url-active' : 'nexflix-url'} onClick={(e) => {
                                                     e.preventDefault(),
+                                                        setPlayed(1),
+                                                        az = i,
                                                         setIsPlaying(false),
                                                         changeurl = !changeurl,
                                                         setsrcVideo(url),

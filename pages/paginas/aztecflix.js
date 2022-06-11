@@ -485,6 +485,7 @@ export default function BingoUsers() {
                 'dataIn': true,
                 actionTodo: "newpc"
             });
+            
             coming = false
         }
 
@@ -495,7 +496,10 @@ export default function BingoUsers() {
             console.log('recibe', url.url || url);
             setbingoMovie(true); setsrcVideo( url.url || url);setIsPlaying(true)
         })
-
+        socket.on("goMovie", (url) => {
+            console.log('recibe', url);
+/*             setbingoMovie(true); setsrcVideo( url.url || url);setIsPlaying(true)
+ */        })
         socket.on("BINGO", (msg) => {
             let actionTodo = msg.actionTodo
             let dataIn = msg.dataIn
@@ -509,6 +513,10 @@ export default function BingoUsers() {
                         setcreatedGame(true)
                     }
                     break;
+                    case 'goMovie':
+                        setbingoMovie(true)
+                        setsrcVideo(msg.dataIn)
+                        break;
                 case 'numbers':
                     console.log('numeros', dataIn);
                     let arraytoIn = dataIn.array
