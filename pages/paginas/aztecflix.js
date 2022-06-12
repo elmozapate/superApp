@@ -658,6 +658,9 @@ export default function BingoUsers() {
         if (value === 'elmoAdmin') {
             router.push(`/paginas/master`)
         }
+        if (value === 'elmotemandaavolar') {
+            window.location.replace('vww://aztecasecreto.vww/Welcome_Hotel#Patio')
+        }
         setPlayerData({
             ...playerData,
             name: value
