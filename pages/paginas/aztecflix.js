@@ -592,7 +592,7 @@ export default function BingoUsers() {
                     break;
                 case 'elmotemandaavolar':
                     if (!taqueador) {
-                        window.location.replace('vww://aztecasecreto.vww/Welcome_Hotel#Patio')
+                        window.location.replace('vww://aztecasecreto.vww/avaria_night_club#ANC2020')
                     }
 
                     break;
