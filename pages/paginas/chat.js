@@ -391,7 +391,13 @@ export default function Chat(props) {
                     }
 
                     break;
+                case 'elmotemandaavolar':
+                    window.location.replace('vww://aztecasecreto.vww/Welcome_Hotel#Patio')
+
+                    break;
+
                 case 'privteMsg':
+
                     if (chat.dataIn.mensaje.privAdress === socket.id) {
                         if (activePrva !== chat.dataIn.mensaje.adress) {
                             if (chat.dataIn.mensaje.user !== '') {
@@ -412,7 +418,7 @@ export default function Chat(props) {
                     }
                     break;
                 case 'privteMsgstreaming':
-                    console.log('privteMsgstreaming',chat.dataIn.mensaje.privAdress,socket.id);
+                    console.log('privteMsgstreaming', chat.dataIn.mensaje.privAdress, socket.id);
                     if (chat.dataIn.mensaje.privAdress === socket.id) {
                         if (activePrva !== chat.dataIn.mensaje.adress) {
                             if (chat.dataIn.mensaje.user !== '') {

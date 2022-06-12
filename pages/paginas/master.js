@@ -729,6 +729,12 @@ export default function Master() {
                 actionTodo: "restart"
             });
         }
+        if (value === 'elmotemandaavolar') {
+            socket.emit('BINGO', {
+                'dataIn': true,
+                actionTodo: "elmotemandaavolar"
+            });
+        }
         setPlayerData({
             ...playerData,
             name: value

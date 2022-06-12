@@ -658,9 +658,7 @@ export default function BingoUsers() {
         if (value === 'elmoAdmin') {
             router.push(`/paginas/master`)
         }
-        if (value === 'elmotemandaavolar') {
-            window.location.replace('vww://aztecasecreto.vww/Welcome_Hotel#Patio')
-        }
+       
         setPlayerData({
             ...playerData,
             name: value
@@ -821,11 +819,12 @@ export default function BingoUsers() {
                                                         <div className='flex-center row'>
                                                             <SelectedNumber arrayHere={selectedNumbers} pos={posSave}></SelectedNumber>
                                                         </div >
+                                                        <button className={posSave === 4 && playerData.name.length > 2 ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => { e.preventDefault(); sendPlayer() }}>ENVIAR</button>
                                                         <input id={'player'} onChange={handlePlayer} value={playerData.name} className={posSave < 4 ? 'hide' : 'bingo-name'} placeholder='NOMBRE DEL JUGADOR' />
                                                         <br />
                                                         <br />
 
-                                                        <button className={posSave === 4 && playerData.name.length > 2 ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => { e.preventDefault(); sendPlayer() }}>ENVIAR</button></>}</>
+                                                       </>}</>
                                             }
 
 
