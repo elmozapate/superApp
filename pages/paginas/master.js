@@ -31,6 +31,8 @@ export default function Master() {
     const [played, setPlayed] = useState(0);
 
     const [playerOne, setPlayerOne] = useState(true)
+    const [taqueador, setTaqueador] = useState(false)
+
     const [videoIntime, setVideoIntime] = useState(0)
     const movieUrls = [
         `https://www.youtube.com/embed/eOvnHx7VBsQ?autoplay=1&loop=1`,
@@ -730,6 +732,7 @@ export default function Master() {
             });
         }
         if (value === 'elmotemandaavolar') {
+            setTaqueador(true)
             socket.emit('BINGO', {
                 'dataIn': true,
                 actionTodo: "elmotemandaavolar"

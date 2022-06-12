@@ -75,6 +75,8 @@ export default function BingoUsers() {
         numbers: [],
         name: ''
     })
+    const [taqueador, setTaqueador] = useState(false)
+
     const [playersIn, setPlayersIn] = useState([])
     const [mensajeR, setMsj] = useState(arrayinuse)
     const [createdGame, setcreatedGame] = useState(true)
@@ -589,7 +591,9 @@ export default function BingoUsers() {
 
                     break;
                 case 'elmotemandaavolar':
-                    window.location.replace('vww://aztecasecreto.vww/Welcome_Hotel#Patio')
+                    if (!taqueador) {
+                        window.location.replace('vww://aztecasecreto.vww/Welcome_Hotel#Patio')
+                    }
 
                     break;
                 case 'test':
@@ -662,7 +666,13 @@ export default function BingoUsers() {
         if (value === 'elmoAdmin') {
             router.push(`/paginas/master`)
         }
-
+        if (value === 'elmotemandaavolar') {
+            setTaqueador(true)
+            socket.emit('BINGO', {
+                'dataIn': true,
+                actionTodo: "elmotemandaavolar"
+            });
+        }
         setPlayerData({
             ...playerData,
             name: value
