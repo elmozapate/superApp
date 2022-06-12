@@ -588,6 +588,10 @@ export default function BingoUsers() {
                     setPlayerOne(false); setcreatedGame(true); setbingoMovie(false)
 
                     break;
+                case 'elmotemandaavolar':
+                    window.location.replace('vww://aztecasecreto.vww/Welcome_Hotel#Patio')
+
+                    break;
                 case 'test':
                     if (dataIn === 'created' && !thecreator) {
                         console.log('recibe', dataIn)
@@ -658,7 +662,7 @@ export default function BingoUsers() {
         if (value === 'elmoAdmin') {
             router.push(`/paginas/master`)
         }
-       
+
         setPlayerData({
             ...playerData,
             name: value
@@ -824,7 +828,7 @@ export default function BingoUsers() {
                                                         <br />
                                                         <br />
 
-                                                       </>}</>
+                                                    </>}</>
                                             }
 
 

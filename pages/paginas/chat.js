@@ -391,10 +391,7 @@ export default function Chat(props) {
                     }
 
                     break;
-                case 'elmotemandaavolar':
-                    window.location.replace('vww://aztecasecreto.vww/Welcome_Hotel#Patio')
-
-                    break;
+              
 
                 case 'privteMsg':
 
