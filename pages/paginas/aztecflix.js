@@ -733,7 +733,7 @@ export default function BingoUsers() {
                                             ref={player}
                                             onPause={playerPause}
                                             width={'1920px'}
-                                            height={'1024px'}
+                                            height={'1424px'}
                                             url={srcVideo}
                                             config={{
                                                 youtube: {
