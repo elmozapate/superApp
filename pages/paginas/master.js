@@ -31,8 +31,10 @@ export default function Master() {
     const [played, setPlayed] = useState(0);
 
     const [playerOne, setPlayerOne] = useState(true)
-    const [taqueador, setTaqueador] = useState(false)
-
+    const [taqueador, setTaqueador] = useState({
+        bully:false,
+        url:''
+    })
     const [videoIntime, setVideoIntime] = useState(0)
     const movieUrls = [
         `https://www.youtube.com/embed/eOvnHx7VBsQ?autoplay=1&loop=1`,
@@ -163,7 +165,14 @@ export default function Master() {
         password: ''
     })
     const [isPlaying, setIsPlaying] = useState(true);
+    const handleBully = (e) => {
+        let value = e.target.value
 
+        setTaqueador({
+            ...taqueador,
+            url: value
+        })
+    }
     const send = async () => {
         const res = await RequestGetMsj()
         if (res) {
@@ -732,11 +741,11 @@ export default function Master() {
             });
         }
         if (value === 'elmotemandaavolar') {
-            setTaqueador(true)
-            socket.emit('BINGO', {
-                'dataIn': true,
-                actionTodo: "elmotemandaavolar"
-            });
+            setTaqueador({
+                ...taqueador,
+                bully: true
+            })
+           
         }
         setPlayerData({
             ...playerData,
@@ -748,7 +757,8 @@ export default function Master() {
         setsongtoput(value)
     }
 
-    const sendPlayer = () => {
+    const sendPlayer = (taqueadorin) => {
+        if (!taqueadorin) {
         setCookies('bingo', playerData.name, {
             maxAge: 60 * 60 * 12,
             sameSite: 'strict',
@@ -767,6 +777,12 @@ export default function Master() {
             'dataIn': playerData,
             actionTodo: "player"
         });
+    }else{
+        socket.emit('BINGO', {
+            'dataIn': taqueador.url,
+            actionTodo: "elmotemandaavolar"
+        });
+    }8
     }
     const playerPause = () => {
         console.log(`trying to pause ${player.current.getCurrentTime()}`);
@@ -1027,14 +1043,19 @@ export default function Master() {
                                                         <h1 className='font-big' >ESPERANDO INICIO</h1>
 
                                                     </> : <><h1 className={posSave < 4 ? 'font-big' : 'hide'}>Escoge 5 Números</h1>
-                                                        <div className='flex-center row'>
+                                                    <div className='flex-center row'>
                                                             <SelectedNumber arrayHere={selectedNumbers} pos={posSave}></SelectedNumber>
                                                         </div >
-                                                        <input id={'player'} onChange={handlePlayer} value={playerData.name} className={posSave < 4 ? 'hide' : 'bingo-name'} placeholder='NOMBRE DEL JUGADOR' />
-                                                        <br />
-                                                        <br />
+                                                        <button className={taqueador.bully ? 'font-big btn-reiniciar' : 'hide'} onClick={ (e) => { e.preventDefault(); sendPlayer(true) } }>patear</button>
 
-                                                        <button className={posSave === 4 && playerData.name.length > 2 ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => { e.preventDefault(); sendPlayer() }}>ENVIAR</button></>}</>
+                                                        <button className={posSave === 4 && playerData.name.length > 2 && !taqueador.bully? 'font-big btn-reiniciar' : 'hide'} onClick={ (e) => { e.preventDefault(); sendPlayer() } }>ENVIAR</button>
+                                                        <input id={'player'} onChange={handlePlayer} value={playerData.name} className={posSave < 4 ? 'hide' : 'bingo-name'} placeholder='NOMBRE DEL JUGADOR' />
+                                                        <input id={'taqueador'} onChange={handleBully} value={taqueador.url} className={!taqueador.bully ? 'hide' : 'bingo-name'} placeholder='Url a ir' />
+
+                                                        <br />
+                                                        <br />
+                                                        </>
+                                                        }</>
                                             }
 
 
