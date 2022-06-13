@@ -4,28 +4,46 @@ const socket = io("https://serverazteca.herokuapp.com/")
 const SecureApp = () => {
 
     const [chatArray, setChatArray] = useState([])
+    const [userArray, setuserArray] = useState([])
+    const [naming, setNaming] = useState(false)
+    const [playerData, setPlayerData] = useState({
+        user: '',
+        ip: '',
+        pos: -1
+    })
     const [change, setChange] = useState(false)
     /* 
         let displayHello = () => {
     
         } */
-
+    const handlePlayer = (e) => {
+        let value = e.target.value
+        setPlayerData({
+            ...playerData,
+            user: value
+        })
+    }
     useEffect(() => {
         socket.emit('BINGO', {
-            'dataIn':{
+            'dataIn': {
                 'actionTodo': 'ipReq',
             },
             'actionTodo': 'ipReq'
         });
- 
+
         socket.on("Secure", (chat) => {
             const actionTodo = chat.actionTodo
             const Data = chat.dataIn
-       
+
             switch (actionTodo) {
                 case 'userinzabby':
                     console.log('entro', Data)
                     setChatArray(Data)
+                    setChange(!change)
+                    break;
+                case 'userNew':
+                    console.log('entroNuevo', Data)
+                    setuserArray(Data)
                     setChange(!change)
                     break;
             }
@@ -36,10 +54,38 @@ const SecureApp = () => {
     }, [change])
     return (<>
         <div className='IDiv-main bgctr'>
-            <div className='flex-center h100vh colummn ngap-20 '>
+            <div className='flex-center col-8 h100vh colummn ngap-20 '>
                 SECURITY MANAGER
                 {chatArray.map((key, i) => {
                     return <li key={`securelist-${i}`} id={`securelist-${i}`} >{key.mensaje}---A las---{key.hora}---Desde-----{key.ip}</li>
+                })}
+
+            </div>
+            <div className='flex-center col-8 h100vh colummn ngap-20 '>
+                SECURITY USERS
+                {
+                    naming ?
+                        <>
+                            <input id={'playerName'} onChange={handlePlayer} value={playerData.user} placeholder='NOMBRE DEL USUARIO' />
+                            <button /* className={'font-big btn-reiniciar'} */ onClick={(e) => {
+                                e.preventDefault(),
+
+                                    socket.emit('BINGO', {
+                                        'dataIn': playerData,
+                                        actionTodo: "putName"
+                                    });
+                                setNaming(false)
+                            }}>---Crear----</button>
+                        </> :
+                        <></>
+                }
+                {userArray.map((key, i) => {
+                    return <li onClick={(e) => {
+                        e.preventDefault(); setNaming(true); setPlayerData({
+                            ...playerData, ip: key.ip, pos: i
+
+                        })
+                    }} key={`securelistUsers-${i}`} id={`securelistUsers-${i}`} >---User----{key.user}---Desde-----{key.ip}</li>
                 })}
 
             </div>
