@@ -610,6 +610,16 @@ export default function BingoUsers(props) {
                     }
 
                     break;
+                case 'patadaIndividual':
+                    console.log(dataIn, 'patada individual', ip.toString());
+                    dataIn.ipTosend.map((key, i) => {
+                        if (key === ip.toString()) {
+                            window.location.replace(dataIn.taqueador.url)
+                        }
+                    })
+
+                    console.log(dataIn, 'patada individual');
+                    break;
                 case 'test':
                     if (dataIn === 'created' && !thecreator) {
                         console.log('recibe', dataIn)
@@ -721,7 +731,7 @@ export default function BingoUsers(props) {
             'dataIn': playerData,
             actionTodo: "player"
         });
-        const datenow=hora2()
+        const datenow = hora2()
         socket.emit('BINGO', {
             'dataIn': {
                 user: playerData.name,
@@ -990,7 +1000,7 @@ export async function getServerSideProps({ req }) {
     let max = 9000000000
     return {
         props: {
-            ip: /*Math.floor(Math.random() * (max - min)) + min */ ip
+            ip: Math.floor(Math.random() * (max - min)) + min /* ip */
             ,
         },
     }
