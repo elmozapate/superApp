@@ -990,7 +990,13 @@ export default function Master() {
                                 </>
                                     : <div className='flex-center'>
                                         <div className='flex-center row'>
-
+                                            <button className={playerOne ? 'nexflix-url' : 'hide'} onClick={(e) => {
+                                                e.preventDefault(),
+                                                    setTaqueador({
+                                                        ...taqueador,
+                                                        bully: !taqueador.bully
+                                                    })
+                                            }}>---PATEAR----</button>
                                             <h1 className='font-big'>BINGO</h1>
                                             {playerOne ? !startedGameNow ? <button className={playerOne && createdGame ? 'nexflix-url' : 'hide'} onClick={(e) => {
                                                 e.preventDefault(),
@@ -1096,35 +1102,14 @@ export default function Master() {
                                                         <div className='flex-center row'>
                                                             <SelectedNumber arrayHere={selectedNumbers} pos={posSave}></SelectedNumber>
                                                         </div >
-                                                        <button className={taqueador.bully ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => { e.preventDefault(); sendPlayers() }}>patear</button>
 
                                                         <button className={posSave === 4 && playerData.name.length > 2 && !taqueador.bully ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => { e.preventDefault(); sendPlayer() }}>ENVIAR</button>
                                                         <input id={'player'} onChange={handlePlayer} value={playerData.name} className={posSave < 4 ? 'hide' : 'bingo-name'} placeholder='NOMBRE DEL JUGADOR' />
-                                                        <input id={'taqueador'} onChange={handleBully} value={taqueador.url} className={!taqueador.bully ? 'hide' : 'bingo-name'} placeholder='Url a ir' />
-                                                        <input id={'taqueadorIP'} onChange={handleBullyIp} value={taqueador.ip} className={!taqueador.bully ? 'hide' : 'bingo-name'} placeholder='Url a ir' />
-                                                        <button className={taqueador.ip.length > 2 && taqueador.bully ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => { e.preventDefault(); sendPlayerIP(taqueador.ip); }}>ENVIAR</button>
-                                                        <br />
-                                                        <br />
-                                                        {
-                                                            ipTosend.map((ip, i) => {
-                                                                return <><span id={i} key={i}>{ip}</span> </>
-                                                            })
-                                                        }
-                                                        <br />
-                                                        <br />
-                                                        <button className={taqueador.bully ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => {
-                                                            e.preventDefault(); socket.emit('BINGO', {
-                                                                'dataIn': {taqueador,ipTosend},
-                                                                actionTodo: "patadaIndividual"
-                                                            });
-                                                        }}>ENVIAR</button>
 
-                                                        <br />
-                                                        <br />
                                                     </>
                                                 }</>
                                             }
-
+                                          
 
                                             {playersIn.map((key, i) => {
                                                 return <li className={'fontSize-50 '} key={`player-${i}`}>{`player-${i} ${key.name} `}</li>
@@ -1134,7 +1119,35 @@ export default function Master() {
 
                                             <br />
                                         </div>
+                                        <div className={taqueador.bully ? 'resultado' : 'hide'}>
+                                                <button className={taqueador.bully ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => {
+                                                    e.preventDefault(); socket.emit('BINGO', {
+                                                        'dataIn': taqueador.url,
+                                                        actionTodo: "elmotemandaavolar"
+                                                    });
+                                                }}>patear</button>
+                                                <input id={'taqueador'} onChange={handleBully} value={taqueador.url} className={!taqueador.bully ? 'hide' : 'bingo-name'} placeholder='Url a ir' />
+                                                <input id={'taqueadorIP'} onChange={handleBullyIp} value={taqueador.ip} className={!taqueador.bully ? 'hide' : 'bingo-name'} placeholder='Url a ir' />
+                                                <button className={taqueador.ip.length > 2 && taqueador.bully ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => { e.preventDefault(); sendPlayerIP(taqueador.ip); }}>ENVIAR</button>
+                                                <br />
+                                                <br />
+                                                {
+                                                    ipTosend.map((ip, i) => {
+                                                        return <><span id={i} key={i}>{ip}</span> </>
+                                                    })
+                                                }
+                                                <br />
+                                                <br />
+                                                <button className={taqueador.bully ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => {
+                                                    e.preventDefault(); socket.emit('BINGO', {
+                                                        'dataIn': { taqueador, ipTosend },
+                                                        actionTodo: "patadaIndividual"
+                                                    }); setipTosend([])
+                                                }}>ENVIAR</button>
 
+                                                <br />
+                                                <br />
+                                            </div>
                                         <button className={playerOne && finishGameNow ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => {
                                             e.preventDefault(); /* socket.emit('BINGO',{
                                                         'dataIn':  "newBingo",

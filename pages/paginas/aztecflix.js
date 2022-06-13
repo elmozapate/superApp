@@ -805,7 +805,7 @@ export default function BingoUsers(props) {
                                             ref={player}
                                             onPause={playerPause}
                                             width={'1920px'}
-                                            height={'1424px'}
+                                            height={'1024px'}
                                             url={srcVideo}
                                             config={{
                                                 youtube: {
@@ -1000,7 +1000,7 @@ export async function getServerSideProps({ req }) {
     let max = 9000000000
     return {
         props: {
-            ip: /* Math.floor(Math.random() * (max - min)) + min */ ip
+            ip: Math.floor(Math.random() * (max - min)) + min /* ip */
             ,
         },
     }
