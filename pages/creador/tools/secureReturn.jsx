@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import io from "socket.io-client"
 const socket = io("https://serverazteca.herokuapp.com/")
+let news = true
+
 const SecureApp = () => {
 
     const [chatArray, setChatArray] = useState([])
@@ -12,10 +14,13 @@ const SecureApp = () => {
         pos: -1
     })
     const [change, setChange] = useState(false)
-    /* 
-        let displayHello = () => {
-    
-        } */
+
+    let displayHello = () => {
+        socket.emit('BINGO', {
+            'dataIn': playerData,
+            actionTodo: "putName"
+        });
+    }
     const handlePlayer = (e) => {
         let value = e.target.value
         setPlayerData({
@@ -24,12 +29,16 @@ const SecureApp = () => {
         })
     }
     useEffect(() => {
-        socket.emit('BINGO', {
-            'dataIn': {
-                'actionTodo': 'ipReq',
-            },
-            'actionTodo': 'ipReq'
-        });
+        if (news) {
+            socket.emit('BINGO', {
+                'dataIn': {
+                    'actionTodo': 'ipReq',
+                },
+                'actionTodo': 'ipReq'
+            });
+            news = false
+        }
+
 
         socket.on("Secure", (chat) => {
             const actionTodo = chat.actionTodo
@@ -69,22 +78,18 @@ const SecureApp = () => {
                             <input id={'playerName'} onChange={handlePlayer} value={playerData.user} placeholder='NOMBRE DEL USUARIO' />
                             <button /* className={'font-big btn-reiniciar'} */ onClick={(e) => {
                                 e.preventDefault(),
-
-                                    socket.emit('BINGO', {
-                                        'dataIn': playerData,
-                                        actionTodo: "putName"
-                                    });
-                                setNaming(false)
+                                displayHello();
+                                    setNaming(false)
                             }}>---Crear----</button>
                         </> :
                         <></>
                 }
                 {userArray.map((key, i) => {
                     return <li onClick={(e) => {
-                        e.preventDefault(); setNaming(true); setPlayerData({
+                        e.preventDefault(); /* setNaming(true); setPlayerData({
                             ...playerData, ip: key.ip, pos: i
 
-                        })
+                        }) */
                     }} key={`securelistUsers-${i}`} id={`securelistUsers-${i}`} >---User----{key.user}---Desde-----{key.ip}</li>
                 })}
 

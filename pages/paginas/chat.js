@@ -15,6 +15,7 @@ let inChat = false
 let privArrayAux = []
 let activePrva = ''
 const socket = io("https://serverazteca.herokuapp.com/")
+
 export default function Chat(props) {
     const hora = () => {
         const date = new Date();

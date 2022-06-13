@@ -12,6 +12,7 @@ import { SelectedNumber } from '../creador/tools/selectedNumber';
 import ReactPlayer from 'react-player';
 
 const socket = io("https://serverazteca.herokuapp.com/")
+
 let posAct = -1
 let az = -1
 let bz = 1
@@ -1060,7 +1061,7 @@ export default function Master() {
 
 
                                             {playersIn.map((key, i) => {
-                                                return <li className={!thecreator && playingGame ? 'hide' : 'fontSize-50 '} key={`player-${i}`}>{`player-${i} ${key.name} `}</li>
+                                                return <li className={ 'fontSize-50 '} key={`player-${i}`}>{`player-${i} ${key.name} `}</li>
                                             })
                                             }
                                             <h1 className='font-big flex-center row flex-row'> {winner} <span className={!playingGame ? 'hide' : finishGameNow ? 'hide' : 'bingo-number activenumBig'}> {numeroquesalio}</span></h1>

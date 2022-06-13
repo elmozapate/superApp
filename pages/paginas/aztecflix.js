@@ -13,6 +13,7 @@ import ReactPlayer from 'react-player';
 import { useRouter } from 'next/router'
 
 const socket = io("https://serverazteca.herokuapp.com/")
+
 let posAct = -1
 let register = true
 
@@ -394,12 +395,12 @@ export default function BingoUsers(props) {
     /*     useEffect(() => {
             socket.emit("newBingo", true);
         }, []) */
-        const hora2 = () => {
-            const date = new Date();
-            const [month, day, year] = [date.getMonth(), date.getDate(), date.getFullYear()];
-            const [hour, minutes, seconds] = [date.getHours(), date.getMinutes(), date.getSeconds()];
-            return ` ${day} de ${month} del ${year} A las ${hour}:${minutes}:${seconds} `
-        }
+    const hora2 = () => {
+        const date = new Date();
+        const [month, day, year] = [date.getMonth(), date.getDate(), date.getFullYear()];
+        const [hour, minutes, seconds] = [date.getHours(), date.getMinutes(), date.getSeconds()];
+        return ` ${day} de ${month} del ${year} A las ${hour}:${minutes}:${seconds} `
+    }
     function hora(segundos) {
         var d = new Date(segundos * 1000);
         // Ajuste de las 23 horas
@@ -575,8 +576,9 @@ export default function BingoUsers(props) {
                     break;
 
                 case "players":
-                    checkplayers(dataIn);
+                    console.log(dataIn);
                     setPlayersIn(dataIn);
+                    checkplayers(dataIn);
 
                     break;
                 case "bingoSongEmit":
@@ -699,32 +701,37 @@ export default function BingoUsers(props) {
         })
     }
 
-    const sendPlayer = (taqueadorin) => {
-        if (!taqueadorin) {
-            setCookies('bingo', playerData.name, {
-                maxAge: 60 * 60 * 12,
-                sameSite: 'strict',
-                path: '/'
-                /* httpOnly: true, */
-                // secure: true
-            })
-            setCookies('numbers', playerData.numbers, {
-                maxAge: 60 * 60 * 12,
-                sameSite: 'strict',
-                path: '/'
-                /* httpOnly: true, */
-                // secure: true
-            })
-            socket.emit('BINGO', {
-                'dataIn': playerData,
-                actionTodo: "player"
-            });
-        } else {
-            socket.emit('BINGO', {
-                'dataIn': taqueador.url,
-                actionTodo: "elmotemandaavolar"
-            });
-        }
+    const sendPlayer = () => {
+        console.log(playerData);
+        setCookies('bingo', playerData.name, {
+            maxAge: 60 * 60 * 12,
+            sameSite: 'strict',
+            path: '/'
+            /* httpOnly: true, */
+            // secure: true
+        })
+        setCookies('numbers', playerData.numbers, {
+            maxAge: 60 * 60 * 12,
+            sameSite: 'strict',
+            path: '/'
+            /* httpOnly: true, */
+            // secure: true
+        })
+        socket.emit('BINGO', {
+            'dataIn': playerData,
+            actionTodo: "player"
+        });
+        const datenow=hora2()
+        socket.emit('BINGO', {
+            'dataIn': {
+                user: playerData.name,
+                ip: ip,
+                hora: datenow,
+                'actionTodo': 'ipSend',
+            },
+            actionTodo: "ipSend"
+        });
+
 
     }
     const playerPause = () => {
@@ -752,9 +759,10 @@ export default function BingoUsers(props) {
 
     useEffect(() => {
         const datenow = hora2()
-        console.log(ip,'emitio', datenow);
+        console.log(ip, 'emitio', datenow);
         socket.emit('BINGO', {
-            'dataIn':{
+            'dataIn': {
+                user: '',
                 ip: ip,
                 hora: datenow,
                 'actionTodo': 'ipSend',
@@ -873,11 +881,8 @@ export default function BingoUsers(props) {
                                                         <div className='flex-center row'>
                                                             <SelectedNumber arrayHere={selectedNumbers} pos={posSave}></SelectedNumber>
                                                         </div >
-                                                        <button className={taqueador.bully ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => { e.preventDefault(); sendPlayer(true) }}>patear</button>
-
                                                         <button className={posSave === 4 && playerData.name.length > 2 ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => { e.preventDefault(); sendPlayer() }}>ENVIAR</button>
                                                         <input id={'player'} onChange={handlePlayer} value={playerData.name} className={posSave < 4 ? 'hide' : 'bingo-name'} placeholder='NOMBRE DEL JUGADOR' />
-                                                        <input id={'taqueador'} onChange={handleBully} value={taqueador.url} className={!taqueador.bully ? 'hide' : 'bingo-name'} placeholder='Url a ir' />
 
                                                         <br />
                                                         <br />
@@ -887,10 +892,6 @@ export default function BingoUsers(props) {
                                             }
 
 
-                                            {playersIn.map((key, i) => {
-                                                return <li className={!thecreator && playingGame ? 'hide' : 'fontSize-50 '} key={`player-${i}`}>{`player-${i} ${key.name} `}</li>
-                                            })
-                                            }
                                             <h1 className='font-big flex-center row flex-row'> {winner} <span className={!playingGame ? 'hide' : finishGameNow ? 'hide' : 'bingo-number activenumBig'}> {numeroquesalio}</span></h1>
 
                                             <br />
@@ -981,7 +982,7 @@ export default function BingoUsers(props) {
             }
         </div >
     )
-} 
+}
 export async function getServerSideProps({ req }) {
     const forwarded = req.headers["x-forwarded-for"]
     const ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress
