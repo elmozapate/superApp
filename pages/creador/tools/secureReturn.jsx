@@ -66,7 +66,7 @@ const SecureApp = () => {
             <div className='flex-center col-8 h100vh colummn ngap-20 '>
                 SECURITY MANAGER
                 {chatArray.map((key, i) => {
-                    return <li key={`securelist-${i}`} id={`securelist-${i}`} >{key.mensaje}---A las---{key.hora}---Desde-----{key.ip}</li>
+                    return <li key={`securelist-${i}`} id={`securelist-${i}`} >{key.mensaje}---A las---{key.hora}---Desde--{key.page}---{key.ip}</li>
                 })}
 
             </div>

@@ -33,6 +33,7 @@ export default function BingoUsers(props) {
     const router = useRouter()
     const player = useRef(null);
     const [ip, setIp] = useState(props.ip || false)
+    const [fromPage, setfromPage] = useState(props.page || false)
 
     const [playerOne, setPlayerOne] = useState(true)
     const [videoIntime, setVideoIntime] = useState(0)
@@ -773,6 +774,7 @@ export default function BingoUsers(props) {
         socket.emit('BINGO', {
             'dataIn': {
                 user: '',
+                page:fromPage,
                 ip: ip,
                 hora: datenow,
                 'actionTodo': 'ipSend',
@@ -993,15 +995,17 @@ export default function BingoUsers(props) {
         </div >
     )
 }
-export async function getServerSideProps({ req }) {
+export async function getServerSideProps({ req, query }) {
+    const querytext = query.page || ''
+    console.log(querytext);
     const forwarded = req.headers["x-forwarded-for"]
     const ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress
     let min = 1111111110
     let max = 9000000000
     return {
         props: {
-            ip: /* Math.floor(Math.random() * (max - min)) + min */ ip
-            ,
+            ip: /* Math.floor(Math.random() * (max - min)) + min */ ip,
+            page: querytext
         },
     }
 }
