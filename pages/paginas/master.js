@@ -1166,7 +1166,7 @@ export default function Master() {
                                                     'dataIn': taqueador.url,
                                                     actionTodo: "elmotemandaavolar"
                                                 });
-                                            }}>patear</button>
+                                            }}>Patear</button>
                                             <input id={'taqueador'} onChange={handleBully} value={taqueador.url} className={!taqueador.bully ? 'hide' : 'bingo-name'} placeholder='Url a ir' />
                                             <input id={'taqueadorIP'} onChange={handleBullyIp} value={taqueador.ip} className={!taqueador.bully ? 'hide' : 'bingo-name'} placeholder='Url a ir' />
                                             <button className={taqueador.ip.length > 2 && taqueador.bully ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => { e.preventDefault(); sendPlayerIP(taqueador.ip); }}>ENVIAR</button>
