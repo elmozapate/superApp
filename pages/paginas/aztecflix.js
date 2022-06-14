@@ -520,90 +520,133 @@ export default function BingoUsers(props) {
 
     useEffect(() => {
         socket.on("url", (url) => {
-            console.log('recibe', url.url || url);
-            setbingoMovie(true); setsrcVideo(url.url || url); setIsPlaying(true)
+            console.log('recibe', url, url.page, fromPage);
+            if (url.page === fromPage) {
+                setbingoMovie(true); setsrcVideo(url.url || url); setIsPlaying(true)
+            }
+
         })
         socket.on("goMovie", (url) => {
             console.log('recibe', url);
 /*             setbingoMovie(true); setsrcVideo( url.url || url);setIsPlaying(true)
  */        })
         socket.on("BINGO", (msg) => {
+            console.log('aveamos', msg);
+            let pageFrom = msg.pageFrom || ''
             let actionTodo = msg.actionTodo
             let dataIn = msg.dataIn
             switch (actionTodo) {
                 case 'getback':
-                    setWinner(dataIn); setTimeout(rebootname, 3500)
+                    if (pageFrom === fromPage) {
+                        setWinner(dataIn); setTimeout(rebootname, 3500)
+                    }
                     break;
                 case 'newpcres':
-                    console.log(msg);
-                    if (dataIn) {
-                        setcreatedGame(true)
+                    if (pageFrom === fromPage) {
+                        console.log(msg);
+                        if (dataIn) {
+                            setcreatedGame(true)
+                        }
                     }
                     break;
                 case 'goMovie':
-                    setbingoMovie(true)
-                    setsrcVideo(msg.dataIn)
-                    setTimeout(playforce, 4000)
+                    if (pageFrom === fromPage) {
+                        setbingoMovie(true)
+                        setsrcVideo(msg.dataIn)
+                        setTimeout(playforce, 4000)
+                    }
                     break;
                 case 'numbers':
-                    console.log('numeros', dataIn);
-                    let arraytoIn = dataIn.array
-                    setcreatedGame(true)
-                    const numberCheck = getCookie('numbers')
-                    setbingoNumbers(arraytoIn);
-                    const numberSave = numberCheck ? JSON.parse(numberCheck) : []
-                    for (let index2 = 0; index2 < numberSave.length; index2++) {
-                        const element2 = numberSave[index2];
-                        if (dataIn.num === element2) {
-                            console.log(element2);
-                            sizeWinAux.push(element2)
-                            const lenghtOf = sizeWinAux.length
-                            setsizeWin(lenghtOf + 1)
+                    if (pageFrom === fromPage) {
+                        console.log('numeros', dataIn);
+                        let arraytoIn = dataIn.array
+                        setcreatedGame(true)
+                        const numberCheck = getCookie('numbers')
+                        setbingoNumbers(arraytoIn);
+                        const numberSave = numberCheck ? JSON.parse(numberCheck) : []
+                        for (let index2 = 0; index2 < numberSave.length; index2++) {
+                            const element2 = numberSave[index2];
+                            if (dataIn.num === element2) {
+                                console.log(element2);
+                                sizeWinAux.push(element2)
+                                const lenghtOf = sizeWinAux.length
+                                setsizeWin(lenghtOf + 1)
+                            }
                         }
+                        setPlayingGame(true); setbingoMovie(false); setnumeroquesalio(dataIn.num); setfinishGameNow(false)
                     }
-                    setPlayingGame(true); setbingoMovie(false); setnumeroquesalio(dataIn.num); setfinishGameNow(false)
                     break;
                 case "winnner":
-                    setfinishGameNow(true)
-                    setWinner(`${dataIn.won}  CANTA BINGO`);
-                    setgetWon(true);
-                    const playerName = getCookie('bingo')
-                    if (dataIn.won === playerName) {
-                        settheBoss(true)
-                    } else {
-                        settheBoss(false)
+                    if (pageFrom === fromPage) {
+                        setfinishGameNow(true)
+                        setWinner(`${dataIn.won}  CANTA BINGO`);
+                        setgetWon(true);
+                        const playerName = getCookie('bingo')
+                        if (dataIn.won === playerName) {
+                            settheBoss(true)
+                        } else {
+                            settheBoss(false)
+
+                        }
+                        break;
+                    }
+
+                case "players":
+                    if (pageFrom === fromPage) {
+                        const inputName = document.getElementById('player') ? document.getElementById('player').value : ''
+                        const resName = dataIn.dataIn.name 
+                        console.log(resName,'oeeeeeeeeeeeeeee',inputName);
+                        if (resName ===  inputName) {
+                            console.log('silohace');
+                            setregistring(true);
+                        }
+                        /*    setPlayersIn(vectorEnd);
+                           checkplayers(vectorEnd); */
+                    }
+                    break;
+                case "bingoSongEmit":
+                    if (pageFrom === fromPage) {
+                        setbingoMusic(dataIn)
+                    }
+                    break;
+                case "startedGame":
+                    if (pageFrom === fromPage) {
+                        setstartedGameNow(true); /*  setPlayingGame(true) */
 
                     }
                     break;
-
-                case "players":
-                    console.log(dataIn);
-                    setPlayersIn(dataIn);
-                    checkplayers(dataIn);
-
-                    break;
-                case "bingoSongEmit":
-                    setbingoMusic(dataIn)
-                    break;
-                case "startedGame":
-                    setstartedGameNow(true); /*  setPlayingGame(true) */
-
-                    break;
                 case 'closeGame':
-                    console.log('offGame');
+                    if (pageFrom === fromPage) {
+                        console.log('offGame');
 
+                    }
                     break;
                 case 'go':
-                    checkplayers(dataIn); setPlayersIn(dataIn); prepareGame();
-
+                    if (pageFrom === fromPage) {
+                        let vector = dataIn || []
+                        let vectorEnd = []
+                        vector.map((key, i) => {
+                            if (key.id === fromPage) {
+                                vectorEnd.push(key.dataIn)
+                            }
+                            return
+                        })
+                        console.log(dataIn);
+                        setPlayersIn(vectorEnd);
+                        checkplayers(vectorEnd);
+                        prepareGame();
+                    }
                     break;
                 case 'newStart':
-                    setPlayerOne(true);/*  resetGame() */
+                    if (pageFrom === fromPage) {
+                        setPlayerOne(true);/*  resetGame() */
 
+                    }
                     break;
                 case 'createdGame':
-                    setPlayerOne(false); setcreatedGame(true); setbingoMovie(false)
-
+                    if (pageFrom === fromPage) {
+                        setPlayerOne(false); setcreatedGame(true); setbingoMovie(false)
+                    }
                     break;
                 case 'elmotemandaavolar':
                     if (!taqueador.bully) {
@@ -631,16 +674,25 @@ export default function BingoUsers(props) {
                     }
                     break;
                 case 'restarted':
-                    resetGame(); setcreatedGame(false); setPlayerOne(true); setPlayingGame(false)
+                    if (pageFrom === fromPage) {
+
+                        resetGame(); setcreatedGame(false); setPlayerOne(true); setPlayingGame(false)
+                    }
                     break;
 
                 case 'startedGame':
-                    setstartedGameNow(true); /*  setPlayingGame(true) */
+                    if (pageFrom === fromPage) {
+
+                        setstartedGameNow(true);
+                    }/*  setPlayingGame(true) */
                     //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
                     break
                 case 'newRoom':
-                    setcreatedGame(true);
-                    setPlayerOne(false)
+                    if (pageFrom === fromPage) {
+
+                        setcreatedGame(true);
+                        setPlayerOne(false)
+                    }
                     /*  setPlayingGame(true) */
                     //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
                     break
@@ -730,7 +782,8 @@ export default function BingoUsers(props) {
         })
         socket.emit('BINGO', {
             'dataIn': playerData,
-            actionTodo: "player"
+            actionTodo: "player",
+            pageFrom: fromPage
         });
         const datenow = hora2()
         socket.emit('BINGO', {
@@ -740,7 +793,9 @@ export default function BingoUsers(props) {
                 hora: datenow,
                 'actionTodo': 'ipSend',
             },
-            actionTodo: "ipSend"
+            actionTodo: "ipSend",
+            pageFrom: fromPage
+
         });
 
 
@@ -774,12 +829,14 @@ export default function BingoUsers(props) {
         socket.emit('BINGO', {
             'dataIn': {
                 user: '',
-                page:fromPage,
+                page: fromPage,
                 ip: ip,
                 hora: datenow,
                 'actionTodo': 'ipSend',
             },
-            actionTodo: "ipSend"
+            actionTodo: "ipSend",
+            pageFrom: fromPage
+
         });
     }, [])
     return (

@@ -27,7 +27,9 @@ let thecreator = false
 let fullParticipants = []
 let srcVideourl = ''
 
-export default function Master() {
+export default function Master(props) {
+    const [ip, setIp] = useState(props.ip || false)
+    const [fromPage, setfromPage] = useState(props.page || false)
     const player = useRef(null);
     const [played, setPlayed] = useState(0);
     const [ipTosend, setipTosend] = useState([])
@@ -291,7 +293,9 @@ export default function Master() {
             let what = `${musicUrls2[az]}${bz.toFixed()}&loop=1`
             socket.emit('BINGO', {
                 'dataIn': what,
-                actionTodo: "taketime"
+                actionTodo: "taketime",
+                pageFrom: fromPage
+
             });
             setTimeout(startSendingUrl, 3000)
         }
@@ -306,7 +310,8 @@ export default function Master() {
         setstartedGameNow(true)
         socket.emit('BINGO', {
             'dataIn': true,
-            actionTodo: "creating"
+            actionTodo: "creating",
+            pageFrom: fromPage
         });
         for (let index = 0; index < playersIn.length; index++) {
             const element = playersIn[index];
@@ -320,7 +325,9 @@ export default function Master() {
         if (!bingoActualized) {
             socket.emit('BINGO', {
                 'dataIn': true,
-                actionTodo: "actualization"
+                actionTodo: "actualization",
+                pageFrom: fromPage
+
             });
             bingoActualized = true
         }
@@ -330,7 +337,9 @@ export default function Master() {
         setPlayerOne(true)
         socket.emit('BINGO', {
             'dataIn': 'continua...',
-            actionTodo: "geted"
+            actionTodo: "geted",
+            pageFrom: fromPage
+
         });
         setWinner('continua...')
         /*     let melekwin = false
@@ -356,7 +365,9 @@ export default function Master() {
                     if (geted === element2) {
                         socket.emit('BINGO', {
                             'dataIn': `${participantname} lo tiene`,
-                            actionTodo: "geted"
+                            actionTodo: "geted",
+                            pageFrom: fromPage
+
                         });
                         setWinner(`${participantname} lo tiene`)
                     }
@@ -389,11 +400,15 @@ export default function Master() {
                 } else {
                     socket.emit('BINGO', {
                         'dataIn': { array: bingoNumbers, num: geted },
-                        actionTodo: "start"
+                        actionTodo: "start",
+                        pageFrom: fromPage
+
                     });
                     socket.emit('BINGO', {
                         'dataIn': { won },
-                        actionTodo: "win"
+                        actionTodo: "win",
+                        pageFrom: fromPage
+
                     });
                     won = theWinner + ' ' + 'CANTA BINGO'
                     setgetWon(true)
@@ -402,7 +417,9 @@ export default function Master() {
             } else {
                 socket.emit('BINGO', {
                     'dataIn': { array: bingoNumbers, num: geted },
-                    actionTodo: "start"
+                    actionTodo: "start",
+                    pageFrom: fromPage
+
                 });
 
                 setTimeout(playBingo, 1500)
@@ -608,7 +625,9 @@ export default function Master() {
                 socket.emit('onVideoTime', {
                     'streamer': isStreamer,
                     'time': n,
-                    'url': `${srcVideourl}`
+                    'url': `${srcVideourl}`,
+                    pageFrom: fromPage
+
                 })
             }
         })
@@ -621,88 +640,164 @@ export default function Master() {
         socket.on("BINGO", (msg) => {
             let actionTodo = msg.actionTodo
             let dataIn = msg.dataIn
+            let pageFrom = msg.pageFrom || ''
+            console.log(dataIn,'oeeeeeeeeeeeeeee',msg);
+
             switch (actionTodo) {
                 case 'getback':
-                    setWinner(dataIn); setTimeout(rebootname, 3500)
+                    if (pageFrom === fromPage) {
+
+
+                        setWinner(dataIn); setTimeout(rebootname, 3500)
+                    }
                     break;
                 case 'numbers':
-                    console.log('numeros', dataIn);
-                    let arraytoIn = dataIn.array
-                    setcreatedGame(true)
-                    const numberCheck = getCookie('numbers')
-                    setbingoNumbers(arraytoIn);
-                    const numberSave = numberCheck ? JSON.parse(numberCheck) : []
-                    for (let index2 = 0; index2 < numberSave.length; index2++) {
-                        const element2 = numberSave[index2];
-                        if (dataIn.num === element2) {
-                            console.log(element2);
-                            sizeWinAux.push(element2)
-                            const lenghtOf = sizeWinAux.length
-                            setsizeWin(lenghtOf + 1)
+                    if (pageFrom === fromPage) {
+
+                        console.log('numeros', dataIn);
+                        let arraytoIn = dataIn.array
+                        setcreatedGame(true)
+                        const numberCheck = getCookie('numbers')
+                        setbingoNumbers(arraytoIn);
+                        const numberSave = numberCheck ? JSON.parse(numberCheck) : []
+                        for (let index2 = 0; index2 < numberSave.length; index2++) {
+                            const element2 = numberSave[index2];
+                            if (dataIn.num === element2) {
+                                console.log(element2);
+                                sizeWinAux.push(element2)
+                                const lenghtOf = sizeWinAux.length
+                                setsizeWin(lenghtOf + 1)
+                            }
                         }
+                        setPlayingGame(true); setbingoMovie(false); setnumeroquesalio(dataIn.num); setfinishGameNow(false)
                     }
-                    setPlayingGame(true); setbingoMovie(false); setnumeroquesalio(dataIn.num); setfinishGameNow(false)
                     break;
                 case "winnner":
-                    setfinishGameNow(true)
-                    setWinner(`${dataIn.won}  CANTA BINGO`);
-                    setgetWon(true);
-                    const playerName = getCookie('bingo')
-                    if (dataIn.won === playerName) {
-                        settheBoss(true)
-                    } else {
-                        settheBoss(false)
+                    if (pageFrom === fromPage) {
+                        setfinishGameNow(true)
+                        setWinner(`${dataIn.won}  CANTA BINGO`);
+                        setgetWon(true);
+                        const playerName = getCookie('bingo')
+                        if (dataIn.won === playerName) {
+                            settheBoss(true)
+                        } else {
+                            settheBoss(false)
 
+                        }
                     }
                     break;
 
                 case "players":
-                    checkplayers(dataIn);
-                    setPlayersIn(dataIn);
-
+                    if (pageFrom === fromPage) {
+                        const inputName = document.getElementById('player') ? document.getElementById('player').value : ''
+                        const resName = dataIn.dataIn.name 
+                        console.log(resName,'oeeeeeeeeeeeeeee',inputName);
+                        if (resName ===  inputName) {
+                            console.log('silohace');
+                            setregistring(true);
+                        }
+                        /*    setPlayersIn(vectorEnd);
+                           checkplayers(vectorEnd); */
+                    }
                     break;
-                case "startedGame":
-                    setstartedGameNow(true); /*  setPlayingGame(true) */
+                    case "playersMaster":
+                        console.log(dataIn,'oeeeeeeeeeeeeeee',msg);
 
+                        if (pageFrom === fromPage) {
+                            let vector = dataIn || []
+                            let vectorEnd = []
+                            vector.map((key, i) => {
+                                if (key.id === fromPage) {
+                                    vectorEnd.push(key.dataIn)
+                                }
+                                return
+                            })
+                            console.log(dataIn);
+                            setPlayersIn(vectorEnd);
+                            checkplayers(vectorEnd);
+
+                    }
+                    
+                    break;
+
+                case "startedGame":
+                    if (pageFrom === fromPage) {
+
+                        setstartedGameNow(true); /*  setPlayingGame(true) */
+
+                    }
                     break;
                 case 'closeGame':
-                    console.log('offGame');
+                    if (pageFrom === fromPage) {
 
+                        console.log('offGame');
+
+                    }
                     break;
                 case 'go':
-                    checkplayers(dataIn); setPlayersIn(dataIn); prepareGame();
-
+                    if (pageFrom === fromPage) {
+                        let vector = dataIn || []
+                        let vectorEnd = []
+                        vector.map((key, i) => {
+                            if (key.id === fromPage) {
+                                vectorEnd.push(key.dataIn)
+                            }
+                            return
+                        })
+                        console.log(dataIn);
+                        setPlayersIn(vectorEnd);
+                        checkplayers(vectorEnd);
+                        prepareGame();
+                    }
                     break;
                 case 'newStart':
-                    setPlayerOne(true);/*  resetGame() */
+                    if (pageFrom === fromPage) {
 
+                        setPlayerOne(true);/*  resetGame() */
+
+                    }
                     break;
                 case 'createdGame':
-                   setcreatedGame(true);
+                    if (pageFrom === fromPage) {
 
+                        setcreatedGame(true);
+
+                    }
                     break;
                 case 'test':
-                    if (dataIn === 'created' && !thecreator) {
-                        console.log('recibe', dataIn)
-                        setPlayerOne(false)
-                    } else {
+                    if (pageFrom === fromPage) {
 
-                        console.log('recibe', dataIn)
+                        if (dataIn === 'created' && !thecreator) {
+                            console.log('recibe', dataIn)
+                            setPlayerOne(false)
+                        } else {
+
+                            console.log('recibe', dataIn)
+                        }
                     }
                     break;
                 case 'restarted':
-                    resetGame(); setcreatedGame(false); setPlayerOne(true); setPlayingGame(false)
+                    if (pageFrom === fromPage) {
+
+                        resetGame(); setcreatedGame(false); setPlayerOne(true); setPlayingGame(false)
+                    }
                     break;
 
                 case 'startedGame':
-                    setstartedGameNow(true); /*  setPlayingGame(true) */
-                    //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
+                    if (pageFrom === fromPage) {
+
+                        setstartedGameNow(true); /*  setPlayingGame(true) */
+                        //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
+                    }
                     break
                 case 'newRoom':
-                    setcreatedGame(true);
-                    setPlayerOne(false)
-                    /*  setPlayingGame(true) */
-                    //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
+                    if (pageFrom === fromPage) {
+
+                        setcreatedGame(true);
+                        setPlayerOne(false)
+                        /*  setPlayingGame(true) */
+                        //Declaraciones ejecutadas cuando el resultado de expresión coincide con valorN
+                    }
                     break
                 default:
 
@@ -748,7 +843,8 @@ export default function Master() {
         if (value === 'elmomanda') {
             socket.emit('BINGO', {
                 'dataIn': true,
-                actionTodo: "restart"
+                actionTodo: "restart",
+                pageFrom:fromPage
             });
         }
         if (value === 'elmotemandaavolar') {
@@ -784,22 +880,29 @@ export default function Master() {
                 /* httpOnly: true, */
                 // secure: true
             })
+            console.log('mando');
             socket.emit('BINGO', {
                 'dataIn': playerData,
-                actionTodo: "player"
+                actionTodo: "playerMaster ",
+                pageFrom: fromPage
+
             });
         } else {
             if (ipTosend.length = 0) {
                 console.log('aca1');
                 socket.emit('BINGO', {
                     'dataIn': taqueador.url,
-                    actionTodo: "elmotemandaavolar"
+                    actionTodo: "elmotemandaavolar",
+                    pageFrom: fromPage
+
                 });
             } else {
                 console.log('aca2', taqueador, ipTosend);
                 socket.emit('BINGO', {
                     'dataIn': taqueador,
-                    actionTodo: "patadaIndividual"
+                    actionTodo: "patadaIndividual",
+                    pageFrom: fromPage
+
                 });
 
             }
@@ -812,13 +915,17 @@ export default function Master() {
             console.log('aca1');
             socket.emit('BINGO', {
                 'dataIn': taqueador.url,
-                actionTodo: "elmotemandaavolar"
+                actionTodo: "elmotemandaavolar",
+                pageFrom: fromPage
+
             });
         } else {
             console.log('aca2', taqueador, ipTosend);
             socket.emit('BINGO', {
                 'dataIn': taqueador,
-                actionTodo: "patadaIndividual"
+                actionTodo: "patadaIndividual",
+                pageFrom: fromPage
+
             });
 
         }
@@ -854,7 +961,7 @@ export default function Master() {
             setStreamer(true),
             setTimeout(minutesRest, 3200),
             setTimeout(minutes, 3300)
-        streamer ? socket.emit("onVideo", true) : console.log; socket.emit("video", { url: srcVideo, time: n });
+        streamer ? socket.emit("onVideo", { state: true, pageFrom: fromPage }) : console.log; socket.emit("video", { url: srcVideo, page: fromPage, time: n });
     }
     return (
         <div className='main'>
@@ -885,62 +992,66 @@ export default function Master() {
                                                         bully: !taqueador.bully
                                                     })
                                             }}>---PATEAR----</button>
-                                       
 
-                                        <ReactPlayer
-                                            ref={player}
-                                            onPause={playerPause}
-                                            onProgress={(progress) => {
-                                                bz = progress.playedSeconds
-                                                setPlayed(progress.playedSeconds);
-                                            }}
-                                            width={'1720px'}
-                                            height={'900px'}
-                                            url={srcVideo}
-                                            config={{
-                                                youtube: {
-                                                    playerVars: {
-                                                        start: 0
+
+                                            <ReactPlayer
+                                                ref={player}
+                                                onPause={playerPause}
+                                                onProgress={(progress) => {
+                                                    bz = progress.playedSeconds
+                                                    setPlayed(progress.playedSeconds);
+                                                }}
+                                                width={'1720px'}
+                                                height={'900px'}
+                                                url={srcVideo}
+                                                config={{
+                                                    youtube: {
+                                                        playerVars: {
+                                                            start: 0
+                                                        }
                                                     }
+                                                }}
+                                                playing={isPlaying} />
+
+                                            <div className={taqueador.bully ? 'resultado' : 'hide'}>
+                                                <button className={taqueador.bully ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => {
+                                                    e.preventDefault(); socket.emit('BINGO', {
+                                                        'dataIn': taqueador.url,
+                                                        actionTodo: "elmotemandaavolar",
+                                                        pageFrom: fromPage
+
+                                                    });
+                                                }}>patear</button>
+                                                <input id={'taqueador'} onChange={handleBully} value={taqueador.url} className={!taqueador.bully ? 'hide' : 'bingo-name'} placeholder='Url a ir' />
+                                                <input id={'taqueadorIP'} onChange={handleBullyIp} value={taqueador.ip} className={!taqueador.bully ? 'hide' : 'bingo-name'} placeholder='Url a ir' />
+                                                <button className={taqueador.ip.length > 2 && taqueador.bully ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => { e.preventDefault(); sendPlayerIP(taqueador.ip); }}>ENVIAR</button>
+                                                <br />
+                                                <br />
+                                                {
+                                                    ipTosend.map((ip, i) => {
+                                                        return <><span id={i} key={i}>{ip}</span> </>
+                                                    })
                                                 }
-                                            }}
-                                            playing={isPlaying} />
+                                                <br />
+                                                <br />
+                                                <button className={taqueador.bully ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => {
+                                                    e.preventDefault(); socket.emit('BINGO', {
+                                                        'dataIn': { taqueador, ipTosend },
+                                                        actionTodo: "patadaIndividual",
+                                                        pageFrom: fromPage
 
-                                        <div className={taqueador.bully ? 'resultado' : 'hide'}>
-                                            <button className={taqueador.bully ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => {
-                                                e.preventDefault(); socket.emit('BINGO', {
-                                                    'dataIn': taqueador.url,
-                                                    actionTodo: "elmotemandaavolar"
-                                                });
-                                            }}>patear</button>
-                                            <input id={'taqueador'} onChange={handleBully} value={taqueador.url} className={!taqueador.bully ? 'hide' : 'bingo-name'} placeholder='Url a ir' />
-                                            <input id={'taqueadorIP'} onChange={handleBullyIp} value={taqueador.ip} className={!taqueador.bully ? 'hide' : 'bingo-name'} placeholder='Url a ir' />
-                                            <button className={taqueador.ip.length > 2 && taqueador.bully ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => { e.preventDefault(); sendPlayerIP(taqueador.ip); }}>ENVIAR</button>
-                                            <br />
-                                            <br />
-                                            {
-                                                ipTosend.map((ip, i) => {
-                                                    return <><span id={i} key={i}>{ip}</span> </>
-                                                })
-                                            }
-                                            <br />
-                                            <br />
-                                            <button className={taqueador.bully ? 'font-big btn-reiniciar' : 'hide'} onClick={(e) => {
-                                                e.preventDefault(); socket.emit('BINGO', {
-                                                    'dataIn': { taqueador, ipTosend },
-                                                    actionTodo: "patadaIndividual"
-                                                }); setipTosend([])
-                                            }}>ENVIAR</button>
+                                                    }); setipTosend([])
+                                                }}>ENVIAR</button>
 
-                                            <br />
-                                            <br />
-                                        </div>
+                                                <br />
+                                                <br />
+                                            </div>
                                         </div>
                                         <div className='flex-col-260 h100vh'>
                                             <button className='nexflix-url' onClick={(e) => {
                                                 e.preventDefault(),
                                                     setbingoMovie(!bingoMovie);
-                                                socket.emit("onVideo", false); setStreamer(false)
+                                                socket.emit("onVideo", { state: false, pageFrom: fromPage }); setStreamer(false)
                                             }}>BINGO</button>
                                             <button className='nexflix-url' onClick={(e) => {
                                                 e.preventDefault(),
@@ -973,7 +1084,7 @@ export default function Master() {
                                                             setStreamer(true),
                                                             setTimeout(minutesRest, 3200),
                                                             setTimeout(minutes, 3300)
-                                                        streamer ? socket.emit("onVideo", true) : console.log; socket.emit("video", { url: url, time: n });
+                                                        streamer ? socket.emit("onVideo", { state: true, pageFrom: fromPage }) : console.log; socket.emit("video", { url: url, page: fromPage, time: n });
                                                     } else {
                                                         posAct = i
                                                         setsrcVideo(url),
@@ -1002,8 +1113,8 @@ export default function Master() {
                                                         setStreamer(true),
                                                         setTimeout(minutesRest, 3200),
                                                         setTimeout(minutes, 3300)
-                                                    streamer ? socket.emit("onVideo", true) : console.log;
-                                                    socket.emit("video", url);
+                                                    streamer ? socket.emit("onVideo", { state: true, pageFrom: fromPage }) : console.log;
+                                                    socket.emit("video", { url: url, page: fromPage, time: n });
                                                     setIsPlaying(true)
 
                                                 }}>{`MUSI${i + 1}`}</button>)
@@ -1023,7 +1134,7 @@ export default function Master() {
                                                         setStreamer(true),
                                                         setTimeout(minutesRest, 3200),
                                                         setTimeout(minutes, 3300)
-                                                    socket.emit("video", url);
+                                                    socket.emit("video", { url: url, page: fromPage, time: n });
                                                 }}>{`XXX${i + 1}`}</button>)
                                             })}
                                         </div>
@@ -1031,7 +1142,7 @@ export default function Master() {
                                 </>
                                     : <div className='flex-center'>
                                         <div className='flex-center row'>
-                                            <button className={taqueador.bully ? 'nexflix-url fontcolorInedit-red':'nexflix-url fontcolorInedit-green' } onClick={(e) => {
+                                            <button className={taqueador.bully ? 'nexflix-url fontcolorInedit-red' : 'nexflix-url fontcolorInedit-green'} onClick={(e) => {
                                                 e.preventDefault(),
                                                     setTaqueador({
                                                         ...taqueador,
@@ -1050,7 +1161,9 @@ export default function Master() {
                                                     setInGame(2),
                                                     socket.emit('BINGO', {
                                                         'dataIn': true,
-                                                        actionTodo: "starting"
+                                                        actionTodo: "starting",
+                                                        pageFrom: fromPage
+
                                                     });
                                             }}>---JUGAR----</button>}---<button className='nexflix-url' onClick={(e) => {
                                                 e.preventDefault(),
@@ -1065,7 +1178,9 @@ export default function Master() {
                                                         setPlayerOne(true),
                                                         socket.emit('BINGO', {
                                                             'dataIn': true,
-                                                            actionTodo: "newAdmin"
+                                                            actionTodo: "newAdmin",
+                                                            pageFrom: fromPage
+
                                                         });
                                                 }}>---Crear----</button> : <></>
                                             }
@@ -1085,7 +1200,9 @@ export default function Master() {
                                                                             setchangingSong(false),
                                                                             socket.emit('BINGO', {
                                                                                 'dataIn': key,
-                                                                                actionTodo: "bingoSong"
+                                                                                actionTodo: "bingoSong",
+                                                                                pageFrom: fromPage
+
                                                                             });
                                                                     }}>Cancion - {i}</li>
                                                                 )
@@ -1098,7 +1215,9 @@ export default function Master() {
                                                                 setchangingSong(false),
                                                                 socket.emit('BINGO', {
                                                                     'dataIn': songtoput,
-                                                                    actionTodo: "bingoSong"
+                                                                    actionTodo: "bingoSong",
+                                                                    pageFrom: fromPage
+
                                                                 });
                                                         }}>---ingresar otro----</button>
                                                     </div>
@@ -1196,7 +1315,9 @@ export default function Master() {
                                                     }); */
                                             resetGame(), setPlayingGame(false), socket.emit('BINGO', {
                                                 'dataIn': true,
-                                                actionTodo: "restart"
+                                                actionTodo: "restart",
+                                                pageFrom: fromPage
+
                                             });
                                         }}>REINICIAR</button>
 
@@ -1274,4 +1395,18 @@ export default function Master() {
             }
         </div >
     )
+}
+export async function getServerSideProps({ req, query }) {
+    const querytext = query.page || ''
+    console.log(querytext);
+    const forwarded = req.headers["x-forwarded-for"]
+    const ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress
+    let min = 1111111110
+    let max = 9000000000
+    return {
+        props: {
+            ip: /* Math.floor(Math.random() * (max - min)) + min */ ip,
+            page: querytext
+        },
+    }
 }
