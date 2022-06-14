@@ -66,7 +66,7 @@ const SecureApp = () => {
             <div className='flex-center col-8 h100vh colummn ngap-20 '>
                 SECURITY MANAGER
                 {chatArray.map((key, i) => {
-                    return <li key={`securelist-${i}`} id={`securelist-${i}`} >{key.mensaje}---A las---{key.hora}---Desde--{key.page}---{key.ip}</li>
+                    return <li key={`securelist-${i}`} id={`securelist-${i}`} >{key.mensaje}---A las---{key.hora}---Desde--{key.page}-IP--{key.ip}</li>
                 })}
 
             </div>
@@ -90,7 +90,7 @@ const SecureApp = () => {
                             ...playerData, ip: key.ip, pos: i
 
                         }) */
-                    }} key={`securelistUsers-${i}`} id={`securelistUsers-${i}`} >---User----{key.user}---Desde-----{key.ip}</li>
+                    }} key={`securelistUsers-${i}`} id={`securelistUsers-${i}`} >---User----{key.user}---IP-----{key.ip}</li>
                 })}
 
             </div>
