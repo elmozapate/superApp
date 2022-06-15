@@ -5,6 +5,8 @@ const socket = io("https://serverazteca.herokuapp.com/")
 
 export default function MetaPuente() {
     const [changing, seTchanging] = useState(false)
+    const [winning, seTwinning] = useState(false)
+
     const llegarPuente = () => {
         socket.emit(
             'calamar', {
@@ -17,13 +19,15 @@ export default function MetaPuente() {
     }
 
     useEffect(() => {
-            socket.on("calamar", (chat) => {
+        socket.on("calamar", (chat) => {
             const actionTodo = chat.actionTodo
             switch (actionTodo) {
                 case 'llegoPlayer':
+                    seTwinning(true)
+                    break;
+                case 'passingFinalReady':
                     seTchanging(true)
                     break;
-
                 default:
                     break;
             }
@@ -32,10 +36,10 @@ export default function MetaPuente() {
 
     return (< >
         {
-            changing ? <><p className='btn-azteca '>FELICIDADES</p>
-             
-        </> : <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); llegarPuente() }} >
-                Parar Reloj </button>
+            winning ? <><p className='btn-azteca '>FELICIDADES</p>
+
+            </> : changing ? <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); llegarPuente() }} >
+                Parar Reloj </button> : <></>
         }
     </>)
 }
