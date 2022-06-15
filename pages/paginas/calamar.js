@@ -39,7 +39,7 @@ export default function Calamar() {
             })
             window.location.replace(`vww://aztecasecreto.vww/@78688#break${key.leter}${key.number}`)
         } else {
-            if (userIn+1>=10) {
+            if (userIn>=10) {
                 socket.emit(
                     'calamar', {
                     'dataIn': {

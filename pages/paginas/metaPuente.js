@@ -32,6 +32,13 @@ export default function MetaPuente() {
                     break;
             }
         })
+        socket.emit(
+            'calamar', {
+            'dataIn': {
+                'actionTodo': 'metaPlace',
+            },
+            'actionTodo': 'metaPlace',
+        })
     }, [])
 
     return (< >
