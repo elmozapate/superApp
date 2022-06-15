@@ -1387,3 +1387,39 @@ p, div, h1{
         white-space: wrap;
             }
 }
+.calamar-puente{
+    overflow-x:hidden;
+    overflow-y:hidden;
+    min-width:getRemSize(2048px);
+    min-height:min-content !important;
+    max-width:getRemSize(2048px);
+    max-height:min-content !important;
+    background-color: transparent;
+    display: flex;
+    flex-wrap: wrap;
+}
+.calamar-piso{
+    height: 50vh;
+    width: 10vw;
+    background-color: #283fc3;
+    border: 1px solid white;
+}
+.calamar-piso-accecible{
+    height: 50vh;
+    width: 10vw;
+    background-color: #283fc3;
+    border: 1px solid white;
+}
+.calamar-piso:hover{
+    background-color: red;
+
+}
+.calamar-piso-accecible:hover{
+    background-color: green;
+
+}
+.calamar-piso-broke{
+    height: 50vh;
+    width: 10vw;
+    background-color: transparent;
+}
