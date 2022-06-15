@@ -69,15 +69,19 @@ export default function Calamar() {
             const levelIn=chat.dataIn.levelIn
             switch (actionTodo) {
                 case 'puente':
+                    console.log('acahay pulevelInente', levelIn);
+
                     seTfloorMap(array)
                     setUserIn(levelIn)
                     break;
                 case 'createdOne':
-                    console.log('acahay puente', array);
+                    console.log('acahay pulevelInente', levelIn);
                     seTfloorMap(array)
                     setUserIn(levelIn)
                     break;
                 case 'newPass':
+                    console.log('acahay pulevelInente', levelIn);
+
                     seTfloorMap(array)
                     setUserIn(levelIn)
                     break;

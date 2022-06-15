@@ -26,6 +26,11 @@ export default function MetaPuente() {
                     seTwinning(true)
                     break;
                 case 'passingFinalReady':
+                    console.log('gano');
+                    seTchanging(true)
+                    break;
+                case 'passingFinalReadyRes':
+                    console.log('conecto');
                     seTchanging(true)
                     break;
                 default:
