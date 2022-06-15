@@ -48,7 +48,6 @@ export default function Calamar() {
                 },
                 'actionTodo': 'passing',
             })
-            setUserIn(userIn + 1)
             window.location.replace(`vww://aztecasecreto.vww/@78678#piso${key.leter}${key.number}`)
         }
     }
