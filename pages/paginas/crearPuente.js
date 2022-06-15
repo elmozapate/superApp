@@ -9,6 +9,20 @@ let pass = [
 export default function CrearPuente() {
     const [floorMap, seTfloorMap] = useState([])
     const [changing, seTchanging] = useState(false)
+    const crearRandom = () => {
+        let min = 0
+        let max = 20
+        let randomNumber = Math.floor(Math.random() * (max - min)) + min
+        for (let index = 0; index < pass.length; index++) {
+            const element = pass[index];
+            if (((randomNumber / 2) * 2) === randomNumber) {
+                pass[index] = 'a'
+            } else {
+                pass[index] = 'b'
+            }
+        }
+        createPuente()
+    }
 
     let fila = true
     let numberof = 0
@@ -91,10 +105,11 @@ export default function CrearPuente() {
     return (< >
         {
             changing ? <><p className='btn-azteca '>Creado</p>
-             <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); deletePuente() }} >
-                BORRAR PUENTE </button>
-        </> : <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); createPuente() }} >
-                CREAR PUENTE </button>
+                <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); deletePuente() }} >
+                    BORRAR PUENTE </button>
+            </> :<> 
+                <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); crearRandom() }} >
+                CREAR PUENTE </button></>
         }
     </>)
 }
