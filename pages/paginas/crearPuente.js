@@ -33,6 +33,13 @@ export default function CrearPuente() {
             },
             'actionTodo': 'resetPuente',
         })
+        socket.emit(
+            'calamar', {
+            'dataIn': {
+                'actionTodo': 'endPuente',
+            },
+            'actionTodo': 'endPuente',
+        })
         seTchanging(false)
 
     }
