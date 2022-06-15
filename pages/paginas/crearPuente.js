@@ -4,7 +4,7 @@ import io from "socket.io-client"
 const socket = io("https://serverazteca.herokuapp.com/")
 let news = true
 let pass = [
-    'a', 'a', 'b', 'a', 'a', 'b', 'b', 'b', 'a', 'b'
+    'b', 'b', 'a', 'a', 'a', 'b', 'a', 'b', 'a', 'a'
 ]
 export default function CrearPuente() {
     const [floorMap, seTfloorMap] = useState([])
