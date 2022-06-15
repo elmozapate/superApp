@@ -9,7 +9,6 @@ export default function Calamar() {
     const [changing, seTchanging] = useState(false)
     const changeArray = (key) => {
         console.log(key);
-        setUserIn(userIn + 1)
         let copiedarray = []/* 
         seTchanging(true) */
         floorMap.map((item, i) => {
@@ -26,36 +25,54 @@ export default function Calamar() {
             }
         })
         seTfloorMap(copiedarray)
-        socket.emit(
-            'calamar', {
-            'dataIn': {
-                puente: copiedarray,
-                'actionTodo': 'passing',
-            },
-            'actionTodo': 'passing',
-        })
+       
         if (key.action === 'fall') {
+            socket.emit(
+                'calamar', {
+                'dataIn': {
+                    puente: copiedarray,
+                    levelIn:userIn,
+
+                    'actionTodo': 'passing',
+                },
+                'actionTodo': 'passing',
+            })
             window.location.replace(`vww://aztecasecreto.vww/@78678#break${key.leter}${key.number}`)
         } else {
+            socket.emit(
+                'calamar', {
+                'dataIn': {
+                    puente: copiedarray,
+                    levelIn:userIn+1,
+                    'actionTodo': 'passing',
+                },
+                'actionTodo': 'passing',
+            })
+            setUserIn(userIn + 1)
             window.location.replace(`vww://aztecasecreto.vww/@78678#piso${key.leter}${key.number}`)
         }
     }
     useEffect(() => {
         socket.on("calamar", (chat) => {
             const actionTodo = chat.actionTodo
-            const array = chat.dataIn
+            const array = chat.dataIn.array
+            const levelIn=chat.dataIn.levelIn
             switch (actionTodo) {
                 case 'puente':
                     seTfloorMap(array)
+                    setUserIn(levelIn)
                     break;
                 case 'createdOne':
                     console.log('acahay puente', array);
                     seTfloorMap(array)
+                    setUserIn(levelIn)
                     break;
                 case 'newPass':
                     seTfloorMap(array)
+                    setUserIn(levelIn)
                     break;
                 case 'noPuente':
+                    setUserIn(0)
                     seTfloorMap([])
                     break;
                 default:
