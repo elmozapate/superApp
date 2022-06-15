@@ -37,7 +37,7 @@ export default function Calamar() {
                 },
                 'actionTodo': 'passing',
             })
-            window.location.replace(`vww://aztecasecreto.vww/@78678#break${key.leter}${key.number}`)
+            window.location.replace(`vww://aztecasecreto.vww/@78688#break${key.leter}${key.number}`)
         } else {
             socket.emit(
                 'calamar', {
@@ -48,7 +48,7 @@ export default function Calamar() {
                 },
                 'actionTodo': 'passing',
             })
-            window.location.replace(`vww://aztecasecreto.vww/@78678#piso${key.leter}${key.number}`)
+            window.location.replace(`vww://aztecasecreto.vww/@78688#piso${key.leter}${key.number}`)
         }
     }
     useEffect(() => {
