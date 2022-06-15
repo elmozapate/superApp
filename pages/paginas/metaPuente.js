@@ -14,7 +14,6 @@ export default function MetaPuente() {
             'actionTodo': 'endPuente',
         })
         seTchanging(true)
-        window.location.replace(`vww://aztecasecreto.vww/@78688#llegada`)
     }
 
     useEffect(() => {
@@ -36,7 +35,7 @@ export default function MetaPuente() {
             changing ? <><p className='btn-azteca '>FELICIDADES</p>
              
         </> : <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); llegarPuente() }} >
-                Llegar </button>
+                Parar Reloj </button>
         }
     </>)
 }

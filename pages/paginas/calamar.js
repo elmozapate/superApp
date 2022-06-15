@@ -4,7 +4,7 @@ import FloorApp from '../../components/containers/floorApp';
 import io from "socket.io-client"
 const socket = io("https://serverazteca.herokuapp.com/")
 export default function Calamar() {
-    const [userIn, setUserIn] = useState(0)
+    const [userIn, setUserIn] = useState(1)
     const [floorMap, seTfloorMap] = useState([])
     const [changing, seTchanging] = useState(false)
     const changeArray = (key) => {
