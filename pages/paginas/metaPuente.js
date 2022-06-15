@@ -21,7 +21,15 @@ export default function MetaPuente() {
     useEffect(() => {
         socket.on("calamar", (chat) => {
             const actionTodo = chat.actionTodo
+            const array = chat.dataIn.array
+            const levelIn=chat.dataIn.levelIn
             switch (actionTodo) {
+                case 'createdOne':
+                    console.log('acahay pulevelInente', levelIn);
+                    if (levelIn===11) {
+                        seTchanging(true)
+                    }
+                    break;
                 case 'llegoPlayer':
                     seTwinning(true)
                     break;
@@ -43,6 +51,14 @@ export default function MetaPuente() {
                 'actionTodo': 'metaPlace',
             },
             'actionTodo': 'metaPlace',
+        })
+        socket.emit(
+            'calamar', {
+            'dataIn': {
+/*                 ip: ip,
+ */                'actionTodo': 'ipSend',
+            },
+            'actionTodo': 'ipSend',
         })
     }, [])
 
