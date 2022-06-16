@@ -89,15 +89,7 @@ export default function CrearPuente() {
                     break;
             }
         })
-        socket.emit(
-            'calamar', {
-            'dataIn': {
-/*                 ip: ip,
- */                'actionTodo': 'ipSend',
-            },
-            'actionTodo': 'ipSend',
-        })
-    }, [])
+      }, [])
     /*   useEffect(() => {
       
   

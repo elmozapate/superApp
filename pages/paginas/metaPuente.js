@@ -53,14 +53,7 @@ export default function MetaPuente() {
             },
             'actionTodo': 'metaPlace',
         })
-        socket.emit(
-            'calamar', {
-            'dataIn': {
-/*                 ip: ip,
- */                'actionTodo': 'ipSend',
-            },
-            'actionTodo': 'ipSend',
-        })
+     
     }, [])
 
     return (< >
