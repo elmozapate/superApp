@@ -20,13 +20,14 @@ export default function MetaPuente() {
 
     useEffect(() => {
         socket.on("calamar", (chat) => {
-            const actionTodo = chat.actionTodo
-            const array = chat.dataIn.array
-            const levelIn=chat.dataIn.levelIn
+            console.log(chat);
+            const actionTodo = chat.actionTodo || ''
             switch (actionTodo) {
                 case 'createdOne':
+                    const dataIn = chat.dataIn
+                    const levelIn = dataIn.levelIn || 0
                     console.log('acahay pulevelInente', levelIn);
-                    if (levelIn===11) {
+                    if (levelIn === 11) {
                         seTchanging(true)
                     }
                     break;
