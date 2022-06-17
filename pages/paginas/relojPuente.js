@@ -5,6 +5,7 @@ import RelojApp from '../../components/containers/relojApp';
 const socket = io("https://serverazteca.herokuapp.com/")
 
 export default function RelojPuente() {
+    const [winning, seTwinning] = useState(false)
     const [eltiempo, setEltiempo] = useState(0)
     const [changing, seTchanging] = useState(false)
     useEffect(() => {
@@ -14,7 +15,9 @@ export default function RelojPuente() {
             const actionTodo = chat.actionTodo
             const array = chat.dataIn
             switch (actionTodo) {
-
+                case 'llegoPlayer':
+                    seTwinning(true)
+                    break;
                 case 'IniciarReloj':
                     seTchanging(true)
                     break;
@@ -38,7 +41,7 @@ export default function RelojPuente() {
                 <span>  OFF</span>
             </div>
             </> : <>
-                <RelojApp eltiempo={eltiempo} />
+                <RelojApp winning={winning} eltiempo={eltiempo} />
                
             </>
         }
