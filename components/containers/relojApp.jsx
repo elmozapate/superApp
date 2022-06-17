@@ -40,15 +40,12 @@ const RelojApp = ({ jail = false, winning = false, eltiempo = 0 }) => {
             </> :
                 eltiempo > 0 ? <span>{parseInt(eltiempo / 60) < 10 ? `0${parseInt(eltiempo / 60)}` : parseInt(eltiempo / 60)}:{((eltiempo) - ((parseInt(eltiempo / 60)) * 60)) < 10 ? `0${((eltiempo) - ((parseInt(eltiempo / 60)) * 60))}` : ((eltiempo) - ((parseInt(eltiempo / 60)) * 60))} </span>
                     : <><span>FAIL</span>
-                        <audio className='hide' controls autoPlay>
-                            <source src={'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/calamaraudios%2Fperder-incorrecto-no-valido.mp3?alt=media&token=1b2bf8a6-782f-442b-adcb-08a100877997'
-                            } type="audio/mp3" />
-                        </audio>
                     </>
             }
-            {eltiempo > 60 ? <audio className='hide' controls autoPlay>
+            {eltiempo > 60 && !winning ? <audio className='hide' controls autoPlay>
                 <source src={'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/calamaraudios%2Fy2mate.com%20-%20Reloj%20Minutero%20%20Efecto%20de%20Sonidolento.mp3?alt=media&token=aa3d406f-6724-4f87-9715-475f865f282e'} type="audio/mp3" />
-            </audio> : <audio src={"https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/calamaraudios%2Fy2mate.com%20-%20sonido%20de%20reloj%20tic%20tic.mp3?alt=media&token=b870b388-39e0-4cd7-9e52-cac388629217"} className='hide' controls loop autoPlay>
+            </audio> : <audio  className='hide' controls loop autoPlay>
+            <source src={'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/calamaraudios%2Fy2mate.com%20-%20Reloj%20Minutero%20%20Efecto%20de%20Sonidolento.mp3?alt=media&token=aa3d406f-6724-4f87-9715-475f865f282e'} type="audio/mp3" />
             </audio>
             }
         </div>
