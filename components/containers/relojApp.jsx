@@ -26,7 +26,7 @@ const RelojApp = ({ winning = false, eltiempo = 0 }) => {
         <div className='reloj-puente'>
             {
                 eltiempo > 0 ? <span>{parseInt(eltiempo / 60) < 10 ? `0${parseInt(eltiempo / 60)}` : parseInt(eltiempo / 60)}:{((eltiempo) - ((parseInt(eltiempo / 60)) * 60)) < 10 ? `0${((eltiempo) - ((parseInt(eltiempo / 60)) * 60))}` : ((eltiempo) - ((parseInt(eltiempo / 60)) * 60))} </span>
-                    : <span>MUERTOS</span>
+                    : <span>FAIL</span>
 
             }
             {winning ? <audio className='' controls autoPlay>
