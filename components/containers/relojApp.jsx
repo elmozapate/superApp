@@ -46,9 +46,9 @@ const RelojApp = ({ jail = false, winning = false, eltiempo = 0 }) => {
                         </audio>
                     </>
             }
-            {winning ? <audio className='hide' controls autoPlay>
-                <source src={'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/calamaraudios%2Ffanfare-triumphal.mp3?alt=media&token=86ec38ea-bf88-4656-96aa-148b6ebd7812'} type="audio/mp3" />
-            </audio> : <audio src={relojSrc} className='hide' controls loop autoPlay>
+            {eltiempo > 60 ? <audio className='hide' controls autoPlay>
+                <source src={'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/calamaraudios%2Fy2mate.com%20-%20Reloj%20Minutero%20%20Efecto%20de%20Sonidolento.mp3?alt=media&token=aa3d406f-6724-4f87-9715-475f865f282e'} type="audio/mp3" />
+            </audio> : <audio src={"https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/calamaraudios%2Fy2mate.com%20-%20sonido%20de%20reloj%20tic%20tic.mp3?alt=media&token=b870b388-39e0-4cd7-9e52-cac388629217"} className='hide' controls loop autoPlay>
             </audio>
             }
         </div>
