@@ -8,6 +8,7 @@ export default function RelojPuente() {
     const [winning, seTwinning] = useState(false)
     const [eltiempo, setEltiempo] = useState(0)
     const [changing, seTchanging] = useState(false)
+    const [jail, setJail] = useState(false)
 
     useEffect(() => {
 
@@ -16,10 +17,11 @@ export default function RelojPuente() {
             const actionTodo = chat.actionTodo
             const array = chat.dataIn
             switch (actionTodo) {
-                case 'llegoPlayer':                
+                case 'llegoPlayer':
                     seTwinning(true)
                     break;
-                    case 'finalMinute':    
+                case 'die':
+                    setJail(true)
                     break;
                 case 'IniciarReloj':
                     seTchanging(true)
@@ -44,8 +46,8 @@ export default function RelojPuente() {
                 <span>  OFF</span>
             </div>
             </> : <>
-                <RelojApp  winning={winning} eltiempo={eltiempo} />
-               
+                <RelojApp jail={jail} winning={winning} eltiempo={eltiempo} />
+
             </>
         }
     </>)
