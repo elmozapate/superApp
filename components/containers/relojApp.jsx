@@ -7,13 +7,11 @@ const RelojApp = ({ jail = false, winning = false, eltiempo = 0 }) => {
     }
     useEffect(() => {
         if (eltiempo) {
-            if (eltiempo < 60 && !ending) {
+            if (eltiempo < 60 ) {
                 console.log('eoooo');
                 setrelojSrc("https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/calamaraudios%2Fy2mate.com%20-%20sonido%20de%20reloj%20tic%20tic.mp3?alt=media&token=b870b388-39e0-4cd7-9e52-cac388629217")
-                ending = true
             }
         }
-      
         console.log('uyyyuy', eltiempo);
     }, [eltiempo])
     useEffect(() => {
