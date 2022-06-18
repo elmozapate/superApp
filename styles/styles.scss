@@ -1455,6 +1455,10 @@ color: red;
     height: getRemSize(30px);
 }
 .componente-lista{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
    min-width:getRemSize(800px);
 min-height:getRemSize(600px);
 }
