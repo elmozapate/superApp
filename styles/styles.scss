@@ -1455,7 +1455,7 @@ color: red;
     color: white !important;
     font-size: getRemSize(100px);
     font-style: 700;
-    height: getRemSize(30px);
+    min-height: fit-content;
 }
 .componente-lista{
     display: flex;
