@@ -4,6 +4,7 @@ import FloorApp from '../../components/containers/floorApp';
 import io from "socket.io-client"
 const socket = io("https://serverazteca.herokuapp.com/")
 export default function Calamar(props) {
+    const [ip, setIp] = useState(props.ip || false)
     const [userIn, setUserIn] = useState(1)
     const [floorMap, seTfloorMap] = useState([])
     const [changing, seTchanging] = useState(false)
@@ -32,7 +33,7 @@ export default function Calamar(props) {
                 'dataIn': {
                     puente: copiedarray,
                     levelIn: userIn,
-                    ip: props.ip || false,
+                    ip: ip || false,
 
                     'actionTodo': 'passing',
                 },
@@ -41,13 +42,13 @@ export default function Calamar(props) {
             socket.emit(
                 'calamar', {
                 'dataIn': {
-                    ip: props.ip || false,
-                    'actionTodo': 'passingFall',
+                    ip: ip || false,
+                    'actionTodo': 'falling',
                 },
-                'actionTodo': 'passingFall',
+                'actionTodo': 'falling',
             })
-            window.location.replace(`vww://aztecasecreto.vww/@78688#break${key.leter}${key.number}`)
-        } else {
+/*             window.location.replace(`vww://aztecasecreto.vww/@78688#break${key.leter}${key.number}`)
+ */        } else {
             if (userIn >= 9) {
                 socket.emit(
                     'calamar', {
@@ -68,8 +69,8 @@ export default function Calamar(props) {
                 },
                 'actionTodo': 'passing',
             })
-            window.location.replace(`vww://aztecasecreto.vww/@78688#piso${key.leter}${key.number}`)
-        }
+/*             window.location.replace(`vww://aztecasecreto.vww/@78688#piso${key.leter}${key.number}`)
+ */        }
     }
     useEffect(() => {
         socket.on("calamar", (chat) => {
@@ -116,7 +117,19 @@ export default function Calamar(props) {
   
       }, []) */
     return (<body className='calamar-puente'>
-        {
+        <button id='btn-play' onClick={(e) => {
+            e.preventDefault(),
+                socket.emit(
+                    'calamar', {
+                    'dataIn': {
+                        ip: ip || false,
+                        'actionTodo': 'falling',
+                    },
+                    'actionTodo': 'falling',
+                })
+        }}>
+            PLAY_PAUSE
+        </button>        {
             changing ? <></> : <FloorApp userIn={userIn} floorMap={floorMap} changeArray={changeArray} />
 
         }
