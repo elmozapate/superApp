@@ -1450,7 +1450,8 @@ color: red;
 }
 .li-listaReady{
     color: white !important;
-    font-size: getRemSize(30px);
+    font-size: getRemSize(100px);
+    font-style: 700;
     height: getRemSize(30px);
 }
 .componente-lista{
