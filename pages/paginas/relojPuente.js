@@ -30,6 +30,10 @@ export default function RelojPuente() {
                     seTchanging(true)
                     setEltiempo(array)
                     break;
+                    case 'noPuente':
+                        seTchanging(false)
+                        break;
+                    
                 default:
                     break;
             }

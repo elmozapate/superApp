@@ -49,7 +49,10 @@ const ParticipantesPuente = (props) => {
                         setisActive(true)
                     }
                     break;
-
+                    case 'noPuente':
+                        setparticipants([])
+                        setisActive(false)
+                        break;
                 default:
                     break;
             }

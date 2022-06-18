@@ -51,7 +51,7 @@ export default function Calamar(props) {
             setnowPlaying(false)
             window.location.replace(`vww://aztecasecreto.vww/@78688#break${key.leter}${key.number}`)
         } else {
-            if (userIn >= 9) {
+            if (userIn >= 10) {
                 socket.emit(
                     'calamar', {
                     'dataIn': {
@@ -59,7 +59,7 @@ export default function Calamar(props) {
                         levelIn: userIn + 1,
                         'actionTodo': 'passingFinal',
                     },
-                    'actionTodo': 'passing',
+                    'actionTodo': 'passingFinal',
                 })
             }
             socket.emit(
@@ -77,25 +77,29 @@ export default function Calamar(props) {
     useEffect(() => {
         socket.on("calamar", (chat) => {
             const actionTodo = chat.actionTodo
-            const array = chat.dataIn.array
-            const levelIn = chat.dataIn.levelIn
+            const dataIn = chat.dataIn || ""
+
             switch (actionTodo) {
                 case 'puente':
-                    console.log('acahay pulevelInente', levelIn);
+                    console.log('acahay pulevelInente', dataIn.levelIn);
 
-                    seTfloorMap(array)
-                    setUserIn(levelIn)
+                    seTfloorMap(dataIn.array)
+                    setUserIn(dataIn.levelIn)
                     break;
                 case 'createdOne':
-                    console.log('acahay pulevelInente', levelIn);
-                    seTfloorMap(array)
-                    setUserIn(levelIn)
+                    console.log('acahay pulevelInente', chat);
+                    if (chat.dataIn.participants[0].ip === ip
+                    ) {
+                        setnowPlaying(true)
+                    }
+                    seTfloorMap(dataIn.array)
+                    setUserIn(dataIn.levelIn)
                     break;
                 case 'newPass':
-                    console.log('acahay pulevelInente', levelIn);
+                    console.log('acahay pulevelInente', dataIn.levelIn);
 
-                    seTfloorMap(array)
-                    setUserIn(levelIn)
+                    seTfloorMap(dataIn.array)
+                    setUserIn(dataIn.levelIn)
                     break;
                 case 'noPuente':
                     setUserIn(0)
@@ -137,7 +141,19 @@ export default function Calamar(props) {
   
       }, []) */
     return (<body className='calamar-puente'>
-        {
+       {/*  <button id='btn-play' onClick={(e) => {
+            e.preventDefault(),
+                socket.emit(
+                    'calamar', {
+                    'dataIn': {
+                        ip: ip || false,
+                        'actionTodo': 'falling',
+                    },
+                    'actionTodo': 'falling',
+                })
+        }}>
+            PLAY_PAUSE
+        </button>   */}      {
             changing ? <></> : <FloorApp nowPlaying={nowPlaying} userIn={userIn} floorMap={floorMap} changeArray={changeArray} />
 
         }

@@ -57,13 +57,6 @@ export default function CrearPuente() {
             },
             'actionTodo': 'resetPuente',
         })
-        socket.emit(
-            'calamar', {
-            'dataIn': {
-                'actionTodo': 'endPuente',
-            },
-            'actionTodo': 'endPuente',
-        })
         seTchanging(false)
 
     }
@@ -97,7 +90,9 @@ export default function CrearPuente() {
                 case 'createdOne':
                     seTchanging(true)
                     break;
-
+                    case 'noPuente':
+                        seTchanging(false)
+                        break;
                 default:
                     break;
             }

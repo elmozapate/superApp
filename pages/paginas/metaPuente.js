@@ -42,6 +42,10 @@ export default function MetaPuente() {
                     console.log('conecto');
                     seTchanging(true)
                     break;
+                    case 'noPuente':
+                        seTwinning(false)
+                        seTchanging(false)
+                        break;
                 default:
                     break;
             }

@@ -1449,6 +1449,32 @@ background-color: black;
 align-items: center;
 justify-content: center;
 padding: 0 10%;
+.complete{
+    height: 100%;
+    display: flex;
+    width: fit-content;
+white-space: nowrap;
+align-items: center;
+justify-content: center;
+    span{
+        display: flex;
+        width: fit-content;
+        height: fit-content;
+        font-size: 35vh;
+    color: green;
+    align-items: center;
+justify-content: center;
+    }
+    .passtime{
+        display: flex;
+        width: fit-content;
+        height: fit-content;
+        font-size: 30vh !important;
+        align-items: center;
+justify-content: center;
+    color: green;
+    }
+}
 span{
     display: flex;
     width: fit-content;
