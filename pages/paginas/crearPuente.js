@@ -58,6 +58,7 @@ export default function CrearPuente() {
             'actionTodo': 'resetPuente',
         })
         seTchanging(false)
+        setparticipants([])
 
     }
     useEffect(() => {
