@@ -1455,5 +1455,6 @@ color: red;
     height: getRemSize(30px);
 }
 .componente-lista{
+   min-width:getRemSize(800px);
 min-height:getRemSize(600px);
 }
