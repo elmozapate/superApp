@@ -1449,6 +1449,9 @@ color: red;
 }
 }
 .li-listaReady{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: white !important;
     font-size: getRemSize(100px);
     font-style: 700;
