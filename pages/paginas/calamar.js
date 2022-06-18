@@ -5,6 +5,7 @@ import io from "socket.io-client"
 const socket = io("https://serverazteca.herokuapp.com/")
 export default function Calamar(props) {
     const [ip, setIp] = useState(props.ip || false)
+    const [nowPlaying, setnowPlaying] = useState(false)
     const [userIn, setUserIn] = useState(1)
     const [floorMap, seTfloorMap] = useState([])
     const [changing, seTchanging] = useState(false)
@@ -47,8 +48,9 @@ export default function Calamar(props) {
                 },
                 'actionTodo': 'falling',
             })
-/*             window.location.replace(`vww://aztecasecreto.vww/@78688#break${key.leter}${key.number}`)
- */        } else {
+            setnowPlaying(false)
+            window.location.replace(`vww://aztecasecreto.vww/@78688#break${key.leter}${key.number}`)
+        } else {
             if (userIn >= 9) {
                 socket.emit(
                     'calamar', {
@@ -69,8 +71,8 @@ export default function Calamar(props) {
                 },
                 'actionTodo': 'passing',
             })
-/*             window.location.replace(`vww://aztecasecreto.vww/@78688#piso${key.leter}${key.number}`)
- */        }
+            window.location.replace(`vww://aztecasecreto.vww/@78688#piso${key.leter}${key.number}`)
+        }
     }
     useEffect(() => {
         socket.on("calamar", (chat) => {
@@ -99,6 +101,24 @@ export default function Calamar(props) {
                     setUserIn(0)
                     seTfloorMap([])
                     break;
+                case 'fallingin':
+                    chat.dataIn.participants.map((key, i) => {
+                        if (chat.dataIn.ip === key.ip) {
+                            if ((i + 1) === chat.dataIn.participants.length) {
+                                if (chat.dataIn.participants[0].ip === ip) {
+                                    console.log('tetoca');
+                                    setnowPlaying(true)
+                                }
+                                console.log(chat.dataIn.participants[0].ip, 'proximaIp', ip);
+                            } else {
+                                if (chat.dataIn.participants[i + 1].ip === ip) {
+                                    console.log('tetoca');
+                                    setnowPlaying(true)
+                                }
+                            }
+                        }
+                    })
+                    break;
                 default:
                     break;
             }
@@ -117,20 +137,8 @@ export default function Calamar(props) {
   
       }, []) */
     return (<body className='calamar-puente'>
-        <button id='btn-play' onClick={(e) => {
-            e.preventDefault(),
-                socket.emit(
-                    'calamar', {
-                    'dataIn': {
-                        ip: ip || false,
-                        'actionTodo': 'falling',
-                    },
-                    'actionTodo': 'falling',
-                })
-        }}>
-            PLAY_PAUSE
-        </button>        {
-            changing ? <></> : <FloorApp userIn={userIn} floorMap={floorMap} changeArray={changeArray} />
+        {
+            changing ? <></> : <FloorApp nowPlaying={nowPlaying} userIn={userIn} floorMap={floorMap} changeArray={changeArray} />
 
         }
     </body>)

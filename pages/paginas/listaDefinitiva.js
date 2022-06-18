@@ -27,7 +27,7 @@ export default function IstaDefinitiva() {
 
                         if (array.ip===key.ip) {
                             if ((i+1)===array.participants.length) {
-                                setparticipantsturn(1)
+                                setparticipantsturn(0)
                             }else{
                                 setparticipantsturn(i+1)
                             }

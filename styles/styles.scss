@@ -13,6 +13,15 @@ body {
     box-sizing: border-box;
 
 }
+.li-listaReady{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white !important;
+    font-size: getRemSize(100px);
+    font-style: 700;
+    min-height: fit-content;
+}
 .iframe-magweb {
     padding: 0;
     margin: 0;
@@ -1448,15 +1457,7 @@ span{
 color: red;
 }
 }
-.li-listaReady{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white !important;
-    font-size: getRemSize(100px);
-    font-style: 700;
-    min-height: fit-content;
-}
+
 .componente-lista{
     display: flex;
     align-items: center;
