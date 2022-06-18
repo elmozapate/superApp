@@ -23,10 +23,20 @@ export default function CrearPuente() {
         }
         createPuente()
     }
+    const [participants, setparticipants] = useState([])
 
     let fila = true
     let numberof = 0
     let floorArray = []
+    const crearUserRandom = () => {
+        socket.emit(
+            'calamar', {
+            'dataIn': {
+                'actionTodo': 'crearUserRandom',
+            },
+            'actionTodo': 'crearUserRandom',
+        })
+    }
     const createPuente = () => {
         socket.emit(
             'calamar', {
@@ -80,7 +90,10 @@ export default function CrearPuente() {
             const actionTodo = chat.actionTodo
             const array = chat.dataIn
             switch (actionTodo) {
-
+                case 'playerList':
+                    console.log('lellega');
+                    setparticipants(array)
+                    break;
                 case 'createdOne':
                     seTchanging(true)
                     break;
@@ -89,19 +102,34 @@ export default function CrearPuente() {
                     break;
             }
         })
-      }, [])
-    /*   useEffect(() => {
+    }, [])
+      useEffect(() => {
       
-  
-      }, []) */
+     socket.emit(
+            'calamar', {
+            'dataIn': {
+                'actionTodo': 'ipSend',
+            },
+            'actionTodo': 'ipSend',
+
+        })
+      }, [])
     return (< >
         {
             changing ? <><p className='btn-azteca '>Creado</p>
                 <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); deletePuente() }} >
                     BORRAR PUENTE </button>
-            </> :<> 
-                <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); crearRandom() }} >
-                CREAR PUENTE </button></>
+            </> : <>
+            <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); crearRandom() }} >
+                    CREAR PUENTE </button>
+                <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); crearUserRandom() }} >
+                   Alistar Juego </button>
+                {
+                    participants.map((key, i) => {
+                        return <li key={`participante-${i}`}>{key.user} </li>
+                    })
+
+                }</>
         }
     </>)
 }
