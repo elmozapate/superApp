@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import io from "socket.io-client"
+import CrearPuente from './crearPuente';
 const socket = io("https://serverazteca.herokuapp.com/")
 
 
 const ParticipantesPuente = (props) => {
     const [isActive, setisActive] = useState(false)
     const [ip, setIp] = useState(props.ip || false)
+    const [admin, setAdmin] = useState(false)
 
     const [participants, setparticipants] = useState([])
     const [mensaje, setMsj] = useState({
@@ -19,6 +21,13 @@ const ParticipantesPuente = (props) => {
             ...mensaje,
             user: value
         })
+        if (mensaje.user === 'anfitrion') {
+            setAdmin(true)
+            setMsj({
+                ...mensaje,
+                user: ''
+            })
+        }
     }
     const sendLatino = () => {
         socket.emit('calamar', {
@@ -49,10 +58,10 @@ const ParticipantesPuente = (props) => {
                         setisActive(true)
                     }
                     break;
-                    case 'noPuente':
-                        setparticipants([])
-                        setisActive(false)
-                        break;
+                case 'noPuente':
+                    setparticipants([])
+                    setisActive(false)
+                    break;
                 default:
                     break;
             }
@@ -67,34 +76,39 @@ const ParticipantesPuente = (props) => {
 
         })
     }, [])
-    return (<div className='flex-row column'>{
-        isActive ?
-            <>
-                {
-                    participants.map((key, i) => {
-                        return <li key={`participante-${i}`}>{key.user} </li>
-                    })
+    return (<div className='flex-row column'>
+        {
+            admin ? <CrearPuente /> : <></>
+        }
+        {
 
-                }
+            isActive ?
+                <>
+                    {
+                        participants.map((key, i) => {
+                            return <li key={`participante-${i}`}>{key.user} </li>
+                        })
 
-            </> : <>
+                    }
 
-                <input
-                    id='user'
-                    value={mensaje.user}
-                    onChange={handleLogin}
-                    placeholder={'Registrate'}
-                />
-                <button className={mensaje.user.length > 2 ? 'btn-azteca pointer' : 'hide'} onClick={(e) => { e.preventDefault(); sendLatino() }}
-                >Registrarce</button>
-                {
-                    participants.map((key, i) => {
-                        return <li key={`participante-${i}`}>{key.user} </li>
-                    })
+                </> : <>
 
-                }
-            </>
-    }
+                    <input
+                        id='user'
+                        value={mensaje.user}
+                        onChange={handleLogin}
+                        placeholder={'Registrate'}
+                    />
+                    <button className={mensaje.user.length > 2 ? 'btn-azteca pointer' : 'hide'} onClick={(e) => { e.preventDefault(); sendLatino() }}
+                    >Registrarce</button>
+                    {
+                        participants.map((key, i) => {
+                            return <li key={`participante-${i}`}>{key.user} </li>
+                        })
+
+                    }
+                </>
+        }
 
     </div>)
 }
@@ -106,7 +120,7 @@ export async function getServerSideProps({ req }) {
     let max = 9000000000
     return {
         props: {
-            ip:/* Math.floor(Math.random() * (max - min)) + min */ ip 
+            ip:/* Math.floor(Math.random() * (max - min)) + min */ ip
             ,
         },
     }
