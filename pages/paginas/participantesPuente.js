@@ -21,12 +21,9 @@ const ParticipantesPuente = (props) => {
             ...mensaje,
             user: value
         })
-        if (mensaje.user === 'anfitrion') {
+        if (mensaje.user === 'anfitrion' || e.target.value === 'anfitrion') {
             setAdmin(true)
-            setMsj({
-                ...mensaje,
-                user: ''
-            })
+            
         }
     }
     const sendLatino = () => {
