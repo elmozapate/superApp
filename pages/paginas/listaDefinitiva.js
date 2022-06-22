@@ -69,7 +69,7 @@ export default function IstaDefinitiva() {
       }, []) */
     return (< >
         {
-            participantsWinner ? <><ComponenteLista participants={participantsWinner}  participantsturn={participantsturn} won={true} /></> : <ComponenteLista participants={participants} participantsturn={participantsturn} />
+            participantsWinner ? <><ComponenteLista participants={participants}  participantsturn={participantsturn} won={true} /></> : <ComponenteLista participants={participants} participantsturn={participantsturn} />
 
         }
 

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import FloorApp from '../../components/containers/floorApp';
 import io from "socket.io-client"
 const socket = io("https://serverazteca.herokuapp.com/")
-export default function Calamar(props) {
+ const Calamar=(props)=> {
     const [turn, setturn] = useState(-1)
 
     const [ip, setIp] = useState(props.ip || false)
@@ -227,3 +227,4 @@ export async function getServerSideProps({ req }) {
         },
     }
 }
+export default Calamar

@@ -23,7 +23,7 @@ const ParticipantesPuente = (props) => {
         })
         if (mensaje.user === 'anfitrion' || e.target.value === 'anfitrion') {
             setAdmin(true)
-            
+
         }
     }
     const sendLatino = () => {
@@ -81,7 +81,7 @@ const ParticipantesPuente = (props) => {
 
             isActive ?
                 <>
-                    {
+                    {admin ? <></> :
                         participants.map((key, i) => {
                             return <li key={`participante-${i}`}>{key.user} </li>
                         })
@@ -97,8 +97,8 @@ const ParticipantesPuente = (props) => {
                         placeholder={'Registrate'}
                     />
                     <button className={mensaje.user.length > 2 ? 'btn-azteca pointer' : 'hide'} onClick={(e) => { e.preventDefault(); sendLatino() }}
-                    >Registrarce</button>
-                    {
+                    >Registrarse</button>
+                    {admin ? <></> :
                         participants.map((key, i) => {
                             return <li key={`participante-${i}`}>{key.user} </li>
                         })

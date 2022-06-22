@@ -24,6 +24,7 @@ export default function RelojPuente() {
                     setJail(true)
                     break;
                 case 'IniciarReloj':
+                    seTwinning(false)
                     seTchanging(true)
                     break;
                 case 'TimeReloj':
