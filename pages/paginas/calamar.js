@@ -5,7 +5,6 @@ import io from "socket.io-client"
 const socket = io("https://serverazteca.herokuapp.com/")
 const Calamar = (props) => {
     const [turn, setturn] = useState(-1)
-
     const [ip, setIp] = useState(props.ip || false)
     const [nowPlaying, setnowPlaying] = useState(false)
     const [userIn, setUserIn] = useState(0)
@@ -150,7 +149,7 @@ const Calamar = (props) => {
                     break;
                 case 'estasEnJail':
                     chat.dataIn.array.map((key, i) => {
-                        if (i > chat.dataIn.puenteTurn && key.ip === ip && chat.dataIn.array.length > 1 && chat.dataIn.puenteTurn !== 0) {
+                        if (key.ip === ip && chat.dataIn.array.length > 1 && (chat.dataIn.array.length > 2 ? chat.dataIn.puenteTurn !== 0 : chat.dataIn.puenteTurn !== i)) {
                             setTimeout(goJail, 5000)
                         }
                     })
