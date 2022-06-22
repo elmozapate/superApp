@@ -8,6 +8,8 @@ const ParticipantesPuente = (props) => {
     const [isActive, setisActive] = useState(false)
     const [ip, setIp] = useState(props.ip || false)
     const [admin, setAdmin] = useState(false)
+    const [inProgress, setinProgress] = useState(false)
+    const [inProgressDone, setinProgressDone] = useState(false)
 
     const [participants, setparticipants] = useState([])
     const [mensaje, setMsj] = useState({
@@ -55,7 +57,17 @@ const ParticipantesPuente = (props) => {
                         setisActive(true)
                     }
                     break;
+                case 'createdOne':
+                    setinProgress(true)
+                    break;
+                case 'theWinner':
+                    setinProgressDone(true)
+
+                    break;
                 case 'noPuente':
+                    setinProgressDone(false)
+                    setinProgress(false)
+
                     setparticipants([])
                     setisActive(false)
                     break;
@@ -77,22 +89,34 @@ const ParticipantesPuente = (props) => {
         {
             admin ? <CrearPuente /> : <></>
         }
-        {
+        <input
+            className='invisible'
+            id='user'
+            value={mensaje.user}
+            onChange={handleLogin}
+        />
+        {inProgress ?
+            <>
+                <button className={'btn-azteca pointer bgcolorInedit-green'} >
+                    {inProgressDone ? 'FINALIZADO' : 'EN CURSO'}
+                </button>
+                {
 
+                    participants.map((key, i) => {
+                        return <li key={`participante-${i}`}>{key.user} </li>
+                    })
+                }
+            </> :
             isActive ?
                 <>
+
                     {admin ? <></> :
                         participants.map((key, i) => {
                             return <li key={`participante-${i}`}>{key.user} </li>
                         })
 
                     }
-                    <input
-                        className='invisible'
-                        id='user'
-                        value={mensaje.user}
-                        onChange={handleLogin}
-                    />
+
                 </> : <>
 
                     <input

@@ -10,6 +10,8 @@ export default function CrearPuente() {
     const [floorMap, seTfloorMap] = useState([])
     const [changing, seTchanging] = useState(false)
     const [randomized, setRandomized] = useState(false)
+    const [inProgress, setinProgress] = useState(false)
+    const [inProgressDone, setinProgressDone] = useState(false)
     const crearRandom = () => {
         let min = 0
         let max = 20
@@ -104,6 +106,8 @@ export default function CrearPuente() {
                     break;
                 case 'createdOne':
                     seTchanging(true)
+                    setinProgress(true)
+
                     break;
                 case 'playerListReady':
                     if (array.length > 0) {
@@ -111,9 +115,15 @@ export default function CrearPuente() {
                     }
 
                     break;
+              
+                case 'theWinner':
+                    setinProgressDone(true)
+
+                    break;
                 case 'noPuente':
                     setRandomized(false)
-
+                    setinProgressDone(false)
+                    setinProgress(false)
                     seTchanging(false)
                     break;
                 default:
@@ -134,7 +144,7 @@ export default function CrearPuente() {
     }, [])
     return (< >
         {
-            changing ? <><p className='btn-azteca bgcolorInedit-green'>Creado</p>
+            changing ? <><p className='btn-azteca bgcolorInedit-green'>{inProgressDone ? 'Finalizado' : inProgress ? 'En curso' : 'Creado'}</p>
                 <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); deletePuente() }} >
                     BORRAR PUENTE </button>
             </> : <>
@@ -144,7 +154,7 @@ export default function CrearPuente() {
 
                     <button className={participants.length === 0 ? 'btn-azteca pointer' : 'btn-azteca pointer bgcolorInedit-green'} onClick={participants.length === 0 ? (e) => { e.preventDefault(); console.log } : (e) => { e.preventDefault(); crearUserRandom() }} >
                         Alistar Juego </button>
-                } 
+                }
                 TIEMPO
                 <input
                     type={'number'}
