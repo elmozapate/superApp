@@ -1502,3 +1502,14 @@ min-height:getRemSize(900px);
     height: getRemSize(50px) !important;
     font-size: getRemSize(40px) !important;
 }
+.not-auth-div{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.not-auth{
+    width: 100vw;
+    height: fit-content;
+}

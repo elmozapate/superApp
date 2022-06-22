@@ -2,8 +2,13 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import FloorApp from '../../components/containers/floorApp';
 import io from "socket.io-client"
+import Bowser from "bowser";
+
 const socket = io("https://serverazteca.herokuapp.com/")
 const Calamar = (props) => {
+
+    const [notAuth, setnotAuth] = useState(false)
+
     const [turn, setturn] = useState(-1)
     const [ip, setIp] = useState(props.ip || false)
     const [nowPlaying, setnowPlaying] = useState(false)
@@ -109,6 +114,14 @@ const Calamar = (props) => {
         }
     }
     useEffect(() => {
+        console.log(Bowser);
+        if (Bowser.name === 'Chrome') {
+            window.alert('Por que entrarias desde aca?')
+            setnotAuth(true)
+        }
+        /*      const browser = Bowser.getParser(window.navigator.userAgent);
+     
+             console.log(`The current browser name is "${browser.getBrowserName()}"`); */
         socket.on("calamar", (chat) => {
             const actionTodo = chat.actionTodo
             const dataIn = chat.dataIn || ""
@@ -208,6 +221,13 @@ const Calamar = (props) => {
       
   
       }, []) */
+    if (notAuth) {
+        return (<>
+            <div className='not-auth-div'>
+                <img className='not-auth' src='https://previews.123rf.com/images/carmenbobo/carmenbobo1507/carmenbobo150700007/41824544-sello-de-goma-con-el-texto-no-autorizado-en-el-interior-ilustraci%C3%B3n-vectorial.jpg'  />
+                </div >
+        </>)
+    }
     return (<body className='calamar-puente'>
         <button id='btn-play' onClick={(e) => {
             e.preventDefault(),
