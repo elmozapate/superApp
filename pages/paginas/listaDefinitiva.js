@@ -3,7 +3,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import io from "socket.io-client"
 import ComponenteLista from './componenteLista';
-const socket = io("https://serverazteca.herokuapp.com/")
+const socket = io("http://localhost:3002/")
 let count = 0
 export default function IstaDefinitiva() {
     const [participants, setparticipants] = useState([])
@@ -21,8 +21,8 @@ export default function IstaDefinitiva() {
                     setparticipants(array)
                     break;
                 case 'fallingin':
-                    console.log('llegolalistaaca', chat);
-                    array.participants.map((key, i) => {
+                    setparticipantsturn(chat.dataIn)
+                   /*  array.participants.map((key, i) => {
                         console.log(chat, 'array actual', array.participants.length, 'contador', i, 'dd', participantsturn);
 
                         if (array.ip === key.ip) {
@@ -32,7 +32,7 @@ export default function IstaDefinitiva() {
                                 setparticipantsturn(i + 1)
                             }
                         }
-                    })
+                    }) */
                     break;
                 case 'playerDesTurns':
                     console.log(chat, 'falla');

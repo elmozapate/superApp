@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import io from "socket.io-client"
-const socket = io("https://serverazteca.herokuapp.com/")
+const socket = io("http://localhost:3002/")
 
 export default function MetaPuente() {
     const [changing, seTchanging] = useState(false)
@@ -31,16 +31,18 @@ export default function MetaPuente() {
                         seTchanging(true)
                     }
                     break;
-                case 'llegoPlayer':
-                    seTwinning(true)
-                    break;
-                case 'passingFinalReady':
-                    console.log('gano');
-                    seTwinning(true)
-                    break;
+                    case 'llegoPlayer':
+                        seTwinning(true)
+                        break;
+                    case 'passingFinalReady':
+                        console.log('gano');
+                        seTchanging(true)
+                        break;
                 case 'passingFinalReadyRes':
                     console.log('conecto');
                     seTchanging(true)
+                    seTwinning(true)
+
                     break;
                     case 'noPuente':
                         seTwinning(false)

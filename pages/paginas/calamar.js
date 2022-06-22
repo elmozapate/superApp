@@ -2,13 +2,33 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import FloorApp from '../../components/containers/floorApp';
 import io from "socket.io-client"
-const socket = io("https://serverazteca.herokuapp.com/")
+const socket = io("http://localhost:3002/")
 export default function Calamar(props) {
+    const [turn, setturn] = useState(-1)
+
     const [ip, setIp] = useState(props.ip || false)
     const [nowPlaying, setnowPlaying] = useState(false)
     const [userIn, setUserIn] = useState(1)
+    const [userKey, setuserKey] = useState({
+        leter: 'a',
+        number: 0,
+    })
     const [floorMap, seTfloorMap] = useState([])
     const [changing, seTchanging] = useState(false)
+    const changelocationfalse = (key) => {
+        setuserKey(key)
+        setTimeout(changelocation, 2000)
+    }
+    const changelocation = (key) => {
+        window.location.replace(`vww://aztecasecreto.vww/@78688#break${userKey.leter}${userKey.number}`)
+    }
+    const changelocationtrue = (key) => {
+        setuserKey(key)
+        setTimeout(changelocation2, 2000)
+    }
+    const changelocation2 = (key) => {
+        window.location.replace(`vww://aztecasecreto.vww/@78688#piso${userKey.leter}${userKey.number}`)
+    }
     const changeArray = (key) => {
         console.log(key);
         let copiedarray = []/* 
@@ -49,20 +69,30 @@ export default function Calamar(props) {
                 'actionTodo': 'falling',
             })
             setnowPlaying(false)
-            window.location.replace(`vww://aztecasecreto.vww/@78688#break${key.leter}${key.number}`)
+            changelocationfalse(key)
         } else {
-            if (userIn >= 10) {
+            console.log(userIn,'usein');
+            if (userIn === 10) {
                 socket.emit(
                     'calamar', {
                     'dataIn': {
                         puente: copiedarray,
-                        levelIn: userIn + 1,
+                        levelIn: 11,
                         'actionTodo': 'passingFinal',
                     },
                     'actionTodo': 'passingFinal',
                 })
-            }
-            socket.emit(
+                socket.emit(
+                    'calamar', {
+                    'dataIn': {
+                        puente: copiedarray,
+                        levelIn: 11,
+                        'actionTodo': 'passing',
+                    },
+                    'actionTodo': 'passing',
+                })
+            }else{
+                 socket.emit(
                 'calamar', {
                 'dataIn': {
                     puente: copiedarray,
@@ -71,7 +101,8 @@ export default function Calamar(props) {
                 },
                 'actionTodo': 'passing',
             })
-            window.location.replace(`vww://aztecasecreto.vww/@78688#piso${key.leter}${key.number}`)
+            }
+            changelocationtrue(key)
         }
     }
     useEffect(() => {
@@ -105,13 +136,28 @@ export default function Calamar(props) {
                     setUserIn(0)
                     seTfloorMap([])
                     break;
+                case 'vastu':
+                    console.log('tetoca', chat, ip);
+                    if (ip === chat.dataIn) {
+                        setnowPlaying(true)
+                    }else{
+                        setnowPlaying(false)
+                    }
+                    break;
                 case 'fallingin':
+                  /*   console.log('tetoca', chat, ip);
+                    if (turn === chat.dataIn) {
+                        window.alert('vas')
+                        setnowPlaying(true)
+
+                    } */
+                    /* console.log('tetoca',chat ,ip);
+
                     chat.dataIn.participants.map((key, i) => {
                         if (chat.dataIn.ip === key.ip) {
                             if ((i + 1) === chat.dataIn.participants.length) {
                                 if (chat.dataIn.participants[0].ip === ip) {
                                     console.log('tetoca');
-                                    setnowPlaying(true)
                                 }
                                 console.log(chat.dataIn.participants[0].ip, 'proximaIp', ip);
                             } else {
@@ -121,8 +167,18 @@ export default function Calamar(props) {
                                 }
                             }
                         }
-                    })
+                    }) */
                     break;
+                case 'playerListReady':
+                    console.log('llegolalista', chat);
+                    chat.dataIn.map((key, i) => {
+                        if (key.ip === ip) {
+                            console.log(key.ip, 'tetoca', ip, i);
+                            setturn(i)
+                        }
+                    })
+/*                         setparticipants(array)
+ */                        break;
                 default:
                     break;
             }
@@ -141,7 +197,7 @@ export default function Calamar(props) {
   
       }, []) */
     return (<body className='calamar-puente'>
-       {/*  <button id='btn-play' onClick={(e) => {
+        <button id='btn-play' onClick={(e) => {
             e.preventDefault(),
                 socket.emit(
                     'calamar', {
@@ -153,7 +209,7 @@ export default function Calamar(props) {
                 })
         }}>
             PLAY_PAUSE
-        </button>   */}      {
+        </button>        {
             changing ? <></> : <FloorApp nowPlaying={nowPlaying} userIn={userIn} floorMap={floorMap} changeArray={changeArray} />
 
         }

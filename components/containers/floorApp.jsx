@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import io from "socket.io-client"
-const socket = io("https://serverazteca.herokuapp.com/")
+const socket = io("http://localhost:3002/")
 
 const FloorApp = ({ nowPlaying=false,userIn = 0, changeArray = console.log, floorMap = [] }) => {
 

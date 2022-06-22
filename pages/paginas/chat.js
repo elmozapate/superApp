@@ -14,7 +14,7 @@ let xcv = 0
 let inChat = false
 let privArrayAux = []
 let activePrva = ''
-const socket = io("https://serverazteca.herokuapp.com/")
+const socket = io("http://localhost:3002/")
 
 export default function Chat(props) {
     const hora = () => {
