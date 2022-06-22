@@ -3,14 +3,16 @@ import { useState, useEffect } from 'react';
 import io from "socket.io-client"
 const socket = io("https://serverazteca.herokuapp.com/")
 
-export default function MetaPuente() {
+const MetaPuente = (props) => {
     const [changing, seTchanging] = useState(false)
     const [winning, seTwinning] = useState(false)
+    const [ip, setIp] = useState(props.ip || false)
 
     const llegarPuente = () => {
         socket.emit(
             'calamar', {
             'dataIn': {
+                ip: ip,
                 'actionTodo': 'endPuente',
             },
             'actionTodo': 'endPuente',
@@ -31,23 +33,23 @@ export default function MetaPuente() {
                         seTchanging(true)
                     }
                     break;
-                    case 'llegoPlayer':
-                        seTwinning(true)
-                        break;
-                    case 'passingFinalReady':
-                        console.log('gano');
-                        seTchanging(true)
-                        break;
+                case 'llegoPlayer':
+                    seTwinning(true)
+                    break;
+                case 'passingFinalReady':
+                    console.log('gano');
+                    seTchanging(true)
+                    break;
                 case 'passingFinalReadyRes':
                     console.log('conecto');
                     seTchanging(true)
                     seTwinning(true)
 
                     break;
-                    case 'noPuente':
-                        seTwinning(false)
-                        seTchanging(false)
-                        break;
+                case 'noPuente':
+                    seTwinning(false)
+                    seTchanging(false)
+                    break;
                 default:
                     break;
             }
@@ -59,7 +61,7 @@ export default function MetaPuente() {
             },
             'actionTodo': 'metaPlace',
         })
-     
+
     }, [])
 
     return (< >
@@ -71,3 +73,17 @@ export default function MetaPuente() {
         }
     </>)
 }
+
+export async function getServerSideProps({ req }) {
+    const forwarded = req.headers["x-forwarded-for"]
+    const ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress
+    let min = 1111111110
+    let max = 9000000000
+    return {
+        props: {
+            ip:/* Math.floor(Math.random() * (max - min)) + min */ ip
+            ,
+        },
+    }
+}
+export default MetaPuente

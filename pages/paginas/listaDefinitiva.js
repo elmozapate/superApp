@@ -7,6 +7,7 @@ const socket = io("https://serverazteca.herokuapp.com/")
 let count = 0
 export default function IstaDefinitiva() {
     const [participants, setparticipants] = useState([])
+    const [participantsWinner, setparticipantsWinner] = useState(false)
     const [participantsturn, setparticipantsturn] = useState(0)
 
     useEffect(() => {
@@ -20,19 +21,24 @@ export default function IstaDefinitiva() {
                     console.log('llegolalista');
                     setparticipants(array)
                     break;
+                case 'theWinner':
+                    console.log('ganador');
+                    setparticipantsWinner(true)
+                    setparticipantsturn(chat.dataIn)
+                    break;
                 case 'fallingin':
                     setparticipantsturn(chat.dataIn)
-                   /*  array.participants.map((key, i) => {
-                        console.log(chat, 'array actual', array.participants.length, 'contador', i, 'dd', participantsturn);
-
-                        if (array.ip === key.ip) {
-                            if ((i + 1) === array.participants.length) {
-                                setparticipantsturn(0)
-                            } else {
-                                setparticipantsturn(i + 1)
-                            }
-                        }
-                    }) */
+                    /*  array.participants.map((key, i) => {
+                         console.log(chat, 'array actual', array.participants.length, 'contador', i, 'dd', participantsturn);
+ 
+                         if (array.ip === key.ip) {
+                             if ((i + 1) === array.participants.length) {
+                                 setparticipantsturn(0)
+                             } else {
+                                 setparticipantsturn(i + 1)
+                             }
+                         }
+                     }) */
                     break;
                 case 'playerDesTurns':
                     console.log(chat, 'falla');
@@ -62,8 +68,10 @@ export default function IstaDefinitiva() {
   
       }, []) */
     return (< >
+        {
+            participantsWinner ? <><ComponenteLista participants={participantsWinner}  participantsturn={participantsturn} won={true} /></> : <ComponenteLista participants={participants} participantsturn={participantsturn} />
 
+        }
 
-        <ComponenteLista participants={participants} participantsturn={participantsturn} />
     </>)
 }
