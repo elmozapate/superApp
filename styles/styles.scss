@@ -1492,3 +1492,13 @@ color: red;
    min-width:getRemSize(800px);
 min-height:getRemSize(900px);
 }
+.invisible{
+    border:none !important; 
+    outline:none;
+    background-color: transparent !important;
+    color: transparent !important;
+}
+.transform-2{
+    height: getRemSize(50px) !important;
+    font-size: getRemSize(40px) !important;
+}

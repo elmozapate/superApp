@@ -87,16 +87,23 @@ const ParticipantesPuente = (props) => {
                         })
 
                     }
-
-                </> : <>
-
                     <input
+                        className='invisible'
                         id='user'
                         value={mensaje.user}
                         onChange={handleLogin}
-                        placeholder={'Registrate'}
                     />
-                    <button className={mensaje.user.length > 2 ? 'btn-azteca pointer' : 'hide'} onClick={(e) => { e.preventDefault(); sendLatino() }}
+                </> : <>
+
+                    <input
+                        className='transform-2'
+
+                        id='user'
+                        value={mensaje.user}
+                        onChange={handleLogin}
+                        placeholder={'INGRESA TU NOMBRE'}
+                    />
+                    <button className={mensaje.user.length > 2 ? 'btn-azteca pointer bgcolorInedit-green' : 'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); sendLatino() }}
                     >Registrarse</button>
                     {admin ? <></> :
                         participants.map((key, i) => {

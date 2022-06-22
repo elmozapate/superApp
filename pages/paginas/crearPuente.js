@@ -9,6 +9,7 @@ let pass = [
 export default function CrearPuente() {
     const [floorMap, seTfloorMap] = useState([])
     const [changing, seTchanging] = useState(false)
+    const [randomized, setRandomized] = useState(false)
     const crearRandom = () => {
         let min = 0
         let max = 20
@@ -72,7 +73,7 @@ export default function CrearPuente() {
             ...mensaje,
             time: value
         })
-   
+
     }
     useEffect(() => {
         if (news) {
@@ -104,7 +105,15 @@ export default function CrearPuente() {
                 case 'createdOne':
                     seTchanging(true)
                     break;
+                case 'playerListReady':
+                    if (array.length > 0) {
+                        setRandomized(true)
+                    }
+
+                    break;
                 case 'noPuente':
+                    setRandomized(false)
+
                     seTchanging(false)
                     break;
                 default:
@@ -125,21 +134,25 @@ export default function CrearPuente() {
     }, [])
     return (< >
         {
-            changing ? <><p className='btn-azteca '>Creado</p>
+            changing ? <><p className='btn-azteca bgcolorInedit-green'>Creado</p>
                 <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); deletePuente() }} >
                     BORRAR PUENTE </button>
             </> : <>
-                <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); crearRandom() }} >
-                    CREAR PUENTE </button>
+                {randomized ?
+                    <button className={'btn-azteca pointer bgcolorInedit-green'} onClick={(e) => { e.preventDefault(); crearRandom() }} >
+                        CREAR PUENTE </button> :
+
+                    <button className={participants.length === 0 ? 'btn-azteca pointer' : 'btn-azteca pointer bgcolorInedit-green'} onClick={participants.length === 0 ? (e) => { e.preventDefault(); console.log } : (e) => { e.preventDefault(); crearUserRandom() }} >
+                        Alistar Juego </button>
+                } 
+                TIEMPO
                 <input
-                type={'number'}
+                    type={'number'}
                     id='time'
                     value={mensaje.time}
                     onChange={handleLogin}
                     placeholder={'Tiempo'}
                 />
-                <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); crearUserRandom() }} >
-                    Alistar Juego </button>
                 {
                     participants.map((key, i) => {
                         return <li key={`participante-${i}`}>{key.user} </li>
