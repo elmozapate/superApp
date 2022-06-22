@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import FloorApp from '../../components/containers/floorApp';
 import io from "socket.io-client"
-const socket = io("http://localhost:3002/")
+const socket = io("https://serverazteca.herokuapp.com/")
 export default function Calamar(props) {
     const [turn, setturn] = useState(-1)
 

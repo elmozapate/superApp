@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 import { setCookies, removeCookies,getCookie } from 'cookies-next';
 import io from "socket.io-client"
 import { SelectedNumber } from '../creador/tools/selectedNumber';
-const socket = io("http://localhost:3002/")
+const socket = io("https://serverazteca.herokuapp.com/")
 let arrayHere = []
 let posSaveAux = -1
 let sizeWinAux = []

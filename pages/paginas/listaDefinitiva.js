@@ -3,7 +3,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import io from "socket.io-client"
 import ComponenteLista from './componenteLista';
-const socket = io("http://localhost:3002/")
+const socket = io("https://serverazteca.herokuapp.com/")
 let count = 0
 export default function IstaDefinitiva() {
     const [participants, setparticipants] = useState([])
