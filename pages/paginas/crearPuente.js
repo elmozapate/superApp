@@ -42,6 +42,7 @@ export default function CrearPuente() {
             'calamar', {
             'dataIn': {
                 puente: floorMap,
+                time: (mensaje.time * 60),
                 'actionTodo': 'createPuente',
             },
             'actionTodo': 'createPuente',
@@ -60,6 +61,18 @@ export default function CrearPuente() {
         seTchanging(false)
         setparticipants([])
 
+    }
+    const [mensaje, setMsj] = useState({
+        time: 5,
+    })
+    const handleLogin = (e) => {
+        e.preventDefault()
+        const value = e.target.value
+        setMsj({
+            ...mensaje,
+            time: value
+        })
+   
     }
     useEffect(() => {
         if (news) {
@@ -91,17 +104,17 @@ export default function CrearPuente() {
                 case 'createdOne':
                     seTchanging(true)
                     break;
-                    case 'noPuente':
-                        seTchanging(false)
-                        break;
+                case 'noPuente':
+                    seTchanging(false)
+                    break;
                 default:
                     break;
             }
         })
     }, [])
-      useEffect(() => {
-      
-     socket.emit(
+    useEffect(() => {
+
+        socket.emit(
             'calamar', {
             'dataIn': {
                 'actionTodo': 'ipSend',
@@ -109,17 +122,24 @@ export default function CrearPuente() {
             'actionTodo': 'ipSend',
 
         })
-      }, [])
+    }, [])
     return (< >
         {
             changing ? <><p className='btn-azteca '>Creado</p>
                 <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); deletePuente() }} >
                     BORRAR PUENTE </button>
             </> : <>
-            <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); crearRandom() }} >
+                <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); crearRandom() }} >
                     CREAR PUENTE </button>
+                <input
+                type={'number'}
+                    id='time'
+                    value={mensaje.time}
+                    onChange={handleLogin}
+                    placeholder={'Tiempo'}
+                />
                 <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); crearUserRandom() }} >
-                   Alistar Juego </button>
+                    Alistar Juego </button>
                 {
                     participants.map((key, i) => {
                         return <li key={`participante-${i}`}>{key.user} </li>

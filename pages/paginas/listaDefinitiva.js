@@ -5,8 +5,8 @@ import io from "socket.io-client"
 import ComponenteLista from './componenteLista';
 const socket = io("https://serverazteca.herokuapp.com/")
 let count = 0
-export default function IstaDefinitiva() {
-    const [participants, setparticipants] = useState([])
+ const IstaDefinitiva=()=> {
+    const [participants, setparticipants] = useState([{user:''}])
     const [participantsWinner, setparticipantsWinner] = useState(false)
     const [participantsturn, setparticipantsturn] = useState(0)
 
@@ -17,6 +17,12 @@ export default function IstaDefinitiva() {
             const actionTodo = chat.actionTodo
             const array = chat.dataIn
             switch (actionTodo) {
+                case 'noPuente':
+                    setparticipants([{user:''}])
+                    setparticipantsturn(0)
+
+                    setparticipantsWinner(false)
+                    break;
                 case 'playerListReady':
                     console.log('llegolalista');
                     setparticipants(array)
@@ -45,8 +51,10 @@ export default function IstaDefinitiva() {
                     break;
 
                 case 'noPuente':
-                    setparticipants([])
+                    setparticipants([{user:''}])
                     setparticipantsturn(0)
+                    setparticipantsWinner(false)
+
                     break;
                 default:
                     break;
@@ -75,3 +83,4 @@ export default function IstaDefinitiva() {
 
     </>)
 }
+export default IstaDefinitiva

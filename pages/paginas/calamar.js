@@ -3,12 +3,12 @@ import { useState, useEffect } from 'react';
 import FloorApp from '../../components/containers/floorApp';
 import io from "socket.io-client"
 const socket = io("https://serverazteca.herokuapp.com/")
- const Calamar=(props)=> {
+const Calamar = (props) => {
     const [turn, setturn] = useState(-1)
 
     const [ip, setIp] = useState(props.ip || false)
     const [nowPlaying, setnowPlaying] = useState(false)
-    const [userIn, setUserIn] = useState(1)
+    const [userIn, setUserIn] = useState(0)
     const [userKey, setuserKey] = useState({
         leter: 'a',
         number: 0,
@@ -29,6 +29,10 @@ const socket = io("https://serverazteca.herokuapp.com/")
     const changelocation2 = (key) => {
         window.location.replace(`vww://aztecasecreto.vww/@78688#piso${userKey.leter}${userKey.number}`)
     }
+    const goJail = () => {
+        window.location.replace(`vww://aztecasecreto.vww/@78688#jail`)
+    }
+
     const changeArray = (key) => {
         console.log(key);
         let copiedarray = []/* 
@@ -71,7 +75,7 @@ const socket = io("https://serverazteca.herokuapp.com/")
             setnowPlaying(false)
             changelocationfalse(key)
         } else {
-            console.log(userIn,'usein');
+            console.log(userIn, 'usein');
             if (userIn === 10) {
                 socket.emit(
                     'calamar', {
@@ -91,16 +95,16 @@ const socket = io("https://serverazteca.herokuapp.com/")
                     },
                     'actionTodo': 'passing',
                 })
-            }else{
-                 socket.emit(
-                'calamar', {
-                'dataIn': {
-                    puente: copiedarray,
-                    levelIn: userIn + 1,
+            } else {
+                socket.emit(
+                    'calamar', {
+                    'dataIn': {
+                        puente: copiedarray,
+                        levelIn: userIn + 1,
+                        'actionTodo': 'passing',
+                    },
                     'actionTodo': 'passing',
-                },
-                'actionTodo': 'passing',
-            })
+                })
             }
             changelocationtrue(key)
         }
@@ -140,17 +144,26 @@ const socket = io("https://serverazteca.herokuapp.com/")
                     console.log('tetoca', chat, ip);
                     if (ip === chat.dataIn) {
                         setnowPlaying(true)
-                    }else{
+                    } else {
                         setnowPlaying(false)
                     }
                     break;
-                case 'fallingin':
-                  /*   console.log('tetoca', chat, ip);
-                    if (turn === chat.dataIn) {
-                        window.alert('vas')
-                        setnowPlaying(true)
+                case 'estasEnJail':
+                    chat.dataIn.array.map((key, i) => {
+                        if (i > chat.dataIn.puenteTurn && key.ip === ip && chat.dataIn.array.length > 1 && chat.dataIn.puenteTurn !== 0) {
+                            setTimeout(goJail, 5000)
+                        }
+                    })
 
-                    } */
+                    break;
+
+                case 'fallingin':
+                    /*   console.log('tetoca', chat, ip);
+                      if (turn === chat.dataIn) {
+                          window.alert('vas')
+                          setnowPlaying(true)
+  
+                      } */
                     /* console.log('tetoca',chat ,ip);
 
                     chat.dataIn.participants.map((key, i) => {
