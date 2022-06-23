@@ -318,6 +318,7 @@ justify-content: center;
 }
 .hg100vh{
     height: 100vh !important;
+    padding-bottom: 30vh !important;
 }
 $aligns:flex-start, center, flex-end, space-between, space-around, space-evenly;
 @each $align in $aligns {
