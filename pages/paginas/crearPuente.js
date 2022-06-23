@@ -163,7 +163,7 @@ export default function CrearPuente() {
                 />
                 {
                     participants.map((key, i) => {
-                        return <li key={`participante-${i}`}>{key.user} </li>
+                        return <li className={key.user===''?'hide':'transform-2'} key={`participante-${i}`}>{key.user} </li>
                     })
 
                 }</>

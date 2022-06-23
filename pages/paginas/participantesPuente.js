@@ -94,7 +94,7 @@ const ParticipantesPuente = (props) => {
                 {
 
                     participants.map((key, i) => {
-                        return <li key={`participante-${i}`}>{key.user} </li>
+                        return <li className={key.user===''?'hide':'transform-2'} key={`participante-${i}`}>{key.user} </li>
                     })
                 }
             </> :
@@ -103,7 +103,7 @@ const ParticipantesPuente = (props) => {
 
                     {admin ? <></> :
                         participants.map((key, i) => {
-                            return <li key={`participante-${i}`}>{key.user} </li>
+                            return <li   className={key.user===''?'hide':'transform-2'} key={`participante-${i}`}>{key.user} </li>
                         })
 
                     }
@@ -122,7 +122,7 @@ const ParticipantesPuente = (props) => {
                     >Registrarse</button>
                     {admin ? <></> :
                         participants.map((key, i) => {
-                            return <li key={`participante-${i}`}>{key.user} </li>
+                            return <li className={key.user===''?'hide':'transform-2'} key={`participante-${i}`}>{key.user} </li>
                         })
 
                     }
