@@ -96,6 +96,7 @@ const Calamar = (props) => {
                 socket.emit(
                     'calamar', {
                     'dataIn': {
+                        ip:ip,
                         puente: copiedarray,
                         levelIn: userIn + 1,
                         'actionTodo': 'passingFinal',
@@ -283,7 +284,7 @@ export async function getServerSideProps({ req }) {
     let max = 9000000000
     return {
         props: {
-            ip: 222
+            ip: ip
             ,
         },
     }

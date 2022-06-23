@@ -36,8 +36,11 @@ const MetaPuente = (props) => {
                     break;
                 case 'passingFinalReady':
                     seTchanging(true)
+                    console.log('chat',chat);
                     break;
                 case 'passingFinalReadyRes':
+                    console.log('chatssss',chat);
+
                     seTchanging(true)
                     seTwinning(true)
 
@@ -77,7 +80,7 @@ export async function getServerSideProps({ req }) {
     let max = 9000000000
     return {
         props: {
-            ip:/* Math.floor(Math.random() * (max - min)) + min */ 222
+            ip:/* Math.floor(Math.random() * (max - min)) + min */ ip
             ,
         },
     }
