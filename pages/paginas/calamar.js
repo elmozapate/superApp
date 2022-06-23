@@ -240,7 +240,7 @@ const Calamar = (props) => {
                     'actionTodo': 'falling',
                 })
         }}>
-            PLAY_PAUSE
+            PLAY_PAUSE{Bowser.name}
         </button>        {
             changing ? <></> : <FloorApp nowPlaying={nowPlaying} userIn={userIn} floorMap={floorMap} changeArray={changeArray} />
 
