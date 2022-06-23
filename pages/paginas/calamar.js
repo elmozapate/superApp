@@ -89,7 +89,7 @@ const Calamar = (props) => {
                     'calamar', {
                     'dataIn': {
                         puente: copiedarray,
-                        levelIn: 11,
+                        levelIn:userIn + 1,
                         'actionTodo': 'passingFinal',
                     },
                     'actionTodo': 'passingFinal',
@@ -98,7 +98,7 @@ const Calamar = (props) => {
                     'calamar', {
                     'dataIn': {
                         puente: copiedarray,
-                        levelIn: 11,
+                        levelIn: userIn + 1,
                         'actionTodo': 'passing',
                     },
                     'actionTodo': 'passing',
