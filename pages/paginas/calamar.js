@@ -78,7 +78,10 @@ const Calamar = (props) => {
                 'actionTodo': 'falling',
             })
             setnowPlaying(false)
-            window.location.replace(`vww://aztecasecreto.vww/@78688#break${key.leter}${key.number}`)
+            if (Bowser.name !== 'Chrome') {
+
+                window.location.replace(`vww://aztecasecreto.vww/@78688#break${key.leter}${key.number}`)
+            }
         } else {
 
             if (userIn === 10) {
@@ -111,7 +114,10 @@ const Calamar = (props) => {
                     'actionTodo': 'passing',
                 })
             }
-            window.location.replace(`vww://aztecasecreto.vww/@78688#piso${key.leter}${key.number}`)
+            if (Bowser.name !== 'Chrome') {
+                window.location.replace(`vww://aztecasecreto.vww/@78688#piso${key.leter}${key.number}`)
+
+            }
         }
     }
     useEffect(() => {
@@ -162,8 +168,23 @@ const Calamar = (props) => {
                     }
                     break;
                 case 'estasEnJail':
+                    let isNowInJail = false
+                    chat.dataIn.jailArray.map((key, i) => {
+                        if (key === ip) {
+                            isNowInJail = true
+                        }
+
+                    })
                     chat.dataIn.array.map((key, i) => {
-                        if (key.ip === ip && chat.dataIn.array.length > 1 && (chat.dataIn.array.length > 2 ? chat.dataIn.puenteTurn !== 0 : chat.dataIn.puenteTurn !== i)) {
+                        if (!isNowInJail && key.ip === ip && chat.dataIn.array.length > 1 && (chat.dataIn.array.length > 2 ? chat.dataIn.puenteTurn !== 0 : chat.dataIn.puenteTurn !== i)) {
+                            socket.emit(
+                                'calamar', {
+                                'dataIn': {
+                                    ip: ip,
+                                    'actionTodo': 'estoyEnJail',
+                                },
+                                'actionTodo': 'estoyEnJail',
+                            })
                             setTimeout(goJail, 5000)
                         }
                     })
@@ -230,7 +251,7 @@ const Calamar = (props) => {
         </>)
     }
     return (<div className='calamar-puente'>
-    {/*     <button id='btn-play' onClick={(e) => {
+        {/*     <button id='btn-play' onClick={(e) => {
             e.preventDefault(),
                 socket.emit(
                     'calamar', {
