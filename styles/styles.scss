@@ -1505,6 +1505,8 @@ min-height:getRemSize(900px);
 .transform-2{
     height: getRemSize(50px) !important;
     font-size: getRemSize(40px) !important;
+    color: green !important;
+    font-weight: 900;
 }
 .not-auth-div{
     width: 100vw;
