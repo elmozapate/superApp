@@ -23,7 +23,7 @@ const Calamar = (props) => {
         setTimeout(changelocation, 2000)
     }
     const changelocation = () => {
-        window.location.replace(`vww://aztecasecreto.vww/@78688#break${userKey.leter}${userKey.number}`)
+
     }
     const changelocationtrue = () => {
         setTimeout(changelocation2, 2000)
@@ -37,8 +37,8 @@ const Calamar = (props) => {
 
     const changeArray = (key) => {
         setuserKey({
-            leter:key.leter,
-            number:key.number
+            leter: key.leter,
+            number: key.number
         })
         let copiedarray = []/* 
         seTchanging(true) */
@@ -78,7 +78,7 @@ const Calamar = (props) => {
                 'actionTodo': 'falling',
             })
             setnowPlaying(false)
-            changelocationfalse()
+            window.location.replace(`vww://aztecasecreto.vww/@78688#break${key.leter}${key.number}`)
         } else {
 
             if (userIn === 10) {
@@ -111,7 +111,7 @@ const Calamar = (props) => {
                     'actionTodo': 'passing',
                 })
             }
-            changelocationtrue()
+            window.location.replace(`vww://aztecasecreto.vww/@78688#piso${key.leter}${key.number}`)
         }
     }
     useEffect(() => {
