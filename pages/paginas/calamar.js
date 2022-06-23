@@ -230,7 +230,7 @@ const Calamar = (props) => {
         </>)
     }
     return (<div className='calamar-puente'>
-        <button id='btn-play' onClick={(e) => {
+    {/*     <button id='btn-play' onClick={(e) => {
             e.preventDefault(),
                 socket.emit(
                     'calamar', {
@@ -242,7 +242,7 @@ const Calamar = (props) => {
                 })
         }}>
             PLAY_PAUSE{Bowser.name}
-        </button>        {
+        </button>  */}       {
             changing ? <></> : <FloorApp nowPlaying={nowPlaying} userIn={userIn} floorMap={floorMap} changeArray={changeArray} />
 
         }

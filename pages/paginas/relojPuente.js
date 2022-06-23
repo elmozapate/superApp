@@ -58,8 +58,8 @@ export default function RelojPuente() {
         })
       }, [])
     return (< >
-        <audio className='hide' src={'http://stream.zeno.fm/72cnmakr4f0uv'} controls autoPlay></audio>
-
+{/*         <audio className='hide' src={'http://stream.zeno.fm/72cnmakr4f0uv'} controls autoPlay></audio>
+ */}
         {
             !changing ? <><div className='reloj-puente'>
                 <span>  OFF</span>
