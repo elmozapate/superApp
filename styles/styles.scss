@@ -317,6 +317,7 @@ justify-content: center;
     transform: scale(.7);
 }
 .hg100vh{
+    width: 100vw !important;
     height: 100vh !important;
     padding-bottom: 30vh !important;
     background-color: #000;
