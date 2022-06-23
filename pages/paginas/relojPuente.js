@@ -13,7 +13,7 @@ export default function RelojPuente() {
     useEffect(() => {
 
         socket.on("calamar", (chat) => {
-            console.log(chat, 'reloj');
+            
             const actionTodo = chat.actionTodo
             const array = chat.dataIn
             switch (actionTodo) {
@@ -31,21 +31,32 @@ export default function RelojPuente() {
                     seTchanging(true)
                     setEltiempo(array)
                     break;
-                    case 'noPuente':
-                        seTwinning(false)
-                        seTchanging(false)
-                        break;
+                case 'noPuente':
+                    seTwinning(false)
+                    seTchanging(false)
+                    break;
+                case 'theWinner':
                     
+                    seTchanging(true)
+                    seTwinning(true)
+                    break;
                 default:
                     break;
             }
         })
 
     }, [])
-    /*   useEffect(() => {
+      useEffect(() => {
       
-  
-      }, []) */
+        socket.emit(
+            'calamar', {
+            'dataIn': {
+                'actionTodo': 'ipSend',
+            },
+            'actionTodo': 'ipSend',
+
+        })
+      }, [])
     return (< >
         <audio className='hide' src={'http://stream.zeno.fm/72cnmakr4f0uv'} controls autoPlay></audio>
 

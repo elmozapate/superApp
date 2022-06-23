@@ -38,7 +38,7 @@ const Calamar = (props) => {
     }
 
     const changeArray = (key) => {
-        console.log(key);
+
         let copiedarray = []/* 
         seTchanging(true) */
         floorMap.map((item, i) => {
@@ -79,7 +79,7 @@ const Calamar = (props) => {
             setnowPlaying(false)
             changelocationfalse(key)
         } else {
-            console.log(userIn, 'usein');
+
             if (userIn === 10) {
                 socket.emit(
                     'calamar', {
@@ -114,27 +114,27 @@ const Calamar = (props) => {
         }
     }
     useEffect(() => {
-        console.log(Bowser);
-        if (Bowser.name === 'Chrome') {
-            window.alert('Por que entrarias desde aca?')
-            setnotAuth(true)
-        }
+
+        /*   if (Bowser.name === 'Chrome') {
+              window.alert('Por que entrarias desde aca?')
+              setnotAuth(true)
+          } */
         /*      const browser = Bowser.getParser(window.navigator.userAgent);
      
-             console.log(`The current browser name is "${browser.getBrowserName()}"`); */
+            */
         socket.on("calamar", (chat) => {
             const actionTodo = chat.actionTodo
             const dataIn = chat.dataIn || ""
 
             switch (actionTodo) {
                 case 'puente':
-                    console.log('acahay pulevelInente', dataIn.levelIn);
+
 
                     seTfloorMap(dataIn.array)
                     setUserIn(dataIn.levelIn)
                     break;
                 case 'createdOne':
-                    console.log('acahay pulevelInente', chat);
+
                     if (chat.dataIn.participants[0].ip === ip
                     ) {
                         setnowPlaying(true)
@@ -143,7 +143,7 @@ const Calamar = (props) => {
                     setUserIn(dataIn.levelIn)
                     break;
                 case 'newPass':
-                    console.log('acahay pulevelInente', dataIn.levelIn);
+
 
                     seTfloorMap(dataIn.array)
                     setUserIn(dataIn.levelIn)
@@ -153,7 +153,7 @@ const Calamar = (props) => {
                     seTfloorMap([])
                     break;
                 case 'vastu':
-                    console.log('tetoca', chat, ip);
+
                     if (ip === chat.dataIn) {
                         setnowPlaying(true)
                     } else {
@@ -170,24 +170,24 @@ const Calamar = (props) => {
                     break;
 
                 case 'fallingin':
-                    /*   console.log('tetoca', chat, ip);
+                    /*  
                       if (turn === chat.dataIn) {
                           window.alert('vas')
                           setnowPlaying(true)
   
                       } */
-                    /* console.log('tetoca',chat ,ip);
+                    /*
 
                     chat.dataIn.participants.map((key, i) => {
                         if (chat.dataIn.ip === key.ip) {
                             if ((i + 1) === chat.dataIn.participants.length) {
                                 if (chat.dataIn.participants[0].ip === ip) {
-                                    console.log('tetoca');
+                                   
                                 }
-                                console.log(chat.dataIn.participants[0].ip, 'proximaIp', ip);
+                               
                             } else {
                                 if (chat.dataIn.participants[i + 1].ip === ip) {
-                                    console.log('tetoca');
+                                   
                                     setnowPlaying(true)
                                 }
                             }
@@ -195,10 +195,10 @@ const Calamar = (props) => {
                     }) */
                     break;
                 case 'playerListReady':
-                    console.log('llegolalista', chat);
+
                     chat.dataIn.map((key, i) => {
                         if (key.ip === ip) {
-                            console.log(key.ip, 'tetoca', ip, i);
+
                             setturn(i)
                         }
                     })
@@ -224,11 +224,11 @@ const Calamar = (props) => {
     if (notAuth) {
         return (<>
             <div className='not-auth-div'>
-                <img className='not-auth' src='https://previews.123rf.com/images/carmenbobo/carmenbobo1507/carmenbobo150700007/41824544-sello-de-goma-con-el-texto-no-autorizado-en-el-interior-ilustraci%C3%B3n-vectorial.jpg'  />
-                </div >
+                <img className='not-auth' src='https://previews.123rf.com/images/carmenbobo/carmenbobo1507/carmenbobo150700007/41824544-sello-de-goma-con-el-texto-no-autorizado-en-el-interior-ilustraci%C3%B3n-vectorial.jpg' />
+            </div >
         </>)
     }
-    return (<body className='calamar-puente'>
+    return (<div className='calamar-puente'>
         <button id='btn-play' onClick={(e) => {
             e.preventDefault(),
                 socket.emit(
@@ -245,7 +245,7 @@ const Calamar = (props) => {
             changing ? <></> : <FloorApp nowPlaying={nowPlaying} userIn={userIn} floorMap={floorMap} changeArray={changeArray} />
 
         }
-    </body>)
+    </div>)
 }
 export async function getServerSideProps({ req }) {
     const forwarded = req.headers["x-forwarded-for"]

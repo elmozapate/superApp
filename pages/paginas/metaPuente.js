@@ -22,13 +22,11 @@ const MetaPuente = (props) => {
 
     useEffect(() => {
         socket.on("calamar", (chat) => {
-            console.log(chat);
             const actionTodo = chat.actionTodo || ''
             switch (actionTodo) {
                 case 'createdOne':
                     const dataIn = chat.dataIn
                     const levelIn = dataIn.levelIn || 0
-                    console.log('acahay pulevelInente', levelIn);
                     if (levelIn === 11) {
                         seTchanging(true)
                     }
@@ -37,11 +35,9 @@ const MetaPuente = (props) => {
                     seTwinning(true)
                     break;
                 case 'passingFinalReady':
-                    console.log('gano');
                     seTchanging(true)
                     break;
                 case 'passingFinalReadyRes':
-                    console.log('conecto');
                     seTchanging(true)
                     seTwinning(true)
 

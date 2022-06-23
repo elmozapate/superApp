@@ -8,19 +8,15 @@ const RelojApp = ({ jail = false, winning = false, eltiempo = 0 }) => {
     useEffect(() => {
         if (eltiempo) {
             if (eltiempo < 60) {
-                console.log('eoooo');
-                setrelojSrc("https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/calamaraudios%2Fy2mate.com%20-%20sonido%20de%20reloj%20tic%20tic.mp3?alt=media&token=b870b388-39e0-4cd7-9e52-cac388629217")
+                                setrelojSrc("https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/calamaraudios%2Fy2mate.com%20-%20sonido%20de%20reloj%20tic%20tic.mp3?alt=media&token=b870b388-39e0-4cd7-9e52-cac388629217")
             }
         }
-        console.log('uyyyuy', eltiempo);
-    }, [eltiempo])
+            }, [eltiempo])
     useEffect(() => {
-        console.log('winnnnnnnnnnnnasn', winning);
-
+        
         if (winning) {
             setrelojSrc('https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/calamaraudios%2Ffanfare-triumphal.mp3?alt=media&token=86ec38ea-bf88-4656-96aa-148b6ebd7812')
-            console.log('winnnnnnnnnnnnn', winning);
-
+            
         }
     }, [winning])
     useEffect(() => {

@@ -44,7 +44,6 @@ const ParticipantesPuente = (props) => {
             const array = chat.dataIn
             switch (actionTodo) {
                 case 'playerList':
-                    console.log('lellega');
                     setparticipants(array)
                     let register = false
                     array.map((key, i) => {

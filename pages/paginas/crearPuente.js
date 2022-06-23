@@ -93,7 +93,6 @@ export default function CrearPuente() {
                 floorArray.push(element)
             }
             seTfloorMap(floorArray)
-            console.log(floorArray);
             news = false
         }
         socket.on("calamar", (chat) => {
@@ -101,7 +100,6 @@ export default function CrearPuente() {
             const array = chat.dataIn
             switch (actionTodo) {
                 case 'playerList':
-                    console.log('lellega');
                     setparticipants(array)
                     break;
                 case 'createdOne':
@@ -115,7 +113,7 @@ export default function CrearPuente() {
                     }
 
                     break;
-              
+
                 case 'theWinner':
                     setinProgressDone(true)
 
