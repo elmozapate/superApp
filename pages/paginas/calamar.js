@@ -8,38 +8,46 @@ const socket = io("https://serverazteca.herokuapp.com/")
 const Calamar = (props) => {
 
     const [notAuth, setnotAuth] = useState(false)
-
     const [turn, setturn] = useState(-1)
     const [ip, setIp] = useState(props.ip || false)
     const [nowPlaying, setnowPlaying] = useState(false)
     const [userIn, setUserIn] = useState(0)
-    const [userKey, setuserKey] = useState({
+    const [userKey, setuserKeyind] = useState({
         leter: 'a',
         number: 0,
     })
     const [floorMap, seTfloorMap] = useState([])
     const [changing, seTchanging] = useState(false)
-    const changelocationfalse = () => {
-        setTimeout(changelocation, 2000)
+    const changelocationfalse = (key) => {
+        setTimeout(() => { changelocation(key) }, 2000)
     }
-    const changelocation = () => {
-
+    const setuserKey = (key) => {
+        setuserKeyind(key)
+        changeArray(key)
+        console.log(key, 'iii');
     }
-    const changelocationtrue = () => {
-        setTimeout(changelocation2, 2000)
+    const changelocation = (key) => {
+        if (Bowser.name === 'Chrome') {
+            window.location.replace(`vww://aztecasecreto.vww/@78688#break${key.leter}${key.number}`)
+        } else {
+            window.alert(`vww://aztecasecreto.vww/@78688#break${key.leter}${key.number}`)
+        }
     }
-    const changelocation2 = () => {
-        window.location.replace(`vww://aztecasecreto.vww/@78688#piso${userKey.leter}${userKey.number}`)
+    const changelocationtrue = (key) => {
+        setTimeout(() => {  changelocation2(key) }, 2000)
+    }
+    const changelocation2 = (key) => {
+        if (Bowser.name === 'Chrome') {
+            window.location.replace(`vww://aztecasecreto.vww/@78688#piso${key.leter}${key.number}`)
+        } else {
+            window.alert(`vww://aztecasecreto.vww/@78688#piso${key.leter}${key.number}`)
+        }
     }
     const goJail = () => {
         window.location.replace(`vww://aztecasecreto.vww/@78688#jail`)
     }
 
     const changeArray = (key) => {
-        setuserKey({
-            leter: key.leter,
-            number: key.number
-        })
         let copiedarray = []/* 
         seTchanging(true) */
         floorMap.map((item, i) => {
@@ -80,7 +88,7 @@ const Calamar = (props) => {
             setnowPlaying(false)
             if (Bowser.name === 'Chrome') {
 
-                window.location.replace(`vww://aztecasecreto.vww/@78688#break${key.leter}${key.number}`)
+                changelocationfalse(key)
             }
         } else {
 
@@ -89,7 +97,7 @@ const Calamar = (props) => {
                     'calamar', {
                     'dataIn': {
                         puente: copiedarray,
-                        levelIn:userIn + 1,
+                        levelIn: userIn + 1,
                         'actionTodo': 'passingFinal',
                     },
                     'actionTodo': 'passingFinal',
@@ -115,8 +123,7 @@ const Calamar = (props) => {
                 })
             }
             if (Bowser.name === 'Chrome') {
-                window.location.replace(`vww://aztecasecreto.vww/@78688#piso${key.leter}${key.number}`)
-
+                changelocationtrue(key)
             }
         }
     }
@@ -264,7 +271,7 @@ const Calamar = (props) => {
         }}>
             PLAY_PAUSE{Bowser.name}
         </button>  */}       {
-            changing ? <></> : <FloorApp nowPlaying={nowPlaying} userIn={userIn} floorMap={floorMap} changeArray={changeArray} />
+            changing ? <></> : <FloorApp nowPlaying={nowPlaying} userIn={userIn} floorMap={floorMap} setuserKey={setuserKey} changeArray={changeArray} />
 
         }
     </div>)
