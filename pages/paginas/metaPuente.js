@@ -77,7 +77,7 @@ export async function getServerSideProps({ req }) {
     let max = 9000000000
     return {
         props: {
-            ip:/* Math.floor(Math.random() * (max - min)) + min */ ip
+            ip:/* Math.floor(Math.random() * (max - min)) + min */ 222
             ,
         },
     }

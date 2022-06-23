@@ -174,7 +174,7 @@ const Calamar = (props) => {
                         setnowPlaying(false)
                     }
                     break;
-                case 'estasEnJail':
+              /*   case 'estasEnJail':
                     let isNowInJail = false
                     chat.dataIn.jailArray.map((key, i) => {
                         if (key === ip) {
@@ -197,7 +197,7 @@ const Calamar = (props) => {
                     })
 
                     break;
-
+ */
                 case 'fallingin':
                     /*  
                       if (turn === chat.dataIn) {
@@ -283,7 +283,7 @@ export async function getServerSideProps({ req }) {
     let max = 9000000000
     return {
         props: {
-            ip: ip
+            ip: 222
             ,
         },
     }
