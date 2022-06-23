@@ -78,7 +78,7 @@ const Calamar = (props) => {
                 'actionTodo': 'falling',
             })
             setnowPlaying(false)
-            if (Bowser.name !== 'Chrome') {
+            if (Bowser.name === 'Chrome') {
 
                 window.location.replace(`vww://aztecasecreto.vww/@78688#break${key.leter}${key.number}`)
             }
@@ -114,7 +114,7 @@ const Calamar = (props) => {
                     'actionTodo': 'passing',
                 })
             }
-            if (Bowser.name !== 'Chrome') {
+            if (Bowser.name === 'Chrome') {
                 window.location.replace(`vww://aztecasecreto.vww/@78688#piso${key.leter}${key.number}`)
 
             }
