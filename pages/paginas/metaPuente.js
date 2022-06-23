@@ -7,6 +7,7 @@ const MetaPuente = (props) => {
     const [changing, seTchanging] = useState(false)
     const [winning, seTwinning] = useState(false)
     const [ip, setIp] = useState(props.ip || false)
+    const [winIp, setWinIp] = useState(false)
 
     const llegarPuente = () => {
         socket.emit(
@@ -28,6 +29,8 @@ const MetaPuente = (props) => {
                     const dataIn = chat.dataIn
                     const levelIn = dataIn.levelIn || 0
                     if (levelIn === 11) {
+                        console.log('chat', chat);
+                        setWinIp(chat.dataIn.winIp)
                         seTchanging(true)
                     }
                     break;
@@ -36,10 +39,10 @@ const MetaPuente = (props) => {
                     break;
                 case 'passingFinalReady':
                     seTchanging(true)
-                    console.log('chat',chat);
+                    console.log('chat', chat);
                     break;
                 case 'passingFinalReadyRes':
-                    console.log('chatssss',chat);
+                    console.log('chatssss', chat);
 
                     seTchanging(true)
                     seTwinning(true)
@@ -60,14 +63,21 @@ const MetaPuente = (props) => {
             },
             'actionTodo': 'metaPlace',
         })
+        socket.emit(
+            'calamar', {
+            'dataIn': {
+                'actionTodo': 'ipSend',
+            },
+            'actionTodo': 'ipSend',
+        })
 
     }, [])
 
     return (< >
         {
-            winning ? <><p className='btn-azteca '>FELICIDADES</p>
+            winning && winIp === ip ? <><p className='btn-azteca '>FELICIDADES</p>
 
-            </> : changing ? <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); llegarPuente() }} >
+            </> : changing && winIp === ip? <button className={'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); llegarPuente() }} >
                 Parar Reloj </button> : <></>
         }
     </>)
@@ -80,7 +90,7 @@ export async function getServerSideProps({ req }) {
     let max = 9000000000
     return {
         props: {
-            ip:/* Math.floor(Math.random() * (max - min)) + min */ ip
+            ip:/* Math.floor(Math.random() * (max - min)) + min */ 222
             ,
         },
     }

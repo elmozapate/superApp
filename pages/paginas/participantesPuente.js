@@ -147,7 +147,7 @@ export async function getServerSideProps({ req }) {
     let max = 9000000000
     return {
         props: {
-            ip:ip
+            ip:222
             ,
         },
     }
