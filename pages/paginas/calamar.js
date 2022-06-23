@@ -19,18 +19,16 @@ const Calamar = (props) => {
     })
     const [floorMap, seTfloorMap] = useState([])
     const [changing, seTchanging] = useState(false)
-    const changelocationfalse = (key) => {
-        setuserKey(key)
+    const changelocationfalse = () => {
         setTimeout(changelocation, 2000)
     }
-    const changelocation = (key) => {
+    const changelocation = () => {
         window.location.replace(`vww://aztecasecreto.vww/@78688#break${userKey.leter}${userKey.number}`)
     }
-    const changelocationtrue = (key) => {
-        setuserKey(key)
+    const changelocationtrue = () => {
         setTimeout(changelocation2, 2000)
     }
-    const changelocation2 = (key) => {
+    const changelocation2 = () => {
         window.location.replace(`vww://aztecasecreto.vww/@78688#piso${userKey.leter}${userKey.number}`)
     }
     const goJail = () => {
@@ -38,7 +36,10 @@ const Calamar = (props) => {
     }
 
     const changeArray = (key) => {
-
+        setuserKey({
+            leter:key.leter,
+            number:key.number
+        })
         let copiedarray = []/* 
         seTchanging(true) */
         floorMap.map((item, i) => {
@@ -77,7 +78,7 @@ const Calamar = (props) => {
                 'actionTodo': 'falling',
             })
             setnowPlaying(false)
-            changelocationfalse(key)
+            changelocationfalse()
         } else {
 
             if (userIn === 10) {
@@ -110,7 +111,7 @@ const Calamar = (props) => {
                     'actionTodo': 'passing',
                 })
             }
-            changelocationtrue(key)
+            changelocationtrue()
         }
     }
     useEffect(() => {
