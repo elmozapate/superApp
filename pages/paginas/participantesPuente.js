@@ -84,7 +84,7 @@ const ParticipantesPuente = (props) => {
 
         })
     }, [])
-    return (<div className='flex-row column I-column-reverse Ij-flex-end'>
+    return (<div className='flex-row column I-column-reverse  hg100vh'>
        
         {inProgress ?
             <>
@@ -147,7 +147,7 @@ export async function getServerSideProps({ req }) {
     let max = 9000000000
     return {
         props: {
-            ip:/* Math.floor(Math.random() * (max - min)) + min */ ip
+            ip:222
             ,
         },
     }

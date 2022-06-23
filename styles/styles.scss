@@ -316,6 +316,9 @@ justify-content: center;
 .transformPreview{
     transform: scale(.7);
 }
+.hg100vh{
+    height: 100vh !important;
+}
 $aligns:flex-start, center, flex-end, space-between, space-around, space-evenly;
 @each $align in $aligns {
     .Ia-#{$align}{
