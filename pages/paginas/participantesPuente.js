@@ -84,16 +84,8 @@ const ParticipantesPuente = (props) => {
 
         })
     }, [])
-    return (<div className='flex-row column'>
-        {
-            admin ? <CrearPuente /> : <></>
-        }
-        <input
-            className='invisible'
-            id='user'
-            value={mensaje.user}
-            onChange={handleLogin}
-        />
+    return (<div className='flex-row column I-column-reverse Ij-flex-end'>
+       
         {inProgress ?
             <>
                 <button className={'btn-azteca pointer bgcolorInedit-green'} >
@@ -136,7 +128,15 @@ const ParticipantesPuente = (props) => {
                     }
                 </>
         }
-
+ {
+            admin ? <CrearPuente /> : <></>
+        }
+        <input
+            className='invisible'
+            id='user'
+            value={mensaje.user}
+            onChange={handleLogin}
+        />
     </div>)
 }
 
