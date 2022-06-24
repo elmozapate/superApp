@@ -8,12 +8,15 @@ export default function RelojPuente() {
     const [winning, seTwinning] = useState(false)
     const [eltiempo, setEltiempo] = useState(0)
     const [changing, seTchanging] = useState(false)
+    const [lastMin, setlastMin] = useState(false)
+    const [lostGame, setlostGame] = useState(false)
+
     const [jail, setJail] = useState(false)
 
     useEffect(() => {
 
         socket.on("calamar", (chat) => {
-            
+
             const actionTodo = chat.actionTodo
             const array = chat.dataIn
             switch (actionTodo) {
@@ -36,9 +39,16 @@ export default function RelojPuente() {
                     seTchanging(false)
                     break;
                 case 'theWinner':
-                    
+
                     seTchanging(true)
                     seTwinning(true)
+                    break;
+                case 'lastMinute':
+                    console.log('lastmin');
+                    setlastMin(true)
+                    break;
+                case 'lostGame':
+                    setlostGame(true)
                     break;
                 default:
                     break;
@@ -46,8 +56,8 @@ export default function RelojPuente() {
         })
 
     }, [])
-      useEffect(() => {
-      
+    useEffect(() => {
+
         socket.emit(
             'calamar', {
             'dataIn': {
@@ -56,16 +66,16 @@ export default function RelojPuente() {
             'actionTodo': 'ipSend',
 
         })
-      }, [])
+    }, [])
     return (< >
-{/*         <audio className='hide' src={'http://stream.zeno.fm/72cnmakr4f0uv'} controls autoPlay></audio>
+        {/*         <audio className='hide' src={'http://stream.zeno.fm/72cnmakr4f0uv'} controls autoPlay></audio>
  */}
         {
             !changing ? <><div className='reloj-puente'>
                 <span>  OFF</span>
             </div>
             </> : <>
-                <RelojApp jail={jail} winning={winning} eltiempo={eltiempo} />
+                <RelojApp lostGame={lostGame} lastMin={lastMin} jail={jail} winning={winning} eltiempo={eltiempo} />
 
             </>
         }
