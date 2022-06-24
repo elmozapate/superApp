@@ -176,6 +176,7 @@ const Calamar = (props) => {
                     }
                     break;
                 case 'estasEnJail':
+                    console.log('jail',chat);
                     if (chat.dataIn.ip === ip) {
                         setTimeout(goJail, 5000)
                     }
