@@ -34,7 +34,7 @@ const Calamar = (props) => {
         }
     }
     const changelocationtrue = (key) => {
-        setTimeout(() => {  changelocation2(key) }, 2000)
+        setTimeout(() => { changelocation2(key) }, 2000)
     }
     const changelocation2 = (key) => {
         if (Bowser.name === 'Chrome') {
@@ -96,7 +96,7 @@ const Calamar = (props) => {
                 socket.emit(
                     'calamar', {
                     'dataIn': {
-                        ip:ip,
+                        ip: ip,
                         puente: copiedarray,
                         levelIn: userIn + 1,
                         'actionTodo': 'passingFinal',
@@ -175,30 +175,11 @@ const Calamar = (props) => {
                         setnowPlaying(false)
                     }
                     break;
-              /*   case 'estasEnJail':
-                    let isNowInJail = false
-                    chat.dataIn.jailArray.map((key, i) => {
-                        if (key === ip) {
-                            isNowInJail = true
-                        }
-
-                    })
-                    chat.dataIn.array.map((key, i) => {
-                        if (!isNowInJail && key.ip === ip && chat.dataIn.array.length > 1 && (chat.dataIn.array.length > 2 ? chat.dataIn.puenteTurn !== 0 : chat.dataIn.puenteTurn !== i)) {
-                            socket.emit(
-                                'calamar', {
-                                'dataIn': {
-                                    ip: ip,
-                                    'actionTodo': 'estoyEnJail',
-                                },
-                                'actionTodo': 'estoyEnJail',
-                            })
-                            setTimeout(goJail, 5000)
-                        }
-                    })
-
+                case 'estasEnJail':
+                    if (chat.dataIn.ip === ip) {
+                        setTimeout(goJail, 5000)
+                    }
                     break;
- */
                 case 'fallingin':
                     /*  
                       if (turn === chat.dataIn) {
@@ -284,7 +265,7 @@ export async function getServerSideProps({ req }) {
     let max = 9000000000
     return {
         props: {
-            ip: 222
+            ip: ip
             ,
         },
     }
