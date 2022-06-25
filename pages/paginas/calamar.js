@@ -6,7 +6,6 @@ import Bowser from "bowser";
 
 const socket = io("https://serverazteca.herokuapp.com/")
 const Calamar = (props) => {
-
     const [notAuth, setnotAuth] = useState(false)
     const [turn, setturn] = useState(-1)
     const [ip, setIp] = useState(props.ip || false)
@@ -46,25 +45,20 @@ const Calamar = (props) => {
     const goJail = () => {
         window.location.replace(`vww://aztecasecreto.vww/@78688#jail`)
     }
-
     const changeArray = (key) => {
-        let copiedarray = []/* 
-        seTchanging(true) */
+        let copiedarray = []
         floorMap.map((item, i) => {
             if (item === key) {
                 copiedarray.push({
                     state: item.action === 'fall' ? true : false,
                     number: item.number,
                     leter: item.leter,
-
                 })
-
             } else {
                 copiedarray.push(item)
             }
         })
         seTfloorMap(copiedarray)
-
         if (key.action === 'fall') {
             socket.emit(
                 'calamar', {
@@ -87,11 +81,9 @@ const Calamar = (props) => {
             })
             setnowPlaying(false)
             if (Bowser.name === 'Chrome') {
-
                 changelocationfalse(key)
             }
         } else {
-
             if (userIn === 10) {
                 socket.emit(
                     'calamar', {
@@ -129,27 +121,15 @@ const Calamar = (props) => {
         }
     }
     useEffect(() => {
-
-        /*   if (Bowser.name === 'Chrome') {
-              window.alert('Por que entrarias desde aca?')
-              setnotAuth(true)
-          } */
-        /*      const browser = Bowser.getParser(window.navigator.userAgent);
-     
-            */
         socket.on("calamar", (chat) => {
             const actionTodo = chat.actionTodo
             const dataIn = chat.dataIn || ""
-
             switch (actionTodo) {
                 case 'puente':
-
-
                     seTfloorMap(dataIn.array)
                     setUserIn(dataIn.levelIn)
                     break;
                 case 'createdOne':
-
                     if (chat.dataIn.participants[0].ip === ip
                     ) {
                         setnowPlaying(true)
@@ -158,8 +138,6 @@ const Calamar = (props) => {
                     setUserIn(dataIn.levelIn)
                     break;
                 case 'newPass':
-
-
                     seTfloorMap(dataIn.array)
                     setUserIn(dataIn.levelIn)
                     break;
@@ -168,7 +146,6 @@ const Calamar = (props) => {
                     seTfloorMap([])
                     break;
                 case 'vastu':
-
                     if (ip === chat.dataIn) {
                         setnowPlaying(true)
                     } else {
@@ -182,29 +159,6 @@ const Calamar = (props) => {
                     }
                     break;
                 case 'fallingin':
-                    /*  
-                      if (turn === chat.dataIn) {
-                          window.alert('vas')
-                          setnowPlaying(true)
-  
-                      } */
-                    /*
-
-                    chat.dataIn.participants.map((key, i) => {
-                        if (chat.dataIn.ip === key.ip) {
-                            if ((i + 1) === chat.dataIn.participants.length) {
-                                if (chat.dataIn.participants[0].ip === ip) {
-                                   
-                                }
-                               
-                            } else {
-                                if (chat.dataIn.participants[i + 1].ip === ip) {
-                                   
-                                    setnowPlaying(true)
-                                }
-                            }
-                        }
-                    }) */
                     break;
                 case 'playerListReady':
 
@@ -214,8 +168,7 @@ const Calamar = (props) => {
                             setturn(i)
                         }
                     })
-/*                         setparticipants(array)
- */                        break;
+                        break;
                 default:
                     break;
             }
@@ -223,16 +176,13 @@ const Calamar = (props) => {
         socket.emit(
             'calamar', {
             'dataIn': {
-/*                 ip: ip,
- */                'actionTodo': 'ipSend',
+                user: '',
+                'actionTodo': 'ipSend',
             },
             'actionTodo': 'ipSend',
         })
     }, [])
-    /*   useEffect(() => {
-      
-  
-      }, []) */
+
     if (notAuth) {
         return (<>
             <div className='not-auth-div'>
@@ -241,19 +191,7 @@ const Calamar = (props) => {
         </>)
     }
     return (<div className='calamar-puente'>
-        {/*     <button id='btn-play' onClick={(e) => {
-            e.preventDefault(),
-                socket.emit(
-                    'calamar', {
-                    'dataIn': {
-                        ip: ip || false,
-                        'actionTodo': 'falling',
-                    },
-                    'actionTodo': 'falling',
-                })
-        }}>
-            PLAY_PAUSE{Bowser.name}
-        </button>  */}       {
+       {
             changing ? <></> : <FloorApp nowPlaying={nowPlaying} userIn={userIn} floorMap={floorMap} setuserKey={setuserKey} changeArray={changeArray} />
 
         }

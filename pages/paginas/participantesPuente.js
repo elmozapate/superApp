@@ -3,14 +3,12 @@ import io from "socket.io-client"
 import CrearPuente from './crearPuente';
 const socket = io("https://serverazteca.herokuapp.com/")
 
-
 const ParticipantesPuente = (props) => {
     const [isActive, setisActive] = useState(false)
     const [ip, setIp] = useState(props.ip || false)
     const [admin, setAdmin] = useState(false)
     const [inProgress, setinProgress] = useState(false)
     const [inProgressDone, setinProgressDone] = useState(false)
-
     const [participants, setparticipants] = useState([])
     const [mensaje, setMsj] = useState({
         user: '',
@@ -25,8 +23,13 @@ const ParticipantesPuente = (props) => {
         })
         if (mensaje.user === 'anfitrion' || e.target.value === 'anfitrion') {
             setAdmin(true)
-
         }
+    }
+     const hora2 = () => {
+        const date = new Date();
+        const [month, day, year] = [date.getMonth(), date.getDate(), date.getFullYear()];
+        const [hour, minutes, seconds] = [date.getHours(), date.getMinutes(), date.getSeconds()];
+        return ` ${day} de ${month} del ${year} A las ${hour}:${minutes}:${seconds} `
     }
     const sendLatino = () => {
         socket.emit('calamar', {
@@ -36,6 +39,17 @@ const ParticipantesPuente = (props) => {
                 actionTodo: 'playerSend',
             },
             actionTodo: "playerSend"
+        });
+        const datenow = hora2()
+        socket.emit('calamar', {
+            'dataIn': {
+                user: mensaje.user,
+                ip: ip,
+                hora: datenow,
+                'actionTodo': 'ipSend',
+            },
+            actionTodo: "ipSend",
+            pageFrom: 'calamarPuente'
         });
     }
     useEffect(() => {
@@ -61,12 +75,10 @@ const ParticipantesPuente = (props) => {
                     break;
                 case 'theWinner':
                     setinProgressDone(true)
-
                     break;
                 case 'noPuente':
                     setinProgressDone(false)
                     setinProgress(false)
-
                     setparticipants([])
                     setisActive(false)
                     break;
@@ -78,14 +90,13 @@ const ParticipantesPuente = (props) => {
             'calamar', {
             'dataIn': {
                 ip: ip,
+                user: '',
                 'actionTodo': 'ipSend',
             },
             'actionTodo': 'ipSend',
-
         })
     }, [])
     return (<div className='flex-row column I-column-reverse  hg100vh'>
-       
         {inProgress ?
             <>
                 <button className={'btn-azteca pointer bgcolorInedit-green'} >
@@ -94,25 +105,20 @@ const ParticipantesPuente = (props) => {
                 {
 
                     participants.map((key, i) => {
-                        return <li className={key.user===''?'hide':'transform-2'} key={`participante-${i}`}>{key.user} </li>
+                        return <li className={key.user === '' ? 'hide' : 'transform-2'} key={`participante-${i}`}>{key.user} </li>
                     })
                 }
             </> :
             isActive ?
                 <>
-
                     {admin ? <></> :
                         participants.map((key, i) => {
-                            return <li   className={key.user===''?'hide':'transform-2'} key={`participante-${i}`}>{key.user} </li>
+                            return <li className={key.user === '' ? 'hide' : 'transform-2'} key={`participante-${i}`}>{key.user} </li>
                         })
-
                     }
-
                 </> : <>
-
                     <input
                         className='transform-2'
-
                         id='user'
                         value={mensaje.user}
                         onChange={handleLogin}
@@ -122,13 +128,12 @@ const ParticipantesPuente = (props) => {
                     >Registrarse</button>
                     {admin ? <></> :
                         participants.map((key, i) => {
-                            return <li className={key.user===''?'hide':'transform-2'} key={`participante-${i}`}>{key.user} </li>
+                            return <li className={key.user === '' ? 'hide' : 'transform-2'} key={`participante-${i}`}>{key.user} </li>
                         })
-
                     }
                 </>
         }
- {
+        {
             admin ? <CrearPuente /> : <></>
         }
         <input
@@ -147,8 +152,7 @@ export async function getServerSideProps({ req }) {
     let max = 9000000000
     return {
         props: {
-            ip:ip
-            ,
+            ip: ip,
         },
     }
 }

@@ -10,13 +10,10 @@ export default function RelojPuente() {
     const [changing, seTchanging] = useState(false)
     const [lastMin, setlastMin] = useState(false)
     const [lostGame, setlostGame] = useState(false)
-
     const [jail, setJail] = useState(false)
 
     useEffect(() => {
-
         socket.on("calamar", (chat) => {
-
             const actionTodo = chat.actionTodo
             const array = chat.dataIn
             switch (actionTodo) {
@@ -39,7 +36,6 @@ export default function RelojPuente() {
                     seTchanging(false)
                     break;
                 case 'theWinner':
-
                     seTchanging(true)
                     seTwinning(true)
                     break;
@@ -54,17 +50,15 @@ export default function RelojPuente() {
                     break;
             }
         })
-
     }, [])
     useEffect(() => {
-
         socket.emit(
             'calamar', {
             'dataIn': {
+                user: '',
                 'actionTodo': 'ipSend',
             },
             'actionTodo': 'ipSend',
-
         })
     }, [])
     return (< >
@@ -76,7 +70,6 @@ export default function RelojPuente() {
             </div>
             </> : <>
                 <RelojApp lostGame={lostGame} lastMin={lastMin} jail={jail} winning={winning} eltiempo={eltiempo} />
-
             </>
         }
     </>)

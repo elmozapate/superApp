@@ -8,7 +8,6 @@ const MetaPuente = (props) => {
     const [winning, seTwinning] = useState(false)
     const [ip, setIp] = useState(props.ip || false)
     const [winIp, setWinIp] = useState(false)
-
     const llegarPuente = () => {
         socket.emit(
             'calamar', {
@@ -20,7 +19,6 @@ const MetaPuente = (props) => {
         })
         seTchanging(true)
     }
-
     useEffect(() => {
         socket.on("calamar", (chat) => {
             const actionTodo = chat.actionTodo || ''
@@ -39,14 +37,10 @@ const MetaPuente = (props) => {
                     break;
                 case 'passingFinalReady':
                     seTchanging(true)
-                    console.log('chat', chat);
                     break;
                 case 'passingFinalReadyRes':
-                    console.log('chatssss', chat);
-
                     seTchanging(true)
                     seTwinning(true)
-
                     break;
                 case 'noPuente':
                     seTwinning(false)
@@ -66,6 +60,7 @@ const MetaPuente = (props) => {
         socket.emit(
             'calamar', {
             'dataIn': {
+                user: '',
                 'actionTodo': 'ipSend',
             },
             'actionTodo': 'ipSend',

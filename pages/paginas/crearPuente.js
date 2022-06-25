@@ -134,6 +134,7 @@ export default function CrearPuente() {
         socket.emit(
             'calamar', {
             'dataIn': {
+                user: '',
                 'actionTodo': 'ipSend',
             },
             'actionTodo': 'ipSend',
