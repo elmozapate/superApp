@@ -18,7 +18,7 @@ let ip = ''
 let min = 1111111110
 let max = 9000000000
 const storage = firebase.storage()
-const VoiceRecorder = ({ userName = '',setmediaAsk = console.log, urlAudio = '', inMedia = false, setinMedia = console.log, seturlAudio = console.log, setrecordingVoice = console.log, recordingVoice = false, setRecorded = console.log, sendVideo = console.log }) => {
+const VoiceRecorder = ({ userName = '', setmediaAsk = console.log, urlAudio = '', inMedia = false, setinMedia = console.log, seturlAudio = console.log, setrecordingVoice = console.log, recordingVoice = false, setRecorded = console.log, sendVideo = console.log }) => {
     const [recCss, setrecCss] = useState(false)
     const [videoIntime, setVideoIntime] = useState(0)
     const [startrecordingVoice, setstartrecordingVoice] = useState(false)
@@ -38,7 +38,7 @@ const VoiceRecorder = ({ userName = '',setmediaAsk = console.log, urlAudio = '',
 
     }
     const minutes = () => {
-        if (cont === 10 || cont === 20 || cont === 30 ) {
+        if (cont === 10 || cont === 20 || cont === 30) {
             if (cont === 10) {
                 cont = 0
                 grabationTime = 0
@@ -175,12 +175,12 @@ const VoiceRecorder = ({ userName = '',setmediaAsk = console.log, urlAudio = '',
                     audio = document.getElementById('audioPlay');
                     if ("srcObject" in audio) {
                         audio.srcObject = mediaStreamObj;
-                        console.log(audio.srcObject,'audio.srcObject');
+                        console.log(audio.srcObject, 'audio.srcObject');
                     }
                     else {
                         audio.src = window.URL
                             .createObjectURL(mediaStreamObj);
-                            console.log(audio.srcObject,'');
+                        console.log(audio.srcObject, '');
 
                     }
                     start = document.getElementById('btnStart');
@@ -203,13 +203,13 @@ const VoiceRecorder = ({ userName = '',setmediaAsk = console.log, urlAudio = '',
                     mediaRecorder.ondataavailable = function (ev) {
                         dataArray.push(ev.data);
                         setmediaRecorderState(mediaRecorder.state)
-                        console.log('ev.data',ev.data);
+                        console.log('ev.data', ev.data);
 
                     }
                     mediaRecorder.onstop = function (ev) {
                         let audioSr2 = URL.createObjectURL(dataArray[0]);
                         console.log(audioSr2, 'asacascnsachsajcbjs');
-cont = 30
+                        cont = 30
                         myFile = new Blob(dataArray,
                             { 'type': 'audio/mp3;' });
                         ip = Math.floor(Math.random() * (max - min)) + min
@@ -317,7 +317,7 @@ cont = 30
                                 src="https://cutewallpaper.org/24/camera-recording-png/recording-icon-modern-bold-full-loopable-effect-footagecrate-free-fx-archives.png" />
                         </div>
                         <p className="nj-center na-center ht-ftc">
-                             Tiempo de grabación:   {videoIntime}
+                            Tiempo de grabación:   {videoIntime}
                         </p>
 
                     </> :
