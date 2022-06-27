@@ -13,6 +13,9 @@ let cont = 0
 const TabletaParticipantes = (props) => {
     const [helpPreStream, sethelpPreStream] = useState(false)
     const [warningPreStreamNeedingHelp, setwarningPreStreamNeedingHelp] = useState(false)
+    const [helpTime, sethelpTime] = useState(30)
+
+    const [inHelping, setinHelping] = useState(false)
 
     const [lastMin, setlastMin] = useState(false)
     const [lostGame, setlostGame] = useState(false)
@@ -77,23 +80,25 @@ const TabletaParticipantes = (props) => {
             cont = 0
         }
         else {
-                if (timeGame < -1) {
-                    setlostGame(true)
-                    cont = 0
+            if (timeGame < -1) {
+                setlostGame(true)
+                cont = 0
 
-                } else {
+            } else {
 
-                    if (timeGame === 15) {
-                        setlastMin(true)
-                    }
-                    if (timeGame === 0) {
-                        setlostGame(true)
-                        escogerEsta({ respuesta: -1 })
-                        showGifPop('https://i.gifer.com/4XAI.gif')
-                    }
-                    seteltiempo(timeGame)
-                    setTimeout(minutes, 1000)
+                if (timeGame === 15) {
+                    setlastMin(true)
                 }
+                if (timeGame === 0) {
+                    setlostGame(true)
+                    if (playerType === 'jugando') {
+                        escogerEsta({ respuesta: -1 })
+                    }
+                    showGifPop('https://i.gifer.com/4XAI.gif')
+                }
+                seteltiempo(timeGame)
+                setTimeout(minutes, 1000)
+            }
         }
     }
     const onlyPublic = () => {
@@ -189,6 +194,7 @@ const TabletaParticipantes = (props) => {
         })
     }
     const helpNeed = (i) => {
+        cont = 10
         console.log(i, 'ayuda');
         if (i.state) {
             socket.emit(
@@ -332,7 +338,18 @@ const TabletaParticipantes = (props) => {
                     break;
                 case 'helpRequired':
                     sethelpRequired(true)
+                    setinHelping(true)
+                    cont = 10
                     break;
+                case 'helpTime':
+                    sethelpRequired(false)
+                    setinHelping(false)
+                    minutes()
+                    break;
+                case 'helpTimeNumber':
+                    sethelpTime(dataIn)
+                    break;
+
                 case 'respuestas':
                     setrespuestas(dataIn)
                     break;
@@ -533,10 +550,10 @@ const TabletaParticipantes = (props) => {
         {!playerActive ? <div className="column fontcolorInedit-white wdt-100 Ia-center Ij-center">
             <BotonesRegistro sendPlayer={sendPlayer} onlyPublic={onlyPublic} ip={ip} />
         </div> : (playerType === 'jugador' || playerType === 'jugando') ? <>
-            <ComponenteJugador lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo} warningPreStreamNeedingHelp={warningPreStreamNeedingHelp} setwarningPreStreamNeedingHelp={setwarningPreStreamNeedingHelp} sethelpPreStream={sethelpPreStream} helpRes={helpRes} helpPreStream={helpPreStream} acceptHelp={acceptHelp} usersInRegister={usersInRegister} nowInlevel={nowInlevel} actualPlayer={actualPlayer} helpsCome={helpsCome} helpsPlayer={helpsPlayer} helpNeed={helpNeed} gameChoose={gameChoose} primeraEleccion={primeraEleccion} inChoosing={inChoosing} userResults={userResults} usersResults={usersResults} ClasificDone={ClasificDone} playerData={playerData} sendPuntuation={sendPuntuation} arrayClassificatorio={arrayClassificatorio} clasificationArray={clasificationArray} inClasification={inClasification} gameActive={gameActive}
+            <ComponenteJugador helpTime={helpTime} inHelping={inHelping} lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo} warningPreStreamNeedingHelp={warningPreStreamNeedingHelp} setwarningPreStreamNeedingHelp={setwarningPreStreamNeedingHelp} sethelpPreStream={sethelpPreStream} helpRes={helpRes} helpPreStream={helpPreStream} acceptHelp={acceptHelp} usersInRegister={usersInRegister} nowInlevel={nowInlevel} actualPlayer={actualPlayer} helpsCome={helpsCome} helpsPlayer={helpsPlayer} helpNeed={helpNeed} gameChoose={gameChoose} primeraEleccion={primeraEleccion} inChoosing={inChoosing} userResults={userResults} usersResults={usersResults} ClasificDone={ClasificDone} playerData={playerData} sendPuntuation={sendPuntuation} arrayClassificatorio={arrayClassificatorio} clasificationArray={clasificationArray} inClasification={inClasification} gameActive={gameActive}
                 pregunta={pregunta} playerType={playerType} respuestas={respuestas} sendHelp={sendHelp} escogerEsta={escogerEsta} helpRequired={helpRequired} ip={ip} />
         </> : <>
-            <ComponentePublico lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo}
+            <ComponentePublico helpTime={helpTime} inHelping={inHelping} lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo}
                 sethelpPreStream={sethelpPreStream} helpRes={helpRes} helpPreStream={helpPreStream} acceptHelp={acceptHelp}
                 nowInlevel={nowInlevel} actualPlayer={actualPlayer} helpsCome={helpsCome} helpsPlayer={helpsPlayer} helpNeed={helpNeed}
                 gameActive={gameActive} primeraEleccion={primeraEleccion} gameChoose={gameChoose}

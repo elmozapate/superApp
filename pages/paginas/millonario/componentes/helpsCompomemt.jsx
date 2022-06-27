@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
+import TiempoPreguntas from "./tiempoPreguntas"
 let uno = 0
 let dos = 0
 let tres = 0
 let cuatro = 0
 const HelpsComponent = (props) => {
-    const { helpsCome = [] } = props
+    const { helpsCome = [] ,helpTime=0 } = props
 
     const [valuesShow, setValuesShow] = useState({
         a: uno,
@@ -49,6 +50,7 @@ const HelpsComponent = (props) => {
             <div className={`hgSize-${parseInt((100 * valuesShow.b) / helpsCome.length)}`}>b : {parseInt((100 * valuesShow.b) / helpsCome.length)}%</div>
             <div className={`hgSize-${parseInt((100 * valuesShow.c) / helpsCome.length)}`}>c : {parseInt((100 * valuesShow.c) / helpsCome.length)}%</div>
             <div className={`hgSize-${parseInt((100 * valuesShow.d) / helpsCome.length)}`}>d : {parseInt((100 * valuesShow.d) / helpsCome.length)}%</div>
+            <TiempoPreguntas />
         </div>
     )
 }

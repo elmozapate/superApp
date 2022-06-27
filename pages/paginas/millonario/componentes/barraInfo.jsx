@@ -3,14 +3,14 @@ import BarraPlayer from "./barraPlayer.jsx";
 import HelpsComponent from "./helpsCompomemt";
 
 const BarraInfo = (props) => {
-    const { warningPreStreamNeedingHelp=false, setwarningPreStreamNeedingHelp=console.log, usersInRegister = [], usersResults = [], nowInlevel = 0, playerData = {
+    const { inHelping=false,warningPreStreamNeedingHelp=false, setwarningPreStreamNeedingHelp=console.log, usersInRegister = [], usersResults = [], nowInlevel = 0, playerData = {
         name: '',
         ip: ''
     }, actualPlayer = {
         name: '',
         ip: ''
-    }
-    } = props
+    },
+    helpTime=0 } = props
     const [friend, setFriend] = useState({
         name: '',
         ip: ''
@@ -27,7 +27,7 @@ const BarraInfo = (props) => {
     return (
         <div className="fontcolorInedit-white wdt-70 column Ia-center Ij-center hgtI-15">
             {
-                helpsCome.length > 0 ? <HelpsComponent helpsCome={helpsCome} /> :
+                helpsCome.length > 0 || inHelping ? <HelpsComponent helpTime={helpTime}  helpsCome={helpsCome} /> :
                     <>
                         <BarraPlayer nowInlevel={nowInlevel} actualPlayer={actualPlayer} playerData={playerData} />
                         <div className={helpsCome.length === 0 && playerType !== 'jugando' ? 'hide' : gameChoose === -1 && playerType === 'jugando' ? " fontcolorInedit-white wdt-100 Ia-center Ij-center" : 'hide'}>
