@@ -1,5 +1,5 @@
 const BarraPlayer = (props) => {
-    const { playerData = {
+    const {playerType='publico', playerData = {
         name: '',
         ip: ''
     },actualPlayer={
@@ -8,9 +8,12 @@ const BarraPlayer = (props) => {
     },nowInlevel=0 } = props
     return (
         <>
-            <div className={" fontcolorInedit-white wdt-100 Ia-center Ij-center"}>
-            {playerData.name!==''?<>{`JUGADOR : ${playerData.name} --- `}</>:<></>} 
-               JUGANDO : {actualPlayer.name} en el nivel: {nowInlevel}
+            <div className={" fontcolorInedit-white wdt-100 Ia-center Ij-center column"}>
+          <span> {playerData.name!==''?<>{`TU ERES : ${playerData.name} --- `}</>:<></>} ...Y ESTA JUGANDO : {actualPlayer.name} en el nivel: {nowInlevel}</span> 
+         <br />
+          <span>  {playerType !== 'jugando' ? <>ESTAS AYUDAS LE QUEDAN A {actualPlayer.name}</> : <>USA LAS AYUDAS VERDES</>}</span> 
+          <br />
+
             </div>
 
         </>

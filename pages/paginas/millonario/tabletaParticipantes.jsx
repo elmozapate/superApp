@@ -68,6 +68,7 @@ const TabletaParticipantes = (props) => {
     const [respuestas, setrespuestas] = useState([{
         respuesta: ''
     }])
+    const [nowinHelping, setnowinHelping] = useState(false)
     const [initing, setIniting] = useState(false)
     const [playerData, setplayerData] = useState({
         name: '',
@@ -85,26 +86,27 @@ const TabletaParticipantes = (props) => {
                 cont = 0
 
             } else {
-
+                seteltiempo(timeGame)
+                setTimeout(minutes, 1000)
                 if (timeGame === 15) {
                     setlastMin(true)
                 }
                 if (timeGame === 0) {
-                    if(helpRequired){
+                    if (nowinHelping) {
                         sethelpRequired(false)
-                        timeGame=30
-
-                    }else{
+                        setnowinHelping(false)
+                        setinHelping(false)
+                        timeGame = 30
+                    } else {
                         setlostGame(true)
-                        if (playerType === 'jugando') {
+                        if (playerType === 'jugando'  ) {
                             escogerEsta({ respuesta: -1 })
                         }
                         showGifPop('https://i.gifer.com/4XAI.gif')
                     }
-                   
+
                 }
-                seteltiempo(timeGame)
-                setTimeout(minutes, 1000)
+
             }
         }
     }
@@ -202,7 +204,8 @@ const TabletaParticipantes = (props) => {
     }
     const helpNeed = (i) => {
         cont = 10
-        console.log(i, 'ayuda');
+        timeGame = 30
+        setnowinHelping(true)
         if (i.state) {
             socket.emit(
                 'millonario', {
@@ -222,10 +225,7 @@ const TabletaParticipantes = (props) => {
                     break;
 
                 case 3:
-                    setinHelping(true)
-                    cont = 10
-                    timeGame=35
-                    minutes()
+
                     socket.emit(
                         'millonario', {
                         'dataIn': {
@@ -344,27 +344,37 @@ const TabletaParticipantes = (props) => {
                     if (ip == dataIn.ip.ip) {
                         setPlayerType('jugando')
                         showGifPop('https://c.tenor.com/Y8ABES9syAYAAAAS/your-turn-its-your-turn.gif')
+                    } else {
+                        setPlayerType('jugador')
+
                     }
 
                     break;
                 case 'helpRequired':
+                    cont = 10
+                    timeGame = 30
+                    setTimeout(() => {
+                        setnowinHelping(true)
+                        minutes()
+                    }, 3000)
                     sethelpRequired(true)
                     setinHelping(true)
-                    cont = 10
-                    timeGame=35
-                    minutes()
+                    setnowinHelping(true)
                     break;
                 case 'helpTime':
-                    sethelpRequired(false)
-                    setinHelping(false)
-                    minutes()
+                    /*      sethelpRequired(false)
+                         setinHelping(false) */
+                    /*   minutes() */
                     break;
                 case 'helpTimeNumber':
-                    sethelpTime(dataIn)
-                    break;
+/*                     sethelpTime(dataIn)
+ */                    break;
 
                 case 'respuestas':
                     setrespuestas(dataIn)
+                    break;
+                case 'stopReloj':
+                    cont = 10
                     break;
                 case 'gameActive':
                     startTransition()
@@ -418,6 +428,7 @@ const TabletaParticipantes = (props) => {
                     break;
 
                 case 'preguntaSiguiente':
+                    setHelpRes(false)
                     setlastMin(false)
                     setlostGame(false)
                     setwinning(false)
@@ -505,6 +516,10 @@ const TabletaParticipantes = (props) => {
                     if (dataIn.ip === ip) {
                         sethelpRequired(true)
                     }
+                    setTimeout(() => {
+                        setnowinHelping(true)
+                        minutes()
+                    }, 3000)
 
                     break;
                 case 'millonarioActualTurn':

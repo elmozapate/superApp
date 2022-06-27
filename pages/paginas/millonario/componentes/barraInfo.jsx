@@ -3,14 +3,14 @@ import BarraPlayer from "./barraPlayer.jsx";
 import HelpsComponent from "./helpsCompomemt";
 
 const BarraInfo = (props) => {
-    const { inHelping=false,warningPreStreamNeedingHelp=false, setwarningPreStreamNeedingHelp=console.log, usersInRegister = [], usersResults = [], nowInlevel = 0, playerData = {
+    const { helpRequired = false, inHelping = false, warningPreStreamNeedingHelp = false, setwarningPreStreamNeedingHelp = console.log, usersInRegister = [], usersResults = [], nowInlevel = 0, playerData = {
         name: '',
         ip: ''
     }, actualPlayer = {
         name: '',
         ip: ''
     },
-    helpTime=0 } = props
+        helpTime = 0 } = props
     const [friend, setFriend] = useState({
         name: '',
         ip: ''
@@ -26,27 +26,29 @@ const BarraInfo = (props) => {
     console.log(playerType, 'playerType');
     return (
         <div className="fontcolorInedit-white wdt-70 column Ia-center Ij-center hgtI-15">
+            
+
             {
-                helpsCome.length > 0  ? <HelpsComponent helpTime={helpTime}  helpsCome={helpsCome} /> :
+                helpsCome.length > 0 ? <HelpsComponent helpTime={helpTime} helpsCome={helpsCome} /> :
                     <>
-                        <BarraPlayer nowInlevel={nowInlevel} actualPlayer={actualPlayer} playerData={playerData} />
-                        <div className={helpsCome.length === 0 && playerType !== 'jugando' ? 'hide' : gameChoose === -1 && playerType === 'jugando' ? " fontcolorInedit-white wdt-100 Ia-center Ij-center" : 'hide'}>
-                            <button className={helpsPlayer.help1 ? 'btn-azteca pointer' : 'hide'} onClick={playerType === 'jugando' ? (e) => {
+                        <BarraPlayer playerType={playerType} nowInlevel={nowInlevel} actualPlayer={actualPlayer} playerData={playerData} />
+                        <div className={helpsCome.length === 0 && playerType !== 'jugando' ? 'fontcolorInedit-white wdt-100 Ia-center Ij-center' : gameChoose === -1 && playerType === 'jugando' ? " fontcolorInedit-white wdt-100 Ia-center Ij-center" : 'fontcolorInedit-white wdt-100 Ia-center Ij-center'}>
+                            <button className={helpsPlayer.help1 ? playerType === 'jugando' ? 'btn-azteca bgcolorInedit-green pointer' : playerType === 'jugando' ? 'btn-azteca bgcolorInedit-red ' : 'btn-azteca bgcolorInedit-blue ' : playerType === 'jugando' ? 'btn-azteca bgcolorInedit-red' : 'hide'} onClick={playerType === 'jugando' && helpsPlayer.help1 ? (e) => {
                                 e.preventDefault(); helpNeed(1); /* helpNeed(); */
                             } : (e) => {
                                 e.preventDefault();/*  console.log(playerType); choosePublic(); */
                             }}>50/50</button>
-                            <button className={helpsPlayer.help2 ? 'btn-azteca pointer' : 'hide'} onClick={playerType === 'jugando' ? (e) => {
+                            <button className={helpsPlayer.help2 ? playerType === 'jugando' ? 'btn-azteca bgcolorInedit-green pointer' : playerType === 'jugando' ? 'btn-azteca bgcolorInedit-red ' : 'btn-azteca bgcolorInedit-blue ' : playerType === 'jugando' ? 'btn-azteca bgcolorInedit-red' : 'hide'} onClick={playerType === 'jugando' && helpsPlayer.help2 ? (e) => {
                                 e.preventDefault(); setwarningPreStreamNeedingHelp(true); /* choosePlayer(); */
                             } : (e) => {
                                 e.preventDefault(); /* console.log(playerType); choosePublic(); */
-                            }}>AYUDA DE AMIGO</button>
-                            <button className={helpsPlayer.help3 ? 'btn-azteca pointer' : 'hide'} onClick={playerType === 'jugando' ? (e) => {
+                            }}>AYUDA  AMIGO</button>
+                            <button className={helpsPlayer.help3 ? playerType === 'jugando' ? 'btn-azteca bgcolorInedit-green pointer' : playerType === 'jugando' ? 'btn-azteca bgcolorInedit-red ' : ' btn-azteca bgcolorInedit-blue' : playerType === 'jugando' ? 'btn-azteca bgcolorInedit-red' : 'hide'} onClick={playerType === 'jugando' && helpsPlayer.help3 ? (e) => {
                                 e.preventDefault(); helpNeed(3); /* choosePlayer(); */
                             } : (e) => {
                                 e.preventDefault(); /* console.log(playerType); choosePublic(); */
-                            }}>AYUDA DE PUBLICO</button>
-                            <button className={helpsPlayer.help4 ? 'btn-azteca pointer' : 'hide'} onClick={playerType === 'jugando' ? (e) => {
+                            }}>AYUDA  PUBLICO</button>
+                            <button className={helpsPlayer.help4 ? playerType === 'jugando' ? 'btn-azteca bgcolorInedit-green pointer' : playerType === 'jugando' ? 'btn-azteca bgcolorInedit-red ' : 'btn-azteca bgcolorInedit-blue ' : playerType === 'jugando' ? 'btn-azteca bgcolorInedit-red' : 'hide'} onClick={playerType === 'jugando' && helpsPlayer.help4 ? (e) => {
                                 e.preventDefault(); helpNeed(4);/* choosePlayer(); */
                             } : (e) => {
                                 e.preventDefault(); /* console.log(playerType); choosePublic(); */

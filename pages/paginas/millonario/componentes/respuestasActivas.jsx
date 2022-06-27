@@ -35,20 +35,11 @@ const RespuestasActivas = ({ sethelpPreStream=console.log, helpRes=false, helpPr
     }
     useEffect(() => {
         if (helpRequired) {
-            window.alert('ayudaras')
             sethelpPreStream(true)
         }
 
     }, [helpRequired])
-    useEffect(() => {
-        if (helpRes==='acepto') {
-            window.alert('Te ayudaran')
-        }
-        if (helpRes==='NoAcepto') {
-            window.alert('Pailas no quizo')
-        }
 
-    }, [helpRes]) 
     return (
         <>
             < >

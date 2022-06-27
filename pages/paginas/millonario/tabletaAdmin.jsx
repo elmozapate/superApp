@@ -30,7 +30,6 @@ const TabletaAdmin = (props) => {
     }
     useEffect(() => {
         if (ClasificDone && changeQuestion) {
-            window.alert('has pregunta')
             setchangeQuestion(false)
         }
 
