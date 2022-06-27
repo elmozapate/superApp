@@ -90,11 +90,18 @@ const TabletaParticipantes = (props) => {
                     setlastMin(true)
                 }
                 if (timeGame === 0) {
-                    setlostGame(true)
-                    if (playerType === 'jugando') {
-                        escogerEsta({ respuesta: -1 })
+                    if(helpRequired){
+                        sethelpRequired(false)
+                        timeGame=30
+
+                    }else{
+                        setlostGame(true)
+                        if (playerType === 'jugando') {
+                            escogerEsta({ respuesta: -1 })
+                        }
+                        showGifPop('https://i.gifer.com/4XAI.gif')
                     }
-                    showGifPop('https://i.gifer.com/4XAI.gif')
+                   
                 }
                 seteltiempo(timeGame)
                 setTimeout(minutes, 1000)
@@ -215,6 +222,10 @@ const TabletaParticipantes = (props) => {
                     break;
 
                 case 3:
+                    setinHelping(true)
+                    cont = 10
+                    timeGame=35
+                    minutes()
                     socket.emit(
                         'millonario', {
                         'dataIn': {
@@ -340,6 +351,8 @@ const TabletaParticipantes = (props) => {
                     sethelpRequired(true)
                     setinHelping(true)
                     cont = 10
+                    timeGame=35
+                    minutes()
                     break;
                 case 'helpTime':
                     sethelpRequired(false)

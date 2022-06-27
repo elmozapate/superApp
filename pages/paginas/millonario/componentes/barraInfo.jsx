@@ -27,7 +27,7 @@ const BarraInfo = (props) => {
     return (
         <div className="fontcolorInedit-white wdt-70 column Ia-center Ij-center hgtI-15">
             {
-                helpsCome.length > 0 || inHelping ? <HelpsComponent helpTime={helpTime}  helpsCome={helpsCome} /> :
+                helpsCome.length > 0  ? <HelpsComponent helpTime={helpTime}  helpsCome={helpsCome} /> :
                     <>
                         <BarraPlayer nowInlevel={nowInlevel} actualPlayer={actualPlayer} playerData={playerData} />
                         <div className={helpsCome.length === 0 && playerType !== 'jugando' ? 'hide' : gameChoose === -1 && playerType === 'jugando' ? " fontcolorInedit-white wdt-100 Ia-center Ij-center" : 'hide'}>

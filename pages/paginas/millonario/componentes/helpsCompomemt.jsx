@@ -5,7 +5,7 @@ let dos = 0
 let tres = 0
 let cuatro = 0
 const HelpsComponent = (props) => {
-    const { helpsCome = [] ,helpTime=0 } = props
+    const { helpsCome = [], helpTime = 0 } = props
 
     const [valuesShow, setValuesShow] = useState({
         a: uno,
@@ -46,11 +46,11 @@ const HelpsComponent = (props) => {
 
     return (
         <div className="percentPublic fontcolorInedit-white wdt-100 Ia-flex-end Ij-center">
-            <div className={`hgSize-${parseInt((100 * valuesShow.a) / helpsCome.length)}`}>a : {parseInt((100 * valuesShow.a) / helpsCome.length)}%</div>
-            <div className={`hgSize-${parseInt((100 * valuesShow.b) / helpsCome.length)}`}>b : {parseInt((100 * valuesShow.b) / helpsCome.length)}%</div>
-            <div className={`hgSize-${parseInt((100 * valuesShow.c) / helpsCome.length)}`}>c : {parseInt((100 * valuesShow.c) / helpsCome.length)}%</div>
-            <div className={`hgSize-${parseInt((100 * valuesShow.d) / helpsCome.length)}`}>d : {parseInt((100 * valuesShow.d) / helpsCome.length)}%</div>
-            <TiempoPreguntas />
+            <div className={`hgSize-${parseInt((100 * valuesShow.a) / helpsCome.length)}`}>a : {parseInt((100 * valuesShow.a) / helpsCome.length) === NaN ? 0 : parseInt((100 * valuesShow.a) / helpsCome.length)}%</div>
+            <div className={`hgSize-${parseInt((100 * valuesShow.b) / helpsCome.length)}`}>b : {parseInt((100 * valuesShow.b) / helpsCome.length) === NaN ? 0 : parseInt((100 * valuesShow.b) / helpsCome.length)}%</div>
+            <div className={`hgSize-${parseInt((100 * valuesShow.c) / helpsCome.length)}`}>c : {parseInt((100 * valuesShow.c) / helpsCome.length) === NaN ? 0 : parseInt((100 * valuesShow.c) / helpsCome.length)}%</div>
+            <div className={`hgSize-${parseInt((100 * valuesShow.d) / helpsCome.length)}`}>d : {parseInt((100 * valuesShow.d) / helpsCome.length) === NaN ? 0 : parseInt((100 * valuesShow.d) / helpsCome.length)}%</div>
+            <TiempoPreguntas eltiempo={helpTime} />
         </div>
     )
 }

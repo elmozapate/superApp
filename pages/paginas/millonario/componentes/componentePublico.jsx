@@ -17,7 +17,7 @@ const ComponentePublico = (props) => {
                 gameActive ?
                     <>
                         <div className={playerType === 'jugando' ? "fontcolorInedit-white wdt-100 Ia-center Ij-center hgtI-15" : "fontcolorInedit-white wdt-100 Ia-center Ij-center hgtI-15"}>
-                            <BarraInfo helpTime={helpTime}  nowInlevel={nowInlevel} actualPlayer={actualPlayer} playerData={playerData} inHelping={inHelping}
+                            <BarraInfo helpTime={eltiempo}  nowInlevel={nowInlevel} actualPlayer={actualPlayer} playerData={playerData} inHelping={inHelping}
                                 usersResults={usersResults} helpsCome={helpsCome} helpsPlayer={helpsPlayer} helpNeed={helpNeed} playerType={playerType} gameChoose={gameChoose} ip={ip} />
                             <BotonesRegistro sendPlayer={sendPlayer} ip={ip} changeMode />
                             <TiempoPreguntas lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo} />

@@ -17,7 +17,7 @@ const ComponenteJugador = (props) => {
                 gameActive ?
                     <>
                         <div className={playerType === 'jugando' ? "fontcolorInedit-white wdt-100 Ia-center Ij-center hgtI-15" : "fontcolorInedit-white wdt-100 Ia-center Ij-center hgtI-15"}>
-                            <BarraInfo  helpTime={helpTime}  inHelping={inHelping} warningPreStreamNeedingHelp={warningPreStreamNeedingHelp} setwarningPreStreamNeedingHelp={setwarningPreStreamNeedingHelp}      usersInRegister={usersInRegister} nowInlevel={nowInlevel} actualPlayer={actualPlayer} playerData={playerData}
+                            <BarraInfo  helpTime={eltiempo}  inHelping={inHelping} warningPreStreamNeedingHelp={warningPreStreamNeedingHelp} setwarningPreStreamNeedingHelp={setwarningPreStreamNeedingHelp}      usersInRegister={usersInRegister} nowInlevel={nowInlevel} actualPlayer={actualPlayer} playerData={playerData}
                                 usersResults={usersResults} helpsCome={helpsCome} helpsPlayer={helpsPlayer} helpNeed={helpNeed} playerType={playerType} gameChoose={gameChoose} ip={ip} />
                             <TiempoPreguntas lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo} />
                         </div>
