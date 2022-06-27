@@ -77,7 +77,6 @@ const TabletaParticipantes = (props) => {
             cont = 0
         }
         else {
-            if (gameActive) {
                 if (timeGame < -1) {
                     setlostGame(true)
                     cont = 0
@@ -95,7 +94,6 @@ const TabletaParticipantes = (props) => {
                     seteltiempo(timeGame)
                     setTimeout(minutes, 1000)
                 }
-            }
         }
     }
     const onlyPublic = () => {

@@ -3,7 +3,7 @@ import ComponentePreguntas from "./componentePreguntas"
 import GitPopOut from "./gitPopOut"
 import TiempoPreguntas from "./tiempoPreguntas"
 import TransitionComponent from "./transitionComponent"
-let cont = 0
+let cont2 = 0
 const ComponenteClasificatorio = (props) => {
     const [ip, setIp] = useState(props.ip || false)
     const [puntuationFinal, setpuntuationFinal] = useState(0)
@@ -54,16 +54,16 @@ const ComponenteClasificatorio = (props) => {
         } else {
             sendPuntuation(resultados.preguntas, eltiempo)
             setclassifiqued(true)
-            cont = 10
+            cont2 = 10
         }
     }
 
     let timeGame = 15
     const minutes = () => {
         timeGame = timeGame + 1
-        if (cont === 10) {
+        if (cont2 === 10) {
             setwinning(true)
-            cont = 0
+            cont2 = 0
         }
         else {
             if (timeGame === 60) {
@@ -77,7 +77,7 @@ const ComponenteClasificatorio = (props) => {
         timeGame = timeGame - 1
         if (timeGame === 0) {
             startCLass()
-            cont = 0
+            cont2 = 0
         }
         else {
             seteltiempo(timeGame)
