@@ -30,7 +30,9 @@ const TabletaParticipantes = (props) => {
     })
     const [gifPop, setGifPop] = useState({
         state: false,
-        msg: 'welcome'
+        msg: 'welcome',
+        audio:''
+
     })
     const [nowInlevel, setnowInlevel] = useState(0)
     const [selectingIp, setselectingIp] = useState(false)
@@ -100,7 +102,8 @@ const TabletaParticipantes = (props) => {
                         if (playerType === 'jugando') {
                             escogerEsta({ respuesta: -1 })
                         }
-                        showGifPop('https://i.gifer.com/4XAI.gif')
+                        showGifPop('perdio')
+                        
                     }
 
                 }
@@ -284,15 +287,69 @@ const TabletaParticipantes = (props) => {
     const resetGifPop = () => {
         setGifPop({
             state: false,
-            msg: ''
+            msg: '',
+            audio:''
+
         })
     }
     const showGifPop = (msg) => {
-        setGifPop({
-            state: true,
-            msg: msg
-        })
-        setTimeout(resetGifPop, 4000)
+
+        switch (msg) {
+            case 'ok':
+                setGifPop({
+                    state: true,
+                    msg: 'https://c.tenor.com/ZWopsXeO7tQAAAAS/clapping-applause.gif',
+                    audio:'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/millonario%2Faplausos.mp3?alt=media&token=77a0f516-4400-4be7-9e72-970a85e431fc'
+
+                }) 
+                setTimeout(resetGifPop, 8000)
+                break;
+            case 'no':
+                setGifPop({
+                    state: true,
+                    msg:  !playerType === 'jugador' || !playerType === 'publico' ? 'https://c.tenor.com/FhF7cOauHTcAAAAM/oyun-bitti-loser.gif' : 'https://c.tenor.com/2oSIv7HNnPsAAAAC/ups-ops.gif',
+                    audio:'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/millonario%2Fmixkit-player-losing-or-failing-2042.wav?alt=media&token=da862dc9-9820-457e-a37d-98846fa8b084'
+
+                })
+                setTimeout(resetGifPop, 7000)
+                break;
+            case 'next':
+                setGifPop({
+                    state: true,
+                    msg:  'https://i.pinimg.com/originals/42/cd/6e/42cd6edb536ac19657ecfaff140db76a.gif',
+                    audio:''
+                })
+                setTimeout(resetGifPop, 5000)
+                break;
+            case 'perdio':
+                setGifPop({
+                    state: true,
+                    msg: 'https://i.gifer.com/4XAI.gif',
+                    audio:''
+
+                })
+                setTimeout(resetGifPop, 7000)
+                break;
+            case 'yourTurn':
+                setGifPop({
+                    state: true,
+                    msg: 'https://c.tenor.com/Y8ABES9syAYAAAAS/your-turn-its-your-turn.gif',
+                    audio:'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/millonario%2FWhatsapp%20Star%20Wars%20(Nuevotono.Net).mp3?alt=media&token=532f2269-1a47-466a-8645-aa5d1f23fcfa'
+                })
+                setTimeout(resetGifPop, 10000)
+                break;
+                case 'notYourTurn':
+                    setGifPop({
+                        state: true,
+                        msg: 'https://c.tenor.com/LCFZOuwQvgAAAAAC/keep-trying-trying.gif',
+                        audio:'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/millonario%2Fmixkit-player-losing-or-failing-2042.wav?alt=media&token=da862dc9-9820-457e-a37d-98846fa8b084'
+                    })
+                    setTimeout(resetGifPop, 10000)
+                    break;
+            default:
+                break;
+        }
+       
     }
     useEffect(() => {
         socket.on("millonario", (chat) => {
@@ -325,9 +382,7 @@ const TabletaParticipantes = (props) => {
                 case 'playerChoose':
                     let corecto = false
                     console.log('asa', dataIn);
-
                     dataIn.array.map((key, i) => {
-
                         if (key.playerData.ip == dataIn.ip.ip) {
                             corecto = true
                             setactualPlayer(key.playerData)
@@ -341,8 +396,11 @@ const TabletaParticipantes = (props) => {
                     setselectingIp(true)
                     if (ip == dataIn.ip.ip) {
                         setPlayerType('jugando')
-                        showGifPop('https://c.tenor.com/Y8ABES9syAYAAAAS/your-turn-its-your-turn.gif')
+                        showGifPop('yourTurn')
+                        
                     } else {
+                        showGifPop('notYourTurn')
+
                         setPlayerType('jugador')
 
                     }
@@ -436,8 +494,8 @@ const TabletaParticipantes = (props) => {
                     seteltiempo(50)
                     startTransition()
 
-                    showGifPop('https://i.pinimg.com/originals/42/cd/6e/42cd6edb536ac19657ecfaff140db76a.gif')
-
+                    showGifPop('next')
+                   
                     setHelpsCome([])
                     sethelpRequired(false)
                     setgameChoose(-1)
@@ -453,21 +511,17 @@ const TabletaParticipantes = (props) => {
                     minutes()
                     break;
                 case 'sendRespuestaResOk':
+                    showGifPop('ok')
                     console.log(dataIn, 'dataIndataInYes');
                     setgameChoose(dataIn)
                     setwinning(true)
                     cont = 10
-                    if (gameActive) {
-                        showGifPop('https://c.tenor.com/ZWopsXeO7tQAAAAS/clapping-applause.gif')
-                    }
-
                     break;
                 case 'sendRespuestaResNo':
-                    if (gameActive) {
-                        timeGame = -100
-                        cont = 10
-                        showGifPop(playerType === 'jugador' || playerType === 'publico' ? 'https://c.tenor.com/FhF7cOauHTcAAAAM/oyun-bitti-loser.gif' : 'https://c.tenor.com/2oSIv7HNnPsAAAAC/ups-ops.gif')
-                    }
+                    timeGame = -100
+                    cont = 10
+                    showGifPop('no')
+                   
                     setlostGame(true)
                     setgameChoose(dataIn)
                     setTimeout(() => {

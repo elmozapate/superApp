@@ -1636,3 +1636,8 @@ min-height:getRemSize(900px);
     height: fit-content !important;
     font-size: getRemSize( 40px);
 }
+.opating{
+    transition: 5000ms;
+    opacity: 0.45;
+    transform: scale(1.6);
+}
