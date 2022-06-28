@@ -7,14 +7,12 @@ import TransitionComponent from "./componentes/transitionComponent"
 import TabletaAdmin from "./tabletaAdmin"
 import GitPopOut from "./componentes/gitPopOut"
 const socket = io("http://serverazteca.herokuapp.com/")
-
 let timeGame = 50
 let cont = 0
 const TabletaParticipantes = (props) => {
     const [helpPreStream, sethelpPreStream] = useState(false)
     const [warningPreStreamNeedingHelp, setwarningPreStreamNeedingHelp] = useState(false)
     const [helpTime, sethelpTime] = useState(120)
-
     const [inHelping, setinHelping] = useState(false)
 
     const [lastMin, setlastMin] = useState(false)
