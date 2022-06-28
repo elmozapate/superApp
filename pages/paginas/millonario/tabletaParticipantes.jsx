@@ -6,21 +6,21 @@ import io from "socket.io-client"
 import TransitionComponent from "./componentes/transitionComponent"
 import TabletaAdmin from "./tabletaAdmin"
 import GitPopOut from "./componentes/gitPopOut"
-const socket = io("https://serverazteca.herokuapp.com/")
+const socket = io("http://serverazteca.herokuapp.com/")
 
-let timeGame = 38
+let timeGame = 50
 let cont = 0
 const TabletaParticipantes = (props) => {
     const [helpPreStream, sethelpPreStream] = useState(false)
     const [warningPreStreamNeedingHelp, setwarningPreStreamNeedingHelp] = useState(false)
-    const [helpTime, sethelpTime] = useState(30)
+    const [helpTime, sethelpTime] = useState(120)
 
     const [inHelping, setinHelping] = useState(false)
 
     const [lastMin, setlastMin] = useState(false)
     const [lostGame, setlostGame] = useState(false)
     const [winning, setwinning] = useState(false)
-    const [eltiempo, seteltiempo] = useState(38)
+    const [eltiempo, seteltiempo] = useState(50)
     const [helpRes, setHelpRes] = useState(false)
     const [ip, setIp] = useState(props.ip || false)
     const [changeQuestion, setchangeQuestion] = useState(false)
@@ -96,10 +96,10 @@ const TabletaParticipantes = (props) => {
                         sethelpRequired(false)
                         setnowinHelping(false)
                         setinHelping(false)
-                        timeGame = 30
+                        timeGame = 55
                     } else {
                         setlostGame(true)
-                        if (playerType === 'jugando'  ) {
+                        if (playerType === 'jugando') {
                             escogerEsta({ respuesta: -1 })
                         }
                         showGifPop('https://i.gifer.com/4XAI.gif')
@@ -204,7 +204,7 @@ const TabletaParticipantes = (props) => {
     }
     const helpNeed = (i) => {
         cont = 10
-        timeGame = 30
+        timeGame = 55
         setnowinHelping(true)
         if (i.state) {
             socket.emit(
@@ -352,7 +352,7 @@ const TabletaParticipantes = (props) => {
                     break;
                 case 'helpRequired':
                     cont = 10
-                    timeGame = 30
+                    timeGame = 55
                     setTimeout(() => {
                         setnowinHelping(true)
                         minutes()
@@ -426,13 +426,16 @@ const TabletaParticipantes = (props) => {
                     setusersResults(dataIn)
                     setclasificationArray(dataIn)
                     break;
+                case 'newArray':
+                    console.log(dataIn, 'newArray');
+                    break;
 
                 case 'preguntaSiguiente':
                     setHelpRes(false)
                     setlastMin(false)
                     setlostGame(false)
                     setwinning(false)
-                    seteltiempo(38)
+                    seteltiempo(50)
                     startTransition()
 
                     showGifPop('https://i.pinimg.com/originals/42/cd/6e/42cd6edb536ac19657ecfaff140db76a.gif')
@@ -448,7 +451,7 @@ const TabletaParticipantes = (props) => {
                     setrespuestas(preguntas)
                     setgameActive(true)
                     cont = 0
-                    timeGame = 38
+                    timeGame = 50
                     minutes()
                     break;
                 case 'sendRespuestaResOk':
