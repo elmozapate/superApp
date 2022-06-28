@@ -6,7 +6,7 @@ import io from "socket.io-client"
 import TransitionComponent from "./componentes/transitionComponent"
 import TabletaAdmin from "./tabletaAdmin"
 import GitPopOut from "./componentes/gitPopOut"
-const socket = io("http://serverazteca.herokuapp.com/")
+const socket = io("https://serverazteca.herokuapp.com/")
 let timeGame = 50
 let cont = 0
 const TabletaParticipantes = (props) => {
