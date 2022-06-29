@@ -3,7 +3,7 @@ import BotonesRegistro from "./componentes/botonesRegistro"
 import ComponenteJugador from "./componentes/componenteJugador"
 import ComponentePublico from "./componentes/componentePublico"
 import io from "socket.io-client"
-import nookies, { parseCookies, setCookie, destroyCookie } from 'nookies'
+import { setCookies, removeCookies, getCookie } from 'cookies-next';
 import TransitionComponent from "./componentes/transitionComponent"
 import TabletaAdmin from "./tabletaAdmin"
 import GitPopOut from "./componentes/gitPopOut"
@@ -376,7 +376,7 @@ const TabletaParticipantes = (props) => {
                     console.log('playerDataRes', chat);
                     setUsersInRegister(dataIn)
                     dataIn.map((key, i) => {
-                        if (key.ip === ip || key.ip === parseInt(cookies2.millonarioIp)) {
+                        if (key.ip === ip || key.ip === parseInt(cookies2)) {
                             /*  if (initing) {
                                  startTransition(true)
                              } else {
@@ -387,7 +387,7 @@ const TabletaParticipantes = (props) => {
                                 ip: key.ip,
                                 name: key.name
                             })
-                            setCookie(null, "millonarioIp", key.ip, {
+                            setCookies( "millonarioIp", key.ip, {
                                 maxAge: 30 * 24 * 60 * 60,
                                 path: '/',
                             })
@@ -414,7 +414,7 @@ const TabletaParticipantes = (props) => {
                         console.log('ccoor');
                     }
                     setselectingIp(true)
-                    if (ip == dataIn.ip.ip||dataIn.ip.ip === parseInt(cookies2.millonarioIp)) {
+                    if (ip == dataIn.ip.ip||dataIn.ip.ip === parseInt(cookies2)) {
                         setPlayerType('jugando')
                         showGifPop('yourTurn')
 
@@ -489,7 +489,7 @@ const TabletaParticipantes = (props) => {
 
                     }
                     dataIn.map((key, i) => {
-                        if (key.playerData.ip === ip||key.playerData.ip === parseInt(cookies2.millonarioIp)) {
+                        if (key.playerData.ip === ip||key.playerData.ip === parseInt(cookies2)) {
                           /*   if (initing) {
                                 startTransition(true)
                             } else {
@@ -588,7 +588,7 @@ const TabletaParticipantes = (props) => {
 
                     break;
                 case 'helpRequiredOne':
-                    if (dataIn.ip === ip||dataIn.ip === parseInt(cookies2.millonarioIp)) {
+                    if (dataIn.ip === ip||dataIn.ip === parseInt(cookies2)) {
                         sethelpRequired(true)
                     }
                     setTimeout(() => {
@@ -627,16 +627,16 @@ const TabletaParticipantes = (props) => {
         })
 
         startTransition()
-        cookies2 = parseCookies('millonarioIp')
-        console.log('ip', ip);
+        cookies2 = getCookie('millonarioIp')
+        console.log(parseInt(cookies2),'ip', ip);
         if (cookies2) {
-            if (cookies2.millonarioIp) {
+            if (cookies2) {
                 console.log('envias');
-                setIp(parseInt(cookies2.millonarioIp))
+                setIp(parseInt(cookies2))
                 socket.emit(
                     'millonario', {
                     'dataIn': {
-                        ip: parseInt(cookies2.millonarioIp),
+                        ip: parseInt(cookies2),
                         'actionTodo': 'ipSend',
                     },
                     'actionTodo': 'ipSend',
