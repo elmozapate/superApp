@@ -872,13 +872,33 @@ p{
 .flex-wrap-true{
     flex-wrap: wrap;
 }
+.show{
+    display: none ;
+
+}
+@media (min-width: 500px) {
+    @media (max-width: 900px) {
+        .invisbleinmobil{
+            flex-direction: row;
+            br{
+                display: none;
+
+            }
+            .show{
+                display: block !important;
+
+            }
+
+        }
+    }
+}
 @media (max-width: 500px) {
     .mini-btn{
         transition: 3000ms;
         transform: scale(.45)!important;
     }
     .hgtI-15 {
-        max-height: fit-content !important;
+        max-height: 20% !important;
 }
 
 .hgtIVH-15{
@@ -891,6 +911,11 @@ p{
    height:25%!important;
     max-height:25%!important;
 
+}
+
+.pd-mobil{
+    padding: 0 20px !important;
+    justify-content: flex-start !important;
 }
 }
 .flex-wrap-false{

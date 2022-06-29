@@ -1,9 +1,10 @@
 import { useState } from "react";
 import BarraPlayer from "./barraPlayer.jsx";
 import HelpsComponent from "./helpsCompomemt";
+import TiempoPreguntas from "./tiempoPreguntas.jsx";
 
 const BarraInfo = (props) => {
-    const { helpRequired = false, inHelping = false, warningPreStreamNeedingHelp = false, setwarningPreStreamNeedingHelp = console.log, usersInRegister = [], usersResults = [], nowInlevel = 0, playerData = {
+    const { lastMin = false, lostGame = false, winning = false, eltiempo = 50, helpRequired = false, inHelping = false, warningPreStreamNeedingHelp = false, setwarningPreStreamNeedingHelp = console.log, usersInRegister = [], usersResults = [], nowInlevel = 0, playerData = {
         name: '',
         ip: ''
     }, actualPlayer = {
@@ -25,7 +26,7 @@ const BarraInfo = (props) => {
     }, gameChoose = -1, playerType = 'jugador', helpNeed = console.log } = props
     console.log(playerType, 'playerType');
     return (
-        <div className=" mini-btn fontcolorInedit-white wdt-80 column Ia-space-between Ij-center hgtI-15 BarraPlayerButton">
+        <div className=" mini-btn fontcolorInedit-white wdt-100 column Ia-space-between Ij-center hgtI-15 BarraPlayerButton">
 
 
             {
@@ -53,10 +54,11 @@ const BarraInfo = (props) => {
                             } : (e) => {
                                 e.preventDefault(); /* console.log(playerType); choosePublic(); */
                             }}>CAMBIO DE PREGUNTA</button>
-                           
-                        </div >
-                        <h1 className={`fontSize-20  ${playerType === 'jugando' ? 'fontcolorInedit-green' : helpRequired ? 'fontcolorInedit-green' : 'fontcolorInedit-red'}`}>{playerType === 'jugando' ? 'TU ESTAS PARTIPANDO' : helpRequired ? 'ESTAS AYUDANDO?' : 'ERES PUBLICO'}</h1>
-                    </div>
+                            {helpRequired ? <></> : <TiempoPreguntas helpRequired={helpRequired} lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo} />}
+                            <h1 className={`fontSize-20  ${playerType === 'jugando' ? 'fontcolorInedit-green' : helpRequired ? 'fontcolorInedit-green' : 'fontcolorInedit-red'}`}>{playerType === 'jugando' ? 'TU ESTAS PARTIPANDO' : helpRequired ? 'ESTAS AYUDANDO?' : 'ERES PUBLICO'}</h1>
+                        </div>
+                    </div >
+
             }
             <div className={warningPreStreamNeedingHelp ? 'warning_pop' : 'hide'}>
                 <div className={warningPreStreamNeedingHelp ? 'warning_popout' : 'hide'}>

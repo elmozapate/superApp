@@ -16,10 +16,10 @@ const ComponenteJugador = (props) => {
             {
                 gameActive ?
                     <>
-                        <div className={playerType === 'jugando' ? "fontcolorInedit-white wdt-100 Ia-center Ij-center hgtI-15 hgtI-15 flex-wrap-true" : "fontcolorInedit-white wdt-100 Ia-center Ij-center hgtI-15 flex-wrap-true"}>
-                            <BarraInfo helpRequired={helpRequired} helpTime={eltiempo}  inHelping={inHelping} warningPreStreamNeedingHelp={warningPreStreamNeedingHelp} setwarningPreStreamNeedingHelp={setwarningPreStreamNeedingHelp}      usersInRegister={usersInRegister} nowInlevel={nowInlevel} actualPlayer={actualPlayer} playerData={playerData}
+                        <div className={playerType === 'jugando' ? "fontcolorInedit-white wdt-100 Ia-center Ij-center  hgtIVH-20 flex-wrap-true" : "fontcolorInedit-white wdt-100 Ia-center Ij-center hgtIVH-20 flex-wrap-true"}>
+                            <BarraInfo lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo} helpRequired={helpRequired} helpTime={eltiempo}  inHelping={inHelping} warningPreStreamNeedingHelp={warningPreStreamNeedingHelp} setwarningPreStreamNeedingHelp={setwarningPreStreamNeedingHelp}      usersInRegister={usersInRegister} nowInlevel={nowInlevel} actualPlayer={actualPlayer} playerData={playerData}
                                 usersResults={usersResults} helpsCome={helpsCome} helpsPlayer={helpsPlayer} helpNeed={helpNeed} playerType={playerType} gameChoose={gameChoose} ip={ip} />
-                                {helpRequired?<></>:  <TiempoPreguntas helpRequired={helpRequired} lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo} />}
+                               
                           
                         </div>
                         <ComponentePreguntas  sethelpPreStream={sethelpPreStream}  helpRes={helpRes} helpPreStream={helpPreStream}  acceptHelp={acceptHelp} gameChoose={gameChoose} primeraEleccion={primeraEleccion} inChoosing={inChoosing} playerChoose={playerChoose} pregunta={pregunta} playerType={playerType} escogerEsta={escogerEsta} respuestas={respuestas} sendHelp={sendHelp} helpRequired={helpRequired} ip={ip} publico={true} />

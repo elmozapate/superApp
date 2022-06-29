@@ -3,13 +3,16 @@ import BotonesRegistro from "./componentes/botonesRegistro"
 import ComponenteJugador from "./componentes/componenteJugador"
 import ComponentePublico from "./componentes/componentePublico"
 import io from "socket.io-client"
+import nookies, { parseCookies, setCookie, destroyCookie } from 'nookies'
 import TransitionComponent from "./componentes/transitionComponent"
 import TabletaAdmin from "./tabletaAdmin"
 import GitPopOut from "./componentes/gitPopOut"
 const socket = io("https://serverazteca.herokuapp.com/")
 let timeGame = 50
 let cont = 0
+let cookies2 = 'sinCookie'
 const TabletaParticipantes = (props) => {
+
     const [helpPreStream, sethelpPreStream] = useState(false)
     const [warningPreStreamNeedingHelp, setwarningPreStreamNeedingHelp] = useState(false)
     const [helpTime, sethelpTime] = useState(120)
@@ -301,7 +304,7 @@ const TabletaParticipantes = (props) => {
                 imgs4 = imgs4.sort(function (a, b) { return (Math.random() - 0.5) });
                 setGifPop({
                     state: true,
-                    msg:imgs4[0] ,
+                    msg: imgs4[0],
                     audio: 'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/millonario%2Faplausos.mp3?alt=media&token=77a0f516-4400-4be7-9e72-970a85e431fc'
 
                 })
@@ -370,9 +373,10 @@ const TabletaParticipantes = (props) => {
             const dataIn = chat.dataIn || ""
             switch (actionTodo) {
                 case 'playerDataRes':
+                    console.log('playerDataRes', chat);
                     setUsersInRegister(dataIn)
                     dataIn.map((key, i) => {
-                        if (key.ip === ip) {
+                        if (key.ip === ip || key.ip === parseInt(cookies2.millonarioIp)) {
                             /*  if (initing) {
                                  startTransition(true)
                              } else {
@@ -382,6 +386,10 @@ const TabletaParticipantes = (props) => {
                             setplayerData({
                                 ip: key.ip,
                                 name: key.name
+                            })
+                            setCookie(null, "millonarioIp", key.ip, {
+                                maxAge: 30 * 24 * 60 * 60,
+                                path: '/',
                             })
                             inGame = true
                         }
@@ -406,7 +414,7 @@ const TabletaParticipantes = (props) => {
                         console.log('ccoor');
                     }
                     setselectingIp(true)
-                    if (ip == dataIn.ip.ip) {
+                    if (ip == dataIn.ip.ip||dataIn.ip.ip === parseInt(cookies2.millonarioIp)) {
                         setPlayerType('jugando')
                         showGifPop('yourTurn')
 
@@ -481,7 +489,7 @@ const TabletaParticipantes = (props) => {
 
                     }
                     dataIn.map((key, i) => {
-                        if (key.playerData.ip === ip) {
+                        if (key.playerData.ip === ip||key.playerData.ip === parseInt(cookies2.millonarioIp)) {
                           /*   if (initing) {
                                 startTransition(true)
                             } else {
@@ -580,7 +588,7 @@ const TabletaParticipantes = (props) => {
 
                     break;
                 case 'helpRequiredOne':
-                    if (dataIn.ip === ip) {
+                    if (dataIn.ip === ip||dataIn.ip === parseInt(cookies2.millonarioIp)) {
                         sethelpRequired(true)
                     }
                     setTimeout(() => {
@@ -617,15 +625,34 @@ const TabletaParticipantes = (props) => {
                     break;
             }
         })
-        socket.emit(
-            'millonario', {
-            'dataIn': {
-                ip: ip,
-                'actionTodo': 'ipSend',
-            },
-            'actionTodo': 'ipSend',
-        })
+
         startTransition()
+        cookies2 = parseCookies('millonarioIp')
+        console.log('ip', ip);
+
+        if (cookies2) {
+            if (cookies2.millonarioIp) {
+                console.log('envias');
+                setIp(parseInt(cookies2.millonarioIp))
+                socket.emit(
+                    'millonario', {
+                    'dataIn': {
+                        ip: parseInt(cookies2.millonarioIp),
+                        'actionTodo': 'ipSend',
+                    },
+                    'actionTodo': 'ipSend',
+                })
+            } else {
+                socket.emit(
+                    'millonario', {
+                    'dataIn': {
+                        ip: ip,
+                        'actionTodo': 'ipSend',
+                    },
+                    'actionTodo': 'ipSend',
+                })
+            }
+        }
     }, [])
     if (inTransition) {
         return (<>
@@ -659,4 +686,5 @@ const TabletaParticipantes = (props) => {
     </>
     )
 }
+
 export default TabletaParticipantes

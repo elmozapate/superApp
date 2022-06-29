@@ -23,8 +23,8 @@ const ComponentePreguntas = (props) => {
     }
     return (
         <>
-            <div className="column wdt-100 Ia-center Ij-center hgtIVH-80">
-                <div className="wdt-100 flex-row Ia-center Ij-center hgtIVH-15 ">
+            <div className="column wdt-100 Ia-center Ij-center hgtIVH-80 pd-mobil">
+                <div className="wdt-100 flex-row Ia-center Ij-center hgtIVH-11 ">
                     <PreguntaActiva pregunta={pregunta} />
                 </div>
                 <div className="wdt-100 flex-wrap-true Ia-center Ij-center hgtIVH-63 ngap-10">
