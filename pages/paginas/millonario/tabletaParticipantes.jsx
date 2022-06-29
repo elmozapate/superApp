@@ -629,7 +629,6 @@ const TabletaParticipantes = (props) => {
         startTransition()
         cookies2 = parseCookies('millonarioIp')
         console.log('ip', ip);
-
         if (cookies2) {
             if (cookies2.millonarioIp) {
                 console.log('envias');
