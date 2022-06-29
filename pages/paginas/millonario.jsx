@@ -26,7 +26,7 @@ export async function getServerSideProps({ req, query }) {
     let max = 9000000000
     return {
         props: {
-            ip: Math.floor(Math.random() * (max - min)) + min,
+            ip: ip,
             page: querytext
         },
     }

@@ -31,7 +31,7 @@ const TabletaParticipantes = (props) => {
     const [gifPop, setGifPop] = useState({
         state: false,
         msg: 'welcome',
-        audio:''
+        audio: ''
 
     })
     const [nowInlevel, setnowInlevel] = useState(0)
@@ -103,7 +103,7 @@ const TabletaParticipantes = (props) => {
                             escogerEsta({ respuesta: -1 })
                         }
                         showGifPop('perdio')
-                        
+
                     }
 
                 }
@@ -288,7 +288,7 @@ const TabletaParticipantes = (props) => {
         setGifPop({
             state: false,
             msg: '',
-            audio:''
+            audio: ''
 
         })
     }
@@ -296,19 +296,27 @@ const TabletaParticipantes = (props) => {
 
         switch (msg) {
             case 'ok':
+                let imgs4 = ['https://c.tenor.com/ZWopsXeO7tQAAAAS/clapping-applause.gif', 'https://c.tenor.com/Oj2nKJiZSU4AAAAC/celebration-will-smith.gif ', ' https://media2.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif?cid=790b76119581833a99349a997c874904cd7abf10efdea4cd&rid=giphy.gif&ct=g ', 'https://c.tenor.com/3kLOiYZ4elcAAAAC/elmo-jimmyfallon.gif', ' https://i.gifer.com/origin/c9/c99a2ba9b7b577dfe17e7f74c4314fc2_w200.gif', 'https://i.pinimg.com/originals/b1/34/ca/b134ca64e6fdf2d4a109a90705711770.gif'
+                ]
+                imgs4 = imgs4.sort(function (a, b) { return (Math.random() - 0.5) });
                 setGifPop({
                     state: true,
-                    msg: 'https://c.tenor.com/ZWopsXeO7tQAAAAS/clapping-applause.gif',
-                    audio:'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/millonario%2Faplausos.mp3?alt=media&token=77a0f516-4400-4be7-9e72-970a85e431fc'
+                    msg:imgs4[0] ,
+                    audio: 'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/millonario%2Faplausos.mp3?alt=media&token=77a0f516-4400-4be7-9e72-970a85e431fc'
 
-                }) 
+                })
                 setTimeout(resetGifPop, 8000)
                 break;
             case 'no':
+                let imgs3 = [' https://media4.giphy.com/media/eJ4j2VnYOZU8qJU3Py/giphy.gif?cid=790b761116fbfb499578001ee048e90750a4d53c92c8ebdc&rid=giphy.gif&ct=g', ' https://c.tenor.com/kRYmL5XfwzMAAAAC/miggi-you-lose.gif ', ' https://www.epicgifs.net/images/show/P1KDAY3RF ', ' https://c.tenor.com/HIiVcEQR_xwAAAAC/game-over-its-over.gif ', ' https://i.pinimg.com/originals/ed/58/d3/ed58d31cdfb5b5da28ff06a11cf860d6.gif', 'https://i.gifer.com/4XAI.gif'
+                ]
+                imgs3 = imgs3.sort(function (a, b) { return (Math.random() - 0.5) });
                 setGifPop({
                     state: true,
-                    msg:  !playerType === 'jugador' || !playerType === 'publico' ? 'https://c.tenor.com/FhF7cOauHTcAAAAM/oyun-bitti-loser.gif' : 'https://c.tenor.com/2oSIv7HNnPsAAAAC/ups-ops.gif',
-                    audio:'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/millonario%2Fmixkit-player-losing-or-failing-2042.wav?alt=media&token=da862dc9-9820-457e-a37d-98846fa8b084'
+                    msg: imgs3[0],
+
+
+                    audio: 'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/millonario%2Fmixkit-player-losing-or-failing-2042.wav?alt=media&token=da862dc9-9820-457e-a37d-98846fa8b084'
 
                 })
                 setTimeout(resetGifPop, 7000)
@@ -316,40 +324,44 @@ const TabletaParticipantes = (props) => {
             case 'next':
                 setGifPop({
                     state: true,
-                    msg:  'https://i.pinimg.com/originals/42/cd/6e/42cd6edb536ac19657ecfaff140db76a.gif',
-                    audio:''
+                    msg: 'https://i.pinimg.com/originals/42/cd/6e/42cd6edb536ac19657ecfaff140db76a.gif',
+                    audio: ''
                 })
                 setTimeout(resetGifPop, 5000)
                 break;
             case 'perdio':
                 setGifPop({
                     state: true,
-                    msg: 'https://i.gifer.com/4XAI.gif',
-                    audio:''
+                    msg: !playerType === 'jugador' || !playerType === 'publico' ? 'https://c.tenor.com/FhF7cOauHTcAAAAM/oyun-bitti-loser.gif' : 'https://c.tenor.com/2oSIv7HNnPsAAAAC/ups-ops.gif', audio: ''
 
                 })
                 setTimeout(resetGifPop, 7000)
                 break;
             case 'yourTurn':
+                let imgs2 = ['https://c.tenor.com/Y8ABES9syAYAAAAS/your-turn-its-your-turn.gif,', 'https://c.tenor.com/I-KWVf8K0ocAAAAd/game-time-its-time.gif', 'https://media0.giphy.com/media/dVZSQpraBtKKnKUZg1/giphy.gif?cid=790b76119d7ab87be7512ea18f0e982850678c62badcfdef&rid=giphy.gif&ct=g', 'https://c.tenor.com/pBTl9Roc4cYAAAAC/you-got-this.gif']
+                imgs2 = imgs2.sort(function (a, b) { return (Math.random() - 0.5) });
                 setGifPop({
                     state: true,
-                    msg: 'https://c.tenor.com/Y8ABES9syAYAAAAS/your-turn-its-your-turn.gif',
-                    audio:'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/millonario%2FWhatsapp%20Star%20Wars%20(Nuevotono.Net).mp3?alt=media&token=532f2269-1a47-466a-8645-aa5d1f23fcfa'
+                    msg: imgs2[0],
+                    audio: 'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/millonario%2FWhatsapp%20Star%20Wars%20(Nuevotono.Net).mp3?alt=media&token=532f2269-1a47-466a-8645-aa5d1f23fcfa'
                 })
                 setTimeout(resetGifPop, 10000)
                 break;
-                case 'notYourTurn':
-                    setGifPop({
-                        state: true,
-                        msg: 'https://c.tenor.com/LCFZOuwQvgAAAAAC/keep-trying-trying.gif',
-                        audio:'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/millonario%2Fmixkit-player-losing-or-failing-2042.wav?alt=media&token=da862dc9-9820-457e-a37d-98846fa8b084'
-                    })
-                    setTimeout(resetGifPop, 10000)
-                    break;
+            case 'notYourTurn':
+                let imgs = ['https://c.tenor.com/LCFZOuwQvgAAAAAC/keep-trying-trying.gif', 'https://c.tenor.com/vF1GD6UN6bUAAAAC/next-time-excited.gif']
+                imgs = imgs.sort(function (a, b) { return (Math.random() - 0.5) });
+
+                setGifPop({
+                    state: true,
+                    msg: imgs,
+                    audio: 'https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/millonario%2Fmixkit-player-losing-or-failing-2042.wav?alt=media&token=da862dc9-9820-457e-a37d-98846fa8b084'
+                })
+                setTimeout(resetGifPop, 10000)
+                break;
             default:
                 break;
         }
-       
+
     }
     useEffect(() => {
         socket.on("millonario", (chat) => {
@@ -397,7 +409,7 @@ const TabletaParticipantes = (props) => {
                     if (ip == dataIn.ip.ip) {
                         setPlayerType('jugando')
                         showGifPop('yourTurn')
-                        
+
                     } else {
                         showGifPop('notYourTurn')
 
@@ -495,7 +507,7 @@ const TabletaParticipantes = (props) => {
                     startTransition()
 
                     showGifPop('next')
-                   
+
                     setHelpsCome([])
                     sethelpRequired(false)
                     setgameChoose(-1)
@@ -521,7 +533,7 @@ const TabletaParticipantes = (props) => {
                     timeGame = -100
                     cont = 10
                     showGifPop('no')
-                   
+
                     setlostGame(true)
                     setgameChoose(dataIn)
                     setTimeout(() => {

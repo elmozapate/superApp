@@ -4,8 +4,8 @@ const TransitionComponent = (props) => {
     const { initing = false, clasifiquing = false, startCLass = console.log,time=30 } = props
     return (
         <div className="bgColor-black col-12 hg100vh relative">
-            <div className={!clasifiquing ? 'hide' : 'warning_pop'}>
-                <div className={'warning_popout relative'}>
+            <div className={!clasifiquing ? 'hide' : 'opating'}>
+                <div className={''}>
                     <img src={'https://i.pinimg.com/originals/d0/49/1d/d0491d3d235d3c6770014825af0d2961.gif'} className="warning_popout-gif" />
                     <button className='btn-azteca pointer bgcolorInedit-red absolute top-50' onCLick={(e) => {
                         e.preventDefault();

@@ -8,8 +8,8 @@ const GitPopOut = (props) => {
     }, startCLass = console.log } = props
     if (buttonActive) {
         return (
-            <div className={'warning_pop opating'}>
-                <div className={'warning_popout relative opating'}>
+            <div className={' opating absolute'}>
+                <div className={'  '}>
                     <img src={'https://i.pinimg.com/originals/d0/49/1d/d0491d3d235d3c6770014825af0d2961.gif'} className="warning_popout-gif" />
                     <button className='btn-azteca pointer bgcolorInedit-red absolute top-50' onCLick={(e) => {
                         e.preventDefault(); setAreYouReady(true); console.log('siiiii');
@@ -21,8 +21,8 @@ const GitPopOut = (props) => {
         )
     }
     return (
-        <div className={gifPop.state ? 'warning_pop opating' : 'hide'}>
-            <div className={gifPop.state ? 'warning_popout' : 'hide'}>
+        <div className={gifPop.state ? 'opating absolute' : 'hide'}>
+            <div className={gifPop.state ? '' : 'hide'}>
                 <img src={gifPop.msg} className="warning_popout-gif" />
                 <audio src={gifPop.audio} className={'hide'} controls autoPlay >
                 </audio>
