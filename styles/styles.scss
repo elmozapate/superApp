@@ -600,7 +600,15 @@ font-weight: 700;
     padding: 10px;
     color: white;
 }
-
+.btn-azteca-mini{
+    min-width: min-content;
+    border-radius: 15px;
+    font-size: getRemSize(12px);
+    font-weight: 900;
+    background-color: red ;
+    padding: 4px 5px;
+    color: white;
+}
 .chat-date{
     height: min-content;
 
@@ -1722,4 +1730,42 @@ min-height:getRemSize(900px);
 
     }
     }
+}
+.game-mode{
+    display:flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    padding: 30px;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+}
+.btn-game-mode{
+    transition: 5000ms;
+    span{
+        font-weight: 900;
+        color: green;
+        font-size: getRemSize(8px) !important;
+    }
+   button{
+width: fit-content !important;
+font-size: getRemSize(10px) !important;
+height: fit-content !important;
+padding: 1px 2px !important;
+} ;
+    z-index: 99999999999999999999;
+    display:flex;
+    position: absolute;
+    top: 0;
+    right: 0;
+    flex-direction: column;
+    height: fit-content;
+    width: min-content;
+    padding: 30px;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+    border-radius: 20px;
+    padding: 20px;
 }

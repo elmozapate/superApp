@@ -6,7 +6,6 @@ import TabletaParticipantes from "./millonario/tabletaParticipantes"
 const Millonario = (props) => {
     const [ip, setIp] = useState(props.ip || false)
     const [fromPage, setfromPage] = useState(props.page )
-    console.log(props.page);
 
 
     return (

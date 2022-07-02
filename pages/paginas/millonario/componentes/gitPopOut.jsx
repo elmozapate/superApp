@@ -12,7 +12,7 @@ const GitPopOut = (props) => {
                 <div className={'  '}>
                     <img src={'https://i.pinimg.com/originals/d0/49/1d/d0491d3d235d3c6770014825af0d2961.gif'} className="warning_popout-gif" />
                     <button className='btn-azteca pointer bgcolorInedit-red absolute top-50' onCLick={(e) => {
-                        e.preventDefault(); setAreYouReady(true); console.log('siiiii');
+                        e.preventDefault(); setAreYouReady(true); 
                         ; startCLass()
                     }}> INICIAR LA CLASIFICACION <br />Suerte... </button>
 

@@ -7,17 +7,24 @@ import { setCookies, removeCookies, getCookie } from 'cookies-next';
 import TransitionComponent from "./componentes/transitionComponent"
 import TabletaAdmin from "./tabletaAdmin"
 import GitPopOut from "./componentes/gitPopOut"
-const socket = io("https://serverazteca.herokuapp.com/")
+import ModeGame from "./componentes/modegame"
+import ComponenteSinglePlayer from "./componentes/componenteSinglePlayer"
+import ComponenteMultiPlayer from "./componentes/componenteMultiPlayer"
+const socket = io('https://serverazteca.herokuapp.com')
 let timeGame = 50
 let cont = 0
 let cookies2 = 'sinCookie'
+let cookies3 = 'sinCookie'
+let cookies4 = 'sinCookie'
 const TabletaParticipantes = (props) => {
-
+    const [changeMode, setChangeMode] = useState('sinRegistro')
+    const [adminData, setadminData] = useState('')
     const [helpPreStream, sethelpPreStream] = useState(false)
     const [warningPreStreamNeedingHelp, setwarningPreStreamNeedingHelp] = useState(false)
     const [helpTime, sethelpTime] = useState(120)
     const [inHelping, setinHelping] = useState(false)
-
+    const [multiPlayerGo, setmultiPlayerGo] = useState(false)
+    const [roomAdmin, setroomAdmin] = useState(false)
     const [lastMin, setlastMin] = useState(false)
     const [lostGame, setlostGame] = useState(false)
     const [winning, setwinning] = useState(false)
@@ -37,11 +44,20 @@ const TabletaParticipantes = (props) => {
         audio: ''
 
     })
+
+    const [roomPlayers, setRoomPlayers] = useState([])
+    const [roomsArray, setRoomsArray] = useState([])
+    const [goNow, setgoNow] = useState(false)
+    const [singlePlayerReady, setsinglePlayerReady] = useState(false)
+    const [multiPlayerReady, setmultiPlayerReady] = useState(false)
+    const [roomName, setRoomName] = useState('sinSala')
     const [nowInlevel, setnowInlevel] = useState(0)
     const [selectingIp, setselectingIp] = useState(false)
     const [ipChoosed, setipChoosed] = useState('')
     const [primeraEleccion, setPrimeraEleccion] = useState(-1)
     const [gameChoose, setgameChoose] = useState(-1)
+    const [chooseState, setChooseState] = useState(false)
+
     const [helpsPlayer, setHelpsPlayer] = useState({
         help1: true,
         help2: true,
@@ -54,6 +70,9 @@ const TabletaParticipantes = (props) => {
         estado: "",
         numeroDePregunta: 0
     }])
+
+    const [SinglePlayArray, setSinglePlayArray] = useState([])
+    const [SinglePlayLevel, setSinglePlayLevel] = useState(0)
     const [ClasificDone, setClasificDone] = useState(false)
     const [inTransition, setinTransition] = useState(false)
     const [playerActive, setPlayerActive] = useState(false)
@@ -71,6 +90,10 @@ const TabletaParticipantes = (props) => {
     const [respuestas, setrespuestas] = useState([{
         respuesta: ''
     }])
+
+    const [nameRequire, setnameRequire] = useState('vacio')
+    const [inRoom, setInRoom] = useState(false)
+
     const [nowinHelping, setnowinHelping] = useState(false)
     const [initing, setIniting] = useState(false)
     const [playerData, setplayerData] = useState({
@@ -79,6 +102,7 @@ const TabletaParticipantes = (props) => {
     })
     const [playerType, setPlayerType] = useState('publico')
     const minutes = () => {
+        let cookies5 = getCookie('playerType') || false
         timeGame = timeGame - 1
         if (cont === 10) {
             cont = 0
@@ -102,7 +126,7 @@ const TabletaParticipantes = (props) => {
                         timeGame = 55
                     } else {
                         setlostGame(true)
-                        if (playerType === 'jugando') {
+                        if (playerType === 'jugando' || (cookies5 === 'jugando')) {
                             escogerEsta({ respuesta: -1 })
                         }
                         showGifPop('perdio')
@@ -119,14 +143,179 @@ const TabletaParticipantes = (props) => {
         setPlayerActive(true)
     }
     const sendHelp = (respuesta) => {
-        console.log(respuesta, 'helped');
         socket.emit(
             'millonario', {
+            'gameType': gameChoose,
+            'roomName': roomName,
             'actionTodo': 'helping',
             'dataIn': respuesta,
         })
         sethelpRequired(false)
     }
+    const startLonelyGamme = (dataIn) => {
+        setCookies("gameType", 'singlePlayer', {
+            maxAge: 30 * 24 * 60 * 60,
+            path: '/',
+        })
+        cookies4 = getCookie('roomName')
+        if (cookies4) {
+            removeCookies('roomName')
+        }
+        setChangeMode('singlePlayer')
+        setsinglePlayerReady(true)
+        setactualPlayer(playerData)
+        setselectingIp(true)
+        setPlayerType('jugando')
+        setTimeout(() => {
+            setHelpRes(false)
+            setlastMin(false)
+            setlostGame(false)
+            setwinning(false)
+            seteltiempo(50)
+            startTransition()
+            setHelpsCome([])
+            sethelpRequired(false)
+            setgameChoose(-1)
+            setPrimeraEleccion(- 1)
+            setpregunta(dataIn[SinglePlayLevel].pregunta)
+            let preguntas = []
+            preguntas.push(dataIn[SinglePlayLevel].respuesta1, dataIn[SinglePlayLevel].respuesta2, dataIn[SinglePlayLevel].respuesta3, dataIn[SinglePlayLevel].respuesta4)
+            setrespuestas(preguntas)
+            setgameActive(true)
+            cont = 0
+            timeGame = 50
+            minutes()
+        }, 8000)
+
+    }
+    const anwserLonelyGamme = (repuesta) => {
+        cont = 10
+        if (repuesta == SinglePlayArray[SinglePlayLevel].correcta) {
+            showGifPop('ok')
+            setgameChoose(SinglePlayArray[SinglePlayLevel].correcta)
+            setwinning(true)
+            socket.emit(
+                'millonario', {
+                'gameType': 'singlePlayer',
+                'roomName': cookies4 ? cookies4 : roomName,
+                'dataIn': {
+                    ip: parseInt(cookies2) || ip,
+                    'actionTodo': 'goodAnwser',
+                },
+                'actionTodo': 'goodAnwser',
+            })
+            setTimeout(() => {
+                newQuestionLonelyGamme(); setnowInlevel(SinglePlayLevel + 1)
+            }, 8000)
+
+        } else {
+            setlostGame(true)
+            showGifPop('no')
+            setgameChoose(SinglePlayArray[SinglePlayLevel].correcta)
+            offLonelyGamme()
+        }
+    }
+    const offLonelyGamme = () => {
+
+        socket.emit(
+            'millonario', {
+            'gameType': 'millonario',
+            'roomName': cookies4 ? cookies4 : roomName,
+            'dataIn': {
+                ip: parseInt(cookies2),
+                'actionTodo': 'gameOver',
+            },
+            'actionTodo': 'gameOver',
+        })
+        setTimeout(() => {
+            setCookies("gameType", 'off', {
+                maxAge: 30 * 24 * 60 * 60,
+                path: '/',
+            })
+            socket.emit(
+                'millonario', {
+                'gameType': 'millonario',
+                'roomName': cookies4 ? cookies4 : roomName,
+                'dataIn': {
+                    ip: parseInt(cookies2),
+                    'actionTodo': 'ipSend',
+                },
+                'actionTodo': 'ipSend',
+            })
+            if (playerType !== 'publico') {
+                setPlayerType('jugador')
+            }
+            setinClasification(false); setarrayClassificatorio([{
+                pregunta: '',
+                repuestas: [],
+                correcta: -1
+            }]); setclasificationArray([]);
+            setPlayerType('jugador')
+            setSinglePlayArray([])
+            setSinglePlayLevel(0)
+            setPlayerActive(false)
+            setlastMin(false)
+            setlostGame(false)
+            setwinning(false)
+            seteltiempo(-1)
+            setHelpRes(false)
+            setClasificDone(false); setuserResults([{
+                estado: "",
+                numeroDePregunta: 0
+            }]); setpregunta([]);
+            setgameActive(false); setselectingIp(false); setChangeMode('sinRegistro')
+            setmultiPlayerReady(false)
+            setsinglePlayerReady(false); setgoNow(false);
+        }, 8000)
+    }
+    const newQuestionLonelyGamme = (newwArray) => {
+        if (newwArray) {
+            const many = SinglePlayLevel + 1
+            setSinglePlayLevel(SinglePlayLevel + 1)
+            setHelpRes(false)
+            setlastMin(false)
+            setlostGame(false)
+            setwinning(false)
+            seteltiempo(50)
+            startTransition()
+            showGifPop('next')
+            setHelpsCome([])
+            sethelpRequired(false)
+            setgameChoose(-1)
+            setPrimeraEleccion(- 1)
+            setpregunta(newwArray[many].pregunta)
+            let preguntas = []
+            preguntas.push(newwArray[many].respuesta1, newwArray[many].respuesta2, newwArray[many].respuesta3, newwArray[many].respuesta4)
+            setrespuestas(preguntas)
+            setgameActive(true)
+            cont = 0
+            timeGame = 50
+            minutes()
+        } else {
+            const many = SinglePlayLevel + 1
+            setSinglePlayLevel(SinglePlayLevel + 1)
+            setHelpRes(false)
+            setlastMin(false)
+            setlostGame(false)
+            setwinning(false)
+            seteltiempo(50)
+            startTransition()
+            showGifPop('next')
+            setHelpsCome([])
+            sethelpRequired(false)
+            setgameChoose(-1)
+            setPrimeraEleccion(- 1)
+            setpregunta(SinglePlayArray[many].pregunta)
+            let preguntas = []
+            preguntas.push(SinglePlayArray[many].respuesta1, SinglePlayArray[many].respuesta2, SinglePlayArray[many].respuesta3, SinglePlayArray[many].respuesta4)
+            setrespuestas(preguntas)
+            setgameActive(true)
+            cont = 0
+            timeGame = 50
+            minutes()
+        }
+    }
+
     const startTransition = (condition) => {
         if (condition) {
             setIniting(true)
@@ -145,31 +334,69 @@ const TabletaParticipantes = (props) => {
 
     }
     const escogerEsta = (respuesta) => {
-        socket.emit(
-            'millonario', {
-            'dataIn': {
-                respuesta,
+        cookies3 = getCookie('gameType')
+        cookies4 = getCookie('roomName')
+        console.log(changeMode, cookies3, 'roomName');
+        if (changeMode === 'millonario' || changeMode === 'multiPlayer' || cookies3 === 'multiPlayer') {
+            console.log(respuesta, 'respuesta');
+
+            socket.emit(
+                'millonario', {
+                'gameType': cookies3,
+                'roomName': cookies4,
+                'dataIn': {
+                    respuesta,
+                    'actionTodo': 'sendRespuesta',
+                },
                 'actionTodo': 'sendRespuesta',
-            },
-            'actionTodo': 'sendRespuesta',
-        })
-        console.log('escigio', respuesta);
+            })
+        } else {
+            if (cookies3 === 'singlePlayer') {
+                anwserLonelyGamme(respuesta)
+            }
+        }
+
     }
     const startMillonario = (participante) => {
-        console.log('start');
+        cookies3 = getCookie('gameType')
+        cookies4 = getCookie('roomName')
+        if (cookies3 === 'singlePlayer') {
+            socket.emit(
+                'millonario', {
+                'gameType': 'singlePlay',
+                'roomName': cookies4 || roomName,
+                'dataIn': {
+                    participante,
+                    'actionTodo': 'singlePlay',
+                },
+                'actionTodo': 'singlePlay',
+            })
+        } else {
+            socket.emit(
+                'millonario', {
+                'gameType': cookies3,
+                'roomName': cookies4 || roomName,
+                'dataIn': {
+                    participante,
+                    'actionTodo': 'createMillonario',
+                },
+                'actionTodo': 'createMillonario',
+            })
+        }
+    }
+    const startClassific = () => {
         socket.emit(
             'millonario', {
-            'dataIn': {
-                participante,
-                'actionTodo': 'createMillonario',
-            },
-            'actionTodo': 'createMillonario',
+            'gameType': 'multiPlayer',
+            'roomName': roomName,
+            'actionTodo': 'createClassification',
         })
-
     }
     const sendPregunta = (pregunta) => {
         socket.emit(
             'millonario', {
+            'gameType': gameChoose,
+            'roomName': roomName,
             'dataIn': {
                 pregunta,
                 'actionTodo': 'nuevaPregunta',
@@ -180,6 +407,8 @@ const TabletaParticipantes = (props) => {
     const sendPuntuation = (array, time) => {
         socket.emit(
             'millonario', {
+            'gameType': gameChoose,
+            'roomName': roomName,
             'dataIn': {
                 playerData,
                 array,
@@ -192,6 +421,8 @@ const TabletaParticipantes = (props) => {
     const sendPlayer = (playerData) => {
         socket.emit(
             'millonario', {
+            'gameType': gameChoose,
+            'roomName': roomName,
             'dataIn': {
                 playerData: playerData,
                 'actionTodo': 'playerDataSend',
@@ -200,55 +431,100 @@ const TabletaParticipantes = (props) => {
         })
     }
     const inChoosing = (i) => {
-        socket.emit(
-            'millonario', {
-            'dataIn': i,
-            'actionTodo': 'inChoosing',
-        })
+        cookies3 = getCookie('gameType')
+        cookies4 = getCookie('roomName')
+        if (cookies3 === 'millonario' || cookies3 === 'multiPlayer') {
+            socket.emit(
+                'millonario', {
+                'gameType': cookies3,
+                'roomName': roomName,
+                'dataIn': i,
+                'actionTodo': 'inChoosing',
+            })
+        } else {
+            setPrimeraEleccion(parseInt((i + 1) - 1))
+        }
+
     }
     const helpNeed = (i) => {
         cont = 10
         timeGame = 55
         setnowinHelping(true)
-        if (i.state) {
+        cookies3 = getCookie('gameType')
+
+        if (i.state && cookies3 !== 'siglePlayer') {
             socket.emit(
                 'millonario', {
+                'gameType': gameChoose,
+                'roomName': roomName,
                 'dataIn': i.friend,
                 'actionTodo': 'help2',
             })
         } else {
             switch (i) {
                 case 1:
-                    socket.emit(
-                        'millonario', {
-                        'dataIn': {
+                    if (cookies3 === 'siglePlayer') {
+                        socket.emit(
+                            'millonario', {
+                            'gameType': gameChoose,
+                            'roomName': roomName,
+                            'dataIn': {
+                                ip: parseInt(cookies2),
+                                level: SinglePlayLevel,
+                                'actionTodo': 'help1',
+                            },
                             'actionTodo': 'help1',
-                        },
-                        'actionTodo': 'help1',
-                    })
+                        })
+
+                    } else {
+                        socket.emit(
+                            'millonario', {
+                            'gameType': gameChoose,
+                            'roomName': roomName,
+                            'dataIn': {
+                                'actionTodo': 'help1',
+                            },
+                            'actionTodo': 'help1',
+                        })
+                    }
+
                     break;
 
                 case 3:
-
-                    socket.emit(
-                        'millonario', {
-                        'dataIn': {
+                    if (cookies3 !== 'siglePlayer') {
+                        socket.emit(
+                            'millonario', {
+                            'gameType': gameChoose,
+                            'roomName': roomName,
+                            'dataIn': {
+                                'actionTodo': 'help3',
+                            },
                             'actionTodo': 'help3',
-                        },
-                        'actionTodo': 'help3',
-                    })
+                        })
+                    }
                     break;
 
                 case 4:
-                    socket.emit(
-                        'millonario', {
-                        'dataIn': {
+                    if (cookies3 === 'siglePlayer') {
+                        let newwArray = []
+                        for (let index = 1; index < SinglePlayArray.length; index++) {
+                            const element = SinglePlayArray[index];
+                            newwArray.push(element)
+                        }
+                        setSinglePlayArray(newwArray)
+                        newQuestionLonelyGamme(newwArray)
+                    } else {
+                        socket.emit(
+                            'millonario', {
+                            'gameType': gameChoose,
+                            'roomName': roomName,
+                            'dataIn': {
+                                'actionTodo': 'help4',
+                            },
                             'actionTodo': 'help4',
-                        },
-                        'actionTodo': 'help4',
-                    })
-                    setinTransition(true)
-
+                        })
+                        setinTransition(true)
+                    }
                     break;
                 default:
                     break;
@@ -260,6 +536,8 @@ const TabletaParticipantes = (props) => {
     const endGame = () => {
         socket.emit(
             'millonario', {
+            'gameType': gameChoose,
+            'roomName': roomName,
             'dataIn': {
                 'actionTodo': 'EndMillonario',
             },
@@ -269,6 +547,8 @@ const TabletaParticipantes = (props) => {
     const acceptHelp = () => {
         socket.emit(
             'millonario', {
+            'gameType': gameChoose,
+            'roomName': roomName,
             'dataIn': {
                 ip: ip,
                 'actionTodo': 'giveHelp',
@@ -276,9 +556,46 @@ const TabletaParticipantes = (props) => {
             'actionTodo': 'giveHelp',
         })
     }
+
+    const checkName = (info) => {
+        setRoomName(info)
+        setnameRequire('enviando')
+        socket.emit(
+            'millonario', {
+            'gameType': gameChoose,
+            'roomName': roomName,
+            'dataIn': info,
+            'actionTodo': 'checkName',
+        })
+    }
+    const createRoom = () => {
+        setadminData(playerData)
+        setCookies("gameType", 'multiPlayer', {
+            maxAge: 30 * 24 * 60 * 60,
+            path: '/',
+        })
+        setCookies("roomName", roomName, {
+            maxAge: 30 * 24 * 60 * 60,
+            path: '/',
+        })
+
+        socket.emit(
+            'millonario', {
+            'gameType': gameChoose,
+            'roomName': roomName,
+            'dataIn': {
+                ip: parseInt(cookies2) || ip,
+                'playerData': playerData,
+                'roomWillName': roomName
+            },
+            'actionTodo': 'createRoom',
+        })
+    }
     const createClasification = () => {
         socket.emit(
             'millonario', {
+            'gameType': gameChoose,
+            'roomName': roomName,
             'dataIn': {
                 ip: ip,
                 'actionTodo': 'createClassification',
@@ -287,6 +604,28 @@ const TabletaParticipantes = (props) => {
         })
     }
 
+    const enterRoom = (info) => {
+        setCookies("gameType", 'multiPlayer', {
+            maxAge: 30 * 24 * 60 * 60,
+            path: '/',
+        })
+        setCookies("roomName", info, {
+            maxAge: 30 * 24 * 60 * 60,
+            path: '/',
+        })
+        setRoomName(info)
+        socket.emit(
+            'millonario', {
+            'gameType': gameChoose,
+            'roomName': info,
+            'dataIn': {
+                playerData: playerData,
+                roomName: info,
+                'actionTodo': 'enterRoom',
+            },
+            'actionTodo': 'enterRoom',
+        })
+    }
     const resetGifPop = () => {
         setGifPop({
             state: false,
@@ -367,13 +706,16 @@ const TabletaParticipantes = (props) => {
 
     }
     useEffect(() => {
+        cookies3 = getCookie('gameType')
+        cookies4 = getCookie('roomName')
         socket.on("millonario", (chat) => {
+            console.log('millonario', cookies3, cookies2, cookies4, chat);
+
             let inGame = false
             const actionTodo = chat.actionTodo
             const dataIn = chat.dataIn || ""
             switch (actionTodo) {
                 case 'playerDataRes':
-                    console.log('playerDataRes', chat);
                     setUsersInRegister(dataIn)
                     dataIn.map((key, i) => {
                         if (key.ip === ip || key.ip === parseInt(cookies2)) {
@@ -382,12 +724,11 @@ const TabletaParticipantes = (props) => {
                              } else {
                                  startTransition()
                              } */
-                            console.log(key);
                             setplayerData({
                                 ip: key.ip,
                                 name: key.name
                             })
-                            setCookies( "millonarioIp", key.ip, {
+                            setCookies("millonarioIp", key.ip, {
                                 maxAge: 30 * 24 * 60 * 60,
                                 path: '/',
                             })
@@ -399,228 +740,721 @@ const TabletaParticipantes = (props) => {
                         setPlayerActive(true)
                     }
                     break;
+                case 'startSingle':
+                    setSinglePlayArray(dataIn)
+                    startLonelyGamme(dataIn)
+                    break;
+                case 'youArePlaying':
+                    console.log('ssssssss');
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4 || dataIn.roomName === roomName) {
+                        setactualPlayer(playerData)
+                        setmultiPlayerReady(true)
+                        setselectingIp(true)
+                        setPlayerType('jugando')
+                        setPlayerActive(true)
+                        setinClasification(true)
+                        setgoNow(true)
+                        setHelpRes(false)
+                        setlastMin(false)
+                        setlostGame(false)
+                        setwinning(false)
+                        seteltiempo(50)
+                        startTransition()
+                        showGifPop('next')
+                        setHelpsCome([])
+                        sethelpRequired(false)
+                        setgameChoose(-1)
+                        setPrimeraEleccion(- 1)
+
+                    }
+                    break;
+                case 'nameOcuped':
+                    setnameRequire('ocupado')
+                    break;
+                case 'millonarioNameUsed':
+                    window.alert('nombre ya ocupado')
+                    break;
+                case 'nameGood':
+                    setnameRequire('libre')
+                    break;
+                case 'roomCreated':
+                    if (dataIn.roomName === roomName) {
+                        setgoNow(true)
+                    }
+                    break;
+                case 'usersInRoom':
+                    if (!ClasificDone) {
+                        chat.dataIn.array.map((key, i) => {
+                            if (key.ip == ip || key.ip == parseInt(cookies2) && !ClasificDone) {
+                                if (!ClasificDone) {
+                                    setRoomName(chat.dataIn.roomName)
+                                    setInRoom(true)
+                                    if (key.type === 'admin' && !ClasificDone) {
+                                        setmultiPlayerReady(true)
+                                        setInRoom(true)
+                                        setroomAdmin(true)
+                                        /*                                         setgoNow(false)
+                                         */
+                                    } else {
+                                        if (!ClasificDone) {
+                                            setmultiPlayerReady(true)
+                                            setInRoom(true)
+                                            setgoNow(true)
+                                        }
+
+                                    }
+                                }
+
+                                setRoomPlayers(chat.dataIn.array)
+                            }
+                        })
+                    }
+                    break;
+                case 'rooms':
+                    let roomsAux = []
+                    dataIn.rooms.map((key, i) => {
+                        if (key.state) {
+                            roomsAux.push(key)
+                        }
+
+                    })
+                    setRoomsArray(roomsAux)
+
+                    break;
+                case 'playerChooseSingle':
+                    setactualPlayer(playerData)
+                    setselectingIp(true)
+                    setPlayerType('jugando')
+                    showGifPop('yourTurn')
+                    setCookies("playerType", 'jugando', {
+                        maxAge: 30 * 24 * 60 * 60,
+                        path: '/',
+                    })
+                    break;
+                case 'playerChooseMultiPlayer':
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4 || dataIn.roomName === roomName) {
+                        setTimeout(() => {
+                            let corecto = false
+                            dataIn.array.map((key, i) => {
+                                console.log('key', key, 'fatainn', dataIn);
+                                if (key.playerData.ip == dataIn.ip || key.playerData.ip == dataIn.ip.ip) {
+                                    corecto = true
+                                    setactualPlayer(key.playerData)
+
+                                }
+                            })
+                            if (corecto) {
+                                setselectingIp(true)
+                            }
+                            setselectingIp(true)
+                            if (ip == dataIn.ip || ip == dataIn.ip.ip || dataIn.ip.ip === parseInt(cookies2)) {
+                                setPlayerType('jugando')
+                                showGifPop('yourTurn')
+                                setCookies("playerType", 'jugando', {
+                                    maxAge: 30 * 24 * 60 * 60,
+                                    path: '/',
+                                })
+                            } else {
+                                showGifPop('notYourTurn')
+                                setCookies("playerType", 'jugador', {
+                                    maxAge: 30 * 24 * 60 * 60,
+                                    path: '/',
+                                })
+                                setPlayerType('jugador')
+                            }
+                        }, 2500)
+                    }
+
+
+                    break;
                 case 'playerChoose':
-                    let corecto = false
-                    console.log('asa', dataIn);
-                    dataIn.array.map((key, i) => {
-                        if (key.playerData.ip == dataIn.ip.ip) {
-                            corecto = true
-                            setactualPlayer(key.playerData)
+                    cookies3 = getCookie('gameType')
+                    if (cookies3 === 'millonario') {
+                        setTimeout(() => {
+                            let corecto = false
+                            dataIn.array.map((key, i) => {
+                                if (key.playerData.ip == dataIn.ip.ip) {
+                                    corecto = true
+                                    setactualPlayer(key.playerData)
+
+                                }
+                            })
+                            if (corecto) {
+                                setselectingIp(true)
+                            }
+                            setselectingIp(true)
+                            if (ip == dataIn.ip.ip || dataIn.ip.ip === parseInt(cookies2)) {
+                                setPlayerType('jugando')
+                                showGifPop('yourTurn')
+
+                            } else {
+                                showGifPop('notYourTurn')
+
+                                setPlayerType('jugador')
+
+                            }
+                        }, 2500)
+                    }
+                    break;
+                case 'playerChooseSinle':
+                    setTimeout(() => {
+                        let corecto = false
+                        dataIn.array.map((key, i) => {
+                            if (key.array.ip == dataIn.ip.ip || key.playerData.ip == dataIn.ip.ip) {
+                                corecto = true
+                                setactualPlayer(key.playerData)
+
+                            }
+                        })
+                        if (corecto) {
+                            setselectingIp(true)
+                        }
+                        setselectingIp(true)
+                        if (ip == dataIn.ip.ip || dataIn.ip.ip === parseInt(cookies2)) {
+                            setPlayerType('jugando')
+                            showGifPop('yourTurn')
+
+                        } else {
+                            showGifPop('notYourTurn')
+
+                            setPlayerType('jugador')
 
                         }
-                    })
-                    if (corecto) {
-                        setselectingIp(true)
-                        console.log('ccoor');
-                    }
-                    setselectingIp(true)
-                    if (ip == dataIn.ip.ip||dataIn.ip.ip === parseInt(cookies2)) {
-                        setPlayerType('jugando')
-                        showGifPop('yourTurn')
-
-                    } else {
-                        showGifPop('notYourTurn')
-
-                        setPlayerType('jugador')
-
-                    }
+                    }, 2500)
 
                     break;
                 case 'helpRequired':
-                    cont = 10
-                    timeGame = 55
-                    setTimeout(() => {
+                    if (cookies3 === 'millonario') {
+                        cont = 10
+                        timeGame = 55
+                        setTimeout(() => {
+                            setnowinHelping(true)
+                            minutes()
+                        }, 3000)
+                        sethelpRequired(true)
+                        setinHelping(true)
                         setnowinHelping(true)
-                        minutes()
-                    }, 3000)
-                    sethelpRequired(true)
-                    setinHelping(true)
-                    setnowinHelping(true)
+                    }
                     break;
-                case 'helpTime':
-                    /*      sethelpRequired(false)
-                         setinHelping(false) */
-                    /*   minutes() */
+                case 'helpRequiredMultiplayer':
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4 || dataIn.roomName === roomName) {
+                        cont = 10
+                        timeGame = 55
+                        setTimeout(() => {
+                            setnowinHelping(true)
+                            minutes()
+                        }, 3000)
+                        sethelpRequired(true)
+                        setinHelping(true)
+                        setnowinHelping(true)
+                    }
                     break;
-                case 'helpTimeNumber':
-/*                     sethelpTime(dataIn)
- */                    break;
 
                 case 'respuestas':
                     setrespuestas(dataIn)
                     break;
                 case 'stopReloj':
-                    cont = 10
+                    if (cookies3 === 'millonario') {
+                        cont = 10
+                    }
                     break;
+                case 'stopRelojMultiPlayer':
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4 || dataIn.roomName === roomName) {
+                        cont = 10
+                    }
+                    break;
+
                 case 'gameActive':
-                    startTransition()
+                    if (cookies3 === 'millonario') {
+                        startTransition()
+                    }
                     /*   if (playerType !== 'jugando') {
                           showGifPop('https://i.pinimg.com/originals/42/cd/6e/42cd6edb536ac19657ecfaff140db76a.gif')
                       } */
 
                     break;
                 case 'inClasification':
-                    setinClasification(true)
+                    if (cookies3 === 'millonario') {
+                        setinClasification(true)
+                    }
+                    break;
+                case 'inClasificationMultiPlayer':
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4 || dataIn.roomName === roomName) {
+                        setinClasification(true)
+                        setgoNow(true)
+                    }
                     break;
                 case 'clasificationArray':
-                    setclasificationArray(dataIn)
+                    if (cookies3 === 'millonario') {
+                        setclasificationArray(dataIn)
+                    }
                     break;
                 case 'arrayClassificatorio':
-                    setarrayClassificatorio(dataIn)
-                    setinClasification(true)
+                    if (cookies3 === 'millonario') {
+                        setarrayClassificatorio(dataIn)
+                        setinClasification(true)
+                    }
                     break;
+                case 'arrayClassificatorioMultiplayer':
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4 && !inClasification) {
+                        setgoNow(true)
+                        setarrayClassificatorio(dataIn.newclasif)
+                        setinClasification(true)
+                    }
+                    break;
+                case 'helpingResYesMultiPlayer':
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4) {
+                        sethelpPreStream(false)
+                        setwarningPreStreamNeedingHelp(false)
+                        setHelpRes('acepto')
+                    }
+                    break
                 case 'helpingResYes':
-                    sethelpPreStream(false)
-                    setwarningPreStreamNeedingHelp(false)
-                    setHelpRes('acepto')
-                    /*  setarrayClassificatorio(dataIn)
-                     setinClasification(true) */
+                    if (cookies3 === 'millonario') {
+                        sethelpPreStream(false)
+                        setwarningPreStreamNeedingHelp(false)
+                        setHelpRes('acepto')
+                    }
+                    break;
+                case 'helpingResNoMultiPlayer':
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4) {
+                        setHelpRes('NoAcepto')
+                        sethelpPreStream(false)
+                        sethelpRequired(false)
+                    }
                     break;
                 case 'helpingResNo':
-                    setHelpRes('NoAcepto')
-                    sethelpPreStream(false)
-                    sethelpRequired(false)
-                    /*  setarrayClassificatorio(dataIn)
-                     setinClasification(true) */
-                    break;
-                case 'inpuntuacion':
-                    if (props.fromPage === 'pacheco') {
-                        setClasificDone(true)
-
+                    if (cookies3 === 'millonario') {
+                        setHelpRes('NoAcepto')
+                        sethelpPreStream(false)
+                        sethelpRequired(false)
                     }
-                    dataIn.map((key, i) => {
-                        if (key.playerData.ip === ip||key.playerData.ip === parseInt(cookies2)) {
+                    break;
+                case 'juegoSolitario':
+                    setSinglePlayArray(dataIn)
+                    startLonelyGamme(dataIn)
+                    setHelpsPlayer({
+                        help1: true,
+                        help2: false,
+                        help3: false,
+                        help4: true,
+                    })
+
+                    break;
+
+                case 'inpuntuacion':
+                    if (cookies3 === 'millonario') {
+                        if (props.fromPage === 'pacheco') {
+                            setClasificDone(true)
+
+                        }
+
+                        dataIn.map((key, i) => {
+                            if (key.playerData.ip === ip || key.playerData.ip === parseInt(cookies2)) {
                           /*   if (initing) {
                                 startTransition(true)
                             } else {
                                 startTransition()
                             }  */setuserResults(key.array)
-                            setClasificDone(true)
-                        }
-                    })
-                    console.log(dataIn[0], 'oaoasas');
-                    setusersResults(dataIn)
-                    setclasificationArray(dataIn)
+                                setClasificDone(true)
+                            }
+                        })
+                        setusersResults(dataIn)
+                        setclasificationArray(dataIn)
+                    }
+                    break;
+                case 'inpuntuacionMultiPlayer':
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4) {
+                        dataIn.array.map((key, i) => {
+                            if (key.playerData.ip === ip || key.playerData.ip === parseInt(cookies2)) {
+                                /*   if (initing) {
+                                      startTransition(true)
+                                  } else {
+                                      startTransition()
+                                  }  */
+                                setgoNow(true)
+                                setuserResults(key.array)
+                                setClasificDone(true)
+                            }
+                        })
+                        setusersResults(dataIn.array)
+                        setclasificationArray(dataIn.array)
+                    }
                     break;
                 case 'newArray':
-                    console.log(dataIn, 'newArray');
+                    if (cookies3 === 'millonario') {
+                    }
                     break;
-
-                case 'preguntaSiguiente':
-                    setHelpRes(false)
-                    setlastMin(false)
-                    setlostGame(false)
-                    setwinning(false)
-                    seteltiempo(50)
-                    startTransition()
-
-                    showGifPop('next')
-
-                    setHelpsCome([])
-                    sethelpRequired(false)
-                    setgameChoose(-1)
-                    setPrimeraEleccion(- 1)
-                    console.log(dataIn, 'preguntaSiguiente');
-                    setpregunta(dataIn.pregunta)
-                    let preguntas = []
-                    preguntas.push(dataIn.respuesta1, dataIn.respuesta2, dataIn.respuesta3, dataIn.respuesta4)
-                    setrespuestas(preguntas)
-                    setgameActive(true)
-                    cont = 0
-                    timeGame = 50
-                    minutes()
-                    break;
-                case 'sendRespuestaResOk':
-                    showGifPop('ok')
-                    console.log(dataIn, 'dataIndataInYes');
-                    setgameChoose(dataIn)
-                    setwinning(true)
-                    cont = 10
-                    break;
-                case 'sendRespuestaResNo':
-                    timeGame = -100
-                    cont = 10
-                    showGifPop('no')
-
-                    setlostGame(true)
-                    setgameChoose(dataIn)
-                    setTimeout(() => {
-                        if (playerType !== 'publico') {
-                            setPlayerType('jugador')
-                        }
-                        setinClasification(false); setarrayClassificatorio([{
-                            pregunta: '',
-                            repuestas: [],
-                            correcta: -1
-                        }]); setclasificationArray([]);
-                        setClasificDone(false); setuserResults([{
-                            estado: "",
-                            numeroDePregunta: 0
-                        }]); setlastMin(false)
+                case 'preguntaSiguienteMultiPlayer':
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4 || dataIn.roomName === roomName) {
+                        setHelpRes(false)
+                        setlastMin(false)
                         setlostGame(false)
                         setwinning(false)
-                        seteltiempo(-1); setgameActive(false); setselectingIp(false); startTransition(true);
-                    }, 15000)
+                        seteltiempo(50)
+                        startTransition()
+                        showGifPop('next')
+                        setHelpsCome([])
+                        sethelpRequired(false)
+                        setgameChoose(-1)
+                        setPrimeraEleccion(- 1)
+                        setpregunta(dataIn.pregunta.pregunta)
+                        let preguntasM = []
+                        preguntasM.push(dataIn.pregunta.respuesta1, dataIn.pregunta.respuesta2, dataIn.pregunta.respuesta3, dataIn.pregunta.respuesta4)
+                        setrespuestas(preguntasM)
+                        setgameActive(true)
+                        cont = 0
+                        timeGame = 50
+                        minutes()
+                    }
+                    break;
+                case 'preguntaSiguiente':
+                    if (cookies3 === 'millonario') {
+                        setHelpRes(false)
+                        setlastMin(false)
+                        setlostGame(false)
+                        setwinning(false)
+                        seteltiempo(50)
+                        startTransition()
+                        showGifPop('next')
+                        setHelpsCome([])
+                        sethelpRequired(false)
+                        setgameChoose(-1)
+                        setPrimeraEleccion(- 1)
+                        setpregunta(dataIn.pregunta)
+                        let preguntas = []
+                        preguntas.push(dataIn.respuesta1, dataIn.respuesta2, dataIn.respuesta3, dataIn.respuesta4)
+                        setrespuestas(preguntas)
+                        setgameActive(true)
+                        cont = 0
+                        timeGame = 50
+                        minutes()
+                    }
+                    break;
+                case 'sendRespuestaResOk':
+                    if (cookies3 === 'millonario') {
+                        showGifPop('ok')
+                        setgameChoose(dataIn)
+                        setwinning(true)
+                        cont = 10
+                    }
+                    break;
+                case 'sendRespuestaResOkMultiplayer':
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4 || dataIn.roomName === roomName) {
+                        showGifPop('ok')
+                        setgameChoose(dataIn.correcta)
+                        setwinning(true)
+                        cont = 10
+                    }
+                    break;
+
+                case 'sendRespuestaResNoMultiPlayer':
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4 || dataIn.roomName === roomName) {
+                        timeGame = -100
+                        cont = 10
+                        showGifPop('no')
+                        setlostGame(true)
+                        setChangeMode('millonario')
+                        setgameChoose(dataIn.correcta)
+                        setRoomName('sinSala')
+                        removeCookies('roomName')
+                        removeCookies('gameType')
+                        cookies4=false
+                        cookies3='off'
+                        setTimeout(() => {
+                            setCookies("gameType", 'off', {
+                                maxAge: 30 * 24 * 60 * 60,
+                                path: '/',
+                            })
+                            if (playerType !== 'publico') {
+                                setPlayerType('jugador')
+                            }
+                            setinClasification(false); setarrayClassificatorio([{
+                                pregunta: '',
+                                repuestas: [],
+                                correcta: -1
+                            }]); setclasificationArray([]);
+                            setClasificDone(false); setuserResults([{
+                                estado: "",
+                                numeroDePregunta: 0
+                            }]); setlastMin(false)
+                            setlostGame(false)
+                            setwinning(false);
+                            setChangeMode('sinRegistro')
+                            setmultiPlayerReady(false)
+                            setsinglePlayerReady(false); setgoNow(false);
+                            seteltiempo(-1); setgameActive(false); setselectingIp(false); startTransition(true);
+                            setpregunta([])
+
+                        }, 15000)
+                    }
+                    break;
+                case 'sendRespuestaResNo':
+                    if (cookies3 === 'millonario') {
+                        timeGame = -100
+                        cont = 10
+                        showGifPop('no')
+                        setlostGame(true)
+                        setgameChoose(dataIn)
+                        setTimeout(() => {
+
+
+                            if (playerType !== 'publico') {
+                                setPlayerType('jugador')
+                            }
+                            setinClasification(false); setarrayClassificatorio([{
+                                pregunta: '',
+                                repuestas: [],
+                                correcta: -1
+                            }]); setclasificationArray([]);
+                            setClasificDone(false); setuserResults([{
+                                estado: "",
+                                numeroDePregunta: 0
+                            }]); setlastMin(false)
+                            setlostGame(false)
+                            setwinning(false);
+                            setChangeMode('sinRegistro')
+                            setmultiPlayerReady(false)
+                            setsinglePlayerReady(false); setgoNow(false);
+                            seteltiempo(-1); setgameActive(false); setselectingIp(false); startTransition(true);
+                            setpregunta([])
+
+                        }, 15000)
+                    }
                     break;
                 case 'inChoosed':
-                    setPrimeraEleccion(parseInt((dataIn + 1) - 1))
-                    /*     if (dataIn) {
-                            startTransition()
-                        }else{
-                            setplayerChoose(dataIn)
-                        } */
+                    if (cookies3 === 'millonario') {
+                        setPrimeraEleccion(parseInt((dataIn + 1) - 1))
+                    }
+                    break;
+                case 'inChoosedMultiPlayer':
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4 || dataIn.roomName === roomName) {
+                        setPrimeraEleccion(parseInt((dataIn.choosed + 1) - 1))
+                    }
                     break;
                 case 'helpsUsed':
-                    console.log(dataIn, 'helpsUsed');
-                    setHelpsPlayer(dataIn)
+                    if (cookies3 === 'millonario') {
+                        setHelpsPlayer(dataIn)
+                    }
 
                     break;
+                case 'helpsUsedMultiPlayer':
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4 || dataIn.roomName === roomName) {
+                        setHelpsPlayer(dataIn.helpsUsed)
+                    }
+
+                    break;
+
                 case 'cambiemosDepregunta':
-                    if (props.fromPage !== 'pacheco') {
-                        setinTransition(true)
+                    if (cookies3 === 'millonario') {
+                        if (props.fromPage !== 'pacheco') {
+                            setinTransition(true)
+                            setchangeQuestion(true)
+                        }
                         setchangeQuestion(true)
                     }
-                    setchangeQuestion(true)
-
                     break;
                 case 'helpingRes':
-                    setHelpsCome(dataIn)
-
+                    if (cookies3 === 'millonario') {
+                        setHelpsCome(dataIn)
+                    }
+                    break;
+                case 'helpingResMultiPlayer':
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4 || dataIn.roomName === roomName) {
+                        setHelpsCome(dataIn.helpArray)
+                    }
                     break;
                 case 'helpRequiredOne':
-                    if (dataIn.ip === ip||dataIn.ip === parseInt(cookies2)) {
-                        sethelpRequired(true)
+                    if (cookies3 === 'millonario') {
+                        if (dataIn.ip === ip || dataIn.ip === parseInt(cookies2)) {
+                            sethelpRequired(true)
+                        }
+                        setTimeout(() => {
+                            setnowinHelping(true)
+                            minutes()
+                        }, 3000)
                     }
-                    setTimeout(() => {
-                        setnowinHelping(true)
-                        minutes()
-                    }, 3000)
+                    break;
+                case 'helpRequiredOneMultiplayer':
+
+                    if (dataIn.roomName === cookies4 || dataIn.roomName === roomName) {
+
+                        if (dataIn.user.ip === ip || dataIn.user.ip === parseInt(cookies2)) {
+                            sethelpRequired(true)
+                        }
+                        setTimeout(() => {
+                            setnowinHelping(true)
+                            minutes()
+                        }, 3000)
+                    }
+                    break;
+                case 'nameUserOcuped':
+
+                    window.alert('NOMBRE NO DISPONIBLE')
+                    break;
+                case 'roomLoose':
+                    window.alert('SALA OFF')
 
                     break;
+                case 'roomLive':
+
+                    if (!ClasificDone) {
+                        if (chat.dataIn !== 'player') {
+                            setroomAdmin(true)
+                        }
+                        setChooseState(false)
+                        setChangeMode(cookies3)
+                        setRoomName(cookies4)
+                        setmultiPlayerReady(true)
+                        setInRoom(true)
+/*                         setgoNow(false)
+ */                    }
+                    break;
                 case 'millonarioActualTurn':
-                    setnowInlevel(dataIn)
+                    if (cookies3 === 'millonario') {
+
+                        setnowInlevel(dataIn)
+                    }
+                    break;
+                case 'millonarioActualTurnMultiPlayer':
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4 || dataIn.roomName === roomName) {
+                        setnowInlevel(dataIn.level)
+                    }
+                    break;
+                case 'youAreOwner':
+                    console.log('asasas', dataIn);
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4 || dataIn.roomName === roomName) {
+                        setplayerData(dataIn.playerData)
+
+                        setTimeout(() => {
+                            setadminData(dataIn.playerData)
+                        }, 2300)
+                    }
+                    break;
+                case 'retomSingle':
+                    let retomArray = []
+                    if (dataIn.helpNumber === 1) {
+                        for (let index = 1; index < dataIn.array.length; index++) {
+                            const element = dataIn.array[index];
+                            retomArray.push(element)
+                        }
+                    } else {
+                        retomArray = dataIn.array
+                    }
+                    setplayerData(dataIn.playerData)
+                    setHelpsPlayer(dataIn.helps)
+                    setSinglePlayArray(retomArray)
+                    setSinglePlayLevel(dataIn.level)
+                    setnowInlevel(dataIn.level + 1)
+                    let restartArray = []
+                    for (let index = dataIn.level; index < dataIn.array.length; index++) {
+                        const element = dataIn.array[index];
+                        restartArray.push(element)
+                    }
+                    startLonelyGamme(restartArray)
+                    console.log(chat, 'retom', chat);
+                    break;
+
+                case 'offGameMultiPlayer':
+                    cookies3 = getCookie('gameType')
+                    cookies4 = getCookie('roomName')
+                    if (dataIn.roomName === cookies4 || dataIn.roomName === roomName) {
+                        removeCookies('roomName')
+                        setCookies("gameType", 'sinSala', {
+                            maxAge: 30 * 24 * 60 * 60,
+                            path: '/',
+                        })
+                        setPlayerActive(false)
+                        setlastMin(false)
+                        setlostGame(false)
+                        setwinning(false)
+                        seteltiempo(-1)
+                        setHelpRes(false)
+                        setTimeout(() => {
+                            if (playerType !== 'publico') {
+                                setPlayerType('jugador')
+                            }
+                            setinClasification(false); setarrayClassificatorio([{
+                                pregunta: '',
+                                repuestas: [],
+                                correcta: -1
+                            }]); setclasificationArray([]);
+                            setClasificDone(false); setuserResults([{
+                                estado: "",
+                                numeroDePregunta: 0
+                            }]); setpregunta([]);
+                            setgameActive(false); setselectingIp(false); setChangeMode('sinRegistro')
+                            setmultiPlayerReady(false)
+                            setsinglePlayerReady(false); setgoNow(false);
+                        }, 5000)
+                    }
+
                     break;
                 case 'offGame':
-                    setlastMin(false)
-                    setlostGame(false)
-                    setwinning(false)
-                    seteltiempo(-1)
-                    setHelpRes(false)
-                    setTimeout(() => {
-                        if (playerType !== 'publico') {
-                            setPlayerType('jugador')
-                        }
-                        setinClasification(false); setarrayClassificatorio([{
-                            pregunta: '',
-                            repuestas: [],
-                            correcta: -1
-                        }]); setclasificationArray([]);
-                        setClasificDone(false); setuserResults([{
-                            estado: "",
-                            numeroDePregunta: 0
-                        }]); setgameActive(false); setselectingIp(false);
-                    }, 5000)
+                    if (cookies3 === 'millonario') {
+
+                        setPlayerActive(false)
+                        setlastMin(false)
+                        setlostGame(false)
+                        setwinning(false)
+                        seteltiempo(-1)
+                        setHelpRes(false)
+                        setTimeout(() => {
+                            if (playerType !== 'publico') {
+                                setPlayerType('jugador')
+                            }
+                            setinClasification(false); setarrayClassificatorio([{
+                                pregunta: '',
+                                repuestas: [],
+                                correcta: -1
+                            }]); setclasificationArray([]);
+                            setClasificDone(false); setuserResults([{
+                                estado: "",
+                                numeroDePregunta: 0
+                            }]); setpregunta([]);
+                            setgameActive(false); setselectingIp(false); setChangeMode('sinRegistro')
+                            setmultiPlayerReady(false)
+                            setsinglePlayerReady(false); setgoNow(false);
+                        }, 5000)
+                    }
                     break;
+
+
+
                 default:
                     break;
             }
@@ -628,22 +1462,41 @@ const TabletaParticipantes = (props) => {
 
         startTransition()
         cookies2 = getCookie('millonarioIp')
-        console.log(parseInt(cookies2),'ip', ip);
+        cookies3 = getCookie('gameType')
+        cookies4 = getCookie('roomName')
         if (cookies2) {
             if (cookies2) {
-                console.log('envias');
-                setIp(parseInt(cookies2))
-                socket.emit(
-                    'millonario', {
-                    'dataIn': {
-                        ip: parseInt(cookies2),
+                if (cookies3) {
+                    setIp(parseInt(cookies2))
+                    socket.emit(
+                        'millonario', {
+                        'gameType': cookies3,
+                        'roomName': cookies4 ? cookies4 : roomName,
+                        'dataIn': {
+                            ip: parseInt(cookies2),
+                            'actionTodo': 'ipSend',
+                        },
                         'actionTodo': 'ipSend',
-                    },
-                    'actionTodo': 'ipSend',
-                })
+                    })
+                } else {
+                    setIp(parseInt(cookies2))
+                    socket.emit(
+                        'millonario', {
+                        'gameType': 'millonario',
+                        'roomName': cookies4 ? cookies4 : roomName,
+                        'dataIn': {
+                            ip: parseInt(cookies2),
+                            'actionTodo': 'ipSend',
+                        },
+                        'actionTodo': 'ipSend',
+                    })
+                }
+
             } else {
                 socket.emit(
                     'millonario', {
+                    'gameType': 'millonario',
+                    'roomName': cookies4 ? cookies4 : roomName,
                     'dataIn': {
                         ip: ip,
                         'actionTodo': 'ipSend',
@@ -651,6 +1504,12 @@ const TabletaParticipantes = (props) => {
                     'actionTodo': 'ipSend',
                 })
             }
+        } else {
+            setCookies("millonarioIp", ip, {
+                maxAge: 30 * 24 * 60 * 60,
+                path: '/',
+            })
+            cookies2 = ip
         }
     }, [])
     if (inTransition) {
@@ -667,12 +1526,53 @@ const TabletaParticipantes = (props) => {
         </>)
     }
     return (<>
+
         <GitPopOut gifPop={gifPop} />
         {!playerActive ? <div className="column fontcolorInedit-white wdt-100 Ia-center Ij-center">
             <BotonesRegistro sendPlayer={sendPlayer} onlyPublic={onlyPublic} ip={ip} />
-        </div> : (playerType === 'jugador' || playerType === 'jugando') ? <>
-            <ComponenteJugador helpTime={helpTime} inHelping={inHelping} lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo} warningPreStreamNeedingHelp={warningPreStreamNeedingHelp} setwarningPreStreamNeedingHelp={setwarningPreStreamNeedingHelp} sethelpPreStream={sethelpPreStream} helpRes={helpRes} helpPreStream={helpPreStream} acceptHelp={acceptHelp} usersInRegister={usersInRegister} nowInlevel={nowInlevel} actualPlayer={actualPlayer} helpsCome={helpsCome} helpsPlayer={helpsPlayer} helpNeed={helpNeed} gameChoose={gameChoose} primeraEleccion={primeraEleccion} inChoosing={inChoosing} userResults={userResults} usersResults={usersResults} ClasificDone={ClasificDone} playerData={playerData} sendPuntuation={sendPuntuation} arrayClassificatorio={arrayClassificatorio} clasificationArray={clasificationArray} inClasification={inClasification} gameActive={gameActive}
-                pregunta={pregunta} playerType={playerType} respuestas={respuestas} sendHelp={sendHelp} escogerEsta={escogerEsta} helpRequired={helpRequired} ip={ip} />
+        </div> : changeMode === 'sinRegistro' ? <ModeGame roomName={roomName} chooseState={chooseState} setChooseState={setChooseState} setmultiPlayerReady={setmultiPlayerReady} setmultiPlayerGo={setmultiPlayerGo} setRoomName={setRoomName} setsinglePlayerReady={setsinglePlayerReady} changeMode={changeMode} setChangeMode={setChangeMode} /> : (playerType === 'jugador' || playerType === 'jugando') ? <>
+            <ModeGame roomName={roomName} chooseState={chooseState} setChooseState={setChooseState} setmultiPlayerReady={setmultiPlayerReady} setsinglePlayerReady={setsinglePlayerReady} setmultiPlayerGo={setmultiPlayerGo} setRoomName={setRoomName} changeMode={changeMode} setChangeMode={setChangeMode} />
+            {
+                changeMode === 'millonario' ? <ComponenteJugador helpTime={helpTime} inHelping={inHelping} lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo} warningPreStreamNeedingHelp={warningPreStreamNeedingHelp} setwarningPreStreamNeedingHelp={setwarningPreStreamNeedingHelp} sethelpPreStream={sethelpPreStream} helpRes={helpRes} helpPreStream={helpPreStream} acceptHelp={acceptHelp} usersInRegister={usersInRegister} nowInlevel={nowInlevel} actualPlayer={actualPlayer} helpsCome={helpsCome} helpsPlayer={helpsPlayer} helpNeed={helpNeed} gameChoose={gameChoose} primeraEleccion={primeraEleccion} inChoosing={inChoosing} userResults={userResults} usersResults={usersResults} ClasificDone={ClasificDone} playerData={playerData} sendPuntuation={sendPuntuation} arrayClassificatorio={arrayClassificatorio} clasificationArray={clasificationArray} inClasification={inClasification} gameActive={gameActive}
+                    pregunta={pregunta} playerType={playerType} respuestas={respuestas} sendHelp={sendHelp} escogerEsta={escogerEsta} helpRequired={helpRequired} ip={ip} /> :
+                    <>{
+                        changeMode === 'singlePlayer' ?
+                            <>
+                                {
+                                    !singlePlayerReady ?
+                                        <>
+                                            <ComponenteSinglePlayer gameActive={gameActive} setmultiPlayerReady={setmultiPlayerReady} changeMode={changeMode} playerData={playerData} setsinglePlayerReady={setsinglePlayerReady} startMillonario={startMillonario}
+                                            />
+                                        </>
+                                        :
+                                        <>
+                                            <ComponenteJugador helpTime={helpTime} inHelping={inHelping} lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo} warningPreStreamNeedingHelp={warningPreStreamNeedingHelp} setwarningPreStreamNeedingHelp={setwarningPreStreamNeedingHelp} sethelpPreStream={sethelpPreStream} helpRes={helpRes} helpPreStream={helpPreStream} acceptHelp={acceptHelp} usersInRegister={usersInRegister} nowInlevel={nowInlevel} actualPlayer={actualPlayer} helpsCome={helpsCome} helpsPlayer={helpsPlayer} helpNeed={helpNeed} gameChoose={gameChoose} primeraEleccion={primeraEleccion} inChoosing={inChoosing} userResults={userResults} usersResults={usersResults} ClasificDone={ClasificDone} playerData={playerData} sendPuntuation={sendPuntuation} arrayClassificatorio={arrayClassificatorio} clasificationArray={clasificationArray} inClasification={inClasification} gameActive={gameActive}
+                                                pregunta={pregunta} playerType={playerType} respuestas={respuestas} sendHelp={sendHelp} escogerEsta={escogerEsta} helpRequired={helpRequired} ip={ip} changeMode={changeMode} />
+                                        </>
+                                }
+                            </> :
+                            <>
+                                {
+                                    multiPlayerReady ?
+                                        <>{
+                                            !goNow ?
+                                                <ComponenteSinglePlayer roomAdmin={roomAdmin} roomPlayers={roomPlayers} changeMode={changeMode} playerData={playerData} setgoNow={setgoNow} setsinglePlayerReady={setsinglePlayerReady} startMillonario={startClassific} roomName={roomName} setmultiPlayerReady={setmultiPlayerReady} multiplayer /> :
+                                                <ComponenteJugador adminData={adminData} helpTime={helpTime} inHelping={inHelping} lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo} warningPreStreamNeedingHelp={warningPreStreamNeedingHelp} setwarningPreStreamNeedingHelp={setwarningPreStreamNeedingHelp} startMillonario={startMillonario} sethelpPreStream={sethelpPreStream} helpRes={helpRes} helpPreStream={helpPreStream} acceptHelp={acceptHelp} usersInRegister={usersInRegister} nowInlevel={nowInlevel} actualPlayer={actualPlayer} helpsCome={helpsCome} helpsPlayer={helpsPlayer} helpNeed={helpNeed} gameChoose={gameChoose} primeraEleccion={primeraEleccion} inChoosing={inChoosing} userResults={userResults} usersResults={usersResults} ClasificDone={ClasificDone} playerData={playerData} sendPuntuation={sendPuntuation} arrayClassificatorio={arrayClassificatorio} clasificationArray={clasificationArray} inClasification={inClasification} gameActive={gameActive}
+                                                    pregunta={pregunta} playerType={playerType} respuestas={respuestas} sendHelp={sendHelp} escogerEsta={escogerEsta} helpRequired={helpRequired} ip={ip} changeMode={changeMode} />
+                                        }
+
+                                        </>
+                                        :
+                                        <>
+                                            <ComponenteMultiPlayer inRoom={inRoom} roomPlayers={roomPlayers} enterRoom={enterRoom} roomsArray={roomsArray} setnameRequire={setnameRequire}
+                                                nameRequire={nameRequire} checkName={checkName} createRoom={createRoom} setmultiPlayerGo={setmultiPlayerGo} multiPlayerGo={multiPlayerGo} changeMode={changeMode} setsinglePlayerReady={setsinglePlayerReady} playerData={playerData} sendRoom={startMillonario} ip={ip} setRoomName={setRoomName} setmultiPlayerReady={setmultiPlayerReady} roomName={roomName} />
+                                        </>
+                                }
+                            </>
+                    }
+                    </>
+            }
+
         </> : <>
             <ComponentePublico helpTime={helpTime} inHelping={inHelping} lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo}
                 sethelpPreStream={sethelpPreStream} helpRes={helpRes} helpPreStream={helpPreStream} acceptHelp={acceptHelp}

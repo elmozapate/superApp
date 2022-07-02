@@ -35,7 +35,6 @@ const RelojApp = ({ inMillonario = false, lastMin = false, lostGame = false, jai
     }, [winning])
     useEffect(() => {
         if (lastMin === true) {
-            console.log('last2');
             setrelojSrc([{
                 url: "https://firebasestorage.googleapis.com/v0/b/avatarupload-5ed8b.appspot.com/o/calamaraudios%2Fy2mate.com%20-%20sonido%20de%20reloj%20tic%20tic.mp3?alt=media&token=b870b388-39e0-4cd7-9e52-cac388629217",
                 type: 'audio/mp3'

@@ -3,7 +3,6 @@ import { useCallback, useState, useEffect } from "react"
 const VideoStream = ( {imageSrc='', setSelected=console.log,setmediaAskSelect=console.log, setmediaAsk = console.log,}) => {
 
 useEffect(() => {
-    console.log(imageSrc);
 
 }, [imageSrc])
 

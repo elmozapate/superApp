@@ -24,7 +24,7 @@ const BarraInfo = (props) => {
         help3: true,
         help4: true,
     }, gameChoose = -1, playerType = 'jugador', helpNeed = console.log } = props
-    console.log(playerType, 'playerType');
+    
     return (
         <div className=" mini-btn fontcolorInedit-white wdt-100 column Ia-space-between Ij-center hgtI-15 BarraPlayerButton">
 

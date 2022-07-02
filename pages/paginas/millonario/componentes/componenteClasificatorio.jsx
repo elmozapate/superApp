@@ -8,7 +8,7 @@ const ComponenteClasificatorio = (props) => {
     const [ip, setIp] = useState(props.ip || false)
     const [puntuationFinal, setpuntuationFinal] = useState(0)
 
-    const { playerData = { name: '' }, userResults = [], ClasificDone = false, sendPuntuation = console.log, arrayClassificatorio = [], clasificationArray = [], inClasification = false, gameActive = false } = props
+    const {adminData ={ name: '',ip:''},actualPlayer={ name: ''},playerData = { name: '' }, userResults = [], ClasificDone = false, sendPuntuation = console.log, arrayClassificatorio = [], clasificationArray = [], inClasification = false, gameActive = false } = props
     const [pregunta, setpregunta] = useState('')
     const [resultados, setresultados] = useState({
         buenas: 0,
@@ -25,7 +25,6 @@ const ComponenteClasificatorio = (props) => {
     const [enPregunta, setenPregunta] = useState(0)
     const [classifiqued, setclassifiqued] = useState(false)
     const escogerEsta = (i) => {
-        console.log('escogio');
         if (correcta === i) {
             let resultadosAux = resultados.preguntas
             resultadosAux.push({
@@ -85,7 +84,6 @@ const ComponenteClasificatorio = (props) => {
         }
     }
     const startCLass = () => {
-        console.log('siiiii');
         setAreYouReady(true)
         minutes()
         setlastMin(false)
@@ -99,12 +97,10 @@ const ComponenteClasificatorio = (props) => {
 
     useEffect(() => {
         if (arrayClassificatorio.length > 0) {
-            console.log(arrayClassificatorio[enPregunta].respuestas, 'arrayClassificatorio', enPregunta);
             setpregunta(arrayClassificatorio[enPregunta].pregunta)
             setrespuestas(arrayClassificatorio[enPregunta].respuestas)
             setcorrecta(arrayClassificatorio[enPregunta].correcta)
         }
-        console.log(clasificationArray, 'clasificationArray');
         let buenas = 0
         userResults.map((key, i) => {
             if (key.estado === 'correcta') {
@@ -115,6 +111,7 @@ const ComponenteClasificatorio = (props) => {
     }, [arrayClassificatorio, enPregunta, clasificationArray, userResults])
     return (
         <div className="column fontcolorInedit-white wdt-100 Ia-center Ij-center">{classifiqued || ClasificDone ? <>{`${playerData.name}  estos son tus resultados : `}
+         
             {userResults.map((key, i) => {
                 return <li key={`resultado-${i}`}><span>{key.numeroDePregunta}</span>--<span>{key.estado}</span></li>
             })}

@@ -34,7 +34,6 @@ const VoiceRecorder = ({ userName = '', setmediaAsk = console.log, urlAudio = ''
             cssTime = 0
         }
         cssTime++
-        console.log('ress', cssTime);
 
     }
     const minutes = () => {
@@ -102,12 +101,10 @@ const VoiceRecorder = ({ userName = '', setmediaAsk = console.log, urlAudio = ''
   
           }
           if (File) {
-              console.log('bien');
               myFile = File
           }
   
   
-          console.log('convertida');
           seturlAudio(blobUrl);
           cont = 10
   
@@ -138,7 +135,6 @@ const VoiceRecorder = ({ userName = '', setmediaAsk = console.log, urlAudio = ''
             },
             function complete(e) {
                 urlObtain = storage.ref(`/chat/Audio/${userName}`).child(`${action ? 'test' : `${ip}`}.mp3`).getDownloadURL().then(url => {
-                    console.log(url, 'url')
                     seturlAudio(url);
                     if (!action) {
                         cont === 10
@@ -175,12 +171,10 @@ const VoiceRecorder = ({ userName = '', setmediaAsk = console.log, urlAudio = ''
                     audio = document.getElementById('audioPlay');
                     if ("srcObject" in audio) {
                         audio.srcObject = mediaStreamObj;
-                        console.log(audio.srcObject, 'audio.srcObject');
                     }
                     else {
                         audio.src = window.URL
                             .createObjectURL(mediaStreamObj);
-                        console.log(audio.srcObject, '');
 
                     }
                     start = document.getElementById('btnStart');
@@ -203,12 +197,10 @@ const VoiceRecorder = ({ userName = '', setmediaAsk = console.log, urlAudio = ''
                     mediaRecorder.ondataavailable = function (ev) {
                         dataArray.push(ev.data);
                         setmediaRecorderState(mediaRecorder.state)
-                        console.log('ev.data', ev.data);
 
                     }
                     mediaRecorder.onstop = function (ev) {
                         let audioSr2 = URL.createObjectURL(dataArray[0]);
-                        console.log(audioSr2, 'asacascnsachsajcbjs');
                         cont = 30
                         myFile = new Blob(dataArray,
                             { 'type': 'audio/mp3;' });
@@ -246,7 +238,7 @@ const VoiceRecorder = ({ userName = '', setmediaAsk = console.log, urlAudio = ''
                                     <button
                                         className={percent !== 0 ? 'hide' : !finishRecordingVoice ? 'hide' : 'bgcolorInedit-green btn-azteca pointer '}
                                         onClick={(e) => {
-                                            e.preventDefault(); Upload(); console.log(!recordingVoice ? 'Pause' : 'Grabar');
+                                            e.preventDefault(); Upload();
                                         }}
                                     >Enviar</button>
                                     <button
