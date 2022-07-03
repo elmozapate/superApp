@@ -1,6 +1,5 @@
 import { useState } from "react"
-import PantallaGrande from "./millonario/pantallaGrande"
-import TabletaAdmin from "./millonario/tabletaAdmin"
+import Head from 'next/head'
 import TabletaParticipantes from "./millonario/tabletaParticipantes"
 
 const Millonario = (props) => {
@@ -9,10 +8,17 @@ const Millonario = (props) => {
 
 
     return (
+        <>
+        <Head>
+              <title>SE MILLONARIO</title>
+              <meta name="description" content="gamesApp app" />
+              <link rel="icon" href="/favicon.ico" />
+            </Head>
         <div className="body bgcolor-black">
             <TabletaParticipantes  fromPage={props.page} ip={ip} />
 
         </div>
+        </>
     )
 
 
