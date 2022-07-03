@@ -437,7 +437,7 @@ const TabletaParticipantes = (props) => {
             socket.emit(
                 'millonario', {
                 'gameType': cookies3,
-                'roomName': roomName,
+                'roomName': cookies4,
                 'dataIn': i,
                 'actionTodo': 'inChoosing',
             })
@@ -451,12 +451,13 @@ const TabletaParticipantes = (props) => {
         timeGame = 55
         setnowinHelping(true)
         cookies3 = getCookie('gameType')
-
+        cookies4 = getCookie('roomName')
+        console.log(i, 'gameType', cookies3);
         if (i.state && cookies3 !== 'siglePlayer') {
             socket.emit(
                 'millonario', {
-                'gameType': gameChoose,
-                'roomName': roomName,
+                'gameType': cookies3,
+                'roomName': cookies4,
                 'dataIn': i.friend,
                 'actionTodo': 'help2',
             })
@@ -466,8 +467,8 @@ const TabletaParticipantes = (props) => {
                     if (cookies3 === 'siglePlayer') {
                         socket.emit(
                             'millonario', {
-                            'gameType': gameChoose,
-                            'roomName': roomName,
+                            'gameType': cookies3,
+                            'roomName': cookies4,
                             'dataIn': {
                                 ip: parseInt(cookies2),
                                 level: SinglePlayLevel,
@@ -479,8 +480,8 @@ const TabletaParticipantes = (props) => {
                     } else {
                         socket.emit(
                             'millonario', {
-                            'gameType': gameChoose,
-                            'roomName': roomName,
+                            'gameType': cookies3,
+                            'roomName': cookies4,
                             'dataIn': {
                                 'actionTodo': 'help1',
                             },
@@ -494,8 +495,8 @@ const TabletaParticipantes = (props) => {
                     if (cookies3 !== 'siglePlayer') {
                         socket.emit(
                             'millonario', {
-                            'gameType': gameChoose,
-                            'roomName': roomName,
+                            'gameType': cookies3,
+                            'roomName': cookies4,
                             'dataIn': {
                                 'actionTodo': 'help3',
                             },
@@ -516,8 +517,8 @@ const TabletaParticipantes = (props) => {
                     } else {
                         socket.emit(
                             'millonario', {
-                            'gameType': gameChoose,
-                            'roomName': roomName,
+                            'gameType': cookies3,
+                            'roomName': cookies4,
                             'dataIn': {
                                 'actionTodo': 'help4',
                             },
@@ -705,7 +706,60 @@ const TabletaParticipantes = (props) => {
         }
 
     }
+const ipSend=()=>{
+    cookies2 = getCookie('millonarioIp') 
+       cookies3 = getCookie('gameType')
+    cookies4 = getCookie('roomName')
+        if (cookies2) {
+            if (cookies2) {
+                if (cookies3) {
+                    setIp(parseInt(cookies2))
+                    socket.emit(
+                        'millonario', {
+                        'gameType': cookies3,
+                        'roomName': cookies4 ? cookies4 : roomName,
+                        'dataIn': {
+                            ip: parseInt(cookies2),
+                            'actionTodo': 'ipSend',
+                        },
+                        'actionTodo': 'ipSend',
+                    })
+                } else {
+                    setIp(parseInt(cookies2))
+                    socket.emit(
+                        'millonario', {
+                        'gameType': 'millonario',
+                        'roomName': cookies4 ? cookies4 : roomName,
+                        'dataIn': {
+                            ip: parseInt(cookies2),
+                            'actionTodo': 'ipSend',
+                        },
+                        'actionTodo': 'ipSend',
+                    })
+                }
+
+            } else {
+                socket.emit(
+                    'millonario', {
+                    'gameType': 'millonario',
+                    'roomName': cookies4 ? cookies4 : roomName,
+                    'dataIn': {
+                        ip: ip,
+                        'actionTodo': 'ipSend',
+                    },
+                    'actionTodo': 'ipSend',
+                })
+            }
+        } else {
+            setCookies("millonarioIp", ip, {
+                maxAge: 30 * 24 * 60 * 60,
+                path: '/',
+            })
+            cookies2 = ip
+        }
+    }
     useEffect(() => {
+        cookies2 = getCookie('millonarioIp') 
         cookies3 = getCookie('gameType')
         cookies4 = getCookie('roomName')
         socket.on("millonario", (chat) => {
@@ -774,7 +828,7 @@ const TabletaParticipantes = (props) => {
                     setnameRequire('ocupado')
                     break;
                 case 'millonarioNameUsed':
-                    window.alert('nombre ya ocupado')
+                    window.alert('Nombre ya ocupado')
                     break;
                 case 'nameGood':
                     setnameRequire('libre')
@@ -1183,8 +1237,8 @@ const TabletaParticipantes = (props) => {
                         setRoomName('sinSala')
                         removeCookies('roomName')
                         removeCookies('gameType')
-                        cookies4=false
-                        cookies3='off'
+                        cookies4 = false
+                        cookies3 = 'off'
                         setTimeout(() => {
                             setCookies("gameType", 'off', {
                                 maxAge: 30 * 24 * 60 * 60,
@@ -1319,8 +1373,16 @@ const TabletaParticipantes = (props) => {
                     }
                     break;
                 case 'nameUserOcuped':
-
-                    window.alert('NOMBRE NO DISPONIBLE')
+                    socket.emit(
+                        'millonario', {
+                        'gameType': cookies3,
+                        'roomName': cookies4 ? cookies4 : roomName,
+                        'dataIn': {
+                            ip: parseInt(cookies2),
+                            'actionTodo': 'ipSend',
+                        },
+                        'actionTodo': 'ipSend',
+                    })
                     break;
                 case 'roomLoose':
                     window.alert('SALA OFF')
@@ -1453,7 +1515,7 @@ const TabletaParticipantes = (props) => {
                     }
                     break;
 
-
+                    
 
                 default:
                     break;
@@ -1464,54 +1526,9 @@ const TabletaParticipantes = (props) => {
         cookies2 = getCookie('millonarioIp')
         cookies3 = getCookie('gameType')
         cookies4 = getCookie('roomName')
-        if (cookies2) {
-            if (cookies2) {
-                if (cookies3) {
-                    setIp(parseInt(cookies2))
-                    socket.emit(
-                        'millonario', {
-                        'gameType': cookies3,
-                        'roomName': cookies4 ? cookies4 : roomName,
-                        'dataIn': {
-                            ip: parseInt(cookies2),
-                            'actionTodo': 'ipSend',
-                        },
-                        'actionTodo': 'ipSend',
-                    })
-                } else {
-                    setIp(parseInt(cookies2))
-                    socket.emit(
-                        'millonario', {
-                        'gameType': 'millonario',
-                        'roomName': cookies4 ? cookies4 : roomName,
-                        'dataIn': {
-                            ip: parseInt(cookies2),
-                            'actionTodo': 'ipSend',
-                        },
-                        'actionTodo': 'ipSend',
-                    })
-                }
-
-            } else {
-                socket.emit(
-                    'millonario', {
-                    'gameType': 'millonario',
-                    'roomName': cookies4 ? cookies4 : roomName,
-                    'dataIn': {
-                        ip: ip,
-                        'actionTodo': 'ipSend',
-                    },
-                    'actionTodo': 'ipSend',
-                })
-            }
-        } else {
-            setCookies("millonarioIp", ip, {
-                maxAge: 30 * 24 * 60 * 60,
-                path: '/',
-            })
-            cookies2 = ip
-        }
+        ipSend()
     }, [])
+    
     if (inTransition) {
         return (<>
             <TransitionComponent initing={initing} />
@@ -1533,7 +1550,7 @@ const TabletaParticipantes = (props) => {
         </div> : changeMode === 'sinRegistro' ? <ModeGame roomName={roomName} chooseState={chooseState} setChooseState={setChooseState} setmultiPlayerReady={setmultiPlayerReady} setmultiPlayerGo={setmultiPlayerGo} setRoomName={setRoomName} setsinglePlayerReady={setsinglePlayerReady} changeMode={changeMode} setChangeMode={setChangeMode} /> : (playerType === 'jugador' || playerType === 'jugando') ? <>
             <ModeGame roomName={roomName} chooseState={chooseState} setChooseState={setChooseState} setmultiPlayerReady={setmultiPlayerReady} setsinglePlayerReady={setsinglePlayerReady} setmultiPlayerGo={setmultiPlayerGo} setRoomName={setRoomName} changeMode={changeMode} setChangeMode={setChangeMode} />
             {
-                changeMode === 'millonario' ? <ComponenteJugador helpTime={helpTime} inHelping={inHelping} lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo} warningPreStreamNeedingHelp={warningPreStreamNeedingHelp} setwarningPreStreamNeedingHelp={setwarningPreStreamNeedingHelp} sethelpPreStream={sethelpPreStream} helpRes={helpRes} helpPreStream={helpPreStream} acceptHelp={acceptHelp} usersInRegister={usersInRegister} nowInlevel={nowInlevel} actualPlayer={actualPlayer} helpsCome={helpsCome} helpsPlayer={helpsPlayer} helpNeed={helpNeed} gameChoose={gameChoose} primeraEleccion={primeraEleccion} inChoosing={inChoosing} userResults={userResults} usersResults={usersResults} ClasificDone={ClasificDone} playerData={playerData} sendPuntuation={sendPuntuation} arrayClassificatorio={arrayClassificatorio} clasificationArray={clasificationArray} inClasification={inClasification} gameActive={gameActive}
+                changeMode === 'millonario' ? <ComponenteJugador ipSend={ipSend} helpTime={helpTime} inHelping={inHelping} lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo} warningPreStreamNeedingHelp={warningPreStreamNeedingHelp} setwarningPreStreamNeedingHelp={setwarningPreStreamNeedingHelp} sethelpPreStream={sethelpPreStream} helpRes={helpRes} helpPreStream={helpPreStream} acceptHelp={acceptHelp} usersInRegister={usersInRegister} nowInlevel={nowInlevel} actualPlayer={actualPlayer} helpsCome={helpsCome} helpsPlayer={helpsPlayer} helpNeed={helpNeed} gameChoose={gameChoose} primeraEleccion={primeraEleccion} inChoosing={inChoosing} userResults={userResults} usersResults={usersResults} ClasificDone={ClasificDone} playerData={playerData} sendPuntuation={sendPuntuation} arrayClassificatorio={arrayClassificatorio} clasificationArray={clasificationArray} inClasification={inClasification} gameActive={gameActive}
                     pregunta={pregunta} playerType={playerType} respuestas={respuestas} sendHelp={sendHelp} escogerEsta={escogerEsta} helpRequired={helpRequired} ip={ip} /> :
                     <>{
                         changeMode === 'singlePlayer' ?
@@ -1546,7 +1563,7 @@ const TabletaParticipantes = (props) => {
                                         </>
                                         :
                                         <>
-                                            <ComponenteJugador helpTime={helpTime} inHelping={inHelping} lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo} warningPreStreamNeedingHelp={warningPreStreamNeedingHelp} setwarningPreStreamNeedingHelp={setwarningPreStreamNeedingHelp} sethelpPreStream={sethelpPreStream} helpRes={helpRes} helpPreStream={helpPreStream} acceptHelp={acceptHelp} usersInRegister={usersInRegister} nowInlevel={nowInlevel} actualPlayer={actualPlayer} helpsCome={helpsCome} helpsPlayer={helpsPlayer} helpNeed={helpNeed} gameChoose={gameChoose} primeraEleccion={primeraEleccion} inChoosing={inChoosing} userResults={userResults} usersResults={usersResults} ClasificDone={ClasificDone} playerData={playerData} sendPuntuation={sendPuntuation} arrayClassificatorio={arrayClassificatorio} clasificationArray={clasificationArray} inClasification={inClasification} gameActive={gameActive}
+                                            <ComponenteJugador ipSend={ipSend} helpTime={helpTime} inHelping={inHelping} lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo} warningPreStreamNeedingHelp={warningPreStreamNeedingHelp} setwarningPreStreamNeedingHelp={setwarningPreStreamNeedingHelp} sethelpPreStream={sethelpPreStream} helpRes={helpRes} helpPreStream={helpPreStream} acceptHelp={acceptHelp} usersInRegister={usersInRegister} nowInlevel={nowInlevel} actualPlayer={actualPlayer} helpsCome={helpsCome} helpsPlayer={helpsPlayer} helpNeed={helpNeed} gameChoose={gameChoose} primeraEleccion={primeraEleccion} inChoosing={inChoosing} userResults={userResults} usersResults={usersResults} ClasificDone={ClasificDone} playerData={playerData} sendPuntuation={sendPuntuation} arrayClassificatorio={arrayClassificatorio} clasificationArray={clasificationArray} inClasification={inClasification} gameActive={gameActive}
                                                 pregunta={pregunta} playerType={playerType} respuestas={respuestas} sendHelp={sendHelp} escogerEsta={escogerEsta} helpRequired={helpRequired} ip={ip} changeMode={changeMode} />
                                         </>
                                 }
@@ -1557,7 +1574,7 @@ const TabletaParticipantes = (props) => {
                                         <>{
                                             !goNow ?
                                                 <ComponenteSinglePlayer roomAdmin={roomAdmin} roomPlayers={roomPlayers} changeMode={changeMode} playerData={playerData} setgoNow={setgoNow} setsinglePlayerReady={setsinglePlayerReady} startMillonario={startClassific} roomName={roomName} setmultiPlayerReady={setmultiPlayerReady} multiplayer /> :
-                                                <ComponenteJugador adminData={adminData} helpTime={helpTime} inHelping={inHelping} lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo} warningPreStreamNeedingHelp={warningPreStreamNeedingHelp} setwarningPreStreamNeedingHelp={setwarningPreStreamNeedingHelp} startMillonario={startMillonario} sethelpPreStream={sethelpPreStream} helpRes={helpRes} helpPreStream={helpPreStream} acceptHelp={acceptHelp} usersInRegister={usersInRegister} nowInlevel={nowInlevel} actualPlayer={actualPlayer} helpsCome={helpsCome} helpsPlayer={helpsPlayer} helpNeed={helpNeed} gameChoose={gameChoose} primeraEleccion={primeraEleccion} inChoosing={inChoosing} userResults={userResults} usersResults={usersResults} ClasificDone={ClasificDone} playerData={playerData} sendPuntuation={sendPuntuation} arrayClassificatorio={arrayClassificatorio} clasificationArray={clasificationArray} inClasification={inClasification} gameActive={gameActive}
+                                                <ComponenteJugador ipSend={ipSend} adminData={adminData} helpTime={helpTime} inHelping={inHelping} lastMin={lastMin} lostGame={lostGame} winning={winning} eltiempo={eltiempo} warningPreStreamNeedingHelp={warningPreStreamNeedingHelp} setwarningPreStreamNeedingHelp={setwarningPreStreamNeedingHelp} startMillonario={startMillonario} sethelpPreStream={sethelpPreStream} helpRes={helpRes} helpPreStream={helpPreStream} acceptHelp={acceptHelp} usersInRegister={usersInRegister} nowInlevel={nowInlevel} actualPlayer={actualPlayer} helpsCome={helpsCome} helpsPlayer={helpsPlayer} helpNeed={helpNeed} gameChoose={gameChoose} primeraEleccion={primeraEleccion} inChoosing={inChoosing} userResults={userResults} usersResults={usersResults} ClasificDone={ClasificDone} playerData={playerData} sendPuntuation={sendPuntuation} arrayClassificatorio={arrayClassificatorio} clasificationArray={clasificationArray} inClasification={inClasification} gameActive={gameActive}
                                                     pregunta={pregunta} playerType={playerType} respuestas={respuestas} sendHelp={sendHelp} escogerEsta={escogerEsta} helpRequired={helpRequired} ip={ip} changeMode={changeMode} />
                                         }
 

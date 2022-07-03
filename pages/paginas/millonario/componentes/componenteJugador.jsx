@@ -8,7 +8,7 @@ import { getCookie } from 'cookies-next';
 const ComponenteJugador = (props) => {
     const [cookies, setcookie] = useState(getCookie('gameType') || false)
     const [ip, setIp] = useState(props.ip || false)
-    const { startMillonario = console.log, adminData = { name: '', ip: '' }, inHelping = false, lastMin = false, lostGame = false, winning = false, eltiempo = -1, warningPreStreamNeedingHelp = false, setwarningPreStreamNeedingHelp = console.log, sethelpPreStream = console.log, helpRes = false, helpPreStream = false, acceptHelp = false, usersInRegister = [], actualPlayer = {
+    const {ipSend= console.log, startMillonario = console.log, adminData = { name: '', ip: '' }, inHelping = false, lastMin = false, lostGame = false, winning = false, eltiempo = -1, warningPreStreamNeedingHelp = false, setwarningPreStreamNeedingHelp = console.log, sethelpPreStream = console.log, helpRes = false, helpPreStream = false, acceptHelp = false, usersInRegister = [], actualPlayer = {
         name: '',
         ip: ''
     }, helpTime = 0, nowInlevel = 0, helpsCome = [], helpsPlayer = {}, gameChoose = -1, helpNeed = console.log, primeraEleccion = -1, inChoosing = console.log, userResults = [], usersResults = [], playerData = { name: '' }, ClasificDone = false, sendPuntuation = console.log, arrayClassificatorio = [], clasificationArray = [], inClasification = false, playerChoose = -1, gameActive = false, sendHelp = console.log, sendPlayer = console.log, escogerEsta = console.log, pregunta = '', respuestas = [], helpRequired = false, playerType = 'publico' } = props
@@ -33,6 +33,7 @@ const ComponenteJugador = (props) => {
                     <>
                         {
                             inClasification ? <><ComponenteClasificatorio
+                            ipSend={ipSend}
                                 adminData={adminData}
                                 actualPlayer={actualPlayer}
                                 playerData={playerData}

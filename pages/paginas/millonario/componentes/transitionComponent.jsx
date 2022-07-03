@@ -7,10 +7,10 @@ const TransitionComponent = (props) => {
             <div className={!clasifiquing ? 'hide' : 'opating'}>
                 <div className={''}>
                     <img src={'https://i.pinimg.com/originals/d0/49/1d/d0491d3d235d3c6770014825af0d2961.gif'} className="warning_popout-gif" />
-                    <button className='btn-azteca pointer bgcolorInedit-red absolute top-50' onCLick={(e) => {
+                    <button onClick={(e) => {
                         e.preventDefault();
                         ; startCLass()
-                    }}> INICIARA LA CLASIFICACION EN: <br />{time}</button>
+                    }} className='btn-azteca pointer bgcolorInedit-red absolute top-50' > INICIARA LA CLASIFICACION EN: <br />{time}</button>
 
                 </div>
             </div>
