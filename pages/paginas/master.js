@@ -11,7 +11,7 @@ import io from "socket.io-client"
 import { SelectedNumber } from '../creador/tools/selectedNumber';
 import ReactPlayer from 'react-player';
 
-const socket = io("https://serverazteca.herokuapp.com/")
+const socket = io("http://localhost:3002/")
 
 let posAct = -1
 let az = -1

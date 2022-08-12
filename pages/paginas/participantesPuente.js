@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import io from "socket.io-client"
 import CrearPuente from './crearPuente';
-const socket = io("https://serverazteca.herokuapp.com/")
+const socket = io("http://localhost:3002/")
 
 const ParticipantesPuente = (props) => {
     const [isActive, setisActive] = useState(false)
