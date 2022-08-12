@@ -4,7 +4,7 @@ import FloorApp from '../../components/containers/floorApp';
 import io from "socket.io-client"
 import Bowser from "bowser";
 
-const socket = io("http://localhost:3002/")
+const socket = io("https://serverazteca.herokuapp.com/")
 const Calamar = (props) => {
     const [notAuth, setnotAuth] = useState(false)
     const [turn, setturn] = useState(-1)

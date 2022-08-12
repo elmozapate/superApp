@@ -12,7 +12,7 @@ import { SelectedNumber } from '../creador/tools/selectedNumber';
 import ReactPlayer from 'react-player';
 import { useRouter } from 'next/router'
 
-const socket = io("http://localhost:3002/")
+const socket = io("https://serverazteca.herokuapp.com/")
 
 let posAct = -1
 let register = true

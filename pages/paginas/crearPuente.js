@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import io from "socket.io-client"
-const socket = io("http://localhost:3002/")
+const socket = io("https://serverazteca.herokuapp.com/")
 let news = true
 let pass = [
     'b', 'b', 'a', 'a', 'a', 'b', 'a', 'b', 'a', 'a'

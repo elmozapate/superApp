@@ -1,12 +1,7 @@
 import { useState } from "react"
 import FormularioRegistro from "./formularioRegistro"
-import LoginButton from "./loginBoton"
-import LogoutButton from "./logOutBoton"
-import { useAuth0 } from "@auth0/auth0-react";
 
 const BotonesRegistro = (props) => {
-    const { user, isAuthenticated, isLoading } = useAuth0();
-
     const { checkLogIn = console.log, nameRequire = 'vacio', sendPlayerRegister = console.log, checkNameUser = console.log, setIsRegister = console.log, onlyPublic = console.log, sendPlayer = console.log, changeMode = false } = props
     const [ip, setIp] = useState(props.ip || false)
     const [activeNow, setactive] = useState(false)
@@ -36,7 +31,6 @@ const BotonesRegistro = (props) => {
                         setwillRegister(true)
                         setoldUser(true)
                     }}>LOGIN</button>
-                    
                     <button className={changeMode ? 'hide' : 'btn-azteca pointer'} onClick={(e) => {
                         e.preventDefault();
                         setfirstChoose(true)
