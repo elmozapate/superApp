@@ -487,7 +487,7 @@ const TabletaParticipantes = (props) => {
         })
     }
     const logOut = () => {
-        const url = router.basePath !== '/' && router.basePath !== '' && router.basePath !== ' ' ? router.basePath : 'http://localhost:3000/paginas/millonario'
+        const url = router.basePath !== '/' && router.basePath !== '' && router.basePath !== ' ' ? router.basePath : 'https://super-app-liard.vercel.app/paginas/millonario'
 
         socket.emit(
             'millonario', {
