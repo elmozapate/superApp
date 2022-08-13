@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
  const LogoutButton = () => {
   const { logout } = useAuth0();
   const router = useRouter();
-  const url = router.basePath !== '/' && router.basePath !== '' && router.basePath !== ' '? router.basePath : 'http://localhost:3000/paginas/millonario'
+  const url = router.basePath !== '/' && router.basePath !== '' && router.basePath !== ' '? router.basePath : 'https://super-app-liard.vercel.app/paginas/millonario'
  
   return (
     <button onClick={() => logout({ returnTo: url })}>
