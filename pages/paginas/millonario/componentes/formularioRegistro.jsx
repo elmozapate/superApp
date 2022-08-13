@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import LoginButton from "./loginBoton"
 
 const FormularioRegistro = (props) => {
     const { oldUser = false, checkLogIn = console.log, checkNameUser = console.log, willRegister = false, setDoing = console.log, setnameRequire = console.log, checkName = console.log, nameRequire = 'vacio', setmultiPlayerReady = console.log, sendPlayerRegister = console.log, sendPlayer = console.log, multiPlayer = false } = props
@@ -56,7 +57,7 @@ const FormularioRegistro = (props) => {
             {
                 inSend ?
                     <h1 className={inSendRes === '404' || inSendRes === 'no' ? "fontcolor-red" : "fontcolor-green"}>
-                        {inSendRes === '404' ? ' ERROR DE CONECCION' : inSendRes === 'sinSend' ? ' VIENDO DISPONIBILIDAD.........' : inSendRes === 'si' ? oldUser ? 'DATOS CORRECTOS ' : 'Nombre Disponible' : oldUser ? 'DATOS INCORRECTOS ':'Nombre No Disponible'}
+                        {inSendRes === '404' ? ' ERROR DE CONECCION' : inSendRes === 'sinSend' ? ' VIENDO DISPONIBILIDAD.........' : inSendRes === 'si' ? oldUser ? 'DATOS CORRECTOS ' : 'Nombre Disponible' : oldUser ? 'DATOS INCORRECTOS ' : 'Nombre No Disponible'}
                     </h1>
                     : <></>
 
@@ -71,10 +72,18 @@ const FormularioRegistro = (props) => {
                             <input id={'password'} type='password' onChange={handlePlayer} value={playerData.password} className={inSend ? 'hide' : 'bingo-name-small'} placeholder={oldUser ? 'Password' : 'NOMBRE DEL JUGADOR'} />
                             <button className={playerData.password.length > 3 ? inSend ? 'hide' : 'btn-azteca pointer' : 'hide'} onClick={(e) => { e.preventDefault(); checkLogIn(playerData); }}>INGRESAR</button>
                             <button className={!oldUser ? 'hide' : 'btn-azteca pointer'} onClick={(e) => { e.preventDefault(); setDoing(false) }}>VOLVER</button>
+                            -------------------
+                            o
+                            Ingresa con Google
+                            <LoginButton />
                         </>
                         :
                         <>
                             <h1>REGISTRATE</h1>
+                            --------------------
+                            <h1>REGISTRATE CON GOOGLE</h1>
+                            <LoginButton />
+                            --------------------
                             <input id={'name'} onChange={handlePlayer} value={playerData.name} className={inSend ? 'hide' : 'bingo-name-small'} placeholder={!willRegister ? 'NOMBRE DE LA SALA' : 'NOMBRE DEL JUGADOR'} />
                             <input id={'password'} onChange={handlePlayer} value={playerData.password} className={inSend ? 'hide' : 'bingo-name-small'} placeholder={willRegister ? 'Password' : 'NOMBRE DEL JUGADOR'} />
                             <span className={playerData.password.length < 3 && playerData.password.length !== 0 ? '' : 'hide'}>MINIMO 5 CARACTERES</span>
