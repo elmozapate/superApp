@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import io from "socket.io-client"
+import { EnvM } from '../../envMachetero';
 import CrearPuente from './crearPuente';
-const socket = io("https://serverazteca.herokuapp.com/")
+const envM=EnvM()
+
+const socket = io(envM.hostBack)
 
 const ParticipantesPuente = (props) => {
     const [isActive, setisActive] = useState(false)

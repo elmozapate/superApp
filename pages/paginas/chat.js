@@ -7,6 +7,9 @@ import VoiceRecorder from '../../components/containers/audioRecorder';
 import Loading from '../../components/containers/loading';
 import VideoStream from '../../components/containers/streamComponent';
 import Streaming from '../../components/containers/streaming';
+import { EnvM } from '../../envMachetero';
+const envM=EnvM()
+
 let theUser = 0
 
 let xcv = 0
@@ -14,7 +17,7 @@ let xcv = 0
 let inChat = false
 let privArrayAux = []
 let activePrva = ''
-const socket = io("https://serverazteca.herokuapp.com/")
+const socket = io(envM.hostBack)
 
 export default function Chat(props) {
     const hora = () => {

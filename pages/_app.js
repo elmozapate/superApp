@@ -2,12 +2,13 @@ import '../styles/styles.scss'
 import { useRouter } from 'next/router'
 import reqGetCompanies from '../request/reqGetCompanies'
 import { Auth0Provider } from '@auth0/auth0-react'
-
+import { EnvM } from '../envMachetero'
+const envM=EnvM()
 let ins = true
 
 function MyApp(props) {
   const router = useRouter()
-  const url = router.basePath !== '/' && router.basePath !== '' && router.basePath !== ' '? router.basePath : 'https://super-app-liard.vercel.app/paginas/millonario'
+  const url = router.basePath !== '/' && router.basePath !== '' && router.basePath !== ' '? router.basePath : `${envM.hostFront}paginas/millonario`
   const { Component, pageProps } = props
  
 

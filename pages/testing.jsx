@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import IComponent from "../components/iComponents/icomponent";
+import { TestFunt } from "./testingFuntion";
 
 const objContent = [{
     type: 'contenedor',
@@ -34,7 +36,7 @@ const objContent = [{
                     }
                 }]
             }
-        },{
+        }, {
             type: 'contenedor',
             column: false,
             bgColor: 'red',
@@ -58,7 +60,7 @@ const objContent = [{
                     }
                 }]
             }
-        },{
+        }, {
             type: 'contenedor',
             column: false,
             bgColor: 'black',
@@ -87,11 +89,58 @@ const objContent = [{
 }]
 
 const Test = () => {
+    const [resultado, setResultado] = useState({
+        cosa1: 0,
+        cosa2: 0,
+        cosa5: 0
+    })
+    const handleLogin = (e) => {
+        e.preventDefault()
+        const id = e.target.id;
+        const value = e.target.value
+        console.log('handle', id, value);
+        setResultado({
+            ...resultado,
+            [id]: value
+        })
+    }
+    const operar = (value1) => {
+        const res = TestFunt(value1.cosa1, value1.cosa2)
+        console.log(res);
+        setResultado({
+            ...resultado,
+            cosa5: res
+        })
+    }
 
     return (
         <>
-            <div className="IDiv-main bgcolor-purple">
-                <IComponent contains={objContent} />
+            <div className="IDiv-main column bgcolor-purple">
+
+                testingPage
+                <br />
+
+                {resultado.cosa1}
+                <br />
+                {resultado.cosa2}
+
+                <br />
+                <input id="cosa1" value={resultado.cosa1} onChange={handleLogin} type={'number'} />
+                <br />
+                <input id="cosa2" value={resultado.cosa2} onChange={handleLogin} type={'number'} />
+                <br />
+                {resultado.cosa5}
+
+                <br />
+
+                <button
+                    onClick={(e) => { e.preventDefault(); operar(resultado) }}
+                >
+                    OPERACION
+                </button>
+
+                {/*                 <IComponent contains={objContent} />
+ */}
             </div>
         </>
     )

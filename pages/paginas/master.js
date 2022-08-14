@@ -10,8 +10,10 @@ import { useState, useEffect } from 'react';
 import io from "socket.io-client"
 import { SelectedNumber } from '../creador/tools/selectedNumber';
 import ReactPlayer from 'react-player';
+import { EnvM } from '../../envMachetero';
+const envM=EnvM()
 
-const socket = io("https://serverazteca.herokuapp.com/")
+const socket = io(envM.hostBack)
 
 let posAct = -1
 let az = -1

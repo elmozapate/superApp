@@ -1,7 +1,10 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import io from "socket.io-client"
-const socket = io("https://serverazteca.herokuapp.com/")
+import { EnvM } from '../../envMachetero';
+const envM=EnvM()
+
+const socket = io(envM.hostBack)
 
 const MetaPuente = (props) => {
     const [changing, seTchanging] = useState(false)

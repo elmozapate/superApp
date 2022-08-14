@@ -39,6 +39,7 @@ const EmptyPage = ({ props }) => {
     console.log(newCli, res, haveCookie);
     const getPage = async () => {
         const response = await reqGetCompanies()
+        console.log(response);
         let thePage = {
             nombre: '',
             password: '',
@@ -46,6 +47,7 @@ const EmptyPage = ({ props }) => {
         }
         let aux = false
         if (response) {
+            console.log(response);
             response.array.map((key, i) => {
                 if (texto.name === key.nombre) {
                     aux = true

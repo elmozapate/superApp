@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import io from "socket.io-client"
-const socket = io("https://serverazteca.herokuapp.com/")
+import { EnvM } from '../../../envMachetero';
+const socket = io(envM.hostBack)
 let news = true
+const envM=EnvM()
 
 const SecureApp = () => {
 

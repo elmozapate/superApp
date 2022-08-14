@@ -2,8 +2,11 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import io from "socket.io-client"
+import { EnvM } from '../../envMachetero';
 import ComponenteLista from './componenteLista';
-const socket = io("https://serverazteca.herokuapp.com/")
+const envM=EnvM()
+
+const socket = io(envM.hostBack)
 let count = 0
 const IstaDefinitiva = () => {
     const [participants, setparticipants] = useState([{ user: '' }])

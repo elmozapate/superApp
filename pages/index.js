@@ -9,7 +9,10 @@ import Creator from './creador/index';
 import { useState, useEffect } from 'react';
 import io from "socket.io-client"
 import { SelectedNumber } from './creador/tools/selectedNumber';
-const socket = io("https://serverazteca.herokuapp.com/")
+import { EnvM } from '../envMachetero';
+const envM=EnvM()
+
+const socket = io(envM.hostBack)
 let arrayHere = []
 let posSaveAux = -1
 let fullParticipants = []

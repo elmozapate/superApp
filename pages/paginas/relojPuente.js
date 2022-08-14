@@ -2,7 +2,10 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import io from "socket.io-client"
 import RelojApp from '../../components/containers/relojApp';
-const socket = io("https://serverazteca.herokuapp.com/")
+import { EnvM } from '../../envMachetero';
+const envM=EnvM()
+
+const socket = io(envM.hostBack)
 
 export default function RelojPuente() {
     const [winning, seTwinning] = useState(false)

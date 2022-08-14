@@ -12,8 +12,9 @@ import ComponenteSinglePlayer from "./componentes/componenteSinglePlayer"
 import ComponenteMultiPlayer from "./componentes/componenteMultiPlayer"
 import { useAuth0 } from "@auth0/auth0-react";
 import { useRouter } from "next/router"
-
-const socket = io("https://serverazteca.herokuapp.com/")
+import { EnvM } from "../../../envMachetero"
+const envM=EnvM()
+const socket = io(envM.hostBack)
 
 let timeGame = 50
 let changeDone = []
@@ -487,7 +488,8 @@ const TabletaParticipantes = (props) => {
         })
     }
     const logOut = () => {
-        const url = router.basePath !== '/' && router.basePath !== '' && router.basePath !== ' ' ? router.basePath : 'https://super-app-liard.vercel.app/paginas/millonario'
+        console.log(`${envM.hostFront}paginas/millonario`);
+        const url =`${envM.hostFront}paginas/millonario`
 
         socket.emit(
             'millonario', {
