@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import io from "socket.io-client"
-const socket = io(envM.hostBack)
 
 const FloorApp = ({ nowPlaying=false,userIn = 0,setuserKey=console.log, changeArray = console.log, floorMap = [] }) => {
 

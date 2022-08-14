@@ -4,10 +4,11 @@ import FloorApp from '../../components/containers/floorApp';
 import io from "socket.io-client"
 import Bowser from "bowser";
 import { EnvM } from '../../envMachetero';
-const envM=EnvM()
 
-const socket = io(envM.hostBack)
 const Calamar = (props) => {
+    const envM = EnvM()
+
+    const socket = io(envM.hostBack)
     const [notAuth, setnotAuth] = useState(false)
     const [turn, setturn] = useState(-1)
     const [ip, setIp] = useState(props.ip || false)
@@ -155,7 +156,7 @@ const Calamar = (props) => {
                     }
                     break;
                 case 'estasEnJail':
-                    console.log('jail',chat);
+                    console.log('jail', chat);
                     if (chat.dataIn.ip === ip) {
                         setTimeout(goJail, 5000)
                     }
@@ -170,7 +171,7 @@ const Calamar = (props) => {
                             setturn(i)
                         }
                     })
-                        break;
+                    break;
                 default:
                     break;
             }
@@ -193,7 +194,7 @@ const Calamar = (props) => {
         </>)
     }
     return (<div className='calamar-puente'>
-       {
+        {
             changing ? <></> : <FloorApp nowPlaying={nowPlaying} userIn={userIn} floorMap={floorMap} setuserKey={setuserKey} changeArray={changeArray} />
 
         }

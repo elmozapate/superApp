@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import io from "socket.io-client"
 import { EnvM } from '../../../envMachetero';
-const socket = io(envM.hostBack)
 let news = true
 const envM=EnvM()
+const socket = io(envM.hostBack)
 
 const SecureApp = () => {
 
