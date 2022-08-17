@@ -1827,3 +1827,64 @@ justify-content: center;
 
     }
 }
+
+@for $i from -100 through 100 {
+.lienzo-#{$i} {
+    z-index: 10;
+
+    background: url('../public/img/canvasBg.png');
+position: absolute;
+top: 200px;
+left: ((105px * ($i / 1))+50px);
+width:  10500px;
+height: 500px;
+}
+.lienzo-#{'_'}#{$i} {
+    background: url('../public/img/canvasBg.png');
+    position: absolute;
+    top: 200px;
+    left: (105px * ($i / 10));
+    width:  10500px;
+    height: 500px;
+    }
+}
+.lienzo-final{
+    z-index: 1;
+    background:green;
+    position: absolute;
+    top: 200px;
+    left: 0;
+    width:  90vw;
+    height: 500px;
+}
+.relativeCanvasContainer{
+position: relative;
+height: 100vh;
+width: 100vw;
+overflow: hidden;
+}
+.botonesCanvas{
+    position: absolute;
+    top: 10px;
+left: 0;
+display: flex;
+    gap: 20px;
+}
+
+.botonesCanvasInteractivos{
+    position: absolute;
+    width: 100vw;
+    display: flex;
+    top: 300px;
+left: 0px;
+justify-content: space-between; 
+div{
+    min-width: 100px;
+    min-height: 100px;
+border-radius: 50%;
+z-index: 100;
+background-color: black;
+opacity: .5;
+}
+
+}
