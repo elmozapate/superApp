@@ -716,7 +716,7 @@ const Test2 = () => {
                         }}
                         onTouchStart={!propsAction.jumping ? (e) => {
                             brincar()
-                        } : null}>{}</button>
+                        } : brincar()}>{}</button>
                 </div>
 
                 <canvas className={`lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} lienzoH-${parseInt(stateImage.height)}`} id="canvas-Pp">
