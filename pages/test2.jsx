@@ -676,7 +676,7 @@ const Test2 = () => {
                                     ...propsImage,
                                     direccion: 'xb'
                                 }
-                            }}>{`<=`}</button>
+                            }}></button>
 
                         <button
                             onTouchEnd={(e) => {
@@ -701,7 +701,7 @@ const Test2 = () => {
                                     ...propsImage,
                                     direccion: 'xf'
                                 }
-                            }}>{`=>`}</button>
+                            }}></button>
                     </div>
                     <button
                         onTouchEnd={() => {
@@ -716,7 +716,7 @@ const Test2 = () => {
                         }}
                         onTouchStart={!propsAction.jumping ? (e) => {
                             brincar()
-                        } : null}>{`BRINCA`}</button>
+                        } : null}>{}</button>
                 </div>
 
                 <canvas className={`lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} lienzoH-${parseInt(stateImage.height)}`} id="canvas-Pp">
