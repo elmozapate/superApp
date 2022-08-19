@@ -618,6 +618,9 @@ const Test2 = () => {
             off = false
             let isMobile = new MobileDetect(navigator.userAgent)
             console.log(navigator.userAgent);
+            document.addEventListener("contextmenu", function (e) {
+                e.preventDefault();
+            }, false);
             if ((isMobile.is('iPhone') || isMobile.is('Android') || isMobile.tablet() !== null || isMobile.phone() !== null || isMobile.mobile() !== null)) {
                 console.log('mobil');
                 setOnMobil(true)
@@ -652,7 +655,7 @@ const Test2 = () => {
                     <div>
                         <button
                             onTouchEnd={(e) => {
-                                 mxActive = false
+                                mxActive = false
                                 propsImage = {
                                     ...propsImage,
                                     direccion: 'xs'
@@ -665,7 +668,7 @@ const Test2 = () => {
                                 mxActive = false
                             }}
                             onTouchStart={(e) => {
-                                
+
                                 mxActive = true
                                 imagenes[0].onMove = true
                                 dibujarMouseOn('-', true)
@@ -677,7 +680,7 @@ const Test2 = () => {
 
                         <button
                             onTouchEnd={(e) => {
-                                
+
                                 propsImage = {
                                     ...propsImage,
                                     direccion: 'xs'
@@ -701,7 +704,7 @@ const Test2 = () => {
                             }}>{`=>`}</button>
                     </div>
                     <button
-                        onTouchEnd={ () => {
+                        onTouchEnd={() => {
                             setTimeout(() => {
                                 let nowJump = propsAction
                                 nowJump.graviti = true
@@ -710,7 +713,7 @@ const Test2 = () => {
                                     ...nowJump
                                 }
                             }, 30);
-                        } }
+                        }}
                         onTouchStart={!propsAction.jumping ? (e) => {
                             brincar()
                         } : null}>{`BRINCA`}</button>
