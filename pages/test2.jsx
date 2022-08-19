@@ -639,61 +639,64 @@ const Test2 = () => {
                         'Mover a la Derecha' : 'Mover a la Izquierda'}</button>
                 </div>
                 <div className="botonesCanvasInteractivos" >
-                    <button
-                        onDoubleClick={(e) => {
-                            e.preventDefault(); mxActive = false
-                            propsImage = {
-                                ...propsImage,
-                                direccion: 'xs'
-                            }
-                            mxDirection = {
-                                ...mxDirection,
-                                left: false,
-                                right: false
-                            }
-                            mxActive = false
-                        }}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            mxActive = true
-                            imagenes[0].onMove = true
-                            dibujarMouseOn('-', true)
-                            propsImage = {
-                                ...propsImage,
-                                direccion: 'xb'
-                            }
-                        }}>{`<=`}</button>
+                    <div>
+                        <button
+                            onDoubleClick={(e) => {
+                                e.preventDefault(); mxActive = false
+                                propsImage = {
+                                    ...propsImage,
+                                    direccion: 'xs'
+                                }
+                                mxDirection = {
+                                    ...mxDirection,
+                                    left: false,
+                                    right: false
+                                }
+                                mxActive = false
+                            }}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                mxActive = true
+                                imagenes[0].onMove = true
+                                dibujarMouseOn('-', true)
+                                propsImage = {
+                                    ...propsImage,
+                                    direccion: 'xb'
+                                }
+                            }}>{`<=`}</button>
+
+                        <button
+                            onDoubleClick={(e) => {
+                                e.preventDefault();
+                                propsImage = {
+                                    ...propsImage,
+                                    direccion: 'xs'
+                                }
+                                mxDirection = {
+                                    ...mxDirection,
+                                    left: false,
+                                    right: false
+                                }
+                                mxActive = false
+                            }}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                console.log('mueve');
+                                mxActive = true
+                                imagenes[0].onMove = true
+                                dibujarMouseOn('+', true)
+                                propsImage = {
+                                    ...propsImage,
+                                    direccion: 'xf'
+                                }
+                            }}>{`=>`}</button>
+                    </div>
                     <button
 
                         onClick={(e) => {
                             e.preventDefault();
                             brincar()
                         }}>{`BRINCA`}</button>
-                    <button
-                        onDoubleClick={(e) => {
-                            e.preventDefault();
-                            propsImage = {
-                                ...propsImage,
-                                direccion: 'xs'
-                            }
-                            mxDirection = {
-                                ...mxDirection,
-                                left: false,
-                                right: false
-                            }
-                            mxActive = false
-                        }}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            console.log('mueve');
-                            mxActive = true
-                            imagenes[0].onMove = true
-                            dibujarMouseOn('+', true)
-                            propsImage = {
-                                ...propsImage,
-                                direccion: 'xf'
-                            }
-                        }}>{`=>`}</button>
                 </div>
 
                 <canvas className={`lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} lienzoH-${parseInt(stateImage.height)}`} id="canvas-Pp">
