@@ -500,7 +500,7 @@ const Test2 = () => {
             } else
                 if ((propsImage.direccion === 'xf' && propsImage.posX <= 1)) {
                     window.alert('pero hacia donde. no hay pa donde viejo/a')
-                } d
+                } 
         }
         if (imagenes[0].onMove) {
             let auxChange = propsImage
