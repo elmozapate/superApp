@@ -93,4 +93,52 @@ export const CrearItemsWorld = (newArray, level,distanceRange) => {
     return (array)
 
 }
+export const PropsImage = {
+    refreshData:false,
+    levelPass: false,
+    alive: true,
+    worldSectionIn: 0,
+    imagen: [],
+    posX: 0,
+    posY: 0,
+    widthX: 0,
+    heightY: 0,
+    fotograma: 0,
+    direccion: 'xs',
+    onMove: false,
+    id: 0,
+    layer: 0,
+    jumping: false,
+    graviti: true,
+    items: [{
+        displayneed: true,
+        layerOnDisplay: 3,
+        imagen: [],
+        type: 'hpc',
+        posX: 0,
+        posY: 0,
+        widthX: 0,
+        heightY: 0,
+        canMove: {
+            state: true,
+            colision: true,
+            direction: 'auto',
+            jumps: {
+                posibility: true,
+                interval: 0,
+                speed: 0,
+                maxJump: 'gravity'
+            },
+            walks: {
+                posibility: true,
+                interval: 0,
+                speed: 0,
+                maxArea: 'all'
+            }
+        },
+        actions: {
+            inCurse: false
+        }
+    }]
+}
 export default CrearItems

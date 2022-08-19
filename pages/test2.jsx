@@ -1,152 +1,77 @@
 import MobileDetect from "mobile-detect";
 import { useEffect, useState } from "react";
-import CrearItems, { CrearItemsWorld } from "./crearItems";
-let off = true
-let mxActive = false
-let myActive = false
-let mxDirection = {
-    left: false,
-    right: false
-}
-let levelFalses = [{
+import CrearItems, { CrearItemsWorld, PropsImage } from "./crearItems";
+let off = true, mxActive = false, myActive = false, mxDirection = { left: false, right: false }, levelFalses = [{
     posX: 0,
     posY: 0,
     widthX: 0,
     heightY: 0,
-}]
-let inLayer = 0
-let propsImage = {
-    alive: true,
-    worldSectionIn: 0,
-    imagen: [],
-    posX: 0,
-    posY: 0,
-    widthX: 0,
-    heightY: 0,
-    fotograma: 0,
-    direccion: 'xs',
-    onMove: false,
-    id: 0,
-    layer: 0,
-    jumping: false,
-    graviti: true,
-    items: [{
-        displayneed: true,
-        layerOnDisplay: 3,
-        imagen: [],
-        type: 'hpc',
-        posX: 0,
-        posY: 0,
-        widthX: 0,
-        heightY: 0,
-        canMove: {
-            state: true,
-            colision: true,
-            direction: 'auto',
-            jumps: {
-                posibility: true,
-                interval: 0,
-                speed: 0,
-                maxJump: 'gravity'
-            },
-            walks: {
-                posibility: true,
-                interval: 0,
-                speed: 0,
-                maxArea: 'all'
-            }
-        },
-        actions: {
-            inCurse: false
-        }
-    }]
-}
-let propsAction = {
-    jumping: false,
-    graviti: true
-}
-let canvas
-let levelGo = 1
-let ctx
-let imagenA
-let canvasC
-let ctxC
-let canvasD
-let ctxD
-let imagenes = [{ onMove: false }]
-let worldItems = []
+}], inLayer = 0, propsImage = PropsImage, propsAction = { jumping: false, graviti: true }, canvas, levelGo = 1, ctx,
+    imagenA, canvasC, ctxC, canvasB, ctxB, canvasD, ctxD, imagenes = [{ onMove: false }], worldItems = [],levelDificulty=4
 const Test2 = () => {
     const [stateImage, setStateImage] = useState({
-        onMove: false,
-        direccion: 'xf',
-        posX: -1,
-        width: 1080,
-        height: 720,
-        level: 1,
-        onMobil: false
+        onMove: false, direccion: 'xf', posX: -1, width: 1080, height: 720, level: 1, onMobil: false
     })
     const [onMobil, setOnMobil] = useState(false)
-    const dibujar = async (values, props, value) => {
-        if (values === 'go') {
+    const dibujar = async (values, Props, value) => {
+        let props = Props
+        let propsimage = propsImage
+        if (values === 'go' && props.posX <= (341 - 0.5) && imagenes[0].onMove) {
+           
+            
+            props.Itemss
             let aDibujar = (props.imagen[`${propsImage.direccion === 'xs' && props.posY < 120 ? 'xj' : propsImage.direccion}_${propsAction.graviti && props.posY < 120 ? parseInt(props.layer / (8 * 4)) < 2 ? parseInt(props.layer / (8 * 4)) + 2 : parseInt(props.layer / (8 * 4)) : !propsAction.graviti && props.posY < 120 ? parseInt(props.layer / (8 * 4)) > 1 ? parseInt(props.layer / (8 * 4)) - 2 : parseInt(props.layer / (8 * 4)) : parseInt(props.layer / (8 * 4))}`])
-            let psx = 0
-            let colisioned = false
-            let Itemss = propsImage.items
+            let psx = 0, colisioned = false, Itemss = propsImage.items
             levelFalses.map((key, i) => {
                 if (((key.posX + key.widthX) < (propsImage.items[0].posX + 10)) && (key.posX + key.widthX) > (propsImage.items[0].posX) && props.posY > 100) {
                     colisioned = true
                 }
             })
-
             if (colisioned) {
                 psx = Itemss[0].posX
                 morir()
                 Itemss[0].posX = 0
-
             } else {
-                psx = Itemss[0].posX
-            }
-            if (!value && props.posX < 355 && props.posX > -1 && propsImage.direccion === 'xf' && (((props.posX / (31 - 0.5)) === (1)) || ((props.posX / (61 - 0.5)) === (1)) || ((props.posX / (91 - 0.5)) === (1)) || ((props.posX / (121 - 0.5)) === (1)) || ((props.posX / (151 - 0.5)) === (1)) || ((props.posX / (181 - 0.5)) === (1)) || ((props.posX / (211 - 0.5)) === (1)) || ((props.posX / (241 - 0.5)) === (1)) || ((props.posX / (271 - 0.5)) === (1)) || ((props.posX / (301 - 0.5)) === (1)) || ((props.posX / (331 - 0.5)) === (1)) || (((props.posX / (341 - 0.5)) === (1))))) {
-                if (((props.posX / (341 - 0.5)) === (1))) {
-                    ganar()
-
+                if (propsImage.refreshData) {
+                    psx = propsimage.items[0].posX
                 } else {
-                    moverCanvas()
+                    psx = Itemss[0].posX
                 }
+            }
+            if (!value && props.posX <= (341 - 0.5) && props.posX > -1 && propsImage.direccion === 'xf' && (((props.posX / (31 - 0.5)) === (1)) || ((props.posX / (61 - 0.5)) === (1)) || ((props.posX / (91 - 0.5)) === (1)) || ((props.posX / (121 - 0.5)) === (1)) || ((props.posX / (151 - 0.5)) === (1)) || ((props.posX / (181 - 0.5)) === (1)) || ((props.posX / (211 - 0.5)) === (1)) || ((props.posX / (241 - 0.5)) === (1)) || ((props.posX / (271 - 0.5)) === (1)) || ((props.posX / (301 - 0.5)) === (1)) || ((props.posX / (331 - 0.5)) === (1)) || (((props.posX / (341 - 0.5)) === (1)))) && propsImage.alive && !propsImage.levelPass) {
+                if (((props.posX / (341 - 0.5)) === (1)) && propsImage.alive) { !propsImage.levelPass && !propsImage.refreshData ? ganar(props) : console.log('sssss'); psx = Itemss[0].posX; } else { moverCanvas() }
             }
             if (!value && props.posX < 351 && props.posX > 28 && propsImage.direccion === 'xb' && (((props.posX / (29 - 0.5)) === (1)) || ((props.posX / (59 - 0.5)) === (1)) ||
                 ((props.posX / (89 + 0.5)) === (1)) || ((props.posX / (119 + 0.5)) === (1)) || ((props.posX / (149 + 0.5)) === (1)) || ((props.posX / (179 + 0.5)) === (1)) || ((props.posX / (209 + 0.5)) === (1)) || ((props.posX / (239 + 0.5)) === (1)) || ((props.posX / (269 + 0.5)) === (1)) || ((props.posX / (299 + 0.5)) === (1)) || ((props.posX / (319 + 0.5)) === (1)))) {
                 moverCanvas()
             }
+            else{
+                console.log
+            }
             if (imagenes[0].onMove) {
                 ctxC.clearRect(0, 0, canvas.width, canvas.height)
+
                 let newModel = props
                 if (newModel.layer < (24 * 4)) {
                     newModel.layer = newModel.layer + 1
-                } else {
-                    newModel.layer = 0
-                }
-
-                if (propsImage.direccion === 'xf') {
+                } else { newModel.layer = 0 } if (propsImage.direccion === 'xf') {
                     newModel.direccion = 'xf'
-
                 } else {
                     newModel.direccion = propsImage.direccion
                 }
-                if ((newModel.direccion === 'xf' && newModel.posX < 355) || (newModel.direccion === 'xs' && newModel.posX < 355) || (newModel.direccion === 'xb' && newModel.posX > 0)) {
-                    if (imagenes[0].onMove) {
-                        Itemss[0].posX = props.direccion === 'xf' && propsImage.direccion === 'xf' ? Itemss[0].posX + (1.25 / 2) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? Itemss[0].posX - (1.25 / 2) : Itemss[0].posX,
-                            newModel = {
-                                ...newModel,
-                                posY: propsAction.jumping && newModel.posY <= 120 ? newModel.posY === 120 && propsAction.jumping && propsAction.graviti ? 120 : !propsAction.graviti ? newModel.posY - 1.10 : propsAction.jumping && propsAction.graviti ? newModel.posY + 1.10 : newModel.posY === 50 ? 120 : 120 : 120,
-                                posX: !propsImage.alive ? 0 : props.direccion === 'xf' && propsImage.direccion === 'xf' ? newModel.posX + (0.125 / 2) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? newModel.posX - (0.125 / 2) : newModel.posX,
-                                items: Itemss,
-                                fotograma: newModel.fotograma + 1,
-                            }
-                        propsImage = {
-                            ...propsImage,
-                            posY: propsAction.jumping && propsImage.posY <= 120 ? newModel.posY === 120 && propsAction.jumping && propsAction.graviti ? 120 : propsAction.jumping && !propsAction.graviti ? propsImage.posY - 1.10 : propsAction.jumping && propsAction.graviti ? propsImage.posY + 1.10 : propsImage.posY === 120 ? 120 : 120 : 120,
-                        }
+                if ((newModel.direccion === 'xf' && newModel.posX < 342) || (newModel.direccion === 'xs' && newModel.posX < 355) || (newModel.direccion === 'xb' && newModel.posX > 0)) {
+                    Itemss[0].posX = propsImage.refreshData ? psx : propsImage.levelPass ? psx : props.direccion === 'xf' && propsImage.direccion === 'xf' ? Itemss[0].posX + ((1.25 /(4*(1/(levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? Itemss[0].posX - ((1.25 /(4*(1/(levelDificulty))))) : Itemss[0].posX
+                    newModel = {
+                        ...newModel,
+                        posY: propsAction.jumping && newModel.posY <= 120 ? newModel.posY === 120 && propsAction.jumping && propsAction.graviti ? 120 : !propsAction.graviti ? newModel.posY - 1.10 : propsAction.jumping && propsAction.graviti ? newModel.posY + 1.10 : newModel.posY === 50 ? 120 : 120 : 120,
+                        posX: propsImage.refreshData ? props.posX : propsImage.levelPass ? props.posX : !propsImage.alive ? 0 : props.direccion === 'xf' && propsImage.direccion === 'xf' ? newModel.posX + ((0.125 /(4*(1/(levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? newModel.posX - ((0.125 /(4*(1/(levelDificulty))))) : newModel.posX,
+                        items: propsImage.levelPass || !propsImage.alive ? props.items : Itemss,
+                        fotograma: newModel.fotograma + 1,
+                    }
+                    propsImage = {
+                        ...propsImage,
+                        posX: propsImage.refreshData ? 0 : propsImage.levelPass ? props.posX : !propsImage.alive ? 0 : props.direccion === 'xf' && propsImage.direccion === 'xf' ? newModel.posX + ((0.125 /(4*(1/(levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? newModel.posX - ((0.125 /(4*(1/(levelDificulty))))) : newModel.posX,
+                        posY: propsAction.jumping && propsImage.posY <= 120 ? newModel.posY === 120 && propsAction.jumping && propsAction.graviti ? 120 : propsAction.jumping && !propsAction.graviti ? propsImage.posY - 1.10 : propsAction.jumping && propsAction.graviti ? propsImage.posY + 1.10 : propsImage.posY === 120 ? 120 : 120 : 120,
                     }
                 }
                 setTimeout(() => {
@@ -157,9 +82,19 @@ const Test2 = () => {
                         direccion: propsImageLast.direccion,
                     }
                     dibujar('go', newModel)
+                    if (propsImage.posX > (341 - 0.5)) {
+                        setTimeout(() => {
+                            propsImage.posX =0
+                            moverCanvas()
+                        }, 4000);
+                      
+                    }
                 }, 5);
-                ctxC.drawImage(aDibujar, !propsImage.alive ? 0 : psx, props.posY, props.widthX, props.heightY)
+
+                ctxC.drawImage(aDibujar, propsImage.levelPass ? psx : propsImage.refreshData ? 10 : !propsImage.alive ? 0 : psx, props.posY, props.widthX, props.heightY)
             }
+        } else {
+            propsimage.items[0].posX = 10
         }
     }
     const morir = () => {
@@ -174,18 +109,10 @@ const Test2 = () => {
             ...propsImage,
             items: whileAux
         }
-        moverCanvas(true)
-        setTimeout(() => {
-            propsImage.alive = true
-        }, 2500);
-    }
-    const ganar = () => {
-        propsImage.alive = false
-        worldItems = CrearItemsWorld([], (levelGo + 1))
-        let canvasB = document.getElementById('canvas-Fn')
-        let ctxB = canvasB.getContext('2d')
-        ctxB.clearRect(0, 0, canvasB.width, canvasB.height)
         let otraImagen = new Image()
+        ctxB = canvasB.getContext('2d')
+        levelGo=1
+        ctxB.clearRect(0, 0, canvasB.width, canvasB.height)
         otraImagen.src = `/img/foto-de-anime.png`
         otraImagen.onload = (() => {
             ctxB.save();
@@ -195,8 +122,8 @@ const Test2 = () => {
             ctxB.font = "20px Arial";
             ctxB.fillStyle = "blue";
             ctxB.strokeStyle = 'white';
-            ctxB.fillText(`INICIO   Lv-${levelGo}`, 12, 8)
-            ctxB.strokeText(`INICIO   Lv-${levelGo}`, 12, 8)
+            ctxB.fillText(`INICIO   Lv-${ 1}`, 12, 8)
+            ctxB.strokeText(`INICIO   Lv-${ 1}`, 12, 8)
             ctxB.restore();
             ctxB.stroke()
             ctxB.font = "50px Arial";
@@ -207,21 +134,72 @@ const Test2 = () => {
             ctxB.strokeText('FIN', 210, 60)
             ctxB.stroke()
         })
+        moverCanvas(true)
         setTimeout(() => {
-            propsImage.posX = 0
-            let toChange = propsImage.items[0]
-            toChange.posX = 0
-            let whileAux = []
-            whileAux.push(toChange)
-            whileAux.push(worldItems)
-            propsImage = {
-                ...propsImage,
-                items: whileAux
-            }
-            levelGo = levelGo + 1
-            moverCanvas(true, levelGo)
+           
             propsImage.alive = true
         }, 2500);
+    }
+    let laFunt = (props, posFix) => {
+        let aDibujar = (props.imagen[`${propsImage.direccion === 'xs' && props.posY < 120 ? 'xj' : propsImage.direccion}_${propsAction.graviti && props.posY < 120 ? parseInt(props.layer / (8 * 4)) < 2 ? parseInt(props.layer / (8 * 4)) + 2 : parseInt(props.layer / (8 * 4)) : !propsAction.graviti && props.posY < 120 ? parseInt(props.layer / (8 * 4)) > 1 ? parseInt(props.layer / (8 * 4)) - 2 : parseInt(props.layer / (8 * 4)) : parseInt(props.layer / (8 * 4))}`])
+        let newModel = props
+        if (newModel.layer < (24 * 4)) {
+            newModel.layer = newModel.layer + 1
+        } else { newModel.layer = 0 }
+        newModel.direccion = 'xs'
+        ctxC.drawImage(aDibujar, posFix, props.posY, props.widthX, props.heightY)
+        if (imagenes[0].onMove === false) {
+            setTimeout(() => {
+                ctxC.clearRect(0, 0, canvas.width, canvas.height)
+                laFunt(props, posFix)
+            }, 5);
+        }
+    }
+    const ganar = (props) => {
+        console.log(inLayer, 'inLayer', propsImage.posX);
+        if (propsImage.alive && !propsImage.levelPass && !propsImage.refreshData) {
+            imagenes[0].onMove = false
+            let posFix = propsImage.items[0].posX
+
+            laFunt(props, posFix)
+            worldItems = CrearItemsWorld([], (levelGo + 1))
+            console.log('aca2');
+            propsImage.levelPass = true
+            canvasB = document.getElementById('canvas-Fn')
+            let otraImagen = new Image()
+            ctxB = canvasB.getContext('2d')
+            ctxB.clearRect(0, 0, canvasB.width, canvasB.height)
+            otraImagen.src = `/img/foto-de-anime.png`
+            otraImagen.onload = (() => {
+                ctxB.save();
+                ctxB.translate(15, 110);
+                ctxB.rotate(Math.PI / 2);
+                ctxB.textAlign = 'right';
+                ctxB.font = "20px Arial";
+                ctxB.fillStyle = "blue";
+                ctxB.strokeStyle = 'white';
+                ctxB.fillText(`INICIO   Lv-${levelGo + 1}`, 12, 8)
+                ctxB.strokeText(`INICIO   Lv-${levelGo + 1}`, 12, 8)
+                ctxB.restore();
+                ctxB.stroke()
+                ctxB.font = "50px Arial";
+                ctxB.fillStyle = "red";
+                ctxB.strokeStyle = 'purple';
+                ctxB.fillText('FIN', 210, 60)
+                ctxB.drawImage(otraImagen, 155, 50, 100, 75)
+                ctxB.strokeText('FIN', 210, 60)
+                ctxB.stroke()
+            })
+            if (!propsImage.refreshData) {
+                propsImage.refreshData = true
+                setTimeout(() => {
+                    console.log('aca');
+
+                    moverCanvas(true, levelGo, props)
+                }, 5000);
+            }
+        }
+
     }
     const initApp = () => {
         setStateImage({
@@ -233,8 +211,8 @@ const Test2 = () => {
         imagenA.src = '/img/body-x-fs-0.png'
         let otraImagen = new Image()
         otraImagen.src = `/img/foto-de-anime.png`
-        let canvasB = document.getElementById('canvas-Fn')
-        let ctxB = canvasB.getContext('2d')
+        canvasB = document.getElementById('canvas-Fn')
+        ctxB = canvasB.getContext('2d')
         canvasC = document.getElementById('canvas-It')
         ctxC = canvasC.getContext('2d')
         canvasD = document.getElementById('canvas-ItObj')
@@ -261,10 +239,7 @@ const Test2 = () => {
             ctxB.strokeText('FIN', 210, 60)
             ctxB.stroke()
         })
-        let imagesValue = ['xs', 'xf', 'xb', 'xj']
-        let newArrayB = {}
-        let oImgW = 0
-        let oImgH = 0
+        let imagesValue = ['xs', 'xf', 'xb', 'xj'], newArrayB = {}, oImgW = 0, oImgH = 0
         imagesValue.map((key, i) => {
             for (let index = 0; index < 4; index++) {
                 new Image()
@@ -282,7 +257,7 @@ const Test2 = () => {
 
         })
         setTimeout(() => {
-            imagenes[0] = { imagen: newArrayB, onMove: false }
+            imagenes[0] = { imagen: newArrayB, onMove: true }
             propsImage = {
                 ...propsImage,
                 imagen: newArrayB,
@@ -347,7 +322,6 @@ const Test2 = () => {
                 }
                 if (keyValue === 'ArrowLeft' && !mxActive) {
                     mxActive = true
-                    imagenes[0].onMove = true
                     dibujarMouseOn('-', true)
                     propsImage = {
                         ...propsImage,
@@ -379,7 +353,6 @@ const Test2 = () => {
                 }
                 if (keyValue === ' ' && !myActive) {
                     myActive = true
-                    imagenes[0].onMove = true
                     dibujarMouseOn('up', true)
                 }
             }, false);
@@ -396,7 +369,6 @@ const Test2 = () => {
                                 ...nowJump
                             }
                         }, 30);
-
                     }
                 } else {
                     if (mxActive && (keyValue === 'ArrowLeft' || keyValue === 'ArrowRight')) {
@@ -464,7 +436,6 @@ const Test2 = () => {
             }, false);
             makeStage()
         }, 5000);
-
     }
     const brincar = () => {
         propsAction = {
@@ -478,7 +449,6 @@ const Test2 = () => {
                 jumping: true,
                 graviti: true
             }
-
             setTimeout(() => {
                 propsAction = {
                     ...propsAction,
@@ -488,7 +458,6 @@ const Test2 = () => {
                 myActive = false
             }, 400);
         }, 400);
-
     }
     const stopStart = () => {
         console.log('inutil');
@@ -501,7 +470,6 @@ const Test2 = () => {
                 if ((propsImage.direccion === 'xf' && propsImage.posX <= 1)) {
                     window.alert('pero hacia donde. no hay pa donde viejo/a')
                 }
-            o
         }
         if (imagenes[0].onMove) {
             let auxChange = propsImage
@@ -513,8 +481,6 @@ const Test2 = () => {
                 auxChange.layer = propsImage.direccion === 'xf' ? 0 : 2
             propsImage = auxChange
         }
-
-
     }
     const dibujarMouseOn = (value, secondValue) => {
         if (value === 'up') {
@@ -559,30 +525,51 @@ const Test2 = () => {
             }
         }
     }
-    const moverCanvas = (die, level) => {
+    const moverCanvas = (die, level, props) => {
+        console.log('mover');
         let value = '?'
         if (((propsImage.posX) - (propsImage.posX.toFixed()) / 30) - ((propsImage.posX) - (propsImage.posX.toFixed()) / 30).toFixed() > 0) {
             value = '+'
         } else {
             value = '-'
         }
-        if (die) {
+        if (die && level) {
+            imagenes[0].onMove = true
+            propsImage.posX = 10
+            propsImage.refreshData = false
+            propsImage.levelPass = false
+        }
+        if (die || level) {
             inLayer = 0
         } else {
-            inLayer = value === '-' ? (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) : ((((propsImage.posX + .5) / 30).toFixed()) * 1) === 0 ? -1 : (((propsImage.posX + .5) / 30).toFixed()) * 1
+            inLayer = die && level ? 0 : value === '-' ? (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) : ((((propsImage.posX + .5) / 30).toFixed()) * 1) === 0 ? -1 : (((propsImage.posX + .5) / 30).toFixed()) * 1
         }
-        console.log(inLayer);
-
-
+        console.log(inLayer, propsImage);
         let theItem = propsImage.items
-        theItem[0].posX = value === '+' ? 1 : 299
-        propsImage = {
-            ...propsImage,
-            items: theItem
-        }
-        if (value === '+' || value === '-') {
+        theItem[0].posX = level ? 1 : value === '+' ? 1 : 299
+        propsImage.items = theItem
+        if (value === '+' || value === '-' || die || level) {
+
             ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
             levelFalses = []
+            if (level && die) {
+                propsImage.items[0].posX = 0
+                propsImage.posX = 
+                dibujar('go', propsImage)
+                let toChange = propsImage.items[0]
+                toChange.posX = 50
+                let whileAux = []
+                whileAux.push(toChange)
+                whileAux.push(worldItems)
+                propsImage.items = whileAux
+                propsImage.refreshData = false
+                propsImage.levelPass = false
+                propsImage.alive = true
+                propsImage.posX = 1
+                propsImage.direccion = 'xs'
+                levelGo = levelGo + 1
+            }
+            makeStage()
             if (die || level) {
                 setStateImage({
                     ...stateImage,
@@ -607,26 +594,21 @@ const Test2 = () => {
             } else {
                 setStateImage({
                     ...stateImage,
-                    posX: value === '-' ? (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) === 0 ? -1 : (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) : ((((propsImage.posX + .5) / 30).toFixed()) * 1) === 0 ? -1 : (((propsImage.posX + .5) / 30).toFixed()) * 1
+                    posX: level ? -1 : propsImage.refreshData ? -1 : value === '-' ? (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) === 0 ? -1 : (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) : ((((propsImage.posX + .5) / 30).toFixed()) * 1) === 0 ? -1 : (((propsImage.posX + .5) / 30).toFixed()) * 1
                 })
             }
-            makeStage()
-
         }
     }
     useEffect(() => {
         if (off) {
             off = false
             let isMobile = new MobileDetect(navigator.userAgent)
-            console.log(navigator.userAgent);
             document.addEventListener("contextmenu", function (e) {
                 e.preventDefault();
             }, false);
             if ((isMobile.is('iPhone') || isMobile.is('Android') || isMobile.tablet() !== null || isMobile.phone() !== null || isMobile.mobile() !== null)) {
-                console.log('mobil');
                 setOnMobil(true)
             }
-
             initApp()
         }
     }, [off])
@@ -671,7 +653,6 @@ const Test2 = () => {
                             onTouchStart={(e) => {
 
                                 mxActive = true
-                                imagenes[0].onMove = true
                                 dibujarMouseOn('-', true)
                                 propsImage = {
                                     ...propsImage,
@@ -694,9 +675,7 @@ const Test2 = () => {
                                 mxActive = false
                             }}
                             onTouchStart={(e) => {
-                                console.log('mueve');
                                 mxActive = true
-                                imagenes[0].onMove = true
                                 dibujarMouseOn('+', true)
                                 propsImage = {
                                     ...propsImage,
