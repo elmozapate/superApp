@@ -1845,6 +1845,7 @@ h1 {
     .lienzoH-#{$r} {
         height: 100vh;
     }
+    
     .lienzo-final-#{$r} {
         top: 0px;
         z-index: 1;
@@ -1903,4 +1904,7 @@ h1 {
         background-color: black;
         opacity: 0.5;
     }
+}
+.lienzoHM{
+    height: ((100vh * (1 / 1))-15vh);
 }
