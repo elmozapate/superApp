@@ -641,7 +641,7 @@ const Test2 = () => {
                 <div className="botonesCanvasInteractivos" >
                     <div>
                         <button
-                            onDoubleClick={(e) => {
+                            onMouseUp={(e) => {
                                 e.preventDefault(); mxActive = false
                                 propsImage = {
                                     ...propsImage,
@@ -654,7 +654,7 @@ const Test2 = () => {
                                 }
                                 mxActive = false
                             }}
-                            onClick={(e) => {
+                            onMouseDown={(e) => {
                                 e.preventDefault();
                                 mxActive = true
                                 imagenes[0].onMove = true
@@ -666,7 +666,7 @@ const Test2 = () => {
                             }}>{`<=`}</button>
 
                         <button
-                            onDoubleClick={(e) => {
+                            onMouseUp={(e) => {
                                 e.preventDefault();
                                 propsImage = {
                                     ...propsImage,
@@ -679,7 +679,7 @@ const Test2 = () => {
                                 }
                                 mxActive = false
                             }}
-                            onClick={(e) => {
+                            onMouseDown={(e) => {
                                 e.preventDefault();
                                 console.log('mueve');
                                 mxActive = true
@@ -692,11 +692,21 @@ const Test2 = () => {
                             }}>{`=>`}</button>
                     </div>
                     <button
-
-                        onClick={(e) => {
+                        onMouseUp={propsAction.jumping ? (e) => {
+                            e.preventDefault();
+                            setTimeout(() => {
+                                let nowJump = propsAction
+                                nowJump.graviti = true
+                                propsAction = {
+                                    ...propsAction,
+                                    ...nowJump
+                                }
+                            }, 30);
+                        } : console.log}
+                        onMouseDown={!propsAction.jumping ? (e) => {
                             e.preventDefault();
                             brincar()
-                        }}>{`BRINCA`}</button>
+                        } : null}>{`BRINCA`}</button>
                 </div>
 
                 <canvas className={`lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} lienzoH-${parseInt(stateImage.height)}`} id="canvas-Pp">
