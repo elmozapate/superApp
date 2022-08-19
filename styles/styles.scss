@@ -1842,9 +1842,8 @@ h1 {
     .lienzoW-#{$r} {
         width: ((10vw * (100 / 1))+150vw);
     }
-    
     .lienzoH-#{$r} {
-        height: (1px * ($r / 1));
+        height: 100vh;
     }
     .lienzo-final-#{$r} {
         top: 0px;
@@ -1853,15 +1852,11 @@ h1 {
         position: absolute;
         left: 0;
         width: 100vw;
-        height: (1px * ($r / 1));
+        height: 100vh;
     }
 }
 
-@media (max-width: 1080px) {
-    .lienzo-final {
-        top: 50px;
-    }
-}
+
 .lienzo-items {
     top: 0px;
     z-index: 100;
