@@ -1,3 +1,4 @@
+import MobileDetect from "mobile-detect";
 import { useEffect, useState } from "react";
 import CrearItems, { CrearItemsWorld } from "./crearItems";
 let off = true
@@ -81,8 +82,10 @@ const Test2 = () => {
         posX: -1,
         width: 1080,
         height: 720,
-        level: 1
+        level: 1,
+        onMobil: false
     })
+    const [onMobil, setOnMobil] = useState(false)
     const dibujar = async (values, props, value) => {
         if (values === 'go') {
             let aDibujar = (props.imagen[`${propsImage.direccion === 'xs' && props.posY < 120 ? 'xj' : propsImage.direccion}_${propsAction.graviti && props.posY < 120 ? parseInt(props.layer / (8 * 4)) < 2 ? parseInt(props.layer / (8 * 4)) + 2 : parseInt(props.layer / (8 * 4)) : !propsAction.graviti && props.posY < 120 ? parseInt(props.layer / (8 * 4)) > 1 ? parseInt(props.layer / (8 * 4)) - 2 : parseInt(props.layer / (8 * 4)) : parseInt(props.layer / (8 * 4))}`])
@@ -613,6 +616,13 @@ const Test2 = () => {
     useEffect(() => {
         if (off) {
             off = false
+            let isMobile = new MobileDetect(navigator.userAgent)
+            console.log(navigator.userAgent);
+            if ((isMobile.is('iPhone') || isMobile.is('Android') || isMobile.tablet() !== null || isMobile.phone() !== null || isMobile.mobile() !== null)) {
+                console.log('mobil');
+                setOnMobil(true)
+            }
+
             initApp()
         }
     }, [off])
@@ -620,7 +630,7 @@ const Test2 = () => {
     return (
         <>
             <div className="IDiv-main column bgcolor-purple relativeCanvasContainer ">
-                <div className="botonesCanvas" >
+                <div className={!onMobil ? "botonesCanvas" : 'hide'} >
                     <button onClick={(e) => {
                         e.preventDefault();
                         stopStart()
@@ -638,11 +648,11 @@ const Test2 = () => {
                     }}>{stateImage.direccion === 'xf' ?
                         'Mover a la Derecha' : 'Mover a la Izquierda'}</button>
                 </div>
-                <div className="botonesCanvasInteractivos" >
+                <div className={!onMobil ? 'hide' : "botonesCanvasInteractivos"}>
                     <div>
                         <button
-                            onMouseUp={(e) => {
-                                e.preventDefault(); mxActive = false
+                            onTouchEnd={(e) => {
+                                 mxActive = false
                                 propsImage = {
                                     ...propsImage,
                                     direccion: 'xs'
@@ -654,8 +664,8 @@ const Test2 = () => {
                                 }
                                 mxActive = false
                             }}
-                            onMouseDown={(e) => {
-                                e.preventDefault();
+                            onTouchStart={(e) => {
+                                
                                 mxActive = true
                                 imagenes[0].onMove = true
                                 dibujarMouseOn('-', true)
@@ -666,8 +676,8 @@ const Test2 = () => {
                             }}>{`<=`}</button>
 
                         <button
-                            onMouseUp={(e) => {
-                                e.preventDefault();
+                            onTouchEnd={(e) => {
+                                
                                 propsImage = {
                                     ...propsImage,
                                     direccion: 'xs'
@@ -679,8 +689,7 @@ const Test2 = () => {
                                 }
                                 mxActive = false
                             }}
-                            onMouseDown={(e) => {
-                                e.preventDefault();
+                            onTouchStart={(e) => {
                                 console.log('mueve');
                                 mxActive = true
                                 imagenes[0].onMove = true
@@ -692,8 +701,7 @@ const Test2 = () => {
                             }}>{`=>`}</button>
                     </div>
                     <button
-                        onMouseUp={propsAction.jumping ? (e) => {
-                            e.preventDefault();
+                        onTouchEnd={ () => {
                             setTimeout(() => {
                                 let nowJump = propsAction
                                 nowJump.graviti = true
@@ -702,9 +710,8 @@ const Test2 = () => {
                                     ...nowJump
                                 }
                             }, 30);
-                        } : console.log}
-                        onMouseDown={!propsAction.jumping ? (e) => {
-                            e.preventDefault();
+                        } }
+                        onTouchStart={!propsAction.jumping ? (e) => {
                             brincar()
                         } : null}>{`BRINCA`}</button>
                 </div>
