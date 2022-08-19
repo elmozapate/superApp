@@ -203,7 +203,7 @@ const Test2 = () => {
             ctxB.fillStyle = "red";
             ctxB.strokeStyle = 'purple';
             ctxB.fillText('FIN', 210, 60)
-            ctxB.drawImage(otraImagen, 155, 50, 100, 100)
+            ctxB.drawImage(otraImagen, 155, 50, 100, 75)
             ctxB.strokeText('FIN', 210, 60)
             ctxB.stroke()
         })
@@ -257,7 +257,7 @@ const Test2 = () => {
             ctxB.fillStyle = "red";
             ctxB.strokeStyle = 'purple';
             ctxB.fillText('FIN', 210, 60)
-            ctxB.drawImage(otraImagen, 155, 50, 100, 100)
+            ctxB.drawImage(otraImagen, 155, 50, 100, 75)
             ctxB.strokeText('FIN', 210, 60)
             ctxB.stroke()
         })
@@ -500,7 +500,8 @@ const Test2 = () => {
             } else
                 if ((propsImage.direccion === 'xf' && propsImage.posX <= 1)) {
                     window.alert('pero hacia donde. no hay pa donde viejo/a')
-                } 
+                }
+            o
         }
         if (imagenes[0].onMove) {
             let auxChange = propsImage
@@ -632,7 +633,7 @@ const Test2 = () => {
 
     return (
         <>
-            <div className="IDiv-main column bgcolor-purple relativeCanvasContainer ">
+            <div className="IDiv-main column bgcolor-green relativeCanvasContainer ">
                 <div className={!onMobil ? "botonesCanvas" : 'hide'} >
                     <button onClick={(e) => {
                         e.preventDefault();
@@ -716,19 +717,19 @@ const Test2 = () => {
                         }}
                         onTouchStart={!propsAction.jumping ? (e) => {
                             brincar()
-                        } : brincar()}>{}</button>
+                        } : brincar()}>{ }</button>
                 </div>
 
-                <canvas className={`lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} lienzoH-${parseInt(stateImage.height)}`} id="canvas-Pp">
+                <canvas className={`lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Pp">
 
                 </canvas>
-                <canvas className={`lienzo-final-${parseInt(stateImage.height)}`} id="canvas-Fn">
+                <canvas className={`lienzo-final-${parseInt(stateImage.height)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Fn">
 
                 </canvas>
-                <canvas className={`lienzo-items`} id="canvas-It">
+                <canvas className={`lienzo-items ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-It">
 
                 </canvas>
-                <canvas className={`lienzo-items`} id="canvas-ItObj">
+                <canvas className={`lienzo-items ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-ItObj">
 
                 </canvas>
             </div>
