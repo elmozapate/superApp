@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import IComponent from "../components/iComponents/icomponent";
-import { TestFunt } from "./testingFuntion";
+import { TestFunt, TestFunt2 } from "./testingFuntion";
 
 const objContent = [{
     type: 'contenedor',
@@ -96,6 +96,9 @@ const Test = () => {
         cosa5: 0,
 
     })
+    const [resultados, setResultados] = useState(4)
+
+
     let objD = {
         a: 'a', b: 'b', c: 'c', d: 'd'
     }
@@ -144,7 +147,72 @@ const Test = () => {
             ...ress
         }
         console.log(objD, 'objD2', ress);
+        let bobadas = [
+            {
+                usage: '',
+                name: 'campoIni',
+                value: 2,
+                type: 'number',
+            },
+            {
+                usage: 'log',
+                name: 'funcionLog',
+                value: (inData) => {
+                    inData.map((key, i) => {
+                        console.log(i, 'mirame', key)
+                    })
+                },
+                type: 'funtion',
+                intoContain: ['ahoraSi', 'meMAte'],
+
+            }, {
+                usage: 'setConst',
+                name: 'setResultados',
+                value: (inData) => {
+                    inData.map((key, i) => {
+                        setResultados(key)
+                    })
+                },
+                type: 'funtion',
+                intoContain: ['resultados', 'campoIni','valor2','valor3'],
+                setFuntion: (inData = []) => {
+                    console.log(inData, 'inData');
+                    let numS = 0
+                    inData.map((key, i) => {
+                        numS = key + numS
+                    })
+                    return numS
+                }
+            }, {
+                usage: 'const',
+                name: 'resultados',
+                value: 5,
+                type: 'number',
+            }, {
+                usage: 'var',
+                name: 'valor2',
+                value: 88,
+                type: 'number',
+            }, {
+                usage: 'var',
+                name: 'valor3',
+                value: -7,
+                type: 'number',
+            }, {
+                usage: '',
+                name: 'asdas',
+                value: 0,
+                type: '',
+            }]
+        const prrr = TestFunt2(bobadas)
+        console.log(prrr, 'ppppp', resultados);
+        setInterval(() => {
+            TestFunt2(bobadas)
+                }, 5000);
     }, [])
+    useEffect(() => {
+        console.log(resultados,'results');
+    }, [resultados])
 
     return (
         <>
@@ -161,7 +229,7 @@ const Test = () => {
 
 
                 <br />
-                <h1> {resultado.cosa5 === 'NaN'  ? '∞' : resultado.cosa5}
+                <h1> {resultado.cosa5 === 'NaN' ? '∞' : resultado.cosa5}
                 </h1>
 
                 <br />
