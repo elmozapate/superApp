@@ -686,17 +686,12 @@ const Test2 = () => {
                     <button
                         onTouchEnd={() => {
                             setTimeout(() => {
-                                let nowJump = propsAction
-                                nowJump.graviti = true
-                                propsAction = {
-                                    ...propsAction,
-                                    ...nowJump
-                                }
+                                propsAction.graviti = true
                             }, 30);
                         }}
                         onTouchStart={!propsAction.jumping ? (e) => {
                             brincar()
-                        } : brincar()}>{ }</button>
+                        } : console.log}>{ }</button>
                 </div>
 
                 <canvas className={`lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Pp">
