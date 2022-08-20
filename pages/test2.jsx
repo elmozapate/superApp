@@ -7,7 +7,7 @@ let off = true, mxActive = false, myActive = false, mxDirection = { left: false,
     widthX: 0,
     heightY: 0,
 }], inLayer = 0, propsImage = PropsImage, propsAction = { jumping: false, graviti: true }, canvas, levelGo = 1, ctx,
-    imagenA, canvasC, ctxC, canvasB, ctxB, canvasD, ctxD, imagenes = [{ onMove: false }], worldItems = [],levelDificulty=4
+    imagenA, canvasC, ctxC, canvasB, ctxB, canvasD, ctxD, imagenes = [{ onMove: false }], worldItems = [], levelDificulty = 4
 const Test2 = () => {
     const [stateImage, setStateImage] = useState({
         onMove: false, direccion: 'xf', posX: -1, width: 1080, height: 720, level: 1, onMobil: false
@@ -17,8 +17,8 @@ const Test2 = () => {
         let props = Props
         let propsimage = propsImage
         if (values === 'go' && props.posX <= (341 - 0.5) && imagenes[0].onMove) {
-           
-            
+
+
             props.Itemss
             let aDibujar = (props.imagen[`${propsImage.direccion === 'xs' && props.posY < 120 ? 'xj' : propsImage.direccion}_${propsAction.graviti && props.posY < 120 ? parseInt(props.layer / (8 * 4)) < 2 ? parseInt(props.layer / (8 * 4)) + 2 : parseInt(props.layer / (8 * 4)) : !propsAction.graviti && props.posY < 120 ? parseInt(props.layer / (8 * 4)) > 1 ? parseInt(props.layer / (8 * 4)) - 2 : parseInt(props.layer / (8 * 4)) : parseInt(props.layer / (8 * 4))}`])
             let psx = 0, colisioned = false, Itemss = propsImage.items
@@ -45,7 +45,7 @@ const Test2 = () => {
                 ((props.posX / (89 + 0.5)) === (1)) || ((props.posX / (119 + 0.5)) === (1)) || ((props.posX / (149 + 0.5)) === (1)) || ((props.posX / (179 + 0.5)) === (1)) || ((props.posX / (209 + 0.5)) === (1)) || ((props.posX / (239 + 0.5)) === (1)) || ((props.posX / (269 + 0.5)) === (1)) || ((props.posX / (299 + 0.5)) === (1)) || ((props.posX / (319 + 0.5)) === (1)))) {
                 moverCanvas()
             }
-            else{
+            else {
                 console.log
             }
             if (imagenes[0].onMove) {
@@ -60,17 +60,17 @@ const Test2 = () => {
                     newModel.direccion = propsImage.direccion
                 }
                 if ((newModel.direccion === 'xf' && newModel.posX < 342) || (newModel.direccion === 'xs' && newModel.posX < 355) || (newModel.direccion === 'xb' && newModel.posX > 0)) {
-                    Itemss[0].posX = propsImage.refreshData ? psx : propsImage.levelPass ? psx : props.direccion === 'xf' && propsImage.direccion === 'xf' ? Itemss[0].posX + ((1.25 /(4*(1/(levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? Itemss[0].posX - ((1.25 /(4*(1/(levelDificulty))))) : Itemss[0].posX
+                    Itemss[0].posX = propsImage.refreshData ? psx : propsImage.levelPass ? psx : props.direccion === 'xf' && propsImage.direccion === 'xf' ? Itemss[0].posX + ((1.25 / (4 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? Itemss[0].posX - ((1.25 / (4 * (1 / (levelDificulty))))) : Itemss[0].posX
                     newModel = {
                         ...newModel,
                         posY: propsAction.jumping && newModel.posY <= 120 ? newModel.posY === 120 && propsAction.jumping && propsAction.graviti ? 120 : !propsAction.graviti ? newModel.posY - 1.10 : propsAction.jumping && propsAction.graviti ? newModel.posY + 1.10 : newModel.posY === 50 ? 120 : 120 : 120,
-                        posX: propsImage.refreshData ? props.posX : propsImage.levelPass ? props.posX : !propsImage.alive ? 0 : props.direccion === 'xf' && propsImage.direccion === 'xf' ? newModel.posX + ((0.125 /(4*(1/(levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? newModel.posX - ((0.125 /(4*(1/(levelDificulty))))) : newModel.posX,
+                        posX: propsImage.refreshData ? props.posX : propsImage.levelPass ? props.posX : !propsImage.alive ? 0 : props.direccion === 'xf' && propsImage.direccion === 'xf' ? newModel.posX + ((0.125 / (4 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? newModel.posX - ((0.125 / (4 * (1 / (levelDificulty))))) : newModel.posX,
                         items: propsImage.levelPass || !propsImage.alive ? props.items : Itemss,
                         fotograma: newModel.fotograma + 1,
                     }
                     propsImage = {
                         ...propsImage,
-                        posX: propsImage.refreshData ? 0 : propsImage.levelPass ? props.posX : !propsImage.alive ? 0 : props.direccion === 'xf' && propsImage.direccion === 'xf' ? newModel.posX + ((0.125 /(4*(1/(levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? newModel.posX - ((0.125 /(4*(1/(levelDificulty))))) : newModel.posX,
+                        posX: propsImage.refreshData ? 0 : propsImage.levelPass ? props.posX : !propsImage.alive ? 0 : props.direccion === 'xf' && propsImage.direccion === 'xf' ? newModel.posX + ((0.125 / (4 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? newModel.posX - ((0.125 / (4 * (1 / (levelDificulty))))) : newModel.posX,
                         posY: propsAction.jumping && propsImage.posY <= 120 ? newModel.posY === 120 && propsAction.jumping && propsAction.graviti ? 120 : propsAction.jumping && !propsAction.graviti ? propsImage.posY - 1.10 : propsAction.jumping && propsAction.graviti ? propsImage.posY + 1.10 : propsImage.posY === 120 ? 120 : 120 : 120,
                     }
                 }
@@ -84,10 +84,10 @@ const Test2 = () => {
                     dibujar('go', newModel)
                     if (propsImage.posX > (341 - 0.5)) {
                         setTimeout(() => {
-                            propsImage.posX =0
+                            propsImage.posX = 0
                             moverCanvas()
                         }, 4000);
-                      
+
                     }
                 }, 5);
 
@@ -111,7 +111,7 @@ const Test2 = () => {
         }
         let otraImagen = new Image()
         ctxB = canvasB.getContext('2d')
-        levelGo=1
+        levelGo = 1
         ctxB.clearRect(0, 0, canvasB.width, canvasB.height)
         otraImagen.src = `/img/foto-de-anime.png`
         otraImagen.onload = (() => {
@@ -122,8 +122,8 @@ const Test2 = () => {
             ctxB.font = "20px Arial";
             ctxB.fillStyle = "blue";
             ctxB.strokeStyle = 'white';
-            ctxB.fillText(`INICIO   Lv-${ 1}`, 12, 8)
-            ctxB.strokeText(`INICIO   Lv-${ 1}`, 12, 8)
+            ctxB.fillText(`INICIO   Lv-${1}`, 12, 8)
+            ctxB.strokeText(`INICIO   Lv-${1}`, 12, 8)
             ctxB.restore();
             ctxB.stroke()
             ctxB.font = "50px Arial";
@@ -136,7 +136,7 @@ const Test2 = () => {
         })
         moverCanvas(true)
         setTimeout(() => {
-           
+
             propsImage.alive = true
         }, 2500);
     }
@@ -503,7 +503,22 @@ const Test2 = () => {
         }
     }
     const makeStage = () => {
-        for (let index = 0; index < worldItems.length; index++) {
+        if (propsImage.items[0].posY< 120) {
+            propsAction = {
+                ...propsAction,
+                jumping: true,
+                     }
+            setTimeout(() => {
+                propsAction = {
+                    ...propsAction,
+                    jumping: false,
+                    graviti: false
+                }
+                myActive = false
+            }, 400);
+            
+        }       
+         for (let index = 0; index < worldItems.length; index++) {
             const element = worldItems[index];
             if (element.layerOnDisplay === inLayer && element.displayneed
             ) {
@@ -554,8 +569,8 @@ const Test2 = () => {
             levelFalses = []
             if (level && die) {
                 propsImage.items[0].posX = 0
-                propsImage.posX = 
-                dibujar('go', propsImage)
+                propsImage.posX =
+                    dibujar('go', propsImage)
                 let toChange = propsImage.items[0]
                 toChange.posX = 50
                 let whileAux = []
@@ -635,6 +650,15 @@ const Test2 = () => {
                         'Mover a la Derecha' : 'Mover a la Izquierda'}</button>
                 </div>
                 <div className={!onMobil ? 'hide' : "botonesCanvasInteractivos"}>
+                    <button
+                        onTouchEnd={() => {
+                            setTimeout(() => {
+                                propsAction.graviti = true
+                            }, 30);
+                        }}
+                        onTouchStart={!propsAction.jumping ? (e) => {
+                            brincar()
+                        } : console.log}>{ }</button>
                     <div>
                         <button
                             onTouchEnd={(e) => {
@@ -683,15 +707,7 @@ const Test2 = () => {
                                 }
                             }}></button>
                     </div>
-                    <button
-                        onTouchEnd={() => {
-                            setTimeout(() => {
-                                propsAction.graviti = true
-                            }, 30);
-                        }}
-                        onTouchStart={!propsAction.jumping ? (e) => {
-                            brincar()
-                        } : console.log}>{ }</button>
+
                 </div>
 
                 <canvas className={`lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Pp">
