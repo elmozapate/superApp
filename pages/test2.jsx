@@ -13,6 +13,11 @@ const Test2 = () => {
         onMove: false, direccion: 'xf', posX: -1, width: 1080, height: 720, level: 1, onMobil: false
     })
     const [onMobil, setOnMobil] = useState(false)
+    const [salto, setsalto] = ({
+        graviti: true,
+        jumping: false,
+        posY: 120
+    })
     const dibujar = async (values, Props, value) => {
         let props = Props
         let propsimage = propsImage
@@ -503,11 +508,11 @@ const Test2 = () => {
         }
     }
     const makeStage = () => {
-        if (propsImage.items[0].posY< 120) {
+        if (propsImage.items[0].posY < 120) {
             propsAction = {
                 ...propsAction,
                 jumping: true,
-                     }
+            }
             setTimeout(() => {
                 propsAction = {
                     ...propsAction,
@@ -516,9 +521,9 @@ const Test2 = () => {
                 }
                 myActive = false
             }, 400);
-            
-        }       
-         for (let index = 0; index < worldItems.length; index++) {
+
+        }
+        for (let index = 0; index < worldItems.length; index++) {
             const element = worldItems[index];
             if (element.layerOnDisplay === inLayer && element.displayneed
             ) {
@@ -657,72 +662,83 @@ const Test2 = () => {
                             }, 30);
                         }}
                         onTouchStart={!propsAction.jumping ? (e) => {
+                            setsalto({
+                                ...salto,
+                                graviti: propsAction.graviti,
+                                jumping: propsAction.jumping,
+                                posY: propsImage.posY
+                            });
                             brincar()
-                        } : console.log}>{ }</button>
-                    <div>
-                        <button
-                            onTouchEnd={(e) => {
-                                mxActive = false
-                                propsImage = {
-                                    ...propsImage,
-                                    direccion: 'xs'
-                                }
-                                mxDirection = {
-                                    ...mxDirection,
-                                    left: false,
-                                    right: false
-                                }
-                                mxActive = false
-                            }}
-                            onTouchStart={(e) => {
+                        } : setsalto({
+                            ...salto,
+                            graviti: propsAction.graviti,
+                            jumping: propsAction.jumping,
+                            posY: propsImage.posY
+                        })}>{salto.graviti}{salto.jumping}{salto.posX}</button>
+                <div>
+                    <button
+                        onTouchEnd={(e) => {
+                            mxActive = false
+                            propsImage = {
+                                ...propsImage,
+                                direccion: 'xs'
+                            }
+                            mxDirection = {
+                                ...mxDirection,
+                                left: false,
+                                right: false
+                            }
+                            mxActive = false
+                        }}
+                        onTouchStart={(e) => {
 
-                                mxActive = true
-                                dibujarMouseOn('-', true)
-                                propsImage = {
-                                    ...propsImage,
-                                    direccion: 'xb'
-                                }
-                            }}></button>
+                            mxActive = true
+                            dibujarMouseOn('-', true)
+                            propsImage = {
+                                ...propsImage,
+                                direccion: 'xb'
+                            }
+                        }}></button>
 
-                        <button
-                            onTouchEnd={(e) => {
+                    <button
+                        onTouchEnd={(e) => {
 
-                                propsImage = {
-                                    ...propsImage,
-                                    direccion: 'xs'
-                                }
-                                mxDirection = {
-                                    ...mxDirection,
-                                    left: false,
-                                    right: false
-                                }
-                                mxActive = false
-                            }}
-                            onTouchStart={(e) => {
-                                mxActive = true
-                                dibujarMouseOn('+', true)
-                                propsImage = {
-                                    ...propsImage,
-                                    direccion: 'xf'
-                                }
-                            }}></button>
-                    </div>
-
+                            propsImage = {
+                                ...propsImage,
+                                direccion: 'xs'
+                            }
+                            mxDirection = {
+                                ...mxDirection,
+                                left: false,
+                                right: false
+                            }
+                            mxActive = false
+                        }}
+                        onTouchStart={(e) => {
+                            mxActive = true
+                            dibujarMouseOn('+', true)
+                            propsImage = {
+                                ...propsImage,
+                                direccion: 'xf'
+                            }
+                        }}></button>
                 </div>
 
-                <canvas className={`lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Pp">
-
-                </canvas>
-                <canvas className={`lienzo-final-${parseInt(stateImage.height)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Fn">
-
-                </canvas>
-                <canvas className={`lienzo-items ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-It">
-
-                </canvas>
-                <canvas className={`lienzo-items ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-ItObj">
-
-                </canvas>
             </div>
+
+            <canvas className={`lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Pp">
+
+            </canvas>
+            <canvas className={`lienzo-final-${parseInt(stateImage.height)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Fn">
+
+            </canvas>
+            <canvas className={`lienzo-items ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-It">
+
+            </canvas>
+            <canvas className={`lienzo-items ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-ItObj">
+
+            </canvas>
+        </div>
         </>
     )
 }
