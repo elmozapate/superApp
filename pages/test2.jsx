@@ -13,7 +13,7 @@ const Test2 = () => {
         onMove: false, direccion: 'xf', posX: -1, width: 1080, height: 720, level: 1, onMobil: false
     })
     const [onMobil, setOnMobil] = useState(false)
-    const [salto, setsalto] = ({
+    const [salto, setsalto] = useState({
         graviti: true,
         jumping: false,
         posY: 120
