@@ -274,7 +274,7 @@ const Test2 = () => {
 
         setTimeout(() => {
             setPlayertime({
-                time: playerTime + 1
+                time: playerTime.time + 1
             })
         }, 1000);
     }
