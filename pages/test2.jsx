@@ -1,7 +1,7 @@
 import MobileDetect from "mobile-detect";
 import { useEffect, useState } from "react";
 import CrearItems, { CrearItemsWorld, PropsImage } from "./crearItems";
-let off = true, mxActive = false, myActive = false, mxDirection = { left: false, right: false }, levelFalses = [{
+let off = true, actualVidas = 5, mxActive = false, myActive = false, mxDirection = { left: false, right: false }, levelFalses = [{
     posX: 0,
     posY: 0,
     widthX: 0,
@@ -133,10 +133,12 @@ const Test2 = () => {
             ...playerGo,
             go: false
         })
-        if (player.vidas > 1 && !imagenes[0].onMove) {
+        if (actualVidas > 1 && !imagenes[0].onMove) {
+            console.log(playerVidas);
+            actualVidas = actualVidas - 1
             setPlayerVidas({
                 ...playerVidas,
-                vidas: playerVidas.vidas - 1
+                vidas: actualVidas
             })
             setTimeout(() => {
                 propsImage.posX = 0
@@ -157,6 +159,7 @@ const Test2 = () => {
                 propsImage.alive = true
             }, 2500);
         } else {
+            actualVidas = 5
             levelGo = 1
             propsImage.alive = false
             worldItems = CrearItemsWorld([], levelGo)
@@ -194,7 +197,11 @@ const Test2 = () => {
             })
             moverCanvas(true)
             setTimeout(() => {
+                imagenes[0].onMove = true
+
                 propsImage.alive = true
+                dibujar('go', propsImage)
+
             }, 2500);
         }
     }
@@ -259,7 +266,7 @@ const Test2 = () => {
                 propsImage.refreshData = true
                 setTimeout(() => {
                     console.log('aca');
-                    
+
                     moverCanvas(true, levelGo, props)
                     setPlayertime({
                         time: 0
@@ -269,13 +276,16 @@ const Test2 = () => {
         }
 
     }
-    const startTime = () => {
+    const startTime = (time) => {
 
-
+        const newTime = time + 1
+        setPlayertime({
+            ...playerTime,
+            time: newTime
+        })
         setTimeout(() => {
-            setPlayertime({
-                time: playerTime.time + 1
-            })
+
+            startTime(newTime)
         }, 1000);
     }
     const initApp = () => {
