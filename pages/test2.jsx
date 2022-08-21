@@ -12,12 +12,37 @@ const Test2 = () => {
     const [stateImage, setStateImage] = useState({
         onMove: false, direccion: 'xf', posX: -1, width: 1080, height: 720, level: 1, onMobil: false
     })
+    const [playerGo, setPlayerGo] = useState({ go: false })
+    const [playerStage, setPlayerStage] = useState({ stage: 0 })
+    const [playerVidas, setPlayerVidas] = useState({ vidas: 5 })
+    const [playerTime, setPlayertime] = useState({ time: 0 })
+    const [player, setPlayer] = useState({
+        level: 1,
+    })
     const [onMobil, setOnMobil] = useState(false)
     const [salto, setsalto] = useState({
         graviti: true,
         jumping: false,
-        posY: 120
+        posY: 120,
+        myActive: false
+
+
     })
+    const setSaltoFunt = () => {
+        console.log({
+            graviti: propsAction.graviti,
+            jumping: propsAction.jumping,
+            posY: propsImage.posY,
+            myActive: myActive
+        });
+        return (
+            {
+                graviti: propsAction.graviti,
+                jumping: propsAction.jumping,
+                posY: propsImage.posY,
+                myActive: myActive
+            })
+    }
     const dibujar = async (values, Props, value) => {
         let props = Props
         let propsimage = propsImage
@@ -103,47 +128,75 @@ const Test2 = () => {
         }
     }
     const morir = () => {
-        levelGo = 1
-        propsImage.alive = false
-        worldItems = CrearItemsWorld([], levelGo)
-        let toChange = propsImage.items[0]
-        let whileAux = []
-        whileAux.push(toChange)
-        whileAux.push(worldItems)
-        propsImage = {
-            ...propsImage,
-            items: whileAux
-        }
-        let otraImagen = new Image()
-        ctxB = canvasB.getContext('2d')
-        levelGo = 1
-        ctxB.clearRect(0, 0, canvasB.width, canvasB.height)
-        otraImagen.src = `/img/foto-de-anime.png`
-        otraImagen.onload = (() => {
-            ctxB.save();
-            ctxB.translate(15, 110);
-            ctxB.rotate(Math.PI / 2);
-            ctxB.textAlign = 'right';
-            ctxB.font = "20px Arial";
-            ctxB.fillStyle = "blue";
-            ctxB.strokeStyle = 'white';
-            ctxB.fillText(`INICIO   Lv-${1}`, 12, 8)
-            ctxB.strokeText(`INICIO   Lv-${1}`, 12, 8)
-            ctxB.restore();
-            ctxB.stroke()
-            ctxB.font = "50px Arial";
-            ctxB.fillStyle = "red";
-            ctxB.strokeStyle = 'purple';
-            ctxB.fillText('FIN', 210, 60)
-            ctxB.drawImage(otraImagen, 155, 50, 100, 75)
-            ctxB.strokeText('FIN', 210, 60)
-            ctxB.stroke()
+        imagenes[0].onMove = false
+        setPlayerGo({
+            ...playerGo,
+            go: false
         })
-        moverCanvas(true)
-        setTimeout(() => {
-
-            propsImage.alive = true
-        }, 2500);
+        if (player.vidas > 1 && !imagenes[0].onMove) {
+            setPlayerVidas({
+                ...playerVidas,
+                vidas: playerVidas.vidas - 1
+            })
+            setTimeout(() => {
+                propsImage.posX = 0
+                propsImage.items[0].posX = 0
+                propsImage.posY = 120
+                inLayer = 0
+                imagenes[0].onMove = true
+                setStateImage({
+                    ...stateImage,
+                    posX: -1
+                })
+                makeStage()
+                setPlayerGo({
+                    ...playerGo,
+                    go: true
+                })
+                dibujar('go', propsImage)
+                propsImage.alive = true
+            }, 2500);
+        } else {
+            levelGo = 1
+            propsImage.alive = false
+            worldItems = CrearItemsWorld([], levelGo)
+            let toChange = propsImage.items[0]
+            let whileAux = []
+            whileAux.push(toChange)
+            whileAux.push(worldItems)
+            propsImage = {
+                ...propsImage,
+                items: whileAux
+            }
+            let otraImagen = new Image()
+            ctxB = canvasB.getContext('2d')
+            ctxB.clearRect(0, 0, canvasB.width, canvasB.height)
+            otraImagen.src = `/img/foto-de-anime.png`
+            otraImagen.onload = (() => {
+                ctxB.save();
+                ctxB.translate(15, 110);
+                ctxB.rotate(Math.PI / 2);
+                ctxB.textAlign = 'right';
+                ctxB.font = "20px Arial";
+                ctxB.fillStyle = "blue";
+                ctxB.strokeStyle = 'white';
+                ctxB.fillText(`INICIO   Lv-${1}`, 12, 8)
+                ctxB.strokeText(`INICIO   Lv-${1}`, 12, 8)
+                ctxB.restore();
+                ctxB.stroke()
+                ctxB.font = "50px Arial";
+                ctxB.fillStyle = "red";
+                ctxB.strokeStyle = 'purple';
+                ctxB.fillText('FIN', 210, 60)
+                ctxB.drawImage(otraImagen, 155, 50, 100, 75)
+                ctxB.strokeText('FIN', 210, 60)
+                ctxB.stroke()
+            })
+            moverCanvas(true)
+            setTimeout(() => {
+                propsImage.alive = true
+            }, 2500);
+        }
     }
     let laFunt = (props, posFix) => {
         let aDibujar = (props.imagen[`${propsImage.direccion === 'xs' && props.posY < 120 ? 'xj' : propsImage.direccion}_${propsAction.graviti && props.posY < 120 ? parseInt(props.layer / (8 * 4)) < 2 ? parseInt(props.layer / (8 * 4)) + 2 : parseInt(props.layer / (8 * 4)) : !propsAction.graviti && props.posY < 120 ? parseInt(props.layer / (8 * 4)) > 1 ? parseInt(props.layer / (8 * 4)) - 2 : parseInt(props.layer / (8 * 4)) : parseInt(props.layer / (8 * 4))}`])
@@ -164,8 +217,15 @@ const Test2 = () => {
         console.log(inLayer, 'inLayer', propsImage.posX);
         if (propsImage.alive && !propsImage.levelPass && !propsImage.refreshData) {
             imagenes[0].onMove = false
+            setPlayerGo({
+                ...playerGo,
+                go: false
+            })
+            setPlayerStage({
+                ...playerStage,
+                stage: playerStage.stage + 1
+            })
             let posFix = propsImage.items[0].posX
-
             laFunt(props, posFix)
             worldItems = CrearItemsWorld([], (levelGo + 1))
             console.log('aca2');
@@ -199,12 +259,24 @@ const Test2 = () => {
                 propsImage.refreshData = true
                 setTimeout(() => {
                     console.log('aca');
-
+                    
                     moverCanvas(true, levelGo, props)
+                    setPlayertime({
+                        time: 0
+                    })
                 }, 5000);
             }
         }
 
+    }
+    const startTime = () => {
+
+
+        setTimeout(() => {
+            setPlayertime({
+                time: playerTime + 1
+            })
+        }, 1000);
     }
     const initApp = () => {
         setStateImage({
@@ -263,6 +335,7 @@ const Test2 = () => {
         })
         setTimeout(() => {
             imagenes[0] = { imagen: newArrayB, onMove: true }
+            startTime(0)
             propsImage = {
                 ...propsImage,
                 imagen: newArrayB,
@@ -284,7 +357,6 @@ const Test2 = () => {
                 ...propsImage,
                 items: createItems
             }
-            imagenes[0] = { imagen: newArrayB, onMove: true }
             dibujar('go', propsImage);
             document.addEventListener('keydown', async (event) => {
                 event.preventDefault();
@@ -439,6 +511,7 @@ const Test2 = () => {
                     }
                 }
             }, false);
+
             makeStage()
         }, 5000);
     }
@@ -448,12 +521,15 @@ const Test2 = () => {
             jumping: true,
             graviti: false
         }
+        setsalto(setSaltoFunt())
+        myActive = true
         setTimeout(() => {
             propsAction = {
                 ...propsAction,
                 jumping: true,
                 graviti: true
             }
+            setsalto(setSaltoFunt())
             setTimeout(() => {
                 propsAction = {
                     ...propsAction,
@@ -461,6 +537,7 @@ const Test2 = () => {
                     graviti: false
                 }
                 myActive = false
+                setsalto(setSaltoFunt())
             }, 400);
         }, 400);
     }
@@ -508,21 +585,8 @@ const Test2 = () => {
         }
     }
     const makeStage = () => {
-        if (propsImage.items[0].posY < 120) {
-            propsAction = {
-                ...propsAction,
-                jumping: true,
-            }
-            setTimeout(() => {
-                propsAction = {
-                    ...propsAction,
-                    jumping: false,
-                    graviti: false
-                }
-                myActive = false
-            }, 400);
+        propsImage.posY = 120
 
-        }
         for (let index = 0; index < worldItems.length; index++) {
             const element = worldItems[index];
             if (element.layerOnDisplay === inLayer && element.displayneed
@@ -544,7 +608,29 @@ const Test2 = () => {
                 ctxD.stroke();
             }
         }
+        myActive = false
+        if (inLayer !== 0) {
+            propsImage.items[0].posY = 120
+            setTimeout(() => {
+                propsImage.items[0].posY = 120
+                propsImage.posY = 120
+                propsAction = {
+                    ...propsAction,
+                    jumping: false,
+                    graviti: true
+                }
+                imagenes[0].onMove = false
+
+                setTimeout(() => {
+                    imagenes[0].onMove = true
+
+                    dibujar('go', propsImage)
+                }, 2000);
+            }, 10);
+        }
+
     }
+
     const moverCanvas = (die, level, props) => {
         console.log('mover');
         let value = '?'
@@ -559,15 +645,25 @@ const Test2 = () => {
             propsImage.refreshData = false
             propsImage.levelPass = false
         }
+
         if (die || level) {
             inLayer = 0
         } else {
             inLayer = die && level ? 0 : value === '-' ? (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) : ((((propsImage.posX + .5) / 30).toFixed()) * 1) === 0 ? -1 : (((propsImage.posX + .5) / 30).toFixed()) * 1
         }
+        const vidas = die ? player.vidas - 1 : player.vidas, stage = die && level ? player.stage + 1 : player.stage
+        setPlayer({
+            ...player,
+            level: inLayer,
+        })
+        setPlayerGo({
+            ...playerGo,
+            go: true
+        })
         console.log(inLayer, propsImage);
         let theItem = propsImage.items
-        theItem[0].posX = level ? 1 : value === '+' ? 1 : 299
-        propsImage.items = theItem
+/*         theItem[0].posX = level ? 1 : value === '+' ? 1 : 299
+ */        propsImage.items = theItem
         if (value === '+' || value === '-' || die || level) {
 
             ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
@@ -632,10 +728,37 @@ const Test2 = () => {
             initApp()
         }
     }, [off])
+    /*  useEffect(() => {
+         if (imagenes[0].onMove) {
+             console.log('asasa');
+     
+             setPlayerGo({
+                 ...player,
+                 go: true
+             })
+         } else {
+             setPlayer({
+                 ...player,
+                 go: false
+             })
+             console.log('ddd');
+     
+         }
+     }, [imagenes]) */
+
 
     return (
         <>
             <div className="IDiv-main column bgcolor-green relativeCanvasContainer ">
+                <div className="game-info">
+                    <span>STAGE:{playerStage.stage}</span>
+                    <span>NIVEL:{player.level}</span>
+                    <span>VIDAS:{playerVidas.vidas}</span>
+                    <span>TIEMPO:{playerTime.time}</span>
+                </div>
+                <div className={playerGo.go ? "action action-go" : 'action action-wait'}>
+                    {playerGo.go ? "Go" : 'Wait'}
+                </div>
                 <div className={!onMobil ? "botonesCanvas" : 'hide'} >
                     <button onClick={(e) => {
                         e.preventDefault();
@@ -662,83 +785,76 @@ const Test2 = () => {
                             }, 30);
                         }}
                         onTouchStart={!propsAction.jumping ? (e) => {
-                            setsalto({
-                                ...salto,
-                                graviti: propsAction.graviti,
-                                jumping: propsAction.jumping,
-                                posY: propsImage.posY
-                            });
+
+                            setsalto(setSaltoFunt());
                             brincar()
-                        } : setsalto({
-                            ...salto,
-                            graviti: propsAction.graviti,
-                            jumping: propsAction.jumping,
-                            posY: propsImage.posY
-                        })}>{salto.graviti}{salto.jumping}{salto.posX}</button>
-                <div>
-                    <button
-                        onTouchEnd={(e) => {
-                            mxActive = false
-                            propsImage = {
-                                ...propsImage,
-                                direccion: 'xs'
-                            }
-                            mxDirection = {
-                                ...mxDirection,
-                                left: false,
-                                right: false
-                            }
-                            mxActive = false
-                        }}
-                        onTouchStart={(e) => {
+                        } : (e) => {
+                            setsalto(setSaltoFunt())
+                        }}>{salto.graviti ? 'G' : '!G'}{salto.jumping ? 'J' : '!J'}{salto.posX}{salto.myActive ? 'Y' : '!Y'}</button>
+                    <div>
+                        <button
+                            onTouchEnd={(e) => {
+                                mxActive = false
+                                propsImage = {
+                                    ...propsImage,
+                                    direccion: 'xs'
+                                }
+                                mxDirection = {
+                                    ...mxDirection,
+                                    left: false,
+                                    right: false
+                                }
+                                mxActive = false
+                            }}
+                            onTouchStart={(e) => {
 
-                            mxActive = true
-                            dibujarMouseOn('-', true)
-                            propsImage = {
-                                ...propsImage,
-                                direccion: 'xb'
-                            }
-                        }}></button>
+                                mxActive = true
+                                dibujarMouseOn('-', true)
+                                propsImage = {
+                                    ...propsImage,
+                                    direccion: 'xb'
+                                }
+                            }}></button>
 
-                    <button
-                        onTouchEnd={(e) => {
+                        <button
+                            onTouchEnd={(e) => {
 
-                            propsImage = {
-                                ...propsImage,
-                                direccion: 'xs'
-                            }
-                            mxDirection = {
-                                ...mxDirection,
-                                left: false,
-                                right: false
-                            }
-                            mxActive = false
-                        }}
-                        onTouchStart={(e) => {
-                            mxActive = true
-                            dibujarMouseOn('+', true)
-                            propsImage = {
-                                ...propsImage,
-                                direccion: 'xf'
-                            }
-                        }}></button>
+                                propsImage = {
+                                    ...propsImage,
+                                    direccion: 'xs'
+                                }
+                                mxDirection = {
+                                    ...mxDirection,
+                                    left: false,
+                                    right: false
+                                }
+                                mxActive = false
+                            }}
+                            onTouchStart={(e) => {
+                                mxActive = true
+                                dibujarMouseOn('+', true)
+                                propsImage = {
+                                    ...propsImage,
+                                    direccion: 'xf'
+                                }
+                            }}></button>
+                    </div>
+
                 </div>
 
+                <canvas className={`lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Pp">
+
+                </canvas>
+                <canvas className={`lienzo-final-${parseInt(stateImage.height)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Fn">
+
+                </canvas>
+                <canvas className={`lienzo-items ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-It">
+
+                </canvas>
+                <canvas className={`lienzo-items ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-ItObj">
+
+                </canvas>
             </div>
-
-            <canvas className={`lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Pp">
-
-            </canvas>
-            <canvas className={`lienzo-final-${parseInt(stateImage.height)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Fn">
-
-            </canvas>
-            <canvas className={`lienzo-items ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-It">
-
-            </canvas>
-            <canvas className={`lienzo-items ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-ItObj">
-
-            </canvas>
-        </div>
         </>
     )
 }
