@@ -13,6 +13,7 @@ const Test2 = () => {
         color: 'green',
         stage: 0
     })
+    const [fullScreen, setFullScreen] = useState(false)
     const [stateImage, setStateImage] = useState({
         onMove: false, direccion: 'xf', posX: -1, width: 1080, height: 720, level: 1, onMobil: false
     })
@@ -229,7 +230,7 @@ const Test2 = () => {
             ctxB.rotate(Math.PI / 2);
             ctxB.textAlign = 'right';
             ctx.textBaseline = "middle";
-            const ctext = `Mundo${level} Lv-${(6-fondos.length)}`.split("").join(String.fromCharCode(8202))
+            const ctext = `Mundo${level} Lv-${(6 - fondos.length)}`.split("").join(String.fromCharCode(8202))
             ctxB.font = "20px Arial";
             ctxB.fillStyle = "blue";
             ctxB.strokeStyle = 'white';
@@ -280,7 +281,36 @@ const Test2 = () => {
         }
 
     }
+    const requestFullScreen = () => {
+        if (fullScreen) {
+            document.exitFullscreen()
+                .then(() => console.log("Document Exited from Full screen mode"))
+                .catch((err) => console.error(err))
+        } else {
+            let el = document.body;
+
+            // Supports most browsers and their versions.
+            let requestMethod = el.requestFullScreen || el.webkitRequestFullScreen
+                || el.mozRequestFullScreen || el.msRequestFullScreen;
+
+            if (requestMethod) {
+
+                // Native full screen.
+                requestMethod.call(el);
+            } else if (typeof window.ActiveXObject !== "undefined") {
+
+                // Older IE.
+                let wscript = new ActiveXObject("WScript.Shell");
+
+                if (wscript !== null) {
+                    wscript.SendKeys("{F11}");
+                }
+            }
+        }
+    }
+
     const initApp = () => {
+
         setStateImage({
             ...stateImage,
             width: window.screen.width,
@@ -341,6 +371,9 @@ const Test2 = () => {
             document.addEventListener('keydown', async (event) => {
                 event.preventDefault();
                 let keyValue = event.key;
+                if (keyValue === 'ArrowUp') {
+                    requestFullScreen()
+                }
                 if (keyValue === 'ArrowRight' && !mxActive && !mxDirection.left) {
                     mxActive = true
                     mxDirection = {
@@ -663,14 +696,14 @@ const Test2 = () => {
                         }, 4500);
 
                         levelDificulty = levelDificulty < 40 ? levelDificulty * 2 : levelDificulty + 40
-                        gameStage = gameStage+1
+                        gameStage = gameStage + 1
                         levelGo = 1
                         setPlayerVidas({
                             ...playerVidas,
                             vidas: playerVidas.vidas + 3
                         })
                     } else {
-                        levelGo =  levelGo + 1
+                        levelGo = levelGo + 1
                     }
                     setStateImage({
                         ...stateImage,
@@ -822,6 +855,13 @@ const Test2 = () => {
                     <span>NIVEL:{player.level}</span>
                     <span>VIDAS:{playerVidas.vidas}</span>
                     <span>TIEMPO:{playerTime.time}</span>
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setFullScreen(!fullScreen);
+                            requestFullScreen()
+                        }}>{fullScreen ? 'EXIT FULLSCREEN' : 'FULLSCREEN'}</button>
+                    <div></div>
                 </div>
                 <div className={playerGo.go ? "action action-go" : 'action action-wait'}>
                     {playerGo.go ? "Go" : 'Wait'}
@@ -903,13 +943,13 @@ const Test2 = () => {
                             }}></button>
                     </div>
                 </div>
-                <canvas className={`lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Pp">
+                <canvas className={`lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Pp">
                 </canvas>
                 <canvas className={`bgcolor-${nowStage.color} lienzo-final-${parseInt(stateImage.height)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Fn">
                 </canvas>
-                <canvas className={`lienzo-items ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-It">
+                <canvas className={`lienzo-items ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-It">
                 </canvas>
-                <canvas className={`lienzo-items ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-ItObj">
+                <canvas className={`lienzo-items ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-ItObj">
                 </canvas>
             </div>
         </>
