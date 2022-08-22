@@ -1,23 +1,27 @@
 import MobileDetect from "mobile-detect";
 import { useEffect, useState } from "react";
 import CrearItems, { CrearItemsWorld, PropsImage } from "./crearItems";
-let off = true, actualVidas = 5, mxActive = false, myActive = false, mxDirection = { left: false, right: false }, levelFalses = [{
+let off = true, actualVidas = 5, mxActive = false, myActive = false, mxDirection = { left: false, right: false }, auxnow = 0, gameStage = 1, levelFalses = [{
     posX: 0,
     posY: 0,
     widthX: 0,
     heightY: 0,
-}], inLayer = 0, propsImage = PropsImage, propsAction = { jumping: false, graviti: true }, canvas, levelGo = 1, ctx,
-    imagenA, canvasC, ctxC, canvasB, ctxB, canvasD, ctxD, imagenes = [{ onMove: false }], worldItems = [], levelDificulty = 4
+}], imagenesSrc = [`/img/foto-de-anime-4.png`, `/img/foto-de-anime-3.png`, `/img/foto-de-anime-2.png`, `/img/foto-de-anime-1.png`, `/img/foto-de-anime-0.png`], fondos = ['green', 'purple', 'yellow', 'black', 'red'], inLayer = 0, propsImage = PropsImage, propsAction = { jumping: false, graviti: true }, canvas, levelGo = 1, ctx,
+    imagenA, canvasC, ctxC, canvasB, ctxB, canvasD, ctxD, imagenes = [{ onMove: false }], worldItems = [], timeRestart = false, levelDificulty = 10
 const Test2 = () => {
+    const [nowStage, setNowStage] = useState({
+        color: 'green',
+        stage: 0
+    })
     const [stateImage, setStateImage] = useState({
         onMove: false, direccion: 'xf', posX: -1, width: 1080, height: 720, level: 1, onMobil: false
     })
     const [playerGo, setPlayerGo] = useState({ go: false })
-    const [playerStage, setPlayerStage] = useState({ stage: 0 })
+    const [playerStage, setPlayerStage] = useState({ stage: 1 })
     const [playerVidas, setPlayerVidas] = useState({ vidas: 5 })
-    const [playerTime, setPlayertime] = useState({ time: 0 })
+    const [playerTime, setPlayertime] = useState({ time: 0, timeRestart: false })
     const [player, setPlayer] = useState({
-        level: 1,
+        level: 0,
     })
     const [onMobil, setOnMobil] = useState(false)
     const [salto, setsalto] = useState({
@@ -25,8 +29,6 @@ const Test2 = () => {
         jumping: false,
         posY: 120,
         myActive: false
-
-
     })
     const setSaltoFunt = () => {
         console.log({
@@ -43,6 +45,87 @@ const Test2 = () => {
                 myActive: myActive
             })
     }
+    const morir = () => {
+        setNowStage({
+            color: fondos[0],
+            stage: 0
+        })
+        imagenes[0].onMove = false
+        if (actualVidas > 1 && !imagenes[0].onMove) {
+            setPlayerGo({
+                ...playerGo,
+                go: false
+            })
+            console.log(playerVidas);
+            actualVidas = actualVidas - 1
+            setPlayerVidas({
+                ...playerVidas,
+                vidas: actualVidas
+            })
+            setTimeout(() => {
+                propsImage.posX = 0
+                propsImage.items[0].posX = 0
+                propsImage.posY = 120
+                inLayer = 0
+                imagenes[0].onMove = true
+                setStateImage({
+                    ...stateImage,
+                    posX: -1
+                })
+                ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
+                makeStage()
+                setPlayerGo({
+                    ...playerGo,
+                    go: true
+                })
+                dibujar('go', propsImage)
+                propsImage.alive = true
+            }, 2500);
+        } else {
+            setPlayerVidas({
+                ...playerVidas,
+                vidas: 0
+            })
+            setPlayerGo({
+                ...playerGo,
+                go: false
+            })
+            darVida(1)
+        }
+    }
+    const darVida = (theLevel, value2) => {
+        setTimeout(() => {
+            propsImage.posX = 0
+            propsImage.items[0].posX = 0
+            let toChange = propsImage.items[0]
+            actualVidas = 5
+            levelGo = theLevel
+            propsImage.alive = false
+            worldItems = CrearItemsWorld([], theLevel)
+            let whileAux = []
+            whileAux.push(toChange)
+            whileAux.push(worldItems)
+            propsImage.items = whileAux
+            aparecer(theLevel)
+
+            if (!value2) {
+                moverCanvas(true)
+                setTimeout(() => {
+                    imagenes[0].onMove = true
+                    setPlayerVidas({
+                        ...playerVidas,
+                        vidas: 5
+                    })
+                    propsImage.alive = true
+                    setPlayerGo({
+                        ...playerGo,
+                        go: true
+                    })
+                    dibujar('go', propsImage)
+                }, 2500);
+            }
+        }, 2500);
+    }
     const dibujar = async (values, Props, value) => {
         let props = Props
         let propsimage = propsImage
@@ -53,11 +136,20 @@ const Test2 = () => {
             let aDibujar = (props.imagen[`${propsImage.direccion === 'xs' && props.posY < 120 ? 'xj' : propsImage.direccion}_${propsAction.graviti && props.posY < 120 ? parseInt(props.layer / (8 * 4)) < 2 ? parseInt(props.layer / (8 * 4)) + 2 : parseInt(props.layer / (8 * 4)) : !propsAction.graviti && props.posY < 120 ? parseInt(props.layer / (8 * 4)) > 1 ? parseInt(props.layer / (8 * 4)) - 2 : parseInt(props.layer / (8 * 4)) : parseInt(props.layer / (8 * 4))}`])
             let psx = 0, colisioned = false, Itemss = propsImage.items
             levelFalses.map((key, i) => {
-                if (((key.posX + key.widthX) < (propsImage.items[0].posX + 10)) && (key.posX + key.widthX) > (propsImage.items[0].posX) && props.posY > 100) {
+                if (((key.posX + key.widthX) < (propsImage.items[0].posX + 20)) && (key.posX + key.widthX - 10) > (propsImage.items[0].posX) && props.posY > 100) {
+                    ctxD.save();
+                    ctxD.font = "40px Arial";
+                    ctxD.fillStyle = "red";
+                    ctxD.strokeStyle = 'white';
+                    ctxD.fillText(actualVidas > 1 ? `MUERTISIMO` : 'GAME OVER', 30, 50)
+                    ctxD.strokeText(actualVidas > 1 ? `MUERTISIMO` : 'GAME OVER', 30, 50)
+                    ctxD.restore();
+                    ctxD.stroke()
                     colisioned = true
                 }
             })
             if (colisioned) {
+                console.log('murios');
                 psx = Itemss[0].posX
                 morir()
                 Itemss[0].posX = 0
@@ -69,7 +161,7 @@ const Test2 = () => {
                 }
             }
             if (!value && props.posX <= (341 - 0.5) && props.posX > -1 && propsImage.direccion === 'xf' && (((props.posX / (31 - 0.5)) === (1)) || ((props.posX / (61 - 0.5)) === (1)) || ((props.posX / (91 - 0.5)) === (1)) || ((props.posX / (121 - 0.5)) === (1)) || ((props.posX / (151 - 0.5)) === (1)) || ((props.posX / (181 - 0.5)) === (1)) || ((props.posX / (211 - 0.5)) === (1)) || ((props.posX / (241 - 0.5)) === (1)) || ((props.posX / (271 - 0.5)) === (1)) || ((props.posX / (301 - 0.5)) === (1)) || ((props.posX / (331 - 0.5)) === (1)) || (((props.posX / (341 - 0.5)) === (1)))) && propsImage.alive && !propsImage.levelPass) {
-                if (((props.posX / (341 - 0.5)) === (1)) && propsImage.alive) { !propsImage.levelPass && !propsImage.refreshData ? ganar(props) : console.log('sssss'); psx = Itemss[0].posX; } else { moverCanvas() }
+                moverCanvas()
             }
             if (!value && props.posX < 351 && props.posX > 28 && propsImage.direccion === 'xb' && (((props.posX / (29 - 0.5)) === (1)) || ((props.posX / (59 - 0.5)) === (1)) ||
                 ((props.posX / (89 + 0.5)) === (1)) || ((props.posX / (119 + 0.5)) === (1)) || ((props.posX / (149 + 0.5)) === (1)) || ((props.posX / (179 + 0.5)) === (1)) || ((props.posX / (209 + 0.5)) === (1)) || ((props.posX / (239 + 0.5)) === (1)) || ((props.posX / (269 + 0.5)) === (1)) || ((props.posX / (299 + 0.5)) === (1)) || ((props.posX / (319 + 0.5)) === (1)))) {
@@ -90,17 +182,17 @@ const Test2 = () => {
                     newModel.direccion = propsImage.direccion
                 }
                 if ((newModel.direccion === 'xf' && newModel.posX < 342) || (newModel.direccion === 'xs' && newModel.posX < 355) || (newModel.direccion === 'xb' && newModel.posX > 0)) {
-                    Itemss[0].posX = propsImage.refreshData ? psx : propsImage.levelPass ? psx : props.direccion === 'xf' && propsImage.direccion === 'xf' ? Itemss[0].posX + ((1.25 / (4 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? Itemss[0].posX - ((1.25 / (4 * (1 / (levelDificulty))))) : Itemss[0].posX
+                    Itemss[0].posX = propsImage.refreshData ? psx : propsImage.levelPass ? psx : props.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || newModel.posY < 120 ? Itemss[0].posX + ((1.25 / (40 * (1 / (levelDificulty))))) : Itemss[0].posX + ((1.25 / (40 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || newModel.posY < 120 ? Itemss[0].posX - ((1.25 / (40 * (1 / (levelDificulty))))) : Itemss[0].posX - ((1.25 / (40 * (1 / (levelDificulty))))) : Itemss[0].posX
                     newModel = {
                         ...newModel,
                         posY: propsAction.jumping && newModel.posY <= 120 ? newModel.posY === 120 && propsAction.jumping && propsAction.graviti ? 120 : !propsAction.graviti ? newModel.posY - 1.10 : propsAction.jumping && propsAction.graviti ? newModel.posY + 1.10 : newModel.posY === 50 ? 120 : 120 : 120,
-                        posX: propsImage.refreshData ? props.posX : propsImage.levelPass ? props.posX : !propsImage.alive ? 0 : props.direccion === 'xf' && propsImage.direccion === 'xf' ? newModel.posX + ((0.125 / (4 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? newModel.posX - ((0.125 / (4 * (1 / (levelDificulty))))) : newModel.posX,
+                        posX: propsImage.refreshData ? props.posX : propsImage.levelPass ? props.posX : !propsImage.alive ? 0 : props.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || newModel.posY < 120 ? newModel.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || newModel.posY < 120 ? newModel.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX,
                         items: propsImage.levelPass || !propsImage.alive ? props.items : Itemss,
                         fotograma: newModel.fotograma + 1,
                     }
                     propsImage = {
                         ...propsImage,
-                        posX: propsImage.refreshData ? 0 : propsImage.levelPass ? props.posX : !propsImage.alive ? 0 : props.direccion === 'xf' && propsImage.direccion === 'xf' ? newModel.posX + ((0.125 / (4 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? newModel.posX - ((0.125 / (4 * (1 / (levelDificulty))))) : newModel.posX,
+                        posX: propsImage.refreshData ? 0 : propsImage.levelPass ? props.posX : !propsImage.alive ? 0 : props.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || newModel.posY < 120 ? newModel.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || newModel.posY < 120 ? newModel.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX,
                         posY: propsAction.jumping && propsImage.posY <= 120 ? newModel.posY === 120 && propsAction.jumping && propsAction.graviti ? 120 : propsAction.jumping && !propsAction.graviti ? propsImage.posY - 1.10 : propsAction.jumping && propsAction.graviti ? propsImage.posY + 1.10 : propsImage.posY === 120 ? 120 : 120 : 120,
                     }
                 }
@@ -120,90 +212,39 @@ const Test2 = () => {
 
                     }
                 }, 5);
-
                 ctxC.drawImage(aDibujar, propsImage.levelPass ? psx : propsImage.refreshData ? 10 : !propsImage.alive ? 0 : psx, props.posY, props.widthX, props.heightY)
             }
         } else {
             propsimage.items[0].posX = 10
         }
     }
-    const morir = () => {
-        imagenes[0].onMove = false
-        setPlayerGo({
-            ...playerGo,
-            go: false
+    const aparecer = (level) => {
+        let otraImagen = new Image()
+        ctxB = canvasB.getContext('2d')
+        ctxB.clearRect(0, 0, canvasB.width, canvasB.height)
+        otraImagen.src = imagenesSrc[fondos.length - 1]
+        otraImagen.onload = (() => {
+            ctxB.save();
+            ctxB.translate(15, 110);
+            ctxB.rotate(Math.PI / 2);
+            ctxB.textAlign = 'right';
+            ctx.textBaseline = "middle";
+            const ctext = `Mundo${level} Lv-${(6-fondos.length)}`.split("").join(String.fromCharCode(8202))
+            ctxB.font = "20px Arial";
+            ctxB.fillStyle = "blue";
+            ctxB.strokeStyle = 'white';
+            ctxB.fillText(ctext, 30, 8)
+            ctxB.strokeText(ctext, 30, 8)
+            ctxB.restore();
+            ctxB.stroke()
+            ctxB.font = "40px Arial";
+            ctxB.fillStyle = "red";
+            ctxB.strokeStyle = 'purple';
+            ctxB.fillText('FIN', 210, 110)
+            ctxB.drawImage(otraImagen, 135, 70, 100, 75)
+            ctxB.strokeText('FIN', 210, 110)
+            ctxB.stroke()
         })
-        if (actualVidas > 1 && !imagenes[0].onMove) {
-            console.log(playerVidas);
-            actualVidas = actualVidas - 1
-            setPlayerVidas({
-                ...playerVidas,
-                vidas: actualVidas
-            })
-            setTimeout(() => {
-                propsImage.posX = 0
-                propsImage.items[0].posX = 0
-                propsImage.posY = 120
-                inLayer = 0
-                imagenes[0].onMove = true
-                setStateImage({
-                    ...stateImage,
-                    posX: -1
-                })
-                makeStage()
-                setPlayerGo({
-                    ...playerGo,
-                    go: true
-                })
-                dibujar('go', propsImage)
-                propsImage.alive = true
-            }, 2500);
-        } else {
-            actualVidas = 5
-            levelGo = 1
-            propsImage.alive = false
-            worldItems = CrearItemsWorld([], levelGo)
-            let toChange = propsImage.items[0]
-            let whileAux = []
-            whileAux.push(toChange)
-            whileAux.push(worldItems)
-            propsImage = {
-                ...propsImage,
-                items: whileAux
-            }
-            let otraImagen = new Image()
-            ctxB = canvasB.getContext('2d')
-            ctxB.clearRect(0, 0, canvasB.width, canvasB.height)
-            otraImagen.src = `/img/foto-de-anime.png`
-            otraImagen.onload = (() => {
-                ctxB.save();
-                ctxB.translate(15, 110);
-                ctxB.rotate(Math.PI / 2);
-                ctxB.textAlign = 'right';
-                ctxB.font = "20px Arial";
-                ctxB.fillStyle = "blue";
-                ctxB.strokeStyle = 'white';
-                ctxB.fillText(`INICIO   Lv-${1}`, 12, 8)
-                ctxB.strokeText(`INICIO   Lv-${1}`, 12, 8)
-                ctxB.restore();
-                ctxB.stroke()
-                ctxB.font = "50px Arial";
-                ctxB.fillStyle = "red";
-                ctxB.strokeStyle = 'purple';
-                ctxB.fillText('FIN', 210, 60)
-                ctxB.drawImage(otraImagen, 155, 50, 100, 75)
-                ctxB.strokeText('FIN', 210, 60)
-                ctxB.stroke()
-            })
-            moverCanvas(true)
-            setTimeout(() => {
-                imagenes[0].onMove = true
-
-                propsImage.alive = true
-                dibujar('go', propsImage)
-
-            }, 2500);
-        }
     }
     let laFunt = (props, posFix) => {
         let aDibujar = (props.imagen[`${propsImage.direccion === 'xs' && props.posY < 120 ? 'xj' : propsImage.direccion}_${propsAction.graviti && props.posY < 120 ? parseInt(props.layer / (8 * 4)) < 2 ? parseInt(props.layer / (8 * 4)) + 2 : parseInt(props.layer / (8 * 4)) : !propsAction.graviti && props.posY < 120 ? parseInt(props.layer / (8 * 4)) > 1 ? parseInt(props.layer / (8 * 4)) - 2 : parseInt(props.layer / (8 * 4)) : parseInt(props.layer / (8 * 4))}`])
@@ -220,73 +261,24 @@ const Test2 = () => {
             }, 5);
         }
     }
-    const ganar = (props) => {
-        console.log(inLayer, 'inLayer', propsImage.posX);
-        if (propsImage.alive && !propsImage.levelPass && !propsImage.refreshData) {
-            imagenes[0].onMove = false
-            setPlayerGo({
-                ...playerGo,
-                go: false
+    const startTime = (time) => {
+        if (timeRestart) {
+            setPlayertime({
+                timeRestart: true,
+                time: time
             })
-            setPlayerStage({
-                ...playerStage,
-                stage: playerStage.stage + 1
+        }
+        else {
+            setPlayertime({
+                ...playerTime,
+                timeRestart: false,
+                time: time + 1
             })
-            let posFix = propsImage.items[0].posX
-            laFunt(props, posFix)
-            worldItems = CrearItemsWorld([], (levelGo + 1))
-            console.log('aca2');
-            propsImage.levelPass = true
-            canvasB = document.getElementById('canvas-Fn')
-            let otraImagen = new Image()
-            ctxB = canvasB.getContext('2d')
-            ctxB.clearRect(0, 0, canvasB.width, canvasB.height)
-            otraImagen.src = `/img/foto-de-anime.png`
-            otraImagen.onload = (() => {
-                ctxB.save();
-                ctxB.translate(15, 110);
-                ctxB.rotate(Math.PI / 2);
-                ctxB.textAlign = 'right';
-                ctxB.font = "20px Arial";
-                ctxB.fillStyle = "blue";
-                ctxB.strokeStyle = 'white';
-                ctxB.fillText(`INICIO   Lv-${levelGo + 1}`, 12, 8)
-                ctxB.strokeText(`INICIO   Lv-${levelGo + 1}`, 12, 8)
-                ctxB.restore();
-                ctxB.stroke()
-                ctxB.font = "50px Arial";
-                ctxB.fillStyle = "red";
-                ctxB.strokeStyle = 'purple';
-                ctxB.fillText('FIN', 210, 60)
-                ctxB.drawImage(otraImagen, 155, 50, 100, 75)
-                ctxB.strokeText('FIN', 210, 60)
-                ctxB.stroke()
-            })
-            if (!propsImage.refreshData) {
-                propsImage.refreshData = true
-                setTimeout(() => {
-                    console.log('aca');
-
-                    moverCanvas(true, levelGo, props)
-                    setPlayertime({
-                        time: 0
-                    })
-                }, 5000);
-            }
+            setTimeout(() => {
+                startTime(propsImage.refreshData ? 0 : imagenes[0].onMove ? time + 1 : time)
+            }, 1000);
         }
 
-    }
-    const startTime = (time) => {
-
-        const newTime = time + 1
-        setPlayertime({
-            ...playerTime,
-            time: newTime
-        })
-        setTimeout(() => {
-
-            startTime(newTime)
-        }, 1000);
     }
     const initApp = () => {
         setStateImage({
@@ -296,8 +288,6 @@ const Test2 = () => {
         })
         imagenA = new Image()
         imagenA.src = '/img/body-x-fs-0.png'
-        let otraImagen = new Image()
-        otraImagen.src = `/img/foto-de-anime.png`
         canvasB = document.getElementById('canvas-Fn')
         ctxB = canvasB.getContext('2d')
         canvasC = document.getElementById('canvas-It')
@@ -306,26 +296,7 @@ const Test2 = () => {
         ctxD = canvasD.getContext('2d')
         canvas = document.getElementById('canvas-Pp')
         ctx = canvas.getContext('2d')
-        otraImagen.onload = (() => {
-            ctxB.save();
-            ctxB.translate(15, 110);
-            ctxB.rotate(Math.PI / 2);
-            ctxB.textAlign = 'right';
-            ctxB.font = "20px Arial";
-            ctxB.fillStyle = "blue";
-            ctxB.strokeStyle = 'white';
-            ctxB.fillText(`INICIO   Lv-${levelGo}`, 12, 8)
-            ctxB.strokeText(`INICIO   Lv-${levelGo}`, 12, 8)
-            ctxB.restore();
-            ctxB.stroke()
-            ctxB.font = "50px Arial";
-            ctxB.fillStyle = "red";
-            ctxB.strokeStyle = 'purple';
-            ctxB.fillText('FIN', 210, 60)
-            ctxB.drawImage(otraImagen, 155, 50, 100, 75)
-            ctxB.strokeText('FIN', 210, 60)
-            ctxB.stroke()
-        })
+        aparecer(1)
         let imagesValue = ['xs', 'xf', 'xb', 'xj'], newArrayB = {}, oImgW = 0, oImgH = 0
         imagesValue.map((key, i) => {
             for (let index = 0; index < 4; index++) {
@@ -341,7 +312,6 @@ const Test2 = () => {
                     }
                 })
             }
-
         })
         setTimeout(() => {
             imagenes[0] = { imagen: newArrayB, onMove: true }
@@ -521,7 +491,6 @@ const Test2 = () => {
                     }
                 }
             }, false);
-
             makeStage()
         }, 5000);
     }
@@ -594,9 +563,9 @@ const Test2 = () => {
             }
         }
     }
-    const makeStage = () => {
+    const makeStage = (value = '+') => {
         propsImage.posY = 120
-
+        levelFalses = []
         for (let index = 0; index < worldItems.length; index++) {
             const element = worldItems[index];
             if (element.layerOnDisplay === inLayer && element.displayneed
@@ -630,99 +599,206 @@ const Test2 = () => {
                     graviti: true
                 }
                 imagenes[0].onMove = false
-
                 setTimeout(() => {
                     imagenes[0].onMove = true
-
+                    propsImage.items[0].posX = value === '+' ? 1 : 299
+                    setPlayerGo({
+                        ...playerGo,
+                        go: true
+                    })
                     dibujar('go', propsImage)
                 }, 2000);
             }, 10);
+        } else {
+            setPlayerGo({
+                ...playerGo,
+                go: true
+            })
         }
-
     }
-
-    const moverCanvas = (die, level, props) => {
-        console.log('mover');
-        let value = '?'
-        if (((propsImage.posX) - (propsImage.posX.toFixed()) / 30) - ((propsImage.posX) - (propsImage.posX.toFixed()) / 30).toFixed() > 0) {
-            value = '+'
+    const moverCanvas = (die, level, props, auxBoolean) => {
+        if (auxBoolean) {
+            makeStage(playerStage.stage)
         } else {
-            value = '-'
-        }
-        if (die && level) {
-            imagenes[0].onMove = true
-            propsImage.posX = 10
-            propsImage.refreshData = false
-            propsImage.levelPass = false
-        }
+            let value = '?'
+            if (((propsImage.posX) - (propsImage.posX.toFixed()) / 30) - ((propsImage.posX) - (propsImage.posX.toFixed()) / 30).toFixed() > 0) {
+                value = '+'
+            } else {
+                value = '-'
+            }
+            console.log(value, 'mover', propsImage.posX, 'mover');
 
-        if (die || level) {
-            inLayer = 0
-        } else {
-            inLayer = die && level ? 0 : value === '-' ? (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) : ((((propsImage.posX + .5) / 30).toFixed()) * 1) === 0 ? -1 : (((propsImage.posX + .5) / 30).toFixed()) * 1
-        }
-        const vidas = die ? player.vidas - 1 : player.vidas, stage = die && level ? player.stage + 1 : player.stage
-        setPlayer({
-            ...player,
-            level: inLayer,
-        })
-        setPlayerGo({
-            ...playerGo,
-            go: true
-        })
-        console.log(inLayer, propsImage);
-        let theItem = propsImage.items
-/*         theItem[0].posX = level ? 1 : value === '+' ? 1 : 299
- */        propsImage.items = theItem
-        if (value === '+' || value === '-' || die || level) {
-
-            ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
-            levelFalses = []
-            if (level && die) {
-                propsImage.items[0].posX = 0
-                propsImage.posX =
-                    dibujar('go', propsImage)
-                let toChange = propsImage.items[0]
-                toChange.posX = 50
-                let whileAux = []
-                whileAux.push(toChange)
-                whileAux.push(worldItems)
-                propsImage.items = whileAux
+            if (die === true && level === true) {
+                console.log('vgano', 'mover');
+                imagenes[0].onMove = true
+                propsImage.posX = 10
                 propsImage.refreshData = false
                 propsImage.levelPass = false
-                propsImage.alive = true
-                propsImage.posX = 1
-                propsImage.direccion = 'xs'
-                levelGo = levelGo + 1
             }
-            makeStage()
             if (die || level) {
-                setStateImage({
-                    ...stateImage,
-                    onMove: false,
-                    direccion: 'xs',
-                    posX: -1,
-                    width: 1080,
-                    height: 720,
-                    level: level ? levelGo : 1
-                })
-                propsImage = {
-                    ...propsImage,
-                    posX: 0,
-                    posY: 145,
-                    fotograma: 0,
-                    direccion: 'xs',
-                    onMove: false,
-                    layer: 0,
-                    jumping: false,
-                    graviti: true
-                }
+                inLayer = 0
             } else {
-                setStateImage({
-                    ...stateImage,
-                    posX: level ? -1 : propsImage.refreshData ? -1 : value === '-' ? (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) === 0 ? -1 : (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) : ((((propsImage.posX + .5) / 30).toFixed()) * 1) === 0 ? -1 : (((propsImage.posX + .5) / 30).toFixed()) * 1
-                })
+                inLayer = die && level ? 0 : value === '-' ? (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) : ((((propsImage.posX + .5) / 30).toFixed()) * 1) === 0 ? -1 : (((propsImage.posX + .5) / 30).toFixed()) * 1
             }
+            setPlayer({
+                ...player,
+                level: inLayer,
+            })
+            setPlayerGo({
+                ...playerGo,
+                go: false
+            })
+            if (inLayer === 11 && gameStage === 5 && levelGo === 5) {
+                window.alert('melo papi ganaste')
+            } else {
+                if (inLayer === 11) {
+                    if (levelGo === 5) {
+                        fondos = fondos.slice(1, fondos.length)
+                        setTimeout(() => {
+                            setNowStage({
+                                ...nowStage,
+                                color: fondos[0],
+                                stage: nowStage.stage + 1
+                            })
+                        }, 4500);
+
+                        levelDificulty = levelDificulty < 40 ? levelDificulty * 2 : levelDificulty + 40
+                        gameStage = gameStage+1
+                        levelGo = 1
+                        setPlayerVidas({
+                            ...playerVidas,
+                            vidas: playerVidas.vidas + 3
+                        })
+                    } else {
+                        levelGo =  levelGo + 1
+                    }
+                    setStateImage({
+                        ...stateImage,
+                        posX: 11
+                    })
+                    levelFalses = []
+                    imagenes[0].onMove = false
+                    propsImage.levelPass = true
+                    ctxD.save();
+                    ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
+                    ctxD.font = "40px Arial";
+                    ctxD.fillStyle = "greem";
+                    ctxD.strokeStyle = 'white';
+                    ctxD.fillText('BRAVISIMO', 30, 50)
+                    ctxD.strokeText(`BRAVISIMO`, 30, 50)
+                    ctxD.restore();
+                    ctxD.stroke();
+                    auxnow = auxnow + 1
+                    console.log('GAno', auxnow);
+                    setPlayerGo({
+                        ...playerGo,
+                        go: false
+                    })
+                    setPlayerStage({
+                        ...playerStage,
+                        stage: gameStage
+                    })
+                    const lastProp = propsImage
+                    laFunt(lastProp, 90)
+                    setPlayerGo({
+                        ...playerGo,
+                        go: false
+                    })
+                    setTimeout(() => {
+                        ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
+                        propsImage.refreshData = true
+                        propsImage.alive = false
+                        worldItems = CrearItemsWorld([], (levelGo))
+                        console.log('aca2');
+                        setPlayerStage({
+                            ...playerStage,
+                            stage: levelGo
+                        })
+                        aparecer(levelGo)
+                        setStateImage({
+                            ...stateImage,
+                            posX: -1
+                        })
+                        imagenes[0].onMove = true
+
+                        setPlayer({
+                            ...player,
+                            level: 0
+                        })
+                        propsImage.alive = true
+                        setPlayerGo({
+                            ...playerGo,
+                            go: true
+                        })
+                        timeRestart = false
+                        setPlayertime({
+                            timeRestart: false,
+                            time: 0
+                        })
+                        propsImage.posX = 0
+                        propsImage.items[0].posX = 0
+                        propsImage.direccion = 'xs'
+                        propsImage.levelPass = false
+                        propsImage.refreshData = false
+                        propsImage.alive = true
+                        inLayer = 0
+                        makeStage(levelGo)
+                        dibujar('go', propsImage)
+                    }, 5000);
+                } else {
+                    if (value === '+' || value === '-' || die || level) {
+                        ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
+                        levelFalses = []
+                        if (level && die) {
+                            propsImage.items[0].posX = 0
+                            propsImage.posX = 0
+                            dibujar('go', propsImage)
+                            let toChange = propsImage.items[0]
+                            toChange.posX = 0
+                            let whileAux = []
+                            whileAux.push(toChange)
+                            whileAux.push(worldItems)
+                            propsImage.items = whileAux
+                            propsImage.refreshData = false
+                            propsImage.levelPass = false
+                            propsImage.alive = true
+                            propsImage.posX = 0
+                            propsImage.direccion = 'xs'
+                            levelGo = levelGo + 1
+                        }
+                        makeStage(value)
+                        if (die || level) {
+                            setStateImage({
+                                ...stateImage,
+                                onMove: false,
+                                direccion: 'xs',
+                                posX: -1,
+                                width: 1080,
+                                height: 720,
+                                level: level ? levelGo : 1
+                            })
+                            propsImage = {
+                                ...propsImage,
+                                posX: 0,
+                                posY: 145,
+                                fotograma: 0,
+                                direccion: 'xs',
+                                onMove: false,
+                                layer: 0,
+                                jumping: false,
+                                graviti: true
+                            }
+                        } else {
+                            propsImage.items[0].posX = value === '+' ? 1 : 299
+                            setStateImage({
+                                ...stateImage,
+                                posX: level ? -1 : propsImage.refreshData ? -1 : value === '-' ? (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) === 0 ? -1 : (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) : ((((propsImage.posX + .5) / 30).toFixed()) * 1) === 0 ? -1 : (((propsImage.posX + .5) / 30).toFixed()) * 1
+                            })
+                        }
+                    }
+                }
+            }
+
         }
     }
     useEffect(() => {
@@ -738,25 +814,6 @@ const Test2 = () => {
             initApp()
         }
     }, [off])
-    /*  useEffect(() => {
-         if (imagenes[0].onMove) {
-             console.log('asasa');
-     
-             setPlayerGo({
-                 ...player,
-                 go: true
-             })
-         } else {
-             setPlayer({
-                 ...player,
-                 go: false
-             })
-             console.log('ddd');
-     
-         }
-     }, [imagenes]) */
-
-
     return (
         <>
             <div className="IDiv-main column bgcolor-green relativeCanvasContainer ">
@@ -795,7 +852,6 @@ const Test2 = () => {
                             }, 30);
                         }}
                         onTouchStart={!propsAction.jumping ? (e) => {
-
                             setsalto(setSaltoFunt());
                             brincar()
                         } : (e) => {
@@ -817,7 +873,6 @@ const Test2 = () => {
                                 mxActive = false
                             }}
                             onTouchStart={(e) => {
-
                                 mxActive = true
                                 dibujarMouseOn('-', true)
                                 propsImage = {
@@ -825,10 +880,8 @@ const Test2 = () => {
                                     direccion: 'xb'
                                 }
                             }}></button>
-
                         <button
                             onTouchEnd={(e) => {
-
                                 propsImage = {
                                     ...propsImage,
                                     direccion: 'xs'
@@ -849,20 +902,14 @@ const Test2 = () => {
                                 }
                             }}></button>
                     </div>
-
                 </div>
-
                 <canvas className={`lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Pp">
-
                 </canvas>
-                <canvas className={`lienzo-final-${parseInt(stateImage.height)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Fn">
-
+                <canvas className={`bgcolor-${nowStage.color} lienzo-final-${parseInt(stateImage.height)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Fn">
                 </canvas>
                 <canvas className={`lienzo-items ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-It">
-
                 </canvas>
                 <canvas className={`lienzo-items ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-ItObj">
-
                 </canvas>
             </div>
         </>
