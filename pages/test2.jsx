@@ -247,6 +247,7 @@ const Test2 = () => {
         otraImagen.src = imagenesSrc[fondos.length - 1]
         otraImagen.onload = (() => {
             ctxB.save();
+            ctxB.clearRect(0, 0, canvasB.width, canvasB.height)
             ctxB.translate(15, 110);
             ctxB.rotate(Math.PI / 2);
             ctxB.textAlign = 'right';
@@ -770,8 +771,12 @@ const Test2 = () => {
                     audioPp.src = ''
                     pass.play()
                     if (levelGo === 5) {
+                        ctxB.clearRect(0, 0, canvasB.width, canvasB.height)
                         fondos = fondos.slice(1, fondos.length)
                         setTimeout(() => {
+                            setPlayer({
+                                level: 0
+                            })
                             setNowStage({
                                 ...nowStage,
                                 color: fondos[0],
