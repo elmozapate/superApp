@@ -1921,40 +1921,154 @@ h1 {
 .lienzoHM {
     height: ((100vh * (1 / 1))-15vh);
 }
-.game-info{
+.game-info {
     z-index: 100000;
     position: absolute;
     top: 10px;
-    right:  10px;
+    right: 10px;
     background-color: #000;
-    padding: 15px,20px;
+    padding: 15px, 20px;
     display: flex;
-    justify-content:space-between ;
+    justify-content: space-between;
     gap: 10px;
     align-items: center;
-    font-size: 1.5rem;  
+    font-size: 1.5rem;
     font-weight: 900;
     color: white;
 }
-.action{
+.action {
     z-index: 100000;
     position: absolute;
     top: 10px;
     left: 10px;
     background-color: #000;
-    padding: 15px,20px;
+    padding: 15px, 20px;
     display: flex;
-    justify-content:space-between ;
+    justify-content: space-between;
     gap: 10px;
-    font-size: 1.5rem;  
+    font-size: 1.5rem;
     font-weight: 900;
     color: white;
 }
-.action-go{
+.action-go {
     z-index: 100000;
     background-color: green;
 }
-.action-wait{
+.action-wait {
     z-index: 100000;
     background-color: red;
+}
+.ocult {
+    visibility: hidden;
+}
+.button-game {
+    width: getRemSize(380px);
+    padding: 0.3rem 1.5rem;
+    border-radius: 10px;
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 20px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    background-color: green;
+    opacity: 0.7;
+    color: white;
+.flex{
+    min-width: 50%;
+    align-items: center;
+    justify-content: space-between;
+    display: flex;
+    gap: 1rem;
+}
+    .number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 2.5rem;
+        min-width: 2.5rem;
+        border-radius: 50%;
+        color: black;
+        background-color: white;
+    }
+    .btn-plus {
+        justify-self: flex-end;
+        min-width: 110px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .hided{
+        visibility: hidden;
+        background-color: transparent;
+        color: transparent;
+        border: none;
+    }:hover {
+        transform: scale(1);
+        color: transparent;
+        background-color: transparent;
+    }
+   
+    button {
+        text-align: center;
+        color: white;
+        background-color: #000;
+        padding: 10px 20px;
+        font-size: 1.3rem;
+        font-weight: 500;
+        border-radius: 7px;
+        &:hover {
+            transform: scale(1.1);
+            color: black;
+            background-color: blue;
+        }
+    }
+}
+.bgGame {
+    background: url("../public/img/fondo-juego.png");
+}
+.bgUrl-1 {
+    background: url("../public/img/escena-0.png") !important;
+    background-repeat: repeat-x;
+}
+.bgUrlmobil-1 {
+    background: url("../public/img/escena-mobil-0.png") !important;
+    background-repeat: repeat-x;
+}
+
+.bgUrl-2 {
+    background: url("../public/img/escena-1.png") !important;
+    background-repeat: repeat-x;
+}
+.bgUrl-3 {
+    background: url("../public/img/escena-2.png") !important;
+    background-repeat: repeat-x;
+}
+.bgUrl-4 {
+    background: url("../public/img/escena-3.png") !important;
+    background-repeat: repeat-x;
+}
+.bgUrl-5 {
+    background: url("../public/img/escena-4.png") !important;
+    background-repeat: repeat-x;
+}
+
+.bgUrlmobil-2 {
+    background: url("../public/img/escena-mobil-1.png") !important;
+    background-repeat: repeat-x;
+}
+.bgUrlmobil-3 {
+    background: url("../public/img/escena-mobil-2.png") !important;
+    background-repeat: repeat-x;
+}
+.bgUrlmobil-4 {
+    background: url("../public/img/escena-mobil-3.png") !important;
+    background-repeat: repeat-x;
+}
+.bgUrlmobil-5 {
+    background: url("../public/img/escena-mobil-4.png") !important;
+    background-repeat: repeat-x;
+}
+.into{
+    justify-content: center; 
 }

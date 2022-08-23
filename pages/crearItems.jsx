@@ -1,11 +1,11 @@
-export const CrearItems = (newArray) => {
+export const CrearItems = (newArray, posX) => {
 
     return ([{
         displayneed: true,
         layerOnDisplay: 3,
         imagen: newArray,
         type: 'hpc',
-        posX: 0,
+        posX: posX,
         posY: 145,
         widthX: 19,
         heightY: 60,
@@ -31,9 +31,12 @@ export const CrearItems = (newArray) => {
         }
     }])
 }
-export const CrearItemsWorld = (newArray, level,distanceRange) => {
+export const CrearItemsWorld = (newArray, level, distanceRange) => {
+    const maxDistance = () => {
+        return (300) / level
+    }
     const minDistance = (value, value2) => {
-        if ((value2 - value) <  20) {
+        if ((value2 - value) < 20) {
             return value2 + 20
         } else {
             return value2
@@ -43,20 +46,20 @@ export const CrearItemsWorld = (newArray, level,distanceRange) => {
     }
     let array = []
     for (let index = 0; index < 11; index++) {
-        console.log(Math.floor(Math.random() * (level - 1)) + 1, level, 'level');
         let objDistances = []
-        let objCant = /* index === 0 ? 1 : Math.floor(Math.random() * (level - 1)) + 1 */level
-        let distanceRange =index===0?170: (280 / objCant)
+        let objCant = index === 0 ? (3 > level ? 1 : 2) : level
+        const distanceRange = maxDistance()
         let ejeX = 0
-       
-        for (let index2 = 0; index2 < objCant; index2++) {
-            if (index2 === 0) {
-                ejeX = index === 0 ? Math.floor(Math.random() * (300 - 150)) + 150 : index2 === 0 ? Math.floor(Math.random() * (((distanceRange * index2) + distanceRange) - (distanceRange * index2))) + (distanceRange * index2) + 30 :( Math.floor(Math.random() * (((distanceRange * index2) + distanceRange) - (distanceRange * index2))) + (distanceRange * index2)+20)
-                objDistances.push(ejeX)
 
-            } else {
-                ejeX = minDistance(objDistances[index2 - 1],Math.floor(Math.random() * (((distanceRange * index2) + distanceRange) - (distanceRange * index2))) + (distanceRange * index2),distanceRange)
-            }
+        for (let index2 = 0; index2 < objCant; index2++) {
+            const max = ((300) / level) - 20;
+            const min = 20;
+            const range = max - min + 1;
+            const trys = (distanceRange * index2) + (Math.random() * range) + min;
+            ejeX = index === 0 ? trys + 60 : trys
+            /* Math.floor(Math.random() * (((distanceRange * (index2 + 1))) - ((((distanceRange * (index2 + 1))) - ((distanceRange * (index2)))) + 20))) + (((distanceRange * (index2 + 1))) - ((distanceRange * (index2)) + 20))
+            objDistances.push(ejeX) */
+
             const element = {
                 displayneed: true,
                 layerOnDisplay: index,
@@ -94,7 +97,7 @@ export const CrearItemsWorld = (newArray, level,distanceRange) => {
 
 }
 export const PropsImage = {
-    refreshData:false,
+    refreshData: false,
     levelPass: false,
     alive: true,
     worldSectionIn: 0,
@@ -141,4 +144,5 @@ export const PropsImage = {
         }
     }]
 }
+export const LosFondos = ['green', 'purple', 'black', 'red']
 export default CrearItems
