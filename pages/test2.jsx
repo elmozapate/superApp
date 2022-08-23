@@ -252,7 +252,7 @@ const Test2 = () => {
             ctxB.rotate(Math.PI / 2);
             ctxB.textAlign = 'right';
             ctx.textBaseline = "middle";
-            const ctext = `Mundo${level} Lv-${(dificulty < 40 ? dificulty / 10 : (dificulty / 40 + 2))}`.split("").join(String.fromCharCode(8202))
+            const ctext = `Mundo${level} Lv-${(6 - fondos.length)}`.split("").join(String.fromCharCode(8202))
             ctxB.font = "20px Arial";
             ctxB.fillStyle = "blue";
             ctxB.strokeStyle = 'white';
