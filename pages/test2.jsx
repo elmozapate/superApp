@@ -2,7 +2,7 @@ import MobileDetect from "mobile-detect";
 import { useEffect, useState } from "react";
 import BotonesJuego from "./botonesJuego";
 import CrearItems, { CrearItemsWorld, LosFondos, PropsImage } from "./crearItems";
-let off = true, jump, audioPp, actualVidas = 5, mxActive = false, myActive = false, mxDirection = { left: false, right: false }, auxnow = 0, gameStage = 1, levelFalses = [{
+let off = true, jump, pass, audioPp, actualVidas = 5, mxActive = false, myActive = false, mxDirection = { left: false, right: false }, auxnow = 0, gameStage = 1, levelFalses = [{
     posX: 0,
     posY: 0,
     widthX: 0,
@@ -767,8 +767,8 @@ const Test2 = () => {
                 window.alert('melo papi ganaste')
             } else {
                 if (inLayer === 11) {
-                    audioPp.src = `/audio/pass.mp3`
-
+                    audioPp.src = ''
+                    pass.play()
                     if (levelGo === 5) {
                         fondos = fondos.slice(1, fondos.length)
                         setTimeout(() => {
@@ -925,6 +925,7 @@ const Test2 = () => {
     }
     useEffect(() => {
         if (off) {
+            pass = new Audio('/audio/pass.mp3');
             jump = new Audio('/audio/jump.mp3');
             jump.volume = 0.2;
             off = false
