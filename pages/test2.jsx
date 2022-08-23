@@ -1021,7 +1021,7 @@ const Test2 = () => {
                                 brincar()
                             } : (e) => {
                                 setsalto(setSaltoFunt())
-                            }}>{salto.graviti ? 'G' : '!G'}{salto.jumping ? 'J' : '!J'}{salto.posX}{salto.myActive ? 'Y' : '!Y'}</button>
+                            }}>{'BRINCAR'}</button>
                         <div>
                             <button
                                 onTouchEnd={(e) => {
@@ -1044,7 +1044,7 @@ const Test2 = () => {
                                         ...propsImage,
                                         direccion: 'xb'
                                     }
-                                }}></button>
+                                }}>IZQ</button>
                             <button
                                 onTouchEnd={(e) => {
                                     propsImage = {
@@ -1065,7 +1065,7 @@ const Test2 = () => {
                                         ...propsImage,
                                         direccion: 'xf'
                                     }
-                                }}></button>
+                                }}>DER</button>
                         </div>
                     </div>
                     <canvas className={`${onMobil ? 'bgUrlmobil' : 'bgUrl'}-${(playerStage.stage + 1)} lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Pp">
