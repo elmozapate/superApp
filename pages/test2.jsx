@@ -75,7 +75,7 @@ const Test2 = () => {
                     ...playerGo,
                     go: true
                 })
-                audioPp.src = `/audio/gameSound-${playerStage.stage}.mp3`
+                setHalfVolume(levelGo)
                 dibujar('go', propsImage)
                 propsImage.alive = true
             }, 5000);
