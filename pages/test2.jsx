@@ -1063,7 +1063,7 @@ const Test2 = () => {
                         let otraImagen2 = new Image()
                         otraImagen2.src = `/img/joshi-${Math.floor(Math.random() * 3)}.png`
                         otraImagen2.onload = (() => {
-                            worldItems = CrearItemsWorld(newArrayB, levelGo, otraImagen2)
+                            worldItems = CrearItemsWorld([], levelGo, otraImagen2)
                         })
                         setPlayerStage({
                             ...playerStage,
