@@ -4,7 +4,7 @@ import BotonesJuego from "./botonesJuego";
 import CrearItems, { CrearItemsWorld, LosFondos, PropsImage } from "./crearItems";
 let off = true, jump, pass, audioPp, actualVidas = 5, mxActive = false, myActive = false, dibujarMalos = {
     die: false, last: [], new: []
-}, mxDirection = { left: false, right: false }, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, joshisound, pow, proyectilesImg = [], imagenesSrc = [`/img/foto-de-anime-4.png`, `/img/foto-de-anime-3.png`, `/img/foto-de-anime-2.png`, `/img/foto-de-anime-1.png`, `/img/foto-de-anime-0.png`], fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { jumping: false, gravity: true }, canvas, levelGo = 1, ctx,
+}, mxDirection = { left: false, right: false }, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, joshisound, pow, proyectilesImg = [], imagenesSrc = [`/img/foto-de-anime-4.png`, `/img/foto-de-anime-3.png`, `/img/foto-de-anime-2.png`, `/img/foto-de-anime-1.png`, `/img/foto-de-anime-0.png`], fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { jumping: false, gravity: true }, canvas, levelGo = 1, ctx,    imgArray = [],
     imagenA, canvasC, ctxC, canvasB, ctxB, canvasD, ctxD, canvasE, ctxE, imagenes = [{ onMove: false }], worldItems = [], timeRestart = false, levelDificulty = 10
 const Test2 = () => {
     const [dificulty, setDificulty] = useState(10)
@@ -135,7 +135,7 @@ const Test2 = () => {
             actualVidas = 5
             levelGo = theLevel
             propsImage.alive = false
-            worldItems = CrearItemsWorld([], theLevel)
+            worldItems = CrearItemsWorld([], theLevel,imgArray)
             let whileAux = []
             whileAux.push(toChange)
             whileAux.push(worldItems)
@@ -588,7 +588,7 @@ const Test2 = () => {
             }
             let createItems = CrearItems(newArrayB, levelGo > 0 ? 0 : 10)
             let otraImagen2 = new Image()
-            let imgArray = []
+         
             otraImagen2.src = `/img/joshi-xf.png`
             otraImagen2.onload = (() => {
                 imgArray.push({
@@ -1063,7 +1063,7 @@ const Test2 = () => {
                         let otraImagen2 = new Image()
                         otraImagen2.src = `/img/joshi-${Math.floor(Math.random() * 3)}.png`
                         otraImagen2.onload = (() => {
-                            worldItems = CrearItemsWorld([], levelGo, otraImagen2)
+                            worldItems = CrearItemsWorld([], levelGo, imgArray)
                         })
                         setPlayerStage({
                             ...playerStage,
