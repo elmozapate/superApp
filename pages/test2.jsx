@@ -4,9 +4,10 @@ import BotonesJuego from "./botonesJuego";
 import CrearItems, { CrearItemsWorld, LosFondos, PropsImage } from "./crearItems";
 let off = true, jump, pass, audioPp, actualVidas = 5, mxActive = false, myActive = false, dibujarMalos = {
     die: false, last: [], new: []
-}, mxDirection = { left: false, right: false }, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, joshisound, pow, proyectilesImg = [], imagenesSrc = [`/img/foto-de-anime-4.png`, `/img/foto-de-anime-3.png`, `/img/foto-de-anime-2.png`, `/img/foto-de-anime-1.png`, `/img/foto-de-anime-0.png`], fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { jumping: false, gravity: true }, canvas, levelGo = 1, ctx,    imgArray = [],
+}, mxDirection = { left: false, right: false }, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, joshisound, pow, proyectilesImg = [], imagenesSrc = [`/img/foto-de-anime-4.png`, `/img/foto-de-anime-3.png`, `/img/foto-de-anime-2.png`, `/img/foto-de-anime-1.png`, `/img/foto-de-anime-0.png`], fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { jumping: false, gravity: true }, canvas, levelGo = 1, ctx, imgArray = [],
     imagenA, canvasC, ctxC, canvasB, ctxB, canvasD, ctxD, canvasE, ctxE, imagenes = [{ onMove: false }], worldItems = [], timeRestart = false, levelDificulty = 10
 const Test2 = () => {
+    const[ejes,setEjes]=useState({ alpha: 0, beta: 0, gamma: 0 })
     const [dificulty, setDificulty] = useState(10)
     const [nowStage, setNowStage] = useState({
         color: 'green',
@@ -92,40 +93,66 @@ const Test2 = () => {
             }, 5000);
         } else {
             laFunt(propsImage, propsImage.items[0].posX)
-            setTimeout(() => {
-                setPlayerVidas({
-                    ...playerVidas,
-                    vidas: 5
-                })
-                setPlayerStage({
-                    stage: 0
-                })
-                setPlayerGo({
-                    ...playerGo,
-                    go: false
-                })
-                setPlayer({
-                    ...player,
-                    level: 0
-                })
-                setGameStart(false)
-                setDificulty(10)
-                setStateImage({
-                    onMove: false, direccion: 'xf', posX: -1, width: 1080, height: 720, level: 1, onMobil: false
-                })
-                setNowStage({
-                    color: 'green',
-                    stage: 0
-                })
-                off = true, actualVidas = 5; mxActive = false; myActive = false; mxDirection = { left: false, right: false }; auxnow = 0; gameStage = 1; levelFalses = [{
-                    posX: 0,
-                    posY: 0,
-                    widthX: 0,
-                    heightY: 0,
-                }]; imagenesSrc = [`/img/foto-de-anime-4.png`, `/img/foto-de-anime-3.png`, `/img/foto-de-anime-2.png`, `/img/foto-de-anime-1.png`, `/img/foto-de-anime-0.png`]; fondos = LosFondos; inLayer = 0; propsImage = PropsImage; propsAction = { jumping: false, gravity: true }; levelGo = 1; ctx;
-                imagenA; canvasC; ctxC; canvasB; ctxB; canvasD; ctxD; imagenes = [{ onMove: false }]; worldItems = []; timeRestart = false; levelDificulty = 10
-            }, 6000);
+            setTimeout(() => { reboot() }, 6000);
         }
+    }
+    const reboot = () => {
+        ctxB.clearRect(0, 0, canvasB.width, canvasB.height)
+        ctxC.clearRect(0, 0, canvas.width, canvas.height)
+        ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
+        ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
+
+        setPlayerVidas({
+            ...playerVidas,
+            vidas: 5
+        })
+        setPlayerStage({
+            stage: 0
+        })
+        setPlayerGo({
+            ...playerGo,
+            go: false
+        })
+        setPlayer({
+            ...player,
+            level: 0
+        })
+        setGameStart(false)
+        setDificulty(10)
+        setStateImage({
+            onMove: false, direccion: 'xf', posX: -1, width: 1080, height: 720, level: 1, onMobil: false
+        })
+        setNowStage({
+            color: 'green',
+            stage: 0
+        })
+        off = true; actualVidas = 5;
+        mxActive = false;
+        myActive = false;
+        dibujarMalos = {
+            die: false, last: [], new: []
+        };
+        mxDirection = { left: false, right: false };
+        auxnow = 0;
+        gameStage = 1;
+        proyectiles = [];
+        malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }];
+        levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }];
+        proyectilesFalses = [];
+        proyectilesImg = [];
+        imagenesSrc = [`/img/foto-de-anime-4.png`, `/img/foto-de-anime-3.png`, `/img/foto-de-anime-2.png`, `/img/foto-de-anime-1.png`, `/img/foto-de-anime-0.png`];
+        fondos = LosFondos;
+        inLayer = 0;
+        propsImage = PropsImage;
+        propsAction = { jumping: false, gravity: true };
+        levelGo = 1;
+        imgArray = [];
+        imagenes = [{ onMove: false }];
+        worldItems = [];
+        timeRestart = false;
+        levelDificulty = 10
+
+
     }
     const darVida = (theLevel, value2) => {
         setTimeout(() => {
@@ -135,7 +162,7 @@ const Test2 = () => {
             actualVidas = 5
             levelGo = theLevel
             propsImage.alive = false
-            worldItems = CrearItemsWorld([], theLevel,imgArray)
+            worldItems = CrearItemsWorld([], theLevel, imgArray)
             let whileAux = []
             whileAux.push(toChange)
             whileAux.push(worldItems)
@@ -483,22 +510,25 @@ const Test2 = () => {
         }
     }
     const startTime = (time) => {
-        if (timeRestart) {
-            setPlayertime({
-                timeRestart: true,
-                time: time
-            })
+        if (gameStart) {
+            if (timeRestart) {
+                setPlayertime({
+                    timeRestart: true,
+                    time: time
+                })
+            }
+            else {
+                setPlayertime({
+                    ...playerTime,
+                    timeRestart: false,
+                    time: time + 1
+                })
+                setTimeout(() => {
+                    startTime(propsImage.refreshData ? 0 : imagenes[0].onMove ? time + 1 : time)
+                }, 1000);
+            }
         }
-        else {
-            setPlayertime({
-                ...playerTime,
-                timeRestart: false,
-                time: time + 1
-            })
-            setTimeout(() => {
-                startTime(propsImage.refreshData ? 0 : imagenes[0].onMove ? time + 1 : time)
-            }, 1000);
-        }
+
 
     }
     const requestFullScreen = () => {
@@ -588,7 +618,7 @@ const Test2 = () => {
             }
             let createItems = CrearItems(newArrayB, levelGo > 0 ? 0 : 10)
             let otraImagen2 = new Image()
-         
+
             otraImagen2.src = `/img/joshi-xf.png`
             otraImagen2.onload = (() => {
                 imgArray.push({
@@ -618,9 +648,9 @@ const Test2 = () => {
                         document.addEventListener('keydown', async (event) => {
                             event.preventDefault();
                             let keyValue = event.key;
-                           /*  if (keyValue === 'ArrowUp') {
-                                requestFullScreen()
-                            } */
+                            /*  if (keyValue === 'ArrowUp') {
+                                 requestFullScreen()
+                             } */
                             if (keyValue === 'ArrowDown') {
                                 mxActive = true
                                 mxDirection = {
@@ -1178,12 +1208,19 @@ const Test2 = () => {
             if ((isMobile.is('iPhone') || isMobile.is('Android') || isMobile.tablet() !== null || isMobile.phone() !== null || isMobile.mobile() !== null)) {
                 setOnMobil(true)
             }
+            window.addEventListener("deviceorientation", function (event) {
+                const alpha = Math.round(event.alpha);
+                const beta = Math.round(event.beta);
+                const gamma = Math.round(event.gamma);
+                setEjes({ alpha: alpha, beta: beta, gamma: gamma })
+                console.log(alpha, beta, gamma);
+            }, true);
 /*             initApp()
  */        }
     }, [off])
     return (
         <>
-            <div className="IDiv-main column bgGame relativeCanvasContainer ">
+            <div className="IDiv-main column bgGame relativeCanvasContainer horizontal-mode">
                 <div className={gameStart ? "hide" : 'game-opt'}>
                     <BotonesJuego funtion={setLevelDificulty} value={playerVidas} id='vidas' name='Vidas' setValue={setPlayerVidas} />
                     {<BotonesJuego funtion={setLevelDificulty} setValue={setPlayerStage} value={playerStage} id='stage' name='Stage' />}
@@ -1220,9 +1257,26 @@ const Test2 = () => {
                             className={onMobil ? "" : 'hide'}
                             onClick={(e) => {
                                 e.preventDefault();
-                                setFullScreen(!fullScreen);
-                                requestFullScreen()
+                                if (fullScreen) {
+                                    setFullScreen(false)
+                                    requestFullScreen()
+                                } else {
+                                    setFullScreen(true);
+                                    requestFullScreen()
+                                }
                             }}>{fullScreen ? 'EXIT FULLSCREEN' : 'FULLSCREEN'}</button>
+                        <button
+                            className={gameStart ? "" : 'hide'}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                reboot();
+                                setGameStart(false);
+                                if (fullScreen) {
+                                    setFullScreen(false)
+                                    requestFullScreen()
+                                };
+
+                            }}>{'EXIT'}</button>
                         <div></div>
                     </div>
                     <div className={playerGo.go ? "action action-go" : 'action action-wait'}>
@@ -1259,8 +1313,9 @@ const Test2 = () => {
                             } : (e) => {
                                 setsalto(setSaltoFunt())
                             }}>{'BRINCAR'}</button>
+                            {ejes.alpha}{ejes.beta}{ejes.gamma}
                         <div>
-                        <button
+                            <button
                                 onTouchEnd={(e) => {
                                     mxActive = false
                                     propsImage = {
@@ -1282,7 +1337,7 @@ const Test2 = () => {
                                         direccion: 'xb'
                                     }
                                 }}>IZQ</button>
-                                <button
+                            <button
                                 onTouchEnd={(e) => {
                                     mxActive = false
                                     propsImage = {
@@ -1335,6 +1390,12 @@ const Test2 = () => {
 
                 </div>
             </div>
+            <div className="IDiv-main column bgGame relativeCanvasContainer vertical-mode">
+                <div className="divRotate">
+                    <audio src="/audio/die.mp3" autoPlay loop></audio>
+                </div>
+            </div>
+
 
         </>
     )
