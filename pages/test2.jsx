@@ -2,12 +2,24 @@ import MobileDetect from "mobile-detect";
 import { useEffect, useState } from "react";
 import BotonesJuego from "./botonesJuego";
 import CrearItems, { CrearItemsWorld, LosFondos, PropsImage } from "./crearItems";
-let off = true, jump, pass, audioPp, actualVidas = 5, mxActive = false, myActive = false, dibujarMalos = {
+
+let off = true, armas = {
+    bat: {
+        body: true,
+        type: 'strike',
+        speed: 1,
+        state: false,
+        fotograma: 0,
+        layer: 0,
+        onEnd: false,
+        imagenes: []
+    },
+}, bat, jump, obtenerOrientacion = console.log, pass, audioPp, actualVidas = 5, mxActive = false, myActive = false, dibujarMalos = {
     die: false, last: [], new: []
-}, mxDirection = { left: false, right: false }, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, joshisound, pow, proyectilesImg = [], imagenesSrc = [`/img/foto-de-anime-4.png`, `/img/foto-de-anime-3.png`, `/img/foto-de-anime-2.png`, `/img/foto-de-anime-1.png`, `/img/foto-de-anime-0.png`], fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { jumping: false, gravity: true }, canvas, levelGo = 1, ctx, imgArray = [],
+}, mxDirection = { left: false, right: false }, portraitAudio, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, joshisound, pow, proyectilesImg = [], imagenesSrc = [`/img/foto-de-anime-4.png`, `/img/foto-de-anime-3.png`, `/img/foto-de-anime-2.png`, `/img/foto-de-anime-1.png`, `/img/foto-de-anime-0.png`], fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { jumping: false, gravity: true }, canvas, levelGo = 1, ctx, imgArray = [],
     imagenA, canvasC, ctxC, canvasB, ctxB, canvasD, ctxD, canvasE, ctxE, imagenes = [{ onMove: false }], worldItems = [], timeRestart = false, levelDificulty = 10
 const Test2 = () => {
-    const[ejes,setEjes]=useState({ alpha: 0, beta: 0, gamma: 0 })
+    const [ejes, setEjes] = useState({ alpha: 0, beta: 0, gamma: 0 })
     const [dificulty, setDificulty] = useState(10)
     const [nowStage, setNowStage] = useState({
         color: 'green',
@@ -192,7 +204,7 @@ const Test2 = () => {
         let propsimage = propsImage
         if (values === 'go' && props.posX <= (341 - 0.5) && imagenes[0].onMove) {
             props.Itemss
-            let aDibujar = (props.imagen[`${propsImage.direccion === 'xs' && props.posY < 120 ? 'xj' : propsImage.direccion}_${propsAction.gravity && props.posY < 120 ? parseInt(props.layer / (8 * 4)) < 2 ? parseInt(props.layer / (8 * 4)) + 2 : parseInt(props.layer / (8 * 4)) : !propsAction.gravity && props.posY < 120 ? parseInt(props.layer / (8 * 4)) > 1 ? parseInt(props.layer / (8 * 4)) - 2 : parseInt(props.layer / (8 * 4)) : parseInt(props.layer / (8 * 4))}`])
+            let aDibujar = armas.bat.state ? armas.bat.body : (props.imagen[`${propsImage.direccion === 'xs' && props.posY < 120 ? 'xj' : propsImage.direccion}_${propsAction.gravity && props.posY < 120 ? parseInt(props.layer / (8 * 4)) < 2 ? parseInt(props.layer / (8 * 4)) + 2 : parseInt(props.layer / (8 * 4)) : !propsAction.gravity && props.posY < 120 ? parseInt(props.layer / (8 * 4)) > 1 ? parseInt(props.layer / (8 * 4)) - 2 : parseInt(props.layer / (8 * 4)) : parseInt(props.layer / (8 * 4))}`])
             let psx = 0, colisioned = false, Itemss = propsImage.items
             levelFalses.map((key, i) => {
                 if (((key.posX + 10) < (propsImage.items[0].posX + props.widthX)) && (((key.posX + key.widthX) - 10) > (propsImage.items[0].posX)) && props.posY > 110) {
@@ -216,6 +228,9 @@ const Test2 = () => {
                 })
             })
             malosFalses.map((key, i) => {
+                if (armas.bat.state && ((key.posX - (armas.bat.imagenes[0].widthX / 2)) < ((propsImage.items[0].posX + props.widthX + (armas.bat.imagenes[0].widthX / 2)))) && (((key.posX + key.widthX - 15)) > ((propsImage.items[0].posX) + (armas.bat.imagenes[0].widthX / 2)))) {
+                    window.alert('bien')
+                }
                 if (((key.posX + 10) < (propsImage.items[0].posX + props.widthX)) && (((key.posX + key.widthX) - 10) > (propsImage.items[0].posX)) && props.posY > 110) {
                     if (key.posY > (props.posY + 10) && (props.posY + 10) < (key.posY + key.heightY)) {
                         joshisound.play()
@@ -238,8 +253,10 @@ const Test2 = () => {
                 }
             })
             proyectilesFalses.map((key, i) => {
+                if (armas.bat.state && ((key.posX - (armas.bat.imagenes[0].widthX / 2)) < ((propsImage.items[0].posX + props.widthX + (armas.bat.imagenes[0].widthX / 2)))) && (((key.posX + key.widthX - 15)) > ((propsImage.items[0].posX) + (armas.bat.imagenes[0].widthX / 2)))) {
+                    window.alert('bien')
+                }
                 if (((key.posX) < (propsImage.items[0].posX + props.widthX - 15)) && (((key.posX + key.widthX - 15)) > (propsImage.items[0].posX))) {
-                    console.log(key.heightY, key.posY);
                     if (((key.posY + key.heightY) > (props.posY + (props.direccion === 'xd' ? (props.heightY / 2) : 0))) && key.posY < (((props.posY + props.heightY)))) {
                         llantobebe.play()
                         pow.play()
@@ -260,7 +277,6 @@ const Test2 = () => {
                 }
             })
             if (colisioned) {
-                console.log('murios');
                 audioPp.src = '/audio/die.mp3'
                 psx = Itemss[0].posX
                 morir()
@@ -337,35 +353,33 @@ const Test2 = () => {
                         if (key.posY < key.canMove.jumps.maxJump) {
                             dibujarMalos.new[i].canMove.jumps.gravity = true
                         }
-                        if (key.canMove.shot.posibility && !key.canMove.shot.state) {
-                            dibujarMalos.new[i].canMove.shot.inInterval = key.canMove.shot.inInterval + 1
+                        if (key.actions.shot.posibility && !key.actions.shot.state) {
+                            dibujarMalos.new[i].actions.shot.inInterval = key.actions.shot.inInterval + 1
                         }
-                        if (key.canMove.shot.posibility && key.canMove.shot.state) {
-                            dibujarMalos.new[i].canMove.shot.inInterval = 0
+                        if (key.actions.shot.posibility && key.actions.shot.state) {
+                            dibujarMalos.new[i].actions.shot.inInterval = 0
                         }
-                        if (key.canMove.shot.posibility && !key.canMove.shot.state && key.canMove.shot.inInterval === key.canMove.shot.interval) {
+                        if (key.actions.shot.posibility && !key.actions.shot.state && key.actions.shot.inInterval === key.actions.shot.interval) {
                             risabebe.play()
-                            console.log('dispara');
-                            dibujarMalos.new[i].canMove.shot.state = true
+                            dibujarMalos.new[i].actions.shot.state = true
                             setTimeout(() => {
                                 try {
-                                    dibujarMalos.new[i].canMove.shot.state = false
+                                    dibujarMalos.new[i].actions.shot.state = false
 
                                 } catch (error) {
                                     console.log(error);
                                 }
                             }, 1000);
-                            console.log(proyectilesImg);
                             let imgUsed = proyectilesImg[0]
                             proyectiles.push({
                                 imagen: imgUsed,
-                                type: key.canMove.shot.type,
+                                type: key.actions.shot.type,
                                 posX: !key.canMove.direccion === 'xf' ? key.posX - 60 : key.posX + 10,
                                 posY: (key.posY + 20) - ((Math.random() * 50) + 30),
                                 widthX: imgUsed.naturalWidth / 30,
                                 heightY: imgUsed.naturalHeight / 30,
                                 direccion: key.canMove.direccion,
-                                speed: key.canMove.shot.speed
+                                speed: key.actions.shot.speed
                             })
                         }
                         if (key.canMove.jumps.posibility && !key.canMove.jumps.state) {
@@ -377,12 +391,11 @@ const Test2 = () => {
                         }
                         let imagenready = key.imagen[key.canMove.direccion === 'xb' ? 1 : 0].imagen
                         ctxE.drawImage(imagenready, key.posX, key.posY - 30, imagenready.naturalWidth / 22, imagenready.naturalHeight / 27)
-                        console.log(stateImage.posX);
                         if (dibujarMalos.new[i].posX < (stateImage.posX === -1 ? 35 : 1) || dibujarMalos.new[i].posX > 299) {
                             dibujarMalos.new[i].canMove.direccion = dibujarMalos.new[i].posX < (stateImage.posX === -1 ? 35 : 1) ? 'xf' : 'xb'
                         }
                         dibujarMalos.new[i].posY = dibujarMalos.new[i].canMove.jumps.state ? (!dibujarMalos.new[i].canMove.jumps.gravity ? dibujarMalos.new[i].posY - (.250 + dibujarMalos.new[i].canMove.jumps.speed) : dibujarMalos.new[i].posY + .250) : dibujarMalos.new[i].posY
-                        dibujarMalos.new[i].posX = dibujarMalos.new[i].canMove.shot.state || dibujarMalos.new[i].canMove.jumps.state ? dibujarMalos.new[i].posX : dibujarMalos.new[i].canMove.direccion === 'xf' ? dibujarMalos.new[i].posX + (.25 * dibujarMalos.new[i].canMove.walks.speed) : dibujarMalos.new[i].posX - (.25 * dibujarMalos.new[i].canMove.walks.speed)
+                        dibujarMalos.new[i].posX = dibujarMalos.new[i].actions.shot.state || dibujarMalos.new[i].canMove.jumps.state ? dibujarMalos.new[i].posX : dibujarMalos.new[i].canMove.direccion === 'xf' ? dibujarMalos.new[i].posX + (.25 * dibujarMalos.new[i].canMove.walks.speed) : dibujarMalos.new[i].posX - (.25 * dibujarMalos.new[i].canMove.walks.speed)
                         malosFalsesAux.push({
                             posX: key.posX,
                             posY: key.posY,
@@ -415,6 +428,33 @@ const Test2 = () => {
                     }
                 })
                 proyectiles = existingProyectiles
+                if (armas.bat.state) {
+                    let indexFor = armas.bat.fotograma
+                    if (armas.bat.layer < 12) {
+                        if (armas.bat.layer === 11) {
+                            armas.bat.onEnd = true
+                        }
+                        if (indexFor < armas.bat.speed) {
+                            indexFor = indexFor + 1
+                            armas.bat.fotograma = indexFor
+                        } else {
+                            indexFor = 0
+                            armas.bat.fotograma = indexFor
+                            armas.bat.layer = armas.bat.layer + 1
+                        }
+                        ctxE.drawImage(armas.bat.imagenes[armas.bat.layer].imagen, psx - 15, props.posY - (props.heightY / 2), armas.bat.imagenes[armas.bat.layer].widthX, armas.bat.imagenes[armas.bat.layer].heightY);
+                    } else {
+                        if (armas.bat.onEnd) {
+                            armas.bat.onEnd = false
+                            setTimeout(() => {
+                                armas.bat.layer = 0
+                                armas.bat.state = false
+                            }, 800);
+                        }
+                        ctxE.drawImage(armas.bat.imagenes[armas.bat.layer].imagen, psx - 15, props.posY - (props.heightY / 2), armas.bat.imagenes[armas.bat.layer].widthX, armas.bat.imagenes[armas.bat.layer].heightY);
+                    }
+                }
+                console.log(armas);
                 ctxC.drawImage(aDibujar, propsImage.levelPass ? psx : propsImage.refreshData ? 10 : !propsImage.alive ? 0 : psx, propsImage.direccion === 'xd' ? props.posY + (props.heightY / 2) : props.posY, props.widthX, propsImage.direccion === 'xd' ? (props.heightY / 2) : props.heightY)
             }
         } else {
@@ -510,25 +550,16 @@ const Test2 = () => {
         }
     }
     const startTime = (time) => {
-        if (gameStart) {
-            if (timeRestart) {
-                setPlayertime({
-                    timeRestart: true,
-                    time: time
-                })
-            }
-            else {
-                setPlayertime({
-                    ...playerTime,
-                    timeRestart: false,
-                    time: time + 1
-                })
-                setTimeout(() => {
-                    startTime(propsImage.refreshData ? 0 : imagenes[0].onMove ? time + 1 : time)
-                }, 1000);
-            }
+        if (imagenes[0].onMove) {
+            setPlayertime({
+                ...playerTime,
+                timeRestart: false,
+                time: time + 1
+            })
+            setTimeout(() => {
+                startTime(time + 1)
+            }, 1000);
         }
-
 
     }
     const requestFullScreen = () => {
@@ -560,7 +591,7 @@ const Test2 = () => {
     }
 
     const initApp = () => {
-
+        obtenerOrientacion()
         setStateImage({
             ...stateImage,
             width: window.screen.width,
@@ -584,6 +615,27 @@ const Test2 = () => {
         canvas = document.getElementById('canvas-Pp')
         ctx = canvas.getContext('2d')
         aparecer(levelGo)
+        for (let index = 0; index < 13; index++) {
+            let element = new Image
+            element.src = `/armas/bat/bat-${index}.png`
+            element.onload = (() => {
+                oImgW = element.naturalWidth
+                oImgH = element.naturalHeight
+                armas.bat.imagenes.push({
+                    id: index,
+                    imagen: element,
+                    widthX: oImgW / 10,
+                    heightY: oImgH / 10,
+                })
+            })
+        }
+        let elemento = new Image
+        elemento.src = `/armas/bat/body.png`
+        elemento.onload = (() => {
+            oImgW = elemento.naturalWidth
+            oImgH = elemento.naturalHeight
+            armas.bat.body = elemento
+        })
         let imagesValue = ['xs', 'xf', 'xb', 'xj', 'xd'], newArrayB = {}, oImgW = 0, oImgH = 0
         imagesValue.map((key, i) => {
             for (let index = 0; index < 4; index++) {
@@ -601,7 +653,6 @@ const Test2 = () => {
         })
         setTimeout(() => {
             imagenes[0] = { imagen: newArrayB, onMove: true }
-            startTime(0)
             propsImage = {
                 ...propsImage,
                 imagen: newArrayB,
@@ -648,9 +699,11 @@ const Test2 = () => {
                         document.addEventListener('keydown', async (event) => {
                             event.preventDefault();
                             let keyValue = event.key;
-                            /*  if (keyValue === 'ArrowUp') {
-                                 requestFullScreen()
-                             } */
+                            if (keyValue === 'ArrowUp') {
+                                if (!armas.bat.state) {
+                                    armas.bat.state = true
+                                }
+                            }
                             if (keyValue === 'ArrowDown') {
                                 mxActive = true
                                 mxDirection = {
@@ -829,6 +882,7 @@ const Test2 = () => {
                         }, false);
                         audioPp = document.getElementById('gameTrack')
                         setHalfVolume()
+                        startTime(0)
                         makeStage()
                     })
 
@@ -840,7 +894,6 @@ const Test2 = () => {
         }, 5000);
     }
     const setHalfVolume = (pista) => {
-        console.log(pista, playerStage.stage);
         audioPp.volume = .2;
         audioPp.src = `/audio/gameSound-${pista ? pista - 1 : playerStage.stage}.mp3`
     }
@@ -982,6 +1035,10 @@ const Test2 = () => {
                         ...playerGo,
                         go: true
                     })
+                    setTimeout(() => {
+                        startTime(playerTime.time + 1)
+
+                    }, 1000);
                     dibujar('go', propsImage)
                 }, 2000);
             }, 10);
@@ -1116,10 +1173,6 @@ const Test2 = () => {
                             go: true
                         })
                         timeRestart = false
-                        setPlayertime({
-                            timeRestart: false,
-                            time: 0
-                        })
                         propsImage.posX = 0
                         propsImage.items[0].posX = 0
                         propsImage.direccion = 'xs'
@@ -1178,6 +1231,7 @@ const Test2 = () => {
                                 gravity: true
                             }
                         } else {
+                            startTime(playerTime.time + 1)
                             propsImage.items[0].posX = value === '+' ? 1 : 299
                             setStateImage({
                                 ...stateImage,
@@ -1192,6 +1246,25 @@ const Test2 = () => {
     }
     useEffect(() => {
         if (off) {
+            portraitAudio = new Audio('/audio/portrait.mp3');
+            portraitAudio.onload = (() => {
+                portraitAudio.play()
+
+            })
+            function orientacionCambiada() {
+                if (window.orientation === 90 || window.orientation === 270) {
+                } if (window.orientation === 0 || window.orientation === 180) {
+                    portraitAudio.play()
+                }
+            }
+            obtenerOrientacion = orientacionCambiada
+            window.addEventListener("orientationchange", orientacionCambiada, false);
+            window.addEventListener("deviceorientation", function (event) {
+                const alpha = Math.round(event.alpha);
+                const beta = Math.round(event.beta);
+                const gamma = Math.round(event.gamma);
+                setEjes({ alpha: alpha, beta: beta, gamma: gamma })
+            }, true);
             llantobebe = new Audio('/audio/bebe-1.mp3');
             joshisound = new Audio('/audio/joshi-0.mp3');
             pow = new Audio('/audio/pow-0.mp3');
@@ -1208,19 +1281,18 @@ const Test2 = () => {
             if ((isMobile.is('iPhone') || isMobile.is('Android') || isMobile.tablet() !== null || isMobile.phone() !== null || isMobile.mobile() !== null)) {
                 setOnMobil(true)
             }
-            window.addEventListener("deviceorientation", function (event) {
-                const alpha = Math.round(event.alpha);
-                const beta = Math.round(event.beta);
-                const gamma = Math.round(event.gamma);
-                setEjes({ alpha: alpha, beta: beta, gamma: gamma })
-                console.log(alpha, beta, gamma);
-            }, true);
-/*             initApp()
- */        }
+            setTimeout(() => {
+                orientacionCambiada()
+            }, 2000);
+
+        }
+
+        /*             initApp()
+         */
     }, [off])
     return (
         <>
-            <div className="IDiv-main column bgGame relativeCanvasContainer horizontal-mode">
+            <div className={`IDiv-main column bgGame relativeCanvasContainer ${!gameStart ? '' : 'horizontal-mode'}`}>
                 <div className={gameStart ? "hide" : 'game-opt'}>
                     <BotonesJuego funtion={setLevelDificulty} value={playerVidas} id='vidas' name='Vidas' setValue={setPlayerVidas} />
                     {<BotonesJuego funtion={setLevelDificulty} setValue={setPlayerStage} value={playerStage} id='stage' name='Stage' />}
@@ -1313,7 +1385,7 @@ const Test2 = () => {
                             } : (e) => {
                                 setsalto(setSaltoFunt())
                             }}>{'BRINCAR'}</button>
-                            {ejes.alpha}{ejes.beta}{ejes.gamma}
+                        {ejes.alpha}{ejes.beta}{ejes.gamma}
                         <div>
                             <button
                                 onTouchEnd={(e) => {
@@ -1390,12 +1462,11 @@ const Test2 = () => {
 
                 </div>
             </div>
-            <div className="IDiv-main column bgGame relativeCanvasContainer vertical-mode">
+            <div className={`IDiv-main column bgGame relativeCanvasContainer  ${!gameStart ? '' : 'vertical-mode'}`}>
                 <div className="divRotate">
-                    <audio src="/audio/die.mp3" autoPlay loop></audio>
+
                 </div>
             </div>
-
 
         </>
     )

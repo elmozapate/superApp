@@ -107,7 +107,9 @@ export const CrearItemsWorld = (newArray, level, imagen) => {
                             interval: 1,
                             speed: (Math.random() * .5) + .5,
                             maxArea: 'all'
-                        },
+                        }
+                    },
+                    actions: {
                         shot: {
                             posibility: true,
                             state: false,
@@ -115,9 +117,7 @@ export const CrearItemsWorld = (newArray, level, imagen) => {
                             interval: parseInt((Math.random() * 2000) + 1000),
                             inInterval: 0,
                             speed: (Math.random() * .5) + .5
-                        }
-                    },
-                    actions: {
+                        },
                         inCurse: true
                     }
                 }
