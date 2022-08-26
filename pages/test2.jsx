@@ -480,7 +480,7 @@ const Test2 = () => {
                             if (dibujarMalos.new[i].posX < (stateImage.posX === -1 ? 35 : 1) || dibujarMalos.new[i].posX > 299) {
                                 dibujarMalos.new[i].canMove.direccion = dibujarMalos.new[i].posX < (stateImage.posX === -1 ? 35 : 1) ? 'xf' : 'xb'
                             }
-                            dibujarMalos.new[i].posY = key.state === 'onDie' ? dibujarMalos.new[i].posY : !dibujarMalos.new[i].canMove.jumps.posibility ? dibujarMalos.new[i].posY : dibujarMalos.new[i].canMove.jumps.state ? (!dibujarMalos.new[i].canMove.jumps.gravity ?dibujarMalos.new[i].posY<151? dibujarMalos.new[i].posY - (.250 + dibujarMalos.new[i].canMove.jumps.speed) :150: dibujarMalos.new[i].posY + .250) : dibujarMalos.new[i].posY
+                            dibujarMalos.new[i].posY = key.state === 'onDie' ? dibujarMalos.new[i].posY : !dibujarMalos.new[i].canMove.jumps.posibility ? dibujarMalos.new[i].posY : dibujarMalos.new[i].canMove.jumps.state ? (!dibujarMalos.new[i].canMove.jumps.gravity ? dibujarMalos.new[i].posY < 151 ? dibujarMalos.new[i].posY - (.250 + dibujarMalos.new[i].canMove.jumps.speed) : 150 : dibujarMalos.new[i].posY + .250) : dibujarMalos.new[i].posY
                             dibujarMalos.new[i].posX = key.state === 'onDie' ? dibujarMalos.new[i].posX : !dibujarMalos.new[i].canMove.walks.posibility ? dibujarMalos.new[i].posX : dibujarMalos.new[i].actions.shot.state || dibujarMalos.new[i].canMove.jumps.state ? dibujarMalos.new[i].posX : dibujarMalos.new[i].canMove.direccion === 'xf' ? dibujarMalos.new[i].posX + (.25 * dibujarMalos.new[i].canMove.walks.speed) : dibujarMalos.new[i].posX - (.25 * dibujarMalos.new[i].canMove.walks.speed)
                             if (key.state !== 'die') {
                                 malosFalsesAux.push({
@@ -1554,23 +1554,26 @@ const Test2 = () => {
                             'Mover a la Derecha' : 'Mover a la Izquierda'}</button>
                     </div>
                     <div className={!onMobil ? 'hide' : "botonesCanvasInteractivos"}>
-                    <button
-                            onTouchEnd={() => {
-                                setTimeout(() => {
-                                    propsAction.gravity = true
-                                }, 30);
-                            }}
-                            onTouchStart={!propsAction.jumping ? (e) => {
-                                setsalto(setSaltoFunt());
-                                brincar()
-                            } : (e) => {
-                                setsalto(setSaltoFunt())
-                            }}>{'Arr'}</button> <button
-                            
-                            onTouchStart={!armas.bat.state ? (e) => {
-                                    armas.bat.state = true
-                            } : (e) => {
-                            }}>{'Bat'}</button>
+                        <div>
+                            <button
+                                onTouchEnd={() => {
+                                    setTimeout(() => {
+                                        propsAction.gravity = true
+                                    }, 30);
+                                }}
+                                onTouchStart={!propsAction.jumping ? (e) => {
+                                    setsalto(setSaltoFunt());
+                                    brincar()
+                                } : (e) => {
+                                    setsalto(setSaltoFunt())
+                                }}>{'Arr'}</button> <button
+
+                                    onTouchStart={!armas.bat.state ? (e) => {
+                                        armas.bat.state = true
+                                    } : (e) => {
+                                    }}>{'Bat'}</button>
+                        </div>
+
                         <div>
                             <button
                                 onTouchEnd={(e) => {
