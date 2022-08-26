@@ -1554,7 +1554,7 @@ const Test2 = () => {
                             'Mover a la Derecha' : 'Mover a la Izquierda'}</button>
                     </div>
                     <div className={!onMobil ? 'hide' : "botonesCanvasInteractivos"}>
-                        <button
+                    <button
                             onTouchEnd={() => {
                                 setTimeout(() => {
                                     propsAction.gravity = true
@@ -1565,8 +1565,12 @@ const Test2 = () => {
                                 brincar()
                             } : (e) => {
                                 setsalto(setSaltoFunt())
-                            }}>{'BRINCAR'}</button>
-                        {ejes.alpha}{ejes.beta}{ejes.gamma}
+                            }}>{'Arr'}</button> <button
+                            
+                            onTouchStart={!armas.bat.state ? (e) => {
+                                    armas.bat.state = true
+                            } : (e) => {
+                            }}>{'Bat'}</button>
                         <div>
                             <button
                                 onTouchEnd={(e) => {
