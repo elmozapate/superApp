@@ -1,4 +1,4 @@
-export const CrearItems = (newArray, posX) => {
+export const CrearItems = (newArray, posX, floor) => {
 
     return ([{
         displayneed: true,
@@ -6,7 +6,7 @@ export const CrearItems = (newArray, posX) => {
         imagen: newArray,
         type: 'hpc',
         posX: posX,
-        posY: 145,
+        posY: floor,
         widthX: 19,
         heightY: 60,
         canMove: {
@@ -31,7 +31,7 @@ export const CrearItems = (newArray, posX) => {
         }
     }])
 }
-export const CrearItemsWorld = (newArray, level, imagen) => {
+export const CrearItemsWorld = (newArray, level, imagen, floor) => {
     const maxDistance = () => {
         return (300) / (level < 3 ? 1 : level < 5 ? 2 : 3)
     }
@@ -81,14 +81,18 @@ export const CrearItemsWorld = (newArray, level, imagen) => {
             let randomDireccion = (Math.random() * 2)
             if (index2 === 0 || index2 === 2) {
                 const malo = {
+                    id: parseInt(Math.random() * 988888888),
+                    hitDamage: 0,
+                    state: 'live',
                     displayneed: true,
                     layerOnDisplay: index,
                     imagen: imagen,
                     type: 'npc',
                     posX: objCant > 1 ? index2 === 0 ? (Math.random() * 95) + 50 : (Math.random() * 110) + 150 : (Math.random() * 250) + 30,
-                    posY: 160,
+                    posY: floor + 30,
                     widthX: imagen[0].imagen.naturalWidth / 22,
                     heightY: imagen[0].imagen.naturalHeight / 27,
+                    health: 30,
                     canMove: {
                         state: true,
                         colision: true,
@@ -114,7 +118,7 @@ export const CrearItemsWorld = (newArray, level, imagen) => {
                             posibility: true,
                             state: false,
                             type: 'basic',
-                            interval: parseInt((Math.random() * 2000) + 1000),
+                            interval: parseInt((Math.random() * (1000 / level)) + 500),
                             inInterval: 0,
                             speed: (Math.random() * .5) + .5
                         },
@@ -142,6 +146,7 @@ export const PropsImage = {
     widthX: 0,
     heightY: 0,
     fotograma: 0,
+    lastDireccion: 'xf',
     direccion: 'xs',
     onMove: false,
     id: 0,

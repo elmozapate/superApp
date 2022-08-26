@@ -35,7 +35,7 @@ const Drag = () => {
             let contenedorArray = []
             for (let index = 0; index < 9; index++) {
                 const element = {
-                    object: indexo === 1 ? `/img/puzzle${level}-${index}.png` : 'empty',
+                    object: indexo === 1 ? `/img/puzzle/puzzle${level}-${index}.png` : 'empty',
                     id: `${indexo}-${index}`
                 };
                 contenedorArray.push(element)

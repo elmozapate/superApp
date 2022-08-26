@@ -2021,48 +2021,48 @@ h1 {
     }
 }
 .bgGame {
-    background: url("../public/img/fondo-juego.png");
+    background: url("../public/img/bg/fondo-juego.png");
 }
 .bgUrl-1 {
-    background: url("../public/img/escena-0.png") !important;
+    background: url("../public/img/escenas/escena-0.png") !important;
     background-repeat: repeat-x;
 }
 .bgUrlmobil-1 {
-    background: url("../public/img/escena-mobil-0.png") !important;
+    background: url("../public/img/escenas/escena-mobil-0.png") !important;
     background-repeat: repeat-x;
 }
 
 .bgUrl-2 {
-    background: url("../public/img/escena-1.png") !important;
+    background: url("../public/img/escenas/escena-1.png") !important;
     background-repeat: repeat-x;
 }
 .bgUrl-3 {
-    background: url("../public/img/escena-2.png") !important;
+    background: url("../public/img/escenas/escena-2.png") !important;
     background-repeat: repeat-x;
 }
 .bgUrl-4 {
-    background: url("../public/img/escena-3.png") !important;
+    background: url("../public/img/escenas/escena-3.png") !important;
     background-repeat: repeat-x;
 }
 .bgUrl-5 {
-    background: url("../public/img/escena-4.png") !important;
+    background: url("../public/img/escenas/escena-4.png") !important;
     background-repeat: repeat-x;
 }
 
 .bgUrlmobil-2 {
-    background: url("../public/img/escena-mobil-1.png") !important;
+    background: url("../public/img/escenas/escena-mobil-1.png") !important;
     background-repeat: repeat-x;
 }
 .bgUrlmobil-3 {
-    background: url("../public/img/escena-mobil-2.png") !important;
+    background: url("../public/img/escenas/escena-mobil-2.png") !important;
     background-repeat: repeat-x;
 }
 .bgUrlmobil-4 {
-    background: url("../public/img/escena-mobil-3.png") !important;
+    background: url("../public/img/escenas/escena-mobil-3.png") !important;
     background-repeat: repeat-x;
 }
 .bgUrlmobil-5 {
-    background: url("../public/img/escena-mobil-4.png") !important;
+    background: url("../public/img/escenas/escena-mobil-4.png") !important;
     background-repeat: repeat-x;
 }
 .into {
@@ -2092,14 +2092,13 @@ h1 {
         min-width: 80vw;
         height: 80vh;
         width: 80vw;
-        background-image: url("../public/img/portrait-bg.png") !important;
+        background-image: url("../public/img/bg/portrait-bg.png") !important;
         background-size: cover;
         background-repeat: no-repeat;
     }
 }
 @media all and (orientation: portrait) {
-   
-    .horizontal-mode {
+      .horizontal-mode {
         display: none;
     }
 }
