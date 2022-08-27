@@ -101,7 +101,7 @@ const GamePad = (props) => {
                         </div>
                     </div>
                 </div>
-                <div className="controlGame-accion">
+                <div className="controlGame-accion ">
                     <div className="btn-a">
                         <button
                             onTouchStart={!armas.bat.state ? (e) => {
