@@ -5,7 +5,7 @@ const GamePad = (props) => {
     return (
         <>
             <div className={"botonesCanvasInteractivos"}>
-                <div className="controlGame-direccion">
+                <div className="controlGame-direccion type0">
                     <div className="div-row">
                         <div className="arrow xs-xb">
                             <button
@@ -118,10 +118,7 @@ const GamePad = (props) => {
                                     setProps('propsAction', 'gravity', true);
                                 }, 30);
                             }}
-                            onTouchStart={!propsAction.jumping ? (e) => {
-                                setsalto(setSaltoFunt());
-                                brincar()
-                            } : (e) => {
+                            onTouchStart={(e) => {
                                 setsalto(setSaltoFunt())
                                 brincar()
 
