@@ -2,6 +2,7 @@ import MobileDetect from "mobile-detect";
 import { useEffect, useState } from "react";
 import BotonesJuego from "./botonesJuego";
 import CrearItems, { CrearItemsWorld, LosFondos, PropsImage } from "./crearItems";
+import GamePad from "./gamePad";
 
 let off = true, actualFloor = 125, lastDireccion = 'xf', armas = {
     bat: {
@@ -38,6 +39,7 @@ const Test2 = () => {
     const [playerVidas, setPlayerVidas] = useState({ vidas: 5 })
     const [playerTime, setPlayertime] = useState({ time: 0, timeRestart: false })
     const [player, setPlayer] = useState({
+        pause: false,
         level: 0,
     })
     const [onMobil, setOnMobil] = useState(false)
@@ -1263,6 +1265,7 @@ const Test2 = () => {
                         fondos = fondos.slice(1, fondos.length)
                         setTimeout(() => {
                             setPlayer({
+                                ...player,
                                 level: 0
                             })
                             setNowStage({
@@ -1420,6 +1423,41 @@ const Test2 = () => {
 
         }
     }
+    const setProps = (value1, value2, value3) => {
+        if (value1 === 'propsAction' || value1 === 'propsImage' || value1 === 'mxDirection') {
+            if (value1 === 'mxDirection') {
+                if (value2 === 'all') {
+                    mxDirection = {
+                        ...mxDirection,
+                        left: value3,
+                        right: value3,
+                    }
+                }
+            }
+            if (value1 === 'propsImage') {
+                propsImage = {
+                    ...propsImage,
+                    [value2]: value3,
+                }
+            }
+            if (value1 === 'propsAction') {
+                propsAction = {
+                    ...propsAction,
+                    [value2]: value3,
+                }
+            }
+        } else {
+            if (value1 === 'lastDireccion') {
+                lastDireccion = value3
+            }
+            if (value1 === 'mxActive') {
+                mxActive = value3
+            }
+            if (value1 === 'armas') {
+                armas.bat[value2] = value3
+            }
+        }
+    }
     useEffect(() => {
         if (off) {
             portraitAudio = new Audio('/audio/portrait.mp3');
@@ -1530,6 +1568,24 @@ const Test2 = () => {
                                 };
 
                             }}>{'EXIT'}</button>
+                        <button
+                            className={gameStart ? "" : 'hide'}
+                            onClick={!player.pause ? (e) => {
+                                e.preventDefault();
+                                imagenes[0].onMove = false;
+                                setPlayer({
+                                    ...player,
+                                    pause: true
+                                })
+                            } : (e) => {
+                                e.preventDefault();
+                                setPlayer({
+                                    ...player,
+                                    pause: false
+                                })
+                                imagenes[0].onMove = true
+                                dibujar('go', propsImage)
+                            }}>{player.pause ? 'continue' : 'pause'}</button>
                         <div></div>
                     </div>
                     <div className={playerGo.go ? "action action-go" : 'action action-wait'}>
@@ -1553,95 +1609,9 @@ const Test2 = () => {
                         }}>{stateImage.direccion === 'xf' ?
                             'Mover a la Derecha' : 'Mover a la Izquierda'}</button>
                     </div>
-                    <div className={!onMobil ? 'hide' : "botonesCanvasInteractivos"}>
-                        <div>
-                            <button
-                                onTouchEnd={() => {
-                                    setTimeout(() => {
-                                        propsAction.gravity = true
-                                    }, 30);
-                                }}
-                                onTouchStart={!propsAction.jumping ? (e) => {
-                                    setsalto(setSaltoFunt());
-                                    brincar()
-                                } : (e) => {
-                                    setsalto(setSaltoFunt())
-                                }}>{'Arr'}</button> <button
-
-                                    onTouchStart={!armas.bat.state ? (e) => {
-                                        armas.bat.state = true
-                                    } : (e) => {
-                                    }}>{'Bat'}</button>
-                        </div>
-
-                        <div>
-                            <button
-                                onTouchEnd={(e) => {
-                                    mxActive = false
-                                    propsImage = {
-                                        ...propsImage,
-                                        direccion: 'xs'
-                                    }
-                                    mxDirection = {
-                                        ...mxDirection,
-                                        left: false,
-                                        right: false
-                                    }
-                                    mxActive = false
-                                }}
-                                onTouchStart={(e) => {
-                                    mxActive = true
-                                    dibujarMouseOn('-', true)
-                                    propsImage = {
-                                        ...propsImage,
-                                        direccion: 'xb',
-
-                                    }
-                                    lastDireccion = 'xb'
-
-                                }}>IZQ</button>
-                            <button
-                                onTouchEnd={(e) => {
-                                    mxActive = false
-                                    propsImage = {
-                                        ...propsImage,
-                                        direccion: 'xs'
-                                    }
-                                    mxActive = false
-                                }}
-                                onTouchStart={(e) => {
-                                    mxActive = true
-                                    propsImage = {
-                                        ...propsImage,
-                                        direccion: 'xd',
-
-                                    }
-                                }}>ABAJO</button>
-                            <button
-                                onTouchEnd={(e) => {
-                                    propsImage = {
-                                        ...propsImage,
-                                        direccion: 'xs',
-
-                                    }
-                                    mxDirection = {
-                                        ...mxDirection,
-                                        left: false,
-                                        right: false
-                                    }
-                                    mxActive = false
-                                }}
-                                onTouchStart={(e) => {
-                                    mxActive = true
-                                    dibujarMouseOn('+', true)
-                                    propsImage = {
-                                        ...propsImage,
-                                        direccion: 'xf',
-                                    }
-                                    lastDireccion = 'xf'
-                                }}>DER</button>
-                        </div>
-                    </div>
+                    {onMobil ?
+                        <GamePad setProps={setProps} propsAction={propsAction} setSaltoFunt={setSaltoFunt} brincar={brincar} setsalto={setsalto} dibujarMouseOn={dibujarMouseOn} /> : <></>
+                    }
                     <canvas className={`${onMobil ? 'bgUrlmobil' : 'bgUrl'}-${(playerStage.stage + 1)} lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Pp">
                     </canvas>
                     <canvas className={`bgcolor-${nowStage.color} lienzo-final-${parseInt(stateImage.height)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Fn">
