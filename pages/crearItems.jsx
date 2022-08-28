@@ -6,9 +6,9 @@ export const CrearItems = (newArray, posX, floor) => {
         imagen: newArray,
         type: 'hpc',
         posX: posX,
-        posY: floor,
+        posY: (floor - 30),
         widthX: 19,
-        heightY: 60,
+        heightY: 30,
         canMove: {
             state: true,
             colision: true,
@@ -36,6 +36,7 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
         return (300) / (level < 3 ? 1 : level < 5 ? 2 : 3)
     }
     let array = []
+    console.log(newArray);
     for (let index = 0; index < 11; index++) {
         let objCant = index === 0 ? (3 > level ? 1 : 2) : level < 3 ? 1 : level < 5 ? 2 : 3
         const distanceRange = maxDistance()
@@ -53,9 +54,9 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
                 imagen: newArray,
                 type: 'obj',
                 posX: ejeX,
-                posY: 150,
-                widthX: 10,
-                heightY: 30,
+                posY: (floor - 20),
+                widthX: newArray.xs_0.naturalWidth / 14,
+                heightY: newArray.xs_0.naturalWidth / 14,
                 canMove: {
                     state: true,
                     colision: true,
@@ -78,7 +79,7 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
                     inCurse: false
                 }
             }
-            let randomDireccion = (Math.random() * 2)
+            let randomDireccion = parseInt(Math.random() * 2)
             if (index2 === 0 || index2 === 2) {
                 const malo = {
                     id: parseInt(Math.random() * 988888888),
@@ -89,10 +90,14 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
                     imagen: imagen,
                     type: 'npc',
                     posX: objCant > 1 ? index2 === 0 ? (Math.random() * 95) + 50 : (Math.random() * 110) + 150 : (Math.random() * 250) + 30,
-                    posY: floor + 30,
+                    posY: (floor - (imagen[0].imagen.naturalHeight / 27)),
                     widthX: imagen[0].imagen.naturalWidth / 22,
                     heightY: imagen[0].imagen.naturalHeight / 27,
                     health: 30,
+                    spiritPosY: floor - imagen[0].imagen.naturalHeight / 27,
+                    explotionTime: 0,
+                    killLayer: 0,
+                    killFotograma: 0,
                     canMove: {
                         state: true,
                         colision: true,

@@ -4,7 +4,10 @@ import BotonesJuego from "./botonesJuego";
 import CrearItems, { CrearItemsWorld, LosFondos, PropsImage } from "./crearItems";
 import GamePad from "./gamePad";
 
-let off = true, actualFloor = 125, lastDireccion = 'xf', armas = {
+let off = true, colisioned = {
+    state: false,
+    item: 0
+}, obst = [], actualFloor = 150, lastDireccion = 'xf', armas = {
     bat: {
         onHit: false,
         damage: 7,
@@ -16,9 +19,10 @@ let off = true, actualFloor = 125, lastDireccion = 'xf', armas = {
         fotograma: 0,
         layer: 0,
         onEnd: false,
+        kills: [],
         imagenes: []
     },
-}, WeaponAudio = [true, true], audioPlaying = 0, jump, obtenerOrientacion = console.log, pass, audioPp, actualVidas = 5, mxActive = false, myActive = false, dibujarMalos = {
+}, WeaponAudio = [true, true], audioPlaying = 0, jump, obtenerOrientacion = console.log, pass, audioPp, actualVidas = 5, mxActive = false, myActive = false, fantasmas = [], dibujarMalos = {
     die: false, last: [], new: []
 }, mxDirection = { left: false, right: false }, portraitAudio, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, muertebebe, joshisound, joshisound2, joshisound3 = [true, true, true], pow, proyectilesImg = [], imagenesSrc = [`/img/finales/foto-de-anime-4.png`, `/img/finales/foto-de-anime-3.png`, `/img/finales/foto-de-anime-2.png`, `/img/finales/foto-de-anime-1.png`, `/img/finales/foto-de-anime-0.png`], fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { jumping: false, gravity: true }, canvas, levelGo = 1, ctx, imgArray = [],
     imagenA, canvasC, ctxC, canvasB, ctxB, canvasD, ctxD, canvasE, ctxE, imagenes = [{ onMove: false }], worldItems = [], timeRestart = false, levelDificulty = 10
@@ -62,7 +66,8 @@ const Test2 = () => {
         proyectiles = []
         levelFalses = []
         malosFalses = []
-        dibujarMalos.new = []
+        fantasmas = [],
+            dibujarMalos.new = []
         dibujarMalos.die = true
         malosFalses = []
         proyectilesFalses = []
@@ -84,7 +89,7 @@ const Test2 = () => {
             setTimeout(() => {
                 propsImage.posX = 0
                 propsImage.items[0].posX = 0
-                propsImage.posY = actualFloor
+                propsImage.posY = (actualFloor - propsImage.heightY)
                 inLayer = 0
                 imagenes[0].onMove = true
                 setStateImage({
@@ -119,11 +124,11 @@ const Test2 = () => {
         ctxC.clearRect(0, 0, canvas.width, canvas.height)
         ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
         ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
-
-        setPlayerVidas({
-            ...playerVidas,
-            vidas: 5
-        })
+        fantasmas = [],
+            setPlayerVidas({
+                ...playerVidas,
+                vidas: 5
+            })
         setPlayerStage({
             stage: 0
         })
@@ -180,7 +185,7 @@ const Test2 = () => {
             actualVidas = 5
             levelGo = theLevel
             propsImage.alive = false
-            worldItems = CrearItemsWorld([], theLevel, imgArray, actualFloor)
+            worldItems = CrearItemsWorld([], theLevel, imgArray, actualFloor, obst[0])
             let whileAux = []
             whileAux.push(toChange)
             whileAux.push(worldItems)
@@ -208,363 +213,478 @@ const Test2 = () => {
     const dibujar = async (values, Props, value) => {
         let props = Props
         let propsimage = propsImage
-        if (values === 'go' && props.posX <= (341 - 0.5) && imagenes[0].onMove) {
-            props.Itemss
-            let aDibujar = armas.bat.state ? armas.bat.body : (props.imagen[`${propsImage.direccion === 'xs' && props.posY < actualFloor ? 'xj' : propsImage.direccion}_${propsAction.gravity && props.posY < actualFloor ? parseInt(props.layer / (8 * 4)) < 2 ? parseInt(props.layer / (8 * 4)) + 2 : parseInt(props.layer / (8 * 4)) : !propsAction.gravity && props.posY < actualFloor ? parseInt(props.layer / (8 * 4)) > 1 ? parseInt(props.layer / (8 * 4)) - 2 : parseInt(props.layer / (8 * 4)) : parseInt(props.layer / (8 * 4))}`])
-            let psx = 0, colisioned = false, Itemss = propsImage.items
-            levelFalses.map((key, i) => {
-                if (((key.posX + 10) < (propsImage.items[0].posX + props.widthX)) && (((key.posX + key.widthX) - 10) > (propsImage.items[0].posX)) && props.posY > 110) {
-                    ctxD.save();
-                    ctxD.font = "40px Arial";
-                    ctxD.fillStyle = "red";
-                    ctxD.strokeStyle = 'white';
-                    ctxD.fillText(actualVidas > 1 ? `MUERTISIMO` : 'GAME OVER', 30, 50)
-                    ctxD.strokeText(actualVidas > 1 ? `MUERTISIMO` : 'GAME OVER', 30, 50)
-                    ctxD.restore();
-                    ctxD.stroke()
-                    colisioned = true
-                }
-                dibujarMalos.new.map((key2, i) => {
-                    if ((key.posX < key2.posX + 10) && (key.posX > key2.posX - 10)) {
-                        dibujarMalos.new[i].canMove.direccion = dibujarMalos.new[i].canMove.direccion ===
-                            'xf' ? 'xb' : 'xf'
-                        if ((key.posX < key2.posX) && (key2.posX < key.posX + key.widthX)) {
-                            dibujarMalos.new[i].posX = dibujarMalos.new[i].canMove.direccion ===
-                                'xf' ? dibujarMalos.new[i].posX + 20 : dibujarMalos.new[i].posX - 20
+        if (colisioned.state) {
+            let newValue = value
+            let indexHere = 0
+            let position = { malo: 0, body: 0 }
+            newValue.map((key, i) => {
+                key.imagen.map((key2, ia) => {
+                    if (colisioned.item === key.id) {
+                        if (key2.direccion === `joshi-evil-${key.posX > Props.posX + Props.widthX ? 'xf' : 'xb'}-${key.killLayer}`) {
+                            indexHere = i
+                            position.malo = ia;
+                            newValue[i].killFotograma = value[i].killFotograma + 1;
+                            if (newValue[i].killFotograma === 30) {
+                                newValue[i].killLayer = value[i].killLayer + 1
+                                newValue[i].killFotograma = 0
+                            }
+                            if (newValue[i].killLayer === 4) {
+                                newValue[i].killLayer = 1
+                            }
                         }
                     }
                 })
             })
-            malosFalses.map((key, i) => {
-                if (armas.bat.state && ((key.posY < (props.posY + props.heightY + (armas.bat.imagenes[0].heightY / 5))) && (key.posY > (props.posY + 10) && (props.posY + 10) < (key.posY + key.heightY))) && ((lastDireccion === 'xb' && ((key.posX + key.widthX) > (((propsImage.items[0].posX) - (armas.bat.imagenes[0].widthX / 5))) && (((key.posX)) < ((propsImage.items[0].posX) - (armas.bat.imagenes[0].widthX / 5))))) || (lastDireccion === 'xf' && ((key.posX) < (((propsImage.items[0].posX) + (props.widthX) + (armas.bat.imagenes[0].widthX / 5))) && (((key.posX + key.widthX - 15)) > ((propsImage.items[0].posX) + (armas.bat.imagenes[0].widthX / 5))))))) {
+            ctxE.drawImage(newValue[indexHere].imagen[position.malo].imagen, newValue[indexHere].canMove.direccion === 'xf' ? newValue[indexHere].posX - 6 : newValue[indexHere].posX + 8, newValue[indexHere].posY - 2, newValue[indexHere].imagen[position.malo].imagen.naturalWidth / 22, newValue[indexHere].imagen[position.malo].imagen.naturalHeight / 27)
+            let aDibujar = propsImage.imagen[`${newValue[indexHere].posX > Props.posX + Props.widthX ? 'xf' : 'xb'}_die`]
+            ctxC.drawImage(aDibujar, newValue[indexHere].posX > props.posX ? newValue[indexHere].posX + newValue[indexHere].widthX - 5 : newValue[indexHere].posX - Props.widthX + 5, Props.posY, Props.widthX, Props.heightY)
+            setTimeout(() => {
+                ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
+                ctxC.clearRect(0, 0, canvas.width, canvas.height)
+                dibujar('go', Props, newValue)
+            }, 5);
+
+        } else {
+            if (values === 'go' && props.posX <= (341 - 0.5) && imagenes[0].onMove) {
+                let aDibujar = armas.bat.state ? armas.bat.body : (props.imagen[`${propsImage.direccion === 'xs' && props.posY+props.heightY < actualFloor ? 'xj' : propsImage.direccion}_${propsAction.gravity && props.posY < actualFloor ? parseInt(props.layer / (8 * 4)) < 2 ? parseInt(props.layer / (8 * 4)) + 2 : parseInt(props.layer / (8 * 4)) : !propsAction.gravity && props.posY < actualFloor ? parseInt(props.layer / (8 * 4)) > 1 ? parseInt(props.layer / (8 * 4)) - 2 : parseInt(props.layer / (8 * 4)) : parseInt(props.layer / (8 * 4))}`])
+                let psx = 0, Itemss = propsImage.items
+                levelFalses.map((key, i) => {
+                    if (((key.posX + 10) < (propsImage.items[0].posX + props.widthX)) && (((key.posX + key.widthX) - 10) > (propsImage.items[0].posX)) && (props.posY + props.heightY > key.posY)) {
+                        ctxD.save();
+                        ctxD.font = "40px Arial";
+                        ctxD.fillStyle = "red";
+                        ctxD.strokeStyle = 'white';
+                        ctxD.fillText(actualVidas > 1 ? `MUERTISIMO` : 'GAME OVER', 30, 50)
+                        ctxD.strokeText(actualVidas > 1 ? `MUERTISIMO` : 'GAME OVER', 30, 50)
+                        ctxD.restore();
+                        ctxD.stroke()
+                        colisioned.state = true
+                    }
                     dibujarMalos.new.map((key2, i) => {
-                        if (key2.id === key.id && key.state !== 'onDie') {
-                            dibujarMalos.new[i].state = 'hit'
-                            if (!armas.bat.onHit) {
-                                dibujarMalos.new[i].health = dibujarMalos.new[i].health - (armas.bat.damage * parseInt(Math.random() * 3) + 1)
-                                joshisound2.play()
-                                if (dibujarMalos.new[i].health < 0) {
-                                    pow.play()
+                        if ((key.posX < key2.posX + 10) && (key.posX > key2.posX - 10)) {
+                            dibujarMalos.new[i].canMove.direccion = dibujarMalos.new[i].canMove.direccion ===
+                                'xf' ? 'xb' : 'xf'
+                            if ((key.posX < key2.posX) && (key2.posX < key.posX + key.widthX)) {
+                                dibujarMalos.new[i].posX = dibujarMalos.new[i].canMove.direccion ===
+                                    'xf' ? dibujarMalos.new[i].posX + 20 : dibujarMalos.new[i].posX - 20
+                            }
+                        }
+                    })
+                })
+                malosFalses.map((key, i) => {
+                    if (armas.bat.state && ((key.posY < (props.posY + props.heightY + (armas.bat.imagenes[0].heightY / 5))) && (key.posY > (props.posY) && (props.posY) < (key.posY + key.heightY))) && ((lastDireccion === 'xb' && ((key.posX + key.widthX) > (((propsImage.items[0].posX) - (armas.bat.imagenes[0].widthX / 5))) && (((key.posX)) < ((propsImage.items[0].posX) - (armas.bat.imagenes[0].widthX / 5))))) || (lastDireccion === 'xf' && ((key.posX) < (((propsImage.items[0].posX) + (props.widthX) + (armas.bat.imagenes[0].widthX / 5))) && (((key.posX + key.widthX - 15)) > ((propsImage.items[0].posX) + (armas.bat.imagenes[0].widthX / 5))))))) {
+                        dibujarMalos.new.map((key2, i) => {
+                            if (key2.id === key.id && key.state !== 'onDie') {
+                                dibujarMalos.new[i].state = 'hit'
+                                if (!armas.bat.onHit) {
+                                    dibujarMalos.new[i].health = dibujarMalos.new[i].health - (armas.bat.damage * parseInt(Math.random() * 3) + 1)
+                                    joshisound2.play()
+                                    if (dibujarMalos.new[i].health < 0) {
+                                        pow.play()
+                                        armas.bat.onHit = true
+                                        joshisound3[2].play()
+                                        dibujarMalos.new[i].state = 'onDie'
+                                        setTimeout(() => {
+                                            armas.bat.onHit = false
+                                        }, 1000);
+
+                                    } else {
+                                        pow.play()
+                                        armas.bat.onHit = true
+                                        setTimeout(() => {
+                                            armas.bat.onHit = false
+
+                                        }, 1000);
+                                        joshisound3[parseInt(Math.random() * 2)].play()
+
+                                    }
+                                }
+                            }
+
+                        })
+                    }
+                    if (key.state !== 'onDie' && key.state !== 'die' && ((key.posX + 10) < (propsImage.items[0].posX + props.widthX)) && (((key.posX + key.widthX) - 10) > (propsImage.items[0].posX)) && props.posY > 110) {
+                        if (key.posY > (props.posY) && (props.posY) < (key.posY + key.heightY)) {
+                            joshisound.play()
+                            dibujarMalos.die = true
+                            ctxD.save();
+                            ctxD.font = "40px Arial";
+                            ctxD.fillStyle = "red";
+                            ctxD.strokeStyle = 'white';
+                            ctxD.fillText(actualVidas > 1 ? `JOSHI TE ` : 'GAME OVER', 30, 50)
+                            ctxD.strokeText(actualVidas > 1 ? `JOSHI TE ` : 'GAME OVER', 30, 50)
+                            ctxD.fillText(actualVidas > 1 ? ` CULEO` : '', 30, 90)
+                            ctxD.strokeText(actualVidas > 1 ? ` CULEO` : '', 30, 90)
+                            ctxD.restore();
+                            ctxD.stroke()
+                            colisioned.state = true
+                            colisioned.item = key.id
+                            malosFalses = []
+
+                        }
+                    }
+                })
+                proyectilesFalses.map((key, i) => {
+                    if (armas.bat.state && (((key.posY + key.heightY - (armas.bat.imagenes[0].heightY / 4.2)) > (props.posY + (props.direccion === 'xd' ? (props.heightY / 2) : 0))) && (key.posY + ((armas.bat.imagenes[0].widthX - (armas.bat.imagenes[0].widthX / (12 - armas.bat.layer))) / .9)) < (((props.posY + props.heightY)))) && ((lastDireccion === 'xb' && ((key.posX + key.widthX - 5) > (((propsImage.items[0].posX) - (armas.bat.imagenes[0].widthX / 5))) && (((key.posX - (armas.bat.imagenes[0].widthX / 5))) < ((propsImage.items[0].posX) - (armas.bat.imagenes[0].widthX / 5))))) || (lastDireccion === 'xf' && ((key.posX) < (((propsImage.items[0].posX) + (props.widthX) + (armas.bat.imagenes[0].widthX / 5))) && (((key.posX + key.widthX - 15)) > ((propsImage.items[0].posX) + (armas.bat.imagenes[0].widthX / 5))))))) {
+                        audioPlaying = audioPlaying > 1 ? audioPlaying + 1 : 0
+                        WeaponAudio[audioPlaying].play()
+                        setTimeout(() => {
+                            setTimeout(() => {
+                                armas.bat.onHit = false
+
+                            }, 500)
+                            muertebebe.play()
+                        }, 500);
+                        proyectiles.map((key2, i) => {
+                            if (key2.id === key.id && key.state !== 'onDie') {
+                                proyectiles[i].state = 'hit';
+                                proyectiles[i].hitdirection = proyectiles[i].direccion === 'xf' ? (lastDireccion === 'xf' ? 'xf' : 'xb') : (lastDireccion === 'xb' ? 'xb' : 'xf')
+                                if (!armas.bat.onHit) {
+                                    proyectiles[i].hitDamage = (Math.random() * 4);
+                                    proyectiles[i].health = armas.bat.onHit ? proyectiles[i].health : proyectiles[i].health - (proyectiles[i].health * (Math.random() * armas.bat.damage - 3) + 3)
                                     armas.bat.onHit = true
-                                    joshisound3[2].play()
-                                    dibujarMalos.new[i].state = 'onDie'
+                                }
+                                if (proyectiles[i].health < 0) {
+                                    proyectiles[i].state = 'die';
+                                }
+                            }
+                        })
+                    }
+                    if (((key.posX) < (propsImage.items[0].posX + props.widthX - 15)) && (((key.posX + key.widthX - 15)) > (propsImage.items[0].posX))) {
+                        if (((key.posY + key.heightY) > (props.posY + (props.direccion === 'xd' ? (props.heightY / 2) : 0))) && key.posY < (((props.posY + props.heightY)))) {
+                            llantobebe.play()
+                            pow.play()
+                            dibujarMalos.die = true
+                            ctxD.save();
+                            ctxD.font = "40px Arial";
+                            ctxD.fillStyle = "red";
+                            ctxD.strokeStyle = 'white';
+                            ctxD.fillText(actualVidas > 1 ? `TRAGASTE ` : 'GAME OVER', 30, 50)
+                            ctxD.fillText(actualVidas > 1 ? `TRAGASTE ` : 'GAME OVER', 30, 50)
+                            ctxD.fillText(actualVidas > 1 ? ` PAÑAL` : 'GAME OVER', 30, 100)
+                            ctxD.strokeText(actualVidas > 1 ? ` PAÑAL` : 'GAME OVER', 30, 100)
+                            ctxD.restore();
+                            ctxD.stroke()
+                            proyectilesFalses = []
+                            colisioned.state = true
+                        }
+                    }
+                })
+                if (colisioned.state) {
+                    ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
+                    ctxC.clearRect(0, 0, canvas.width, canvas.height)
+                    dibujar('go', propsImage, dibujarMalos.new)
+                    audioPp.src = '/audio/die.mp3'
+                    setTimeout(() => {
+                        psx = Itemss[0].posX
+                        morir()
+                        colisioned.state = false
+                        Itemss[0].posX = 0
+                    }, 5000);
+                } else {
+                    psx = Itemss[0].posX
+                    if (!value && props.posX <= (341 - 0.5) && props.posX > -1 && propsImage.direccion === 'xf' && (((props.posX / (31 - 0.5)) === (1)) || ((props.posX / (61 - 0.5)) === (1)) || ((props.posX / (91 - 0.5)) === (1)) || ((props.posX / (121 - 0.5)) === (1)) || ((props.posX / (151 - 0.5)) === (1)) || ((props.posX / (181 - 0.5)) === (1)) || ((props.posX / (211 - 0.5)) === (1)) || ((props.posX / (241 - 0.5)) === (1)) || ((props.posX / (271 - 0.5)) === (1)) || ((props.posX / (301 - 0.5)) === (1)) || ((props.posX / (331 - 0.5)) === (1)) || (((props.posX / (341 - 0.5)) === (1)))) && propsImage.alive && !propsImage.levelPass) {
+                        moverCanvas()
+                    }
+                    if (!value && props.posX < 351 && props.posX > 28 && propsImage.direccion === 'xb' && (((props.posX / (29 - 0.5)) === (1)) || ((props.posX / (59 - 0.5)) === (1)) ||
+                        ((props.posX / (89 + 0.5)) === (1)) || ((props.posX / (119 + 0.5)) === (1)) || ((props.posX / (149 + 0.5)) === (1)) || ((props.posX / (179 + 0.5)) === (1)) || ((props.posX / (209 + 0.5)) === (1)) || ((props.posX / (239 + 0.5)) === (1)) || ((props.posX / (269 + 0.5)) === (1)) || ((props.posX / (299 + 0.5)) === (1)) || ((props.posX / (319 + 0.5)) === (1)))) {
+                        moverCanvas()
+                    }
+                    else {
+                        console.log
+                    }
+                    if (imagenes[0].onMove) {
+                        if (!colisioned.state) {
+                            ctxC.clearRect(0, 0, canvas.width, canvas.height)
+
+                            let newModel = props
+                            if (newModel.layer < (24 * 4)) {
+                                newModel.layer = newModel.layer + 1
+                            } else { newModel.layer = 0 } if (propsImage.direccion === 'xf') {
+                                newModel.direccion = 'xf'
+                            } else {
+                                newModel.direccion = propsImage.direccion
+                            }
+                            if ((newModel.direccion === 'xf' && newModel.posX < 342) || ((newModel.direccion === 'xs' || newModel.direccion === 'xd') && newModel.posX < 355) || (newModel.direccion === 'xb' && newModel.posX > 0)) {
+                                Itemss[0].posX = propsImage.refreshData ? psx : propsImage.levelPass ? psx : props.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || newModel.posY < actualFloor ? Itemss[0].posX + ((1.25 / (40 * (1 / (levelDificulty))))) : Itemss[0].posX + ((1.25 / (40 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || newModel.posY < actualFloor ? Itemss[0].posX - ((1.25 / (40 * (1 / (levelDificulty))))) : Itemss[0].posX - ((1.25 / (40 * (1 / (levelDificulty))))) : Itemss[0].posX
+                                newModel = {
+                                    ...newModel,
+                                    posY: propsAction.jumping && newModel.posY <= (actualFloor - newModel.heightY) ? newModel.posY === (actualFloor - newModel.heightY) && propsAction.jumping && propsAction.gravity ? (actualFloor - newModel.heightY) : !propsAction.gravity ? newModel.posY - 1.10 : propsAction.jumping && propsAction.gravity ? newModel.posY + 1.10 : newModel.posY === 50 ? (actualFloor - newModel.heightY) : (actualFloor - newModel.heightY) : (actualFloor - newModel.heightY),
+                                    posX: propsImage.refreshData ? props.posX : propsImage.levelPass ? props.posX : !propsImage.alive ? 0 : props.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || newModel.posY < actualFloor ? newModel.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || newModel.posY < actualFloor ? newModel.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX,
+                                    items: propsImage.levelPass || !propsImage.alive ? props.items : Itemss,
+                                    fotograma: newModel.fotograma + 1,
+                                }
+                                propsImage = {
+                                    ...propsImage,
+                                    posX: propsImage.refreshData ? 0 : propsImage.levelPass ? props.posX : !propsImage.alive ? 0 : props.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || newModel.posY < actualFloor ? newModel.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || newModel.posY < actualFloor ? newModel.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX,
+                                    posY: propsAction.jumping && propsImage.posY <= (actualFloor - propsImage.heightY) ? newModel.posY === (actualFloor - propsImage.heightY) && propsAction.jumping && propsAction.gravity ? (actualFloor - propsImage.heightY) : propsAction.jumping && !propsAction.gravity ? propsImage.posY - 1.10 : propsAction.jumping && propsAction.gravity ? propsImage.posY + 1.10 : propsImage.posY === (actualFloor - propsImage.heightY) ? (actualFloor - propsImage.heightY) : (actualFloor - propsImage.heightY) : (actualFloor - propsImage.heightY),
+                                }
+                            }
+                            setTimeout(() => {
+                                const propsImageLast = propsImage
+                                propsImage = {
+                                    ...newModel,
+                                    onMove: propsImageLast.onMove,
+                                    direccion: propsImageLast.direccion,
+                                }
+                                dibujar('go', newModel)
+                                if (propsImage.posX > (341 - 0.5)) {
                                     setTimeout(() => {
-                                        armas.bat.onHit = false
+                                        propsImage.posX = 0
+                                        moverCanvas()
+                                    }, 4000);
+
+                                }
+                            }, 5);
+                            ctxE.clearRect(0, 0, canvasD.width, canvasD.height)
+
+
+
+                            let malosFalsesAux = []
+                            dibujarMalos.new.map((key, i) => {
+                                if (key.state !== 'die' && key.state !== 'spirit') {
+                                    if (key.canMove.jumps.state && key.posY >= (actualFloor - key.heightY) && key.canMove.jumps.gravity) {
+                                        dibujarMalos.new[i].canMove.jumps.gravity = false
+                                        dibujarMalos.new[i].canMove.jumps.state = false
+                                        dibujarMalos.new[i].posY = (actualFloor - key.heightY)
+                                        dibujarMalos.new[i].canMove.jumps.inInterval = 0
+                                    }
+                                    if (key.posY < key.canMove.jumps.maxJump) {
+                                        dibujarMalos.new[i].canMove.jumps.gravity = true
+                                    }
+                                    if (key.actions.shot.posibility && !key.actions.shot.state) {
+                                        dibujarMalos.new[i].actions.shot.inInterval = key.actions.shot.inInterval + 1
+                                    }
+                                    if (key.actions.shot.posibility && key.actions.shot.state) {
+                                        dibujarMalos.new[i].actions.shot.inInterval = 0
+                                    }
+                                    if (key.state !== 'onDie' && key.state !== 'die' && key.actions.shot.posibility && !key.actions.shot.state && key.actions.shot.inInterval === key.actions.shot.interval) {
+                                        risabebe.play()
+                                        dibujarMalos.new[i].actions.shot.state = true
                                         setTimeout(() => {
                                             try {
-                                                dibujarMalos.new[i].state = 'die'
+                                                dibujarMalos.new[i].actions.shot.state = false
+                                                armas.bat.onHit = false
+
                                             } catch (error) {
                                                 console.log(error);
                                             }
                                         }, 1000);
-                                    }, 1000);
+                                        let imgUsed = proyectilesImg
+                                        let efectRandom = parseInt(Math.random() * 2)
+                                        proyectiles.push({
+                                            id: parseInt(Math.random() * 50000000000000),
+                                            health: 22,
+                                            hitdirection: 'xf',
+                                            hitDamage: 0,
+                                            state: 'live',
+                                            imagen: imgUsed,
+                                            type: key.actions.shot.type,
+                                            posX: !key.canMove.direccion === 'xf' ? key.posX - 60 : key.posX + 10,
+                                            posY: (key.posY) + ((Math.random() * 30) - 15),
+                                            widthX: imgUsed[0].naturalWidth / 30,
+                                            heightY: imgUsed[0].naturalHeight / 30,
+                                            direccion: key.canMove.direccion,
+                                            speed: key.actions.shot.speed,
+                                            efectDirection: efectRandom === 0 ? 'up' : 'down',
+                                        })
+                                    }
+                                    if (key.canMove.jumps.posibility && !key.canMove.jumps.state) {
+                                        dibujarMalos.new[i].canMove.jumps.inInterval = key.canMove.jumps.inInterval + 1
+                                    }
+                                    if (key.canMove.jumps.posibility && !key.canMove.jumps.state && key.canMove.jumps.inInterval === key.canMove.jumps.interval) {
+                                        dibujarMalos.new[i].canMove.jumps.state = true
+                                        dibujarMalos.new[i].canMove.jumps.gravity = false
+                                    }
+                                    let position = {
+                                        die: 0,
+                                        hit: {
+                                            left: 0,
+                                            right: 0
+                                        },
+                                    }
+                                    key.imagen.map((key2, i) => {
+                                        if (key2.direccion === 'spirit') { position.spirit = i }
+                                        if (key2.direccion === 'die') { position.die = i }
+                                        if (key2.direccion === `hit-xf`) { position.hit.right = i }
+                                        if (key2.direccion === `hit-xb`) { position.hit.left = i }
+                                    })
+                                    let imagenready = key.state === 'onDie' ? key.imagen[position.die].imagen : key.state === 'hit' ? key.imagen[key.canMove.direccion === 'xf' ? position.hit.right : position.hit.left].imagen : key.imagen[key.canMove.direccion === 'xb' ? 1 : 0].imagen
+
+                                    if (key.state === 'onDie') {
+                                        if (key.explotionTime > 100) {
+                                            dibujarMalos.new[i].state = 'spirit'
+                                        } else {
+                                            dibujarMalos.new[i].explotionTime = dibujarMalos.new[i].explotionTime + 1
+
+                                        }
+                                        ctxE.drawImage(armas.bat.kills[0].imagen, key.posX, key.posY - (key.explotionTime / 10), (armas.bat.kills[0].imagen.naturalWidth / 22) + (key.explotionTime / 10), (armas.bat.kills[0].imagen.naturalHeight / 27) + (key.explotionTime / 10))
+                                    } else {
+                                        ctxE.drawImage(imagenready, key.posX, key.posY, imagenready.naturalWidth / 22, imagenready.naturalHeight / 27)
+                                    }
+                                    if (dibujarMalos.new[i].posX < (stateImage.posX === -1 ? 35 : 1) || dibujarMalos.new[i].posX > 299) {
+                                        dibujarMalos.new[i].canMove.direccion = dibujarMalos.new[i].posX < (stateImage.posX === -1 ? 35 : 1) ? 'xf' : 'xb'
+                                    }
+                                    dibujarMalos.new[i].posY = dibujarMalos.new[i].posY + dibujarMalos.new[i].heightY > (actualFloor) ? (actualFloor - dibujarMalos.new[i].heightY) : (key.state === 'onDie' || key.state === 'spirit') ? dibujarMalos.new[i].posY : !dibujarMalos.new[i].canMove.jumps.posibility ? dibujarMalos.new[i].posY : dibujarMalos.new[i].canMove.jumps.state ? (!dibujarMalos.new[i].canMove.jumps.gravity ? dibujarMalos.new[i].posY + dibujarMalos.new[i].heightY < (actualFloor) ? dibujarMalos.new[i].posY - (.250 + dibujarMalos.new[i].canMove.jumps.speed) : (actualFloor - dibujarMalos.new[i].heightY) : dibujarMalos.new[i].posY + .250) : dibujarMalos.new[i].posY
+                                    dibujarMalos.new[i].posX = (key.state === 'onDie' || key.state === 'spirit') ? dibujarMalos.new[i].posX : !dibujarMalos.new[i].canMove.walks.posibility ? dibujarMalos.new[i].posX : dibujarMalos.new[i].actions.shot.state || dibujarMalos.new[i].canMove.jumps.state ? dibujarMalos.new[i].posX : dibujarMalos.new[i].canMove.direccion === 'xf' ? dibujarMalos.new[i].posX + (.25 * dibujarMalos.new[i].canMove.walks.speed) : dibujarMalos.new[i].posX - (.25 * dibujarMalos.new[i].canMove.walks.speed)
 
                                 } else {
-                                    pow.play()
-                                    armas.bat.onHit = true
-                                    setTimeout(() => {
-                                        armas.bat.onHit = false
 
-                                    }, 1000);
-                                    joshisound3[parseInt(Math.random() * 2)].play()
-
+                                    let position = {
+                                        die: 0,
+                                        hit: {
+                                            left: 0,
+                                            right: 0
+                                        },
+                                    }
+                                    key.imagen.map((key2, i) => {
+                                        if (key2.direccion === 'spirit') { position.spirit = i }
+                                        if (key2.direccion === 'die') { position.die = i }
+                                        if (key2.direccion === `hit-xf`) { position.hit.right = i }
+                                        if (key2.direccion === `hit-xb`) { position.hit.left = i }
+                                    })
+                                    fantasmas.map((keySpirit, iGhost) => {
+                                        if (keySpirit.posY > 0) {
+                                            if (fantasmas[iGhost].posY > 0) {
+                                                fantasmas[iGhost].posY = fantasmas[iGhost].posY - (1.25 / 3)
+                                                ctxE.drawImage(key.imagen[position.spirit].imagen, key.posX, keySpirit.posY, key.imagen[position.spirit].imagen.naturalWidth / 22, key.imagen[position.spirit].imagen.naturalHeight / 27)
+                                            }
+                                        }
+                                    })
+                                    if (key.state === 'spirit') {
+                                        let isDead = false
+                                        fantasmas.map((kkk, xi) => {
+                                            if (kkk.id === key.id) {
+                                                isDead = true
+                                            }
+                                        })
+                                        if (!isDead) {
+                                            fantasmas.push({
+                                                id: key.id,
+                                                posX: key.posX,
+                                                posY: key.posY,
+                                            })
+                                            dibujarMalos.new[i].state = 'die'
+                                        }
+                                        ctxE.drawImage(key.imagen[position.spirit].imagen, key.posX, key.posY, key.imagen[position.spirit].imagen.naturalWidth / 22, key.imagen[position.spirit].imagen.naturalHeight / 27)
+                                    } else {
+                                        let position = {
+                                            die: 0,
+                                            hit: {
+                                                left: 0,
+                                                right: 0
+                                            },
+                                        }
+                                        dibujarMalos.new.map((key, i) => {
+                                            key.imagen.map((key2, ia) => {
+                                                if (key2.direccion === 'spirit') { position.spirit = ia }
+                                                if (key2.direccion === 'die') { position.die = ia }
+                                                if (key2.direccion === `hit-xf`) { position.hit.right = ia }
+                                                if (key2.direccion === `hit-xb`) { position.hit.left = ia }
+                                            })
+                                            ctxE.drawImage(key.imagen[position.die].imagen, key.posX, key.posY, key.imagen[position.die].imagen.naturalWidth / 22, key.imagen[position.die].imagen.naturalHeight / 27)
+                                        })
+                                    }
+                                }
+                                if (key.state !== 'onDie' && key.state !== 'spirit') {
+                                    malosFalsesAux.push({
+                                        ...key,
+                                        id: key.id,
+                                        posX: key.posX,
+                                        posY: key.posY,
+                                        widthX: key.widthX,
+                                        heightY: key.heightY,
+                                    })
+                                }
+                            })
+                            malosFalses = malosFalsesAux
+                            proyectilesFalses = []
+                            let existingProyectiles = []
+                            proyectiles.map((key, i) => {
+                                ctxE.drawImage(key.imagen[key.direccion === 'xf' ? 1 : 0], key.posX, key.posY, key.widthX, key.heightY)
+                                proyectiles[i].posX = key.state !== 'hit' ? (key.direccion === 'xf' ? key.posX + (.25 * key.speed) : key.posX - (.25 * key.speed)) : (key.hitdirection === 'xb' ? key.posX - (.25 * (key.speed * 2.5)) : key.posX + (.25 * (key.speed * 2.5)))
+                                proyectiles[i].posY = key.state === 'hit' ? key.efectDirection === 'up' ? proyectiles[i].posY - (.6 * key.speed * key.hitDamage) : proyectiles[i].posY + (.6 * key.speed * key.hitDamage) : proyectiles[i].posY
+                                if ((key.state !== 'die' && key.state !== 'onDie' && key.state !== 'spirit') && (key.posX < 300 && (key.posX + key.widthX) > 0) && (key.posY > 0 && key.posY > 0)) {
+                                    proyectilesFalses.push({
+                                        ...key,
+                                        id: key.id,
+                                        state: key.posX,
+                                        posX: key.posX,
+                                        posY: key.posY,
+                                        widthX: key.widthX,
+                                        heightY: key.heightY,
+                                        health: key.health
+                                    })
+                                    existingProyectiles.push(key)
+                                }
+                            })
+                            proyectiles = existingProyectiles
+                            if (armas.bat.state) {
+                                let indexFor = armas.bat.fotograma
+                                if (armas.bat.layer < 13) {
+                                    if (armas.bat.layer === 12) {
+                                        armas.bat.onEnd = true
+                                        setTimeout(() => {
+                                            armas.bat.layer = 0
+                                            armas.bat.state = false
+                                        }, 600);
+                                    }
+                                    if (indexFor < armas.bat.speed) {
+                                        indexFor = indexFor + 1
+                                        armas.bat.fotograma = indexFor
+                                    } else {
+                                        indexFor = 0
+                                        armas.bat.fotograma = indexFor
+                                        armas.bat.layer = armas.bat.layer + 1
+                                    }
+                                    let posLayer = 0
+                                    armas.bat.imagenes.map((key2, i) => {
+                                        if (key2.id === armas.bat.layer && key2.direccion === lastDireccion) {
+                                            posLayer = i
+                                        }
+                                    })
+                                    ctxE.drawImage(armas.bat.imagenes[posLayer].imagen, psx - 15, props.posY - (props.heightY / 2), armas.bat.imagenes[posLayer].widthX, armas.bat.imagenes[posLayer].heightY);
+                                } else {
+                                    let posLayer = 0
+                                    armas.bat.imagenes.map((key2, i) => {
+                                        if (key2.id === 13 && key2.direccion === lastDireccion) {
+                                            posLayer = i
+                                        }
+                                    })
+                                    ctxE.drawImage(armas.bat.imagenes[posLayer].imagen, psx - 15, props.posY - (props.heightY / 2), armas.bat.imagenes[posLayer].widthX, armas.bat.imagenes[posLayer].heightY);
                                 }
                             }
-                        }
-
-                    })
-                }
-                if (key.state !== 'onDie' && key.state !== 'die' && ((key.posX + 10) < (propsImage.items[0].posX + props.widthX)) && (((key.posX + key.widthX) - 10) > (propsImage.items[0].posX)) && props.posY > 110) {
-                    if (key.posY > (props.posY + 10) && (props.posY + 10) < (key.posY + key.heightY)) {
-                        joshisound.play()
-                        dibujarMalos.die = true
-                        ctxD.save();
-                        ctxD.font = "40px Arial";
-                        ctxD.fillStyle = "red";
-                        ctxD.strokeStyle = 'white';
-                        ctxD.fillText(actualVidas > 1 ? `JOSHI TE ` : 'GAME OVER', 30, 50)
-                        ctxD.strokeText(actualVidas > 1 ? `JOSHI TE ` : 'GAME OVER', 30, 50)
-                        ctxD.fillText(actualVidas > 1 ? ` CULEO` : '', 30, 90)
-                        ctxD.strokeText(actualVidas > 1 ? ` CULEO` : '', 30, 90)
-                        ctxD.restore();
-                        ctxD.stroke()
-                        colisioned = true
-                        malosFalses = []
-                        dibujarMalos.new = []
-
-                    }
-                }
-            })
-            proyectilesFalses.map((key, i) => {
-                if (armas.bat.state && (((key.posY + key.heightY - (armas.bat.imagenes[0].heightY / 4.2)) > (props.posY + (props.direccion === 'xd' ? (props.heightY / 2) : 0))) && (key.posY + ((armas.bat.imagenes[0].widthX - (armas.bat.imagenes[0].widthX / (12 - armas.bat.layer))) / .9)) < (((props.posY + props.heightY)))) && ((lastDireccion === 'xb' && ((key.posX + key.widthX - 5) > (((propsImage.items[0].posX) - (armas.bat.imagenes[0].widthX / 5))) && (((key.posX - (armas.bat.imagenes[0].widthX / 5))) < ((propsImage.items[0].posX) - (armas.bat.imagenes[0].widthX / 5))))) || (lastDireccion === 'xf' && ((key.posX) < (((propsImage.items[0].posX) + (props.widthX) + (armas.bat.imagenes[0].widthX / 5))) && (((key.posX + key.widthX - 15)) > ((propsImage.items[0].posX) + (armas.bat.imagenes[0].widthX / 5))))))) {
-                    audioPlaying = audioPlaying > 1 ? audioPlaying + 1 : 0
-                    WeaponAudio[audioPlaying].play()
-                    setTimeout(() => {
-                        setTimeout(() => {
-                            armas.bat.onHit = false
-
-                        }, 500)
-                        muertebebe.play()
-                    }, 500);
-                    proyectiles.map((key2, i) => {
-                        if (key2.id === key.id && key.state !== 'onDie') {
-                            proyectiles[i].state = 'hit';
-                            proyectiles[i].hitdirection = proyectiles[i].direccion === 'xf' ? (lastDireccion === 'xf' ? 'xf' : 'xb') : (lastDireccion === 'xb' ? 'xb' : 'xf')
-                            if (!armas.bat.onHit) {
-                                proyectiles[i].hitDamage = (Math.random() * 4);
-                                proyectiles[i].health = armas.bat.onHit ? proyectiles[i].health : proyectiles[i].health - (proyectiles[i].health * (Math.random() * armas.bat.damage - 3) + 3)
-                                armas.bat.onHit = true
-                            }
-                            if (proyectiles[i].health < 0) {
-                                proyectiles[i].state = 'die';
-                            }
-                        }
-                    })
-                }
-                if (((key.posX) < (propsImage.items[0].posX + props.widthX - 15)) && (((key.posX + key.widthX - 15)) > (propsImage.items[0].posX))) {
-                    if (((key.posY + key.heightY) > (props.posY + (props.direccion === 'xd' ? (props.heightY / 2) : 0))) && key.posY < (((props.posY + props.heightY)))) {
-                        llantobebe.play()
-                        pow.play()
-                        dibujarMalos.die = true
-                        ctxD.save();
-                        ctxD.font = "40px Arial";
-                        ctxD.fillStyle = "red";
-                        ctxD.strokeStyle = 'white';
-                        ctxD.fillText(actualVidas > 1 ? `TRAGASTE ` : 'GAME OVER', 30, 50)
-                        ctxD.fillText(actualVidas > 1 ? `TRAGASTE ` : 'GAME OVER', 30, 50)
-                        ctxD.fillText(actualVidas > 1 ? ` PAÑAL` : 'GAME OVER', 30, 100)
-                        ctxD.strokeText(actualVidas > 1 ? ` PAÑAL` : 'GAME OVER', 30, 100)
-                        ctxD.restore();
-                        ctxD.stroke()
-                        proyectilesFalses = []
-                        colisioned = true
-                    }
-                }
-            })
-            if (colisioned) {
-                audioPp.src = '/audio/die.mp3'
-                psx = Itemss[0].posX
-                morir()
-                Itemss[0].posX = 0
-            } else {
-                if (propsImage.refreshData) {
-                    psx = propsimage.items[0].posX
-                } else {
-                    psx = Itemss[0].posX
-                }
-            }
-            if (!value && props.posX <= (341 - 0.5) && props.posX > -1 && propsImage.direccion === 'xf' && (((props.posX / (31 - 0.5)) === (1)) || ((props.posX / (61 - 0.5)) === (1)) || ((props.posX / (91 - 0.5)) === (1)) || ((props.posX / (121 - 0.5)) === (1)) || ((props.posX / (151 - 0.5)) === (1)) || ((props.posX / (181 - 0.5)) === (1)) || ((props.posX / (211 - 0.5)) === (1)) || ((props.posX / (241 - 0.5)) === (1)) || ((props.posX / (271 - 0.5)) === (1)) || ((props.posX / (301 - 0.5)) === (1)) || ((props.posX / (331 - 0.5)) === (1)) || (((props.posX / (341 - 0.5)) === (1)))) && propsImage.alive && !propsImage.levelPass) {
-                moverCanvas()
-            }
-            if (!value && props.posX < 351 && props.posX > 28 && propsImage.direccion === 'xb' && (((props.posX / (29 - 0.5)) === (1)) || ((props.posX / (59 - 0.5)) === (1)) ||
-                ((props.posX / (89 + 0.5)) === (1)) || ((props.posX / (119 + 0.5)) === (1)) || ((props.posX / (149 + 0.5)) === (1)) || ((props.posX / (179 + 0.5)) === (1)) || ((props.posX / (209 + 0.5)) === (1)) || ((props.posX / (239 + 0.5)) === (1)) || ((props.posX / (269 + 0.5)) === (1)) || ((props.posX / (299 + 0.5)) === (1)) || ((props.posX / (319 + 0.5)) === (1)))) {
-                moverCanvas()
-            }
-            else {
-                console.log
-            }
-            if (imagenes[0].onMove) {
-                ctxC.clearRect(0, 0, canvas.width, canvas.height)
-
-                let newModel = props
-                if (newModel.layer < (24 * 4)) {
-                    newModel.layer = newModel.layer + 1
-                } else { newModel.layer = 0 } if (propsImage.direccion === 'xf') {
-                    newModel.direccion = 'xf'
-                } else {
-                    newModel.direccion = propsImage.direccion
-                }
-                if ((newModel.direccion === 'xf' && newModel.posX < 342) || ((newModel.direccion === 'xs' || newModel.direccion === 'xd') && newModel.posX < 355) || (newModel.direccion === 'xb' && newModel.posX > 0)) {
-                    Itemss[0].posX = propsImage.refreshData ? psx : propsImage.levelPass ? psx : props.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || newModel.posY < actualFloor ? Itemss[0].posX + ((1.25 / (40 * (1 / (levelDificulty))))) : Itemss[0].posX + ((1.25 / (40 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || newModel.posY < actualFloor ? Itemss[0].posX - ((1.25 / (40 * (1 / (levelDificulty))))) : Itemss[0].posX - ((1.25 / (40 * (1 / (levelDificulty))))) : Itemss[0].posX
-                    newModel = {
-                        ...newModel,
-                        posY: propsAction.jumping && newModel.posY <= actualFloor ? newModel.posY === actualFloor && propsAction.jumping && propsAction.gravity ? actualFloor : !propsAction.gravity ? newModel.posY - 1.10 : propsAction.jumping && propsAction.gravity ? newModel.posY + 1.10 : newModel.posY === 50 ? actualFloor : actualFloor : actualFloor,
-                        posX: propsImage.refreshData ? props.posX : propsImage.levelPass ? props.posX : !propsImage.alive ? 0 : props.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || newModel.posY < actualFloor ? newModel.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || newModel.posY < actualFloor ? newModel.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX,
-                        items: propsImage.levelPass || !propsImage.alive ? props.items : Itemss,
-                        fotograma: newModel.fotograma + 1,
-                    }
-                    propsImage = {
-                        ...propsImage,
-                        posX: propsImage.refreshData ? 0 : propsImage.levelPass ? props.posX : !propsImage.alive ? 0 : props.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || newModel.posY < actualFloor ? newModel.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || newModel.posY < actualFloor ? newModel.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX,
-                        posY: propsAction.jumping && propsImage.posY <= actualFloor ? newModel.posY === actualFloor && propsAction.jumping && propsAction.gravity ? actualFloor : propsAction.jumping && !propsAction.gravity ? propsImage.posY - 1.10 : propsAction.jumping && propsAction.gravity ? propsImage.posY + 1.10 : propsImage.posY === actualFloor ? actualFloor : actualFloor : actualFloor,
-                    }
-                }
-                setTimeout(() => {
-                    const propsImageLast = propsImage
-                    propsImage = {
-                        ...newModel,
-                        onMove: propsImageLast.onMove,
-                        direccion: propsImageLast.direccion,
-                    }
-                    dibujar('go', newModel)
-                    if (propsImage.posX > (341 - 0.5)) {
-                        setTimeout(() => {
-                            propsImage.posX = 0
-                            moverCanvas()
-                        }, 4000);
-
-                    }
-                }, 5);
-                ctxE.clearRect(0, 0, canvasD.width, canvasD.height)
-                let malosFalsesAux = []
-                if (!dibujarMalos.die) {
-                    dibujarMalos.new.map((key, i) => {
-                        if (key.state !== 'die') {
-                            if (key.canMove.jumps.state && key.posY >= 160 && key.canMove.jumps.gravity) {
-                                dibujarMalos.new[i].canMove.jumps.gravity = false
-                                dibujarMalos.new[i].canMove.jumps.state = false
-                                dibujarMalos.new[i].posY = 160
-                                dibujarMalos.new[i].canMove.jumps.inInterval = 0
-                            }
-                            if (key.posY < key.canMove.jumps.maxJump) {
-                                dibujarMalos.new[i].canMove.jumps.gravity = true
-                            }
-                            if (key.actions.shot.posibility && !key.actions.shot.state) {
-                                dibujarMalos.new[i].actions.shot.inInterval = key.actions.shot.inInterval + 1
-                            }
-                            if (key.actions.shot.posibility && key.actions.shot.state) {
-                                dibujarMalos.new[i].actions.shot.inInterval = 0
-                            }
-                            if (key.state !== 'onDie' && key.state !== 'die' && key.actions.shot.posibility && !key.actions.shot.state && key.actions.shot.inInterval === key.actions.shot.interval) {
-                                risabebe.play()
-                                dibujarMalos.new[i].actions.shot.state = true
-                                setTimeout(() => {
-                                    try {
-                                        dibujarMalos.new[i].actions.shot.state = false
-                                        armas.bat.onHit = false
-
-                                    } catch (error) {
-                                        console.log(error);
-                                    }
-                                }, 1000);
-                                let imgUsed = proyectilesImg
-                                let efectRandom = parseInt(Math.random() * 2)
-                                proyectiles.push({
-                                    id: parseInt(Math.random() * 50000000000000),
-                                    health: 22,
-                                    hitdirection: 'xf',
-                                    hitDamage: 0,
-                                    state: 'live',
-                                    imagen: imgUsed,
-                                    type: key.actions.shot.type,
-                                    posX: !key.canMove.direccion === 'xf' ? key.posX - 60 : key.posX + 10,
-                                    posY: (key.posY + 20) - ((Math.random() * 50) + 30),
-                                    widthX: imgUsed[0].naturalWidth / 30,
-                                    heightY: imgUsed[0].naturalHeight / 30,
-                                    direccion: key.canMove.direccion,
-                                    speed: key.actions.shot.speed,
-                                    efectDirection: efectRandom === 0 ? 'up' : 'down',
-                                })
-                            }
-                            if (key.canMove.jumps.posibility && !key.canMove.jumps.state) {
-                                dibujarMalos.new[i].canMove.jumps.inInterval = key.canMove.jumps.inInterval + 1
-                            }
-                            if (key.canMove.jumps.posibility && !key.canMove.jumps.state && key.canMove.jumps.inInterval === key.canMove.jumps.interval) {
-                                dibujarMalos.new[i].canMove.jumps.state = true
-                                dibujarMalos.new[i].canMove.jumps.gravity = false
-                            }
-                            let position = {
-                                die: 0,
-                                hit: {
-                                    left: 0,
-                                    right: 0
-                                },
-                            }
-                            key.imagen.map((key2, i) => {
-                                if (key2.direccion === 'die') { position.die = i }
-                                if (key2.direccion === `hit-xf`) { position.hit.right = i }
-                                if (key2.direccion === `hit-xb`) { position.hit.left = i }
-                            })
-                            let imagenready = key.state === 'onDie' ? key.imagen[position.die].imagen : key.state === 'hit' ? key.imagen[key.canMove.direccion === 'xf' ? position.hit.right : position.hit.left].imagen : key.imagen[key.canMove.direccion === 'xb' ? 1 : 0].imagen
-                            if (key.state !== 'die') {
-                                ctxE.drawImage(imagenready, key.posX, key.state === 'onDie' ? key.posY - 31.5 : key.posY - 30, imagenready.naturalWidth / 22, imagenready.naturalHeight / key.state === 'onDie' ? 22 : 27)
-                            }
-                            if (dibujarMalos.new[i].posX < (stateImage.posX === -1 ? 35 : 1) || dibujarMalos.new[i].posX > 299) {
-                                dibujarMalos.new[i].canMove.direccion = dibujarMalos.new[i].posX < (stateImage.posX === -1 ? 35 : 1) ? 'xf' : 'xb'
-                            }
-                            dibujarMalos.new[i].posY = key.state === 'onDie' ? dibujarMalos.new[i].posY : !dibujarMalos.new[i].canMove.jumps.posibility ? dibujarMalos.new[i].posY : dibujarMalos.new[i].canMove.jumps.state ? (!dibujarMalos.new[i].canMove.jumps.gravity ? dibujarMalos.new[i].posY < 151 ? dibujarMalos.new[i].posY - (.250 + dibujarMalos.new[i].canMove.jumps.speed) : 150 : dibujarMalos.new[i].posY + .250) : dibujarMalos.new[i].posY
-                            dibujarMalos.new[i].posX = key.state === 'onDie' ? dibujarMalos.new[i].posX : !dibujarMalos.new[i].canMove.walks.posibility ? dibujarMalos.new[i].posX : dibujarMalos.new[i].actions.shot.state || dibujarMalos.new[i].canMove.jumps.state ? dibujarMalos.new[i].posX : dibujarMalos.new[i].canMove.direccion === 'xf' ? dibujarMalos.new[i].posX + (.25 * dibujarMalos.new[i].canMove.walks.speed) : dibujarMalos.new[i].posX - (.25 * dibujarMalos.new[i].canMove.walks.speed)
-                            if (key.state !== 'die') {
-                                malosFalsesAux.push({
-                                    ...key,
-                                    id: key.id,
-                                    posX: key.posX,
-                                    posY: key.posY,
-                                    widthX: key.widthX,
-                                    heightY: key.heightY,
-                                })
-                            }
-                        }
-                    })
-                    malosFalses = malosFalsesAux
-                } else {
-                    malosFalsesAux = []
-                    malosFalses = []
-                    dibujarMalos.new = []
-                    setTimeout(() => {
-                        dibujarMalos.die = false
-                    }, 5000);
-                }
-                proyectilesFalses = []
-                let existingProyectiles = []
-                proyectiles.map((key, i) => {
-                    ctxE.drawImage(key.imagen[key.direccion === 'xf' ? 1 : 0], key.posX, key.posY, key.widthX, key.heightY)
-                    proyectiles[i].posX = key.state !== 'hit' ? (key.direccion === 'xf' ? key.posX + (.25 * key.speed) : key.posX - (.25 * key.speed)) : (key.hitdirection === 'xb' ? key.posX - (.25 * (key.speed * 2.5)) : key.posX + (.25 * (key.speed * 2.5)))
-                    proyectiles[i].posY = key.state === 'hit' ? key.efectDirection === 'up' ? proyectiles[i].posY - (.6 * key.speed * key.hitDamage) : proyectiles[i].posY + (.6 * key.speed * key.hitDamage) : proyectiles[i].posY
-                    if (key.state !== 'die' && (key.posX < 300 && (key.posX + key.widthX) > 0) && (key.posY > 0 && key.posY > 0)) {
-                        proyectilesFalses.push({
-                            ...key,
-                            id: key.id,
-                            state: key.posX,
-                            posX: key.posX,
-                            posY: key.posY,
-                            widthX: key.widthX,
-                            heightY: key.heightY,
-                            health: key.health
-                        })
-                        existingProyectiles.push(key)
-                    }
-                })
-                proyectiles = existingProyectiles
-                if (armas.bat.state) {
-                    let indexFor = armas.bat.fotograma
-                    if (armas.bat.layer < 13) {
-                        if (armas.bat.layer === 12) {
-                            armas.bat.onEnd = true
-                            setTimeout(() => {
-                                armas.bat.layer = 0
-                                armas.bat.state = false
-                            }, 600);
-                        }
-                        if (indexFor < armas.bat.speed) {
-                            indexFor = indexFor + 1
-                            armas.bat.fotograma = indexFor
+                            ctxC.drawImage(aDibujar, propsImage.levelPass ? psx : propsImage.refreshData ? 10 : !propsImage.alive ? 0 : psx, propsImage.direccion === 'xd' ? props.posY + (props.heightY / 2) : props.posY, props.widthX, propsImage.direccion === 'xd' ? (props.heightY / 2) : props.heightY)
                         } else {
-                            indexFor = 0
-                            armas.bat.fotograma = indexFor
-                            armas.bat.layer = armas.bat.layer + 1
+                            ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
+                            ctxC.clearRect(0, 0, canvas.width, canvas.height)
+                            let position = { malo: 0, body: 0 }
+                            dibujarMalos.new.map((key, i) => {
+                                if (colisioned.item === key.id) {
+                                    key.imagen.map((key2, ia) => {
+                                        if (key2.direccion === `joshi-evil-${propsImage.direccion}-${key.killLayer}`) {
+                                            position = ia;
+                                            dibujarMalos.new[i].killFotograma = dibujarMalos.new[i].killFotograma + 1;
+                                            if (dibujarMalos.new[i].killFotograma === 50) {
+                                                dibujarMalos.new[i].killLayer = dibujarMalos.new[i].killLayer + 1
+                                            }
+                                            if (dibujarMalos.new[i].killLayer === 4) {
+                                                dibujarMalos.new[i].killLayer = 0
+                                            }
+                                        }
+                                        ctxE.drawImage(key.imagen[position.malo].imagen, key.posX, key.posY, key.imagen[position.malo].imagen.naturalWidth / 22, key.imagen[position.malo].imagen.naturalHeight / 27)
+                                    })
+
+                                }
+                            })
+                            let aDibujar = propsImage.imagen[`${propsImage.direccion}_die`]
+                            ctxC.drawImage(aDibujar, psx, props.posY, props.widthX, props.heightY)
                         }
-                        let posLayer = 0
-                        armas.bat.imagenes.map((key2, i) => {
-                            if (key2.id === armas.bat.layer && key2.direccion === lastDireccion) {
-                                posLayer = i
-                            }
-                        })
-                        ctxE.drawImage(armas.bat.imagenes[posLayer].imagen, psx - 15, props.posY - (props.heightY / 2), armas.bat.imagenes[posLayer].widthX, armas.bat.imagenes[posLayer].heightY);
-                    } else {
-                        let posLayer = 0
-                        armas.bat.imagenes.map((key2, i) => {
-                            if (key2.id === 13 && key2.direccion === lastDireccion) {
-                                posLayer = i
-                            }
-                        })
-                        ctxE.drawImage(armas.bat.imagenes[posLayer].imagen, psx - 15, props.posY - (props.heightY / 2), armas.bat.imagenes[posLayer].widthX, armas.bat.imagenes[posLayer].heightY);
                     }
                 }
-                ctxC.drawImage(aDibujar, propsImage.levelPass ? psx : propsImage.refreshData ? 10 : !propsImage.alive ? 0 : psx, propsImage.direccion === 'xd' ? props.posY + (props.heightY / 2) : props.posY, props.widthX, propsImage.direccion === 'xd' ? (props.heightY / 2) : props.heightY)
+            } else {
+                propsimage.items[0].posX = 10
             }
-        } else {
-            propsimage.items[0].posX = 10
         }
     }
     const aparecer = (level) => {
@@ -697,6 +817,18 @@ const Test2 = () => {
     }
 
     const initApp = () => {
+        let kills = new Image
+        kills.src = `/armas/bat/img/kills/explocion.png`
+        kills.onload = (() => {
+            oImgW = kills.naturalWidth
+            oImgH = kills.naturalHeight
+            armas.bat.kills.push({
+                id: Math.floor(Math.random() * 25555555555555),
+                imagen: kills,
+                widthX: oImgW / 10,
+                heightY: oImgH / 10,
+            })
+        })
         obtenerOrientacion()
         setStateImage({
             ...stateImage,
@@ -728,6 +860,7 @@ const Test2 = () => {
         canvas = document.getElementById('canvas-Pp')
         ctx = canvas.getContext('2d')
         aparecer(levelGo)
+
         for (let index = 0; index < 14; index++) {
             let element = new Image
             element.src = `/armas/bat/img/bat-${index}-xf.png`
@@ -780,6 +913,23 @@ const Test2 = () => {
                 })
             }
         })
+        let imagesValue2 = ['xb', 'xf']
+        let oImgW2 = 0
+        let oImgH2 = 0
+        imagesValue2.map((key, i) => {
+            for (let index = 0; index < 2; index++) {
+                let element = new Image
+                element.src = `/img/body/body-${key}-die.png`
+                element.onload = (() => {
+                    oImgW2 = element.naturalWidth / 10
+                    oImgH2 = element.naturalHeight / 10
+                    newArrayB = {
+                        ...newArrayB,
+                        [`${key}_die`]: element
+                    }
+                })
+            }
+        })
         setTimeout(() => {
             imagenes[0] = { imagen: newArrayB, onMove: true }
             propsImage = {
@@ -806,6 +956,7 @@ const Test2 = () => {
                     direccion: 'xf',
                     imagen: otraImagen2
                 })
+
                 let otraImagen3 = new Image()
                 otraImagen3.src = `/img/enemigos/joshi/joshi-xb.png`
                 otraImagen3.onload = (() => {
@@ -842,217 +993,242 @@ const Test2 = () => {
                                         direccion: 'die',
                                         imagen: otraImagen6
                                     })
-                                    worldItems = CrearItemsWorld(newArrayB, levelGo, imgArray, actualFloor)
-                                    propsImage = {
-                                        ...propsImage,
-                                        items: createItems
-                                    }
-                                    dibujar('go', propsImage);
-                                    document.addEventListener('keydown', async (event) => {
-                                        event.preventDefault();
-                                        let keyValue = event.key;
-                                        if (keyValue === 'ArrowUp') {
-                                            if (!armas.bat.state) {
-                                                armas.bat.state = true
-                                            }
-                                        }
-                                        if (keyValue === 'ArrowDown') {
-                                            mxActive = true
-                                            mxDirection = {
-                                                ...mxDirection,
-                                                left: false,
-                                                right: false
-                                            }
-                                            propsImage = {
-                                                ...propsImage,
-                                                direccion: 'xd',
+                                    let otraImagen7 = new Image()
+                                    otraImagen7.src = `/img/enemigos/joshi/joshi-spirit.png`
+                                    otraImagen7.onload = (() => {
+                                        imgArray.push({
+                                            direccion: 'spirit',
+                                            imagen: otraImagen7
+                                        })
+                                        let arrayA = ['xb', 'xf']
+                                        for (let index = 0; index < arrayA.length; index++) {
+                                            const element = arrayA[index];
+                                            for (let indexe = 0; indexe < 5; indexe++) {
+                                                const element2 = new Image()
+                                                element2.src = `/img/enemigos/joshi/joshi-evil-${element}-${indexe}.png`
+                                                element2.onload = (() => {
+                                                    imgArray.push({
+                                                        direccion: `joshi-evil-${element}-${indexe}`,
+                                                        imagen: element2
+                                                    })
+                                                    if (index === 1 && indexe === 4) {
+                                                        worldItems = CrearItemsWorld(newArrayB, levelGo, imgArray, actualFloor, obst[0])
+                                                        propsImage = {
+                                                            ...propsImage,
+                                                            items: createItems
+                                                        }
+                                                        dibujar('go', propsImage);
+                                                        document.addEventListener('keydown', async (event) => {
+                                                            event.preventDefault();
+                                                            let keyValue = event.key;
+                                                            if (keyValue === 'ArrowUp') {
+                                                                if (!armas.bat.state) {
+                                                                    armas.bat.state = true
+                                                                }
+                                                            }
+                                                            if (keyValue === 'ArrowDown') {
+                                                                mxActive = true
+                                                                mxDirection = {
+                                                                    ...mxDirection,
+                                                                    left: false,
+                                                                    right: false
+                                                                }
+                                                                propsImage = {
+                                                                    ...propsImage,
+                                                                    direccion: 'xd',
+                                                                }
+
+                                                            }
+                                                            if (keyValue === 'ArrowRight' && !mxActive && !mxDirection.left) {
+                                                                mxActive = true
+                                                                mxDirection = {
+                                                                    ...mxDirection,
+                                                                    left: false,
+                                                                    right: true
+                                                                }
+                                                                propsImage = {
+                                                                    ...propsImage,
+                                                                    direccion: 'xf',
+
+                                                                }
+                                                                lastDireccion = 'xf'
+                                                                dibujarMouseOn('+', true)
+                                                            } else {
+                                                                if ((keyValue === 'ArrowRight' && mxActive)) {
+                                                                    propsImage = {
+                                                                        ...propsImage,
+                                                                        direccion: 'xf',
+                                                                    }
+                                                                    lastDireccion = 'xf'
+                                                                    mxDirection = {
+                                                                        ...mxDirection,
+                                                                        left: false,
+                                                                        right: true
+                                                                    }
+                                                                } else
+                                                                    if ((keyValue === 'ArrowRight' && mxActive && mxDirection.left)) {
+                                                                        propsImage = {
+                                                                            ...propsImage,
+                                                                            direccion: 'xf',
+                                                                        }
+
+                                                                        lastDireccion = 'xf'
+                                                                        mxDirection = {
+                                                                            ...mxDirection,
+                                                                            left: false,
+                                                                            right: true
+                                                                        }
+                                                                    }
+                                                            }
+                                                            if (keyValue === 'ArrowLeft' && !mxActive) {
+                                                                mxActive = true
+                                                                dibujarMouseOn('-', true)
+                                                                propsImage = {
+                                                                    ...propsImage,
+                                                                    direccion: 'xb',
+                                                                }
+                                                                lastDireccion = 'xb'
+                                                            } else {
+                                                                if ((keyValue === 'ArrowLeft' && mxActive)) {
+                                                                    propsImage = {
+                                                                        ...propsImage,
+                                                                        direccion: 'xb',
+                                                                    }
+                                                                    lastDireccion = 'xb'
+                                                                    mxDirection = {
+                                                                        ...mxDirection,
+                                                                        left: true,
+                                                                        right: false
+                                                                    }
+                                                                } else
+                                                                    if ((keyValue === 'ArrowLeft' && mxActive && mxDirection.left)) {
+                                                                        propsImage = {
+                                                                            ...propsImage,
+                                                                            direccion: 'xb',
+
+                                                                        }
+                                                                        lastDireccion = 'xb'
+                                                                        mxDirection = {
+                                                                            ...mxDirection,
+                                                                            left: true,
+                                                                            right: false
+                                                                        }
+                                                                    }
+                                                            }
+                                                            if (keyValue === ' ' && !myActive) {
+                                                                myActive = true
+                                                                dibujarMouseOn('up', true)
+                                                            }
+                                                        }, false);
+
+                                                        document.addEventListener('keyup', (event) => {
+                                                            event.preventDefault()
+                                                            let keyValue = event.key;
+                                                            if (keyValue === ' ') {
+                                                                if (propsAction.jumping) {
+                                                                    setTimeout(() => {
+                                                                        let nowJump = propsAction
+                                                                        nowJump.gravity = true
+                                                                        propsAction = {
+                                                                            ...propsAction,
+                                                                            ...nowJump
+                                                                        }
+                                                                    }, 30);
+                                                                }
+                                                            } else {
+                                                                if (mxActive && (keyValue === 'ArrowLeft' || keyValue === 'ArrowRight' || keyValue === 'ArrowDown')) {
+                                                                    if (keyValue === 'ArrowDown') {
+                                                                        propsImage = {
+                                                                            ...propsImage,
+                                                                            direccion: 'xs'
+                                                                        }
+                                                                        mxDirection = {
+                                                                            ...mxDirection,
+                                                                            left: false,
+                                                                            right: false
+                                                                        }
+                                                                        mxActive = false
+                                                                    }
+                                                                    if ((!mxDirection.right && keyValue === 'ArrowLeft')) {
+                                                                        mxActive = false
+                                                                        propsImage = {
+                                                                            ...propsImage,
+                                                                            direccion: 'xs'
+                                                                        }
+                                                                        mxDirection = {
+                                                                            ...mxDirection,
+                                                                            left: false,
+                                                                            right: false
+                                                                        }
+                                                                        mxActive = false
+                                                                    }
+                                                                    if ((!mxDirection.left && keyValue === 'ArrowRight')) {
+                                                                        mxActive = false
+                                                                        propsImage = {
+                                                                            ...propsImage,
+                                                                            direccion: 'xs'
+                                                                        }
+                                                                        mxDirection = {
+                                                                            ...mxDirection,
+                                                                            left: false,
+                                                                            right: false
+                                                                        }
+                                                                        mxActive = false
+                                                                    }
+                                                                    if ((mxDirection.right && keyValue === 'ArrowLeft')) {
+                                                                        propsImage = {
+                                                                            ...propsImage,
+                                                                            direccion: 'xf',
+                                                                        }
+                                                                        mxDirection = {
+                                                                            ...mxDirection,
+                                                                            left: false,
+                                                                            right: true
+                                                                        }
+                                                                    }
+                                                                    if ((mxDirection.left && keyValue === 'ArrowRight')) {
+                                                                        propsImage = {
+                                                                            ...propsImage,
+                                                                            direccion: 'xb',
+                                                                            lastDireccion: 'xb'
+                                                                        }
+                                                                        mxDirection = {
+                                                                            ...mxDirection,
+                                                                            left: true,
+                                                                            right: false
+                                                                        }
+                                                                    }
+                                                                    else if ((mxDirection.left && keyValue === 'ArrowRight')) {
+                                                                        propsImage = {
+                                                                            ...propsImage,
+                                                                            direccion: 'xb',
+                                                                        }
+                                                                        mxDirection = {
+                                                                            ...mxDirection,
+                                                                            left: true,
+                                                                            right: false
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }, false);
+                                                        audioPp = document.getElementById('gameTrack')
+                                                        setHalfVolume()
+                                                        startTime(0)
+                                                        makeStage()
+                                                    }
+                                                })
                                             }
 
                                         }
-                                        if (keyValue === 'ArrowRight' && !mxActive && !mxDirection.left) {
-                                            mxActive = true
-                                            mxDirection = {
-                                                ...mxDirection,
-                                                left: false,
-                                                right: true
-                                            }
-                                            propsImage = {
-                                                ...propsImage,
-                                                direccion: 'xf',
 
-                                            }
-                                            lastDireccion = 'xf'
-                                            dibujarMouseOn('+', true)
-                                        } else {
-                                            if ((keyValue === 'ArrowRight' && mxActive)) {
-                                                propsImage = {
-                                                    ...propsImage,
-                                                    direccion: 'xf',
-                                                }
-                                                lastDireccion = 'xf'
-                                                mxDirection = {
-                                                    ...mxDirection,
-                                                    left: false,
-                                                    right: true
-                                                }
-                                            } else
-                                                if ((keyValue === 'ArrowRight' && mxActive && mxDirection.left)) {
-                                                    propsImage = {
-                                                        ...propsImage,
-                                                        direccion: 'xf',
-                                                    }
+                                    })
 
-                                                    lastDireccion = 'xf'
-                                                    mxDirection = {
-                                                        ...mxDirection,
-                                                        left: false,
-                                                        right: true
-                                                    }
-                                                }
-                                        }
-                                        if (keyValue === 'ArrowLeft' && !mxActive) {
-                                            mxActive = true
-                                            dibujarMouseOn('-', true)
-                                            propsImage = {
-                                                ...propsImage,
-                                                direccion: 'xb',
-                                            }
-                                            lastDireccion = 'xb'
-                                        } else {
-                                            if ((keyValue === 'ArrowLeft' && mxActive)) {
-                                                propsImage = {
-                                                    ...propsImage,
-                                                    direccion: 'xb',
-                                                }
-                                                lastDireccion = 'xb'
-                                                mxDirection = {
-                                                    ...mxDirection,
-                                                    left: true,
-                                                    right: false
-                                                }
-                                            } else
-                                                if ((keyValue === 'ArrowLeft' && mxActive && mxDirection.left)) {
-                                                    propsImage = {
-                                                        ...propsImage,
-                                                        direccion: 'xb',
-
-                                                    }
-                                                    lastDireccion = 'xb'
-                                                    mxDirection = {
-                                                        ...mxDirection,
-                                                        left: true,
-                                                        right: false
-                                                    }
-                                                }
-                                        }
-                                        if (keyValue === ' ' && !myActive) {
-                                            myActive = true
-                                            dibujarMouseOn('up', true)
-                                        }
-                                    }, false);
-
-                                    document.addEventListener('keyup', (event) => {
-                                        event.preventDefault()
-                                        let keyValue = event.key;
-                                        if (keyValue === ' ') {
-                                            if (propsAction.jumping) {
-                                                setTimeout(() => {
-                                                    let nowJump = propsAction
-                                                    nowJump.gravity = true
-                                                    propsAction = {
-                                                        ...propsAction,
-                                                        ...nowJump
-                                                    }
-                                                }, 30);
-                                            }
-                                        } else {
-                                            if (mxActive && (keyValue === 'ArrowLeft' || keyValue === 'ArrowRight' || keyValue === 'ArrowDown')) {
-                                                if (keyValue === 'ArrowDown') {
-                                                    propsImage = {
-                                                        ...propsImage,
-                                                        direccion: 'xs'
-                                                    }
-                                                    mxDirection = {
-                                                        ...mxDirection,
-                                                        left: false,
-                                                        right: false
-                                                    }
-                                                    mxActive = false
-                                                }
-                                                if ((!mxDirection.right && keyValue === 'ArrowLeft')) {
-                                                    mxActive = false
-                                                    propsImage = {
-                                                        ...propsImage,
-                                                        direccion: 'xs'
-                                                    }
-                                                    mxDirection = {
-                                                        ...mxDirection,
-                                                        left: false,
-                                                        right: false
-                                                    }
-                                                    mxActive = false
-                                                }
-                                                if ((!mxDirection.left && keyValue === 'ArrowRight')) {
-                                                    mxActive = false
-                                                    propsImage = {
-                                                        ...propsImage,
-                                                        direccion: 'xs'
-                                                    }
-                                                    mxDirection = {
-                                                        ...mxDirection,
-                                                        left: false,
-                                                        right: false
-                                                    }
-                                                    mxActive = false
-                                                }
-                                                if ((mxDirection.right && keyValue === 'ArrowLeft')) {
-                                                    propsImage = {
-                                                        ...propsImage,
-                                                        direccion: 'xf',
-                                                    }
-                                                    mxDirection = {
-                                                        ...mxDirection,
-                                                        left: false,
-                                                        right: true
-                                                    }
-                                                }
-                                                if ((mxDirection.left && keyValue === 'ArrowRight')) {
-                                                    propsImage = {
-                                                        ...propsImage,
-                                                        direccion: 'xb',
-                                                        lastDireccion: 'xb'
-                                                    }
-                                                    mxDirection = {
-                                                        ...mxDirection,
-                                                        left: true,
-                                                        right: false
-                                                    }
-                                                }
-                                                else if ((mxDirection.left && keyValue === 'ArrowRight')) {
-                                                    propsImage = {
-                                                        ...propsImage,
-                                                        direccion: 'xb',
-                                                    }
-                                                    mxDirection = {
-                                                        ...mxDirection,
-                                                        left: true,
-                                                        right: false
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }, false);
-                                    audioPp = document.getElementById('gameTrack')
-                                    setHalfVolume()
-                                    startTime(0)
-                                    makeStage()
                                 })
-
                             })
                         })
                     })
                 })
-
             })
 
 
@@ -1144,17 +1320,19 @@ const Test2 = () => {
     }
 
     const makeStage = (value = '+') => {
-        propsImage.posY = actualFloor
+        propsImage.posY = (actualFloor - propsImage.heightY)
         proyectiles = []
-        levelFalses = []
+        fantasmas = [],
+            levelFalses = []
         malosFalses = []
         proyectilesFalses = []
         ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
         dibujarMalos = { last: [], new: [] }
         for (let index = 0; index < worldItems.length; index++) {
             let otraImagen = new Image()
-            otraImagen.src = `/img/obstaculos/obst-${Math.floor(Math.random() * 2)}.png`
+            otraImagen.src = `/img/obstaculos/obst-${parseInt(Math.floor(Math.random() * 2))}.png`
             otraImagen.onload = (() => {
+                obst[0] = otraImagen
                 const element = worldItems[index];
                 if (element.layerOnDisplay === inLayer && element.displayneed
                 ) {
@@ -1174,7 +1352,7 @@ const Test2 = () => {
                           ctxD.fillStyle = 'green';
                           ctxD.moveTo(0, 0);
                           ctxD.stroke(); */
-                        ctxD.drawImage(otraImagen, element.posX, element.posY - 30, otraImagen.naturalWidth / 14, otraImagen.naturalHeight / 25)
+                        ctxD.drawImage(otraImagen, element.posX, element.posY, otraImagen.naturalWidth / 14, otraImagen.naturalHeight / 25)
 
                     } else {
                         if (element.type === 'npc') {
@@ -1189,10 +1367,10 @@ const Test2 = () => {
         }
         myActive = false
         if (inLayer !== 0) {
-            propsImage.items[0].posY = actualFloor
+            propsImage.items[0].posY = (actualFloor - propsImage.heightY)
             setTimeout(() => {
-                propsImage.items[0].posY = actualFloor
-                propsImage.posY = actualFloor
+                propsImage.items[0].posY = (actualFloor - propsImage.items[0].heightY)
+                propsImage.posY = (actualFloor - propsImage.heightY)
                 propsAction = {
                     ...propsAction,
                     jumping: false,
@@ -1256,7 +1434,7 @@ const Test2 = () => {
                 if (inLayer === 11) {
                     audioPp.src = ''
                     pass.play()
-                    worldItems = CrearItemsWorld([], levelGo, imgArray, actualFloor)
+                    worldItems = CrearItemsWorld([], levelGo, imgArray, actualFloor, obst[0])
                     levelFalses = []
                     malosFalses = []
                     proyectilesFalses = []
@@ -1324,9 +1502,9 @@ const Test2 = () => {
                         propsImage.refreshData = true
                         propsImage.alive = false
                         let otraImagen2 = new Image()
-                        otraImagen2.src = `/img/enemigos/joshi/joshi-${Math.floor(Math.random() * 3)}.png`
+                        otraImagen2.src = `/img/enemigos/joshi/joshi-${parseInt(Math.floor(Math.random() * 3))}.png`
                         otraImagen2.onload = (() => {
-                            worldItems = CrearItemsWorld([], levelGo, imgArray, actualFloor)
+                            worldItems = CrearItemsWorld(otraImagen2, levelGo, imgArray, actualFloor, obst[0])
                         })
                         setPlayerStage({
                             ...playerStage,
