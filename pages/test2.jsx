@@ -8,7 +8,7 @@ let off = true, colisioned = {
     state: false,
     item: 0,
     result: 'live'
-}, obst = [], sierra=true,timeOfgame = 0, actualFloor = 150, lastDireccion = 'xf', armas = {
+}, obst = [], dolor = true, sierra = true, timeOfgame = 0, actualFloor = 150, lastDireccion = 'xf', armas = {
     bat: {
         onHit: false,
         damage: 7,
@@ -25,7 +25,7 @@ let off = true, colisioned = {
     },
 }, WeaponAudio = [true, true], audioPlaying = 0, jump, obtenerOrientacion = console.log, pass, audioPp, actualVidas = 5, mxActive = false, myActive = false, fantasmas = [], dibujarMalos = {
     die: false, last: [], new: []
-}, mxDirection = { left: false, right: false }, portraitAudio, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, muertebebe, joshisound, joshisound2, joshisound3 = [true, true, true,true], pow, proyectilesImg = [], imagenesSrc = [`/img/finales/foto-de-anime-4.png`, `/img/finales/foto-de-anime-3.png`, `/img/finales/foto-de-anime-2.png`, `/img/finales/foto-de-anime-1.png`, `/img/finales/foto-de-anime-0.png`], fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { jumping: false, gravity: true }, canvas, levelGo = 1, ctx, imgArray = [],
+}, mxDirection = { left: false, right: false }, portraitAudio, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, muertebebe, joshisound, joshisound2, joshisound3 = [true, true, true, true], pow, proyectilesImg = [], imagenesSrc = [`/img/finales/foto-de-anime-4.png`, `/img/finales/foto-de-anime-3.png`, `/img/finales/foto-de-anime-2.png`, `/img/finales/foto-de-anime-1.png`, `/img/finales/foto-de-anime-0.png`], fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { jumping: false, gravity: true }, canvas, levelGo = 1, ctx, imgArray = [],
     imagenA, canvasC, ctxC, canvasB, ctxB, canvasD, ctxD, canvasE, ctxE, imagenes = [{ onMove: false }], worldItems = [], timeRestart = false, levelDificulty = 20
 const Test2 = () => {
     const [ejes, setEjes] = useState({ alpha: 0, beta: 0, gamma: 0 })
@@ -466,6 +466,8 @@ const Test2 = () => {
                             ctxD.strokeText(actualVidas > 1 ? `MUERTISIMO` : 'GAME OVER', 30, 50)
                             ctxD.restore();
                             ctxD.stroke()
+                        } else {
+                            dolor.play()
                         }
                     }
                     dibujarMalos.new.map((key2, i) => {
@@ -537,7 +539,7 @@ const Test2 = () => {
                                 ctxD.restore();
                                 ctxD.stroke()
                                 malosFalses = []
-                            }else{
+                            } else {
                                 joshisound3[3].play()
                             }
                         }
@@ -1928,7 +1930,9 @@ const Test2 = () => {
             joshisound2 = new Audio('/audio/joshi-1.mp3');
             joshisound3 = [new Audio('/audio/joshi-1.mp3'), new Audio('/audio/joshi-2.mp3'), new Audio('/audio/joshi-3.mp3'), new Audio('/audio/joshi-4.mp3')];
             pow = new Audio('/audio/pow-0.mp3');
-            sierra=new Audio('/audio/sierra.mp3')
+            sierra = new Audio('/audio/sierra.mp3');
+            dolor = new Audio('/audio/dolor.mp3');
+            dolor.volume = .2
             risabebe = new Audio('/audio/bebe-0.mp3');
             muertebebe = new Audio('/audio/bebe-2.mp3');
             pass = new Audio('/audio/pass.mp3');
