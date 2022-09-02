@@ -2,13 +2,20 @@ export const CrearItems = (newArray, posX, floor) => {
 
     return ([{
         displayneed: true,
-        layerOnDisplay: 3,
-        imagen: newArray,
+        layerOnDisplay: 'all',
+        imagen: [],
         type: 'hpc',
-        posX: posX,
-        posY: (floor - 30),
-        widthX: 19,
-        heightY: 30,
+        posX: 0,
+        posY: 0,
+        widthX: 0,
+        heightY: 0,
+        status:'live',
+        health:{
+/*             resistencia:0,
+ */            blindaje:0,
+            estado:'normal',
+            nivel:50
+        },
         canMove: {
             state: true,
             colision: true,
@@ -48,27 +55,31 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
             const range = max - min + 1;
             const trys = (distanceRange * index2) + (Math.random() * range) + min;
             ejeX = index === 0 ? trys + 60 : trys
+            const randomNumber = parseInt(Math.floor(Math.random() * 2))
             const element = {
+                id: `${parseInt(Math.random() * 988888888)}-obst`,
                 displayneed: true,
                 layerOnDisplay: index,
-                imagen: newArray,
+                randomNumber: randomNumber,
+                damage: randomNumber === 0 ? 25 : 45,
                 type: 'obj',
                 posX: ejeX,
+                class:randomNumber === 0 ? 'cactus' : 'motosierra',
                 posY: (floor - 20),
                 widthX: newArray.xs_0.naturalWidth / 14,
                 heightY: newArray.xs_0.naturalWidth / 14,
                 canMove: {
                     state: true,
                     colision: true,
-                    direccion: 'auto',
+                    direccion: 'off',
                     jumps: {
-                        posibility: true,
+                        posibility: false,
                         interval: 0,
                         speed: 0,
                         maxJump: 'gravity'
                     },
                     walks: {
-                        posibility: true,
+                        posibility: false,
                         interval: 0,
                         speed: 0,
                         maxArea: 'all'
@@ -82,13 +93,15 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
             let randomDireccion = parseInt(Math.random() * 2)
             if (index2 === 0 || index2 === 2) {
                 const malo = {
-                    id: parseInt(Math.random() * 988888888),
+                    id: `${parseInt(Math.random() * 988888888)}-malo`,
                     hitDamage: 0,
                     state: 'live',
                     displayneed: true,
                     layerOnDisplay: index,
                     imagen: imagen,
                     type: 'npc',
+                    class:'johsi',
+                    damage:(Math.random() * 25) + 15,
                     posX: objCant > 1 ? index2 === 0 ? (Math.random() * 95) + 50 : (Math.random() * 110) + 150 : (Math.random() * 250) + 30,
                     posY: (floor - (imagen[0].imagen.naturalHeight / 27)),
                     widthX: imagen[0].imagen.naturalWidth / 22,
@@ -125,7 +138,9 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
                             type: 'basic',
                             interval: parseInt((Math.random() * (1000 / level)) + 500),
                             inInterval: 0,
-                            speed: (Math.random() * .5) + .5
+                            speed: (Math.random() * .5) + .5,
+                            damage:(Math.random() * 8) + 25
+
                         },
                         inCurse: true
                     }
@@ -167,6 +182,13 @@ export const PropsImage = {
         posY: 0,
         widthX: 0,
         heightY: 0,
+        status:'live',
+        health:{
+/*             resistencia:0,
+ */            blindaje:0,
+            estado:'normal',
+            nivel:50
+        },
         canMove: {
             state: true,
             colision: true,

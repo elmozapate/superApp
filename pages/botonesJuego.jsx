@@ -10,13 +10,14 @@ const BotonesJuego = (props) => {
             </span>
             <div className="btn-plus">
                 <button
-                    className={`flex-start ${id === 'dificulty' &&  value > 10 ? '' : id === 'level' ? (id === 'level' && value[id] > 0 ? "" : 'hided') : id === 'stage' ? (value[id] > (0) ? '' : 'hided') : value[id] > 1 ? '' : 'hided'}`}
+                    className={`flex-start ${id === 'dificulty' && value > 10 ? '' : id === 'level' ? (id === 'level' && value[id] > 0 ? "" : 'hided') : id === 'stage' ? (value[id] > (0) ? '' : 'hided') : value[id] > 1 ? '' : 'hided'}`}
                     onClick={(e) => {
                         e.preventDefault();
                         funtion(id, id === 'level' || id === 'dificulty' ? '-' : value[id] - 1);
                         setValue({
+                            ...value,
                             [id]: value[id] - 1
-                        });
+                        })
                     }}
                 >-</button>
                 <button
@@ -25,8 +26,9 @@ const BotonesJuego = (props) => {
                         e.preventDefault();
                         funtion(id, id === 'level' || id === 'dificulty' ? '+' : value[id] + 1);
                         setValue({
+                            ...value,
                             [id]: value[id] + 1
-                        });
+                        })
                     }}
                 >+</button>
             </div>
