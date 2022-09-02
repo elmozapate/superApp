@@ -455,6 +455,7 @@ const Test2 = () => {
                             vidas: actualVidas,
                             health: propsImage.items[0].health.nivel
                         })
+                        sierra.play()
                         if (propsImage.items[0].health.nivel < 0) {
                             colisioned.result = 'die'
                             ctxD.save();
@@ -465,8 +466,6 @@ const Test2 = () => {
                             ctxD.strokeText(actualVidas > 1 ? `MUERTISIMO` : 'GAME OVER', 30, 50)
                             ctxD.restore();
                             ctxD.stroke()
-                        }else{
-                            sierra.play()
                         }
                     }
                     dibujarMalos.new.map((key2, i) => {
