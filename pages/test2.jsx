@@ -459,10 +459,10 @@ const Test2 = () => {
                     if (hiter === ('malo') || hiter === ('proy') || hiter === ('obst')) {
                         const chokeInminente = Colisonador(propsImage.items[0], hiter === ('malo') ? malosFalses : hiter === ('proy') ? proyectiles : levelFalses, props, true, true, ctxD, hiter)
                         if (chokeInminente.state) {
-                            yaWey.play()
                             switch (chokeInminente.array[0].b.id.split('-')[chokeInminente.array[0].b.id.split('-').length - 1]) {
                                 case 'malo':
                                     if (dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'die' && dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'spirit' && dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'onDie') {
+                                        yaWey.play()
                                         joshisound.play()
                                         colisioned.state = true
                                         colisioned.item = dibujarMalos.new[chokeInminente.array[0].b.pos].id
@@ -493,6 +493,7 @@ const Test2 = () => {
                                     break;
                                 case 'proy':
                                     llantobebe.play()
+                                    yaWey.play()
                                     pow.play()
                                     colisioned.state = true
                                     colisioned.item = proyectiles[chokeInminente.array[0].b.pos].id
@@ -516,6 +517,7 @@ const Test2 = () => {
                                     }
                                     break;
                                 case 'obst':
+                                    dolor.play()
                                     colisioned.state = true
                                     colisioned.item = levelFalses[chokePlayer.array[0].b.pos].id
                                     propsImage.items[0].health.nivel = propsImage.items[0].health.nivel - levelFalses[chokePlayer.array[0].b.pos].damage
@@ -532,8 +534,6 @@ const Test2 = () => {
                                         ctxD.strokeText(actualVidas > 1 ? `MUERTISIMO` : 'GAME OVER', 30, 50)
                                         ctxD.restore();
                                         ctxD.stroke()
-                                    } else {
-                                        dolor.play()
                                     }
                                     break;
                                 default:
