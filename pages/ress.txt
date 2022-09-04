@@ -1,0 +1,383 @@
+const dibujar = async (values, Props, value) => {
+        const puntosNulos = JoshiXf()
+        if (dibujarMalos.new.length > 0) {
+            console.log(dibujarMalos.new, parseInt(dibujarMalos.new[0].heightY), parseInt(dibujarMalos.new[0].widthX));
+            ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
+            ctxC.clearRect(0, 0, canvasC.width, canvasE.height)
+            ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            let objeto2 = []
+            let regleta = []
+            let regletaNull = []
+            dibujarMalos.new[0].posX = 50
+            dibujarMalos.new[0].posY = 20
+            let drawRegletaY = 1
+            for (let i = 0; i < parseInt(dibujarMalos.new[0].heightY); i++) {
+                let drawRegletaX = 1
+                for (let index = 0; index < parseInt(dibujarMalos.new[0].widthX); index++) {
+                    const lugarNull = puntosNulos[i]
+                    console.log(lugarNull[0], lugarNull[1]);
+
+                    const element = {
+                        posX: parseInt((index * 5) + dibujarMalos.new[0].posX),
+                        posY: parseInt(dibujarMalos.new[0].posY + (i * 5)),
+                        widthX: parseInt(dibujarMalos.new[0].widthX * 5),
+                        heightY: parseInt(dibujarMalos.new[0].heightY * 5),
+                        id: dibujarMalos.new[0].id,
+                    };
+                    if (lugarNull.length === 3) {
+                        if (((index < lugarNull[2][1]) && (index > lugarNull[2][0])) || index < lugarNull[0] || index > parseInt(dibujarMalos.new[0].widthX) - lugarNull[1]) {
+                            regletaNull.push(element)
+                        }
+                    } else
+                        if (index < lugarNull[0] || index > parseInt(dibujarMalos.new[0].widthX) - lugarNull[1]) {
+                            regletaNull.push(element)
+                        }
+                    if (drawRegletaX === 5 && i === 0) {
+                        regleta.push({ elemento: element, eje: 'X' })
+                        drawRegletaX = 0
+                    }
+                    if (drawRegletaY === 5 && index === 0) {
+                        regleta.push({ elemento: element, eje: 'Y' })
+                        drawRegletaY = 0
+                    }
+                    drawRegletaX = drawRegletaX + 1
+                    objeto2.push(element)
+                }
+                drawRegletaY = drawRegletaY + 1
+            }
+            ctxD.lineWidth = .2
+            regleta.map((key, i) => {
+                if (key.eje === 'X') {
+                    ctxD.fillStyle = 'green'
+                    ctxD.fillRect(key.elemento.posX, key.elemento.posY, 5, (dibujarMalos.new[0].heightY * 5))
+
+                } else {
+                    ctxD.fillStyle = 'blue'
+                    ctxD.fillRect(key.elemento.posX, key.elemento.posY, (dibujarMalos.new[0].widthX * 5), 5)
+
+                }
+            })
+            objeto2.map((key, i) => {
+                ctxD.strokeRect(key.posX, key.posY, 5, 5)
+            })
+            regletaNull.map((key, i) => {
+                ctxD.clearRect(key.posX, key.posY, 5, 5)
+            })
+            ctxE.drawImage(dibujarMalos.new[0].imagen[0].imagen, 50, 20, (dibujarMalos.new[0].widthX * 5), (dibujarMalos.new[0].heightY * 5))
+
+        } else {
+            setTimeout(() => {
+                dibujar()
+            }, 5);
+        }
+    }
+/* 
+
+
+/* 
+
+
+
+
+
+
+
+
+
+
+
+ */
+const dibujar = async (values, Props, value) => {
+    const puntosNulos = BebeXf()
+    proyectiles = []
+    let imgUsed = proyectilesImg
+
+    if (imgUsed[1] && imgUsed[1].naturalWidth) {
+        proyectiles.push({
+            id: `00-proy`,
+            health: 22,
+            hitdirection: 'xf',
+            hitDamage: 0,
+            state: 'live',
+            imagen: imgUsed[1],
+            type: 'prototype',
+            posX: 50,
+            posY: 20,
+            widthX: parseInt(imgUsed[1].naturalWidth / 30),
+            heightY: parseInt(imgUsed[1].naturalHeight / 30),
+            direccion: 'xb',
+            speed: 0,
+            efectDirection: 'down',
+            damage: 0,
+        })
+        console.log(proyectiles, parseInt(proyectiles[0].heightY), parseInt(proyectiles[0].widthX));
+        ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
+        ctxC.clearRect(0, 0, canvasC.width, canvasE.height)
+        ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        let objeto2 = []
+        let regleta = []
+        let regletaNull = []
+        proyectiles[0].posX = 50
+        proyectiles[0].posY = 20
+        let drawRegletaY = 1
+        for (let i = 0; i < parseInt(proyectiles[0].heightY); i++) {
+            let drawRegletaX = 1
+            for (let index = 0; index < parseInt(proyectiles[0].widthX); index++) {
+                const lugarNull = puntosNulos[i]
+                console.log(lugarNull[0], lugarNull[1]);
+
+                const element = {
+                    posX: parseInt((index * 5) + proyectiles[0].posX),
+                    posY: parseInt(proyectiles[0].posY + (i * 5)),
+                    widthX: parseInt(proyectiles[0].widthX * 5),
+                    heightY: parseInt(proyectiles[0].heightY * 5),
+                    id: proyectiles[0].id,
+                };
+                if (lugarNull.length === 3) {
+                    if (((index < lugarNull[2][1]) && (index > lugarNull[2][0])) || index < lugarNull[0] || index > parseInt(proyectiles[0].widthX) - lugarNull[1]) {
+                        regletaNull.push(element)
+                    }
+                } else
+                    if (index < lugarNull[0] || index > parseInt(proyectiles[0].widthX) - lugarNull[1]) {
+                        regletaNull.push(element)
+                    }
+                if (drawRegletaX === 5 && i === 0) {
+                    regleta.push({ elemento: element, eje: 'X' })
+                    drawRegletaX = 0
+                }
+                if (drawRegletaY === 5 && index === 0) {
+                    regleta.push({ elemento: element, eje: 'Y' })
+                    drawRegletaY = 0
+                }
+                drawRegletaX = drawRegletaX + 1
+                objeto2.push(element)
+            }
+            drawRegletaY = drawRegletaY + 1
+        }
+        ctxD.lineWidth = .2
+        regleta.map((key, i) => {
+            if (key.eje === 'X') {
+                ctxD.fillStyle = 'green'
+                ctxD.fillRect(key.elemento.posX, key.elemento.posY, 5, (proyectiles[0].heightY * 5))
+
+            } else {
+                ctxD.fillStyle = 'blue'
+                ctxD.fillRect(key.elemento.posX, key.elemento.posY, (proyectiles[0].widthX * 5), 5)
+
+            }
+        })
+        objeto2.map((key, i) => {
+            ctxD.strokeRect(key.posX, key.posY, 5, 5)
+        })
+        regletaNull.map((key, i) => {
+            ctxD.clearRect(key.posX, key.posY, 5, 5)
+        })
+        ctxD.drawImage(proyectiles[0].imagen, 50, 20, (proyectiles[0].widthX * 5), (proyectiles[0].heightY * 5))
+
+    } else {
+        setTimeout(() => {
+            dibujar()
+        }, 5);
+    }
+}
+
+
+
+
+
+ */
+const dibujar = async (values, Props, value) => {
+    const puntosNulos = BodyXf()
+    if (propsImage.imagen.xf_1) {
+        console.log(propsImage.imagen['xf_1']);
+        ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
+        ctxC.clearRect(0, 0, canvasC.width, canvasE.height)
+        ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        let objeto2 = []
+        let regleta = []
+        let regletaNull = []
+        propsImage.posX = 50
+        propsImage.posY = 20
+        let drawRegletaY = 1
+        console.log(parseInt(propsImage.heightY), parseInt(propsImage.widthX));
+        for (let i = 0; i < parseInt(propsImage.heightY); i++) {
+            let drawRegletaX = 1
+            for (let index = 0; index < parseInt(propsImage.widthX); index++) {
+                const lugarNull = puntosNulos[i]
+                console.log(lugarNull[0], lugarNull[1]);
+
+                const element = {
+                    posX: parseInt((index * 5) + propsImage.posX),
+                    posY: parseInt(propsImage.posY + (i * 5)),
+                    widthX: parseInt(propsImage.widthX * 5),
+                    heightY: parseInt(propsImage.heightY * 5),
+                    id: propsImage.id,
+                };
+                if (lugarNull.length === 3) {
+                    if (((index < lugarNull[2][1]) && (index > lugarNull[2][0])) || index < lugarNull[0] || index > parseInt(propsImage.widthX) - lugarNull[1]) {
+                        regletaNull.push(element)
+                    }
+                } else
+                    if (index < lugarNull[0] || index > parseInt(propsImage.widthX) - lugarNull[1]) {
+                        regletaNull.push(element)
+                    }
+                if (drawRegletaX === 5 && i === 0) {
+                    regleta.push({ elemento: element, eje: 'X' })
+                    drawRegletaX = 0
+                }
+                if (drawRegletaY === 5 && index === 0) {
+                    regleta.push({ elemento: element, eje: 'Y' })
+                    drawRegletaY = 0
+                }
+                drawRegletaX = drawRegletaX + 1
+                objeto2.push(element)
+            }
+            drawRegletaY = drawRegletaY + 1
+        }
+        ctxD.lineWidth = .2
+        regleta.map((key, i) => {
+            if (key.eje === 'X') {
+                ctxD.fillStyle = 'green'
+                ctxD.fillRect(key.elemento.posX, key.elemento.posY, 5, (propsImage.heightY * 5))
+
+            } else {
+                ctxD.fillStyle = 'blue'
+                ctxD.fillRect(key.elemento.posX, key.elemento.posY, (propsImage.widthX * 5), 5)
+
+            }
+        })
+        objeto2.map((key, i) => {
+            ctxD.strokeRect(key.posX, key.posY, 5, 5)
+        })
+        regletaNull.map((key, i) => {
+            ctxD.clearRect(key.posX, key.posY, 5, 5)
+        })
+        ctxD.drawImage(propsImage.imagen.xf_1, 50, 20, (propsImage.widthX * 5), (propsImage.heightY * 5))
+
+    } else {
+        setTimeout(() => {
+            dibujar()
+        }, 5);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const dibujar = async (values, Props, value) => {
+    const puntosNulos = SierraXf()
+    if (obst.length > 0 && obst[1]) {
+        console.log(obst[1]);
+        let obstt = [{
+            id: `0-obst`,
+            displayneed: true,
+            layerOnDisplay: 0,
+            randomNumber: 0,
+            damage: 0,
+            imagen: obst[1],
+            type: 'obj',
+            posX: 50,
+            class: 'motosierra',
+            posY: 20,
+            widthX: parseInt(obst[1].naturalWidth / 14),
+            heightY: parseInt(obst[1].naturalWidth / 14),
+        }]
+        console.log(obstt, parseInt(obstt[0].heightY), parseInt(obstt[0].widthX));
+        ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
+        ctxC.clearRect(0, 0, canvasC.width, canvasE.height)
+        ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        let objeto2 = []
+        let regleta = []
+        let regletaNull = []
+        obstt[0].posX = 50
+        obstt[0].posY = 20
+        let drawRegletaY = 1
+        for (let i = 0; i < parseInt(obstt[0].heightY); i++) {
+            let drawRegletaX = 1
+            for (let index = 0; index < parseInt(obstt[0].widthX); index++) {
+                const lugarNull = puntosNulos[i]
+                console.log(lugarNull[0], lugarNull[1]);
+
+                const element = {
+                    posX: parseInt((index * 5) + obstt[0].posX),
+                    posY: parseInt(obstt[0].posY + (i * 5)),
+                    widthX: parseInt(obstt[0].widthX * 5),
+                    heightY: parseInt(obstt[0].heightY * 5),
+                    id: obstt[0].id,
+                };
+                if (lugarNull.length === 3) {
+                    if (((index < lugarNull[2][1]) && (index > lugarNull[2][0])) || index < lugarNull[0] || index > parseInt(obstt[0].widthX) - lugarNull[1]) {
+                        regletaNull.push(element)
+                    }
+                } else
+                    if (index < lugarNull[0] || index > parseInt(obstt[0].widthX) - lugarNull[1]) {
+                        regletaNull.push(element)
+                    }
+                if (drawRegletaX === 5 && i === 0) {
+                    regleta.push({ elemento: element, eje: 'X' })
+                    drawRegletaX = 0
+                }
+                if (drawRegletaY === 5 && index === 0) {
+                    regleta.push({ elemento: element, eje: 'Y' })
+                    drawRegletaY = 0
+                }
+                drawRegletaX = drawRegletaX + 1
+                objeto2.push(element)
+            }
+            drawRegletaY = drawRegletaY + 1
+        }
+        ctxD.lineWidth = .2
+        regleta.map((key, i) => {
+            if (key.eje === 'X') {
+                ctxD.fillStyle = 'green'
+                ctxD.fillRect(key.elemento.posX, key.elemento.posY, 5, (obstt[0].heightY * 5))
+
+            } else {
+                ctxD.fillStyle = 'blue'
+                ctxD.fillRect(key.elemento.posX, key.elemento.posY, (obstt[0].widthX * 5), 5)
+
+            }
+        })
+        objeto2.map((key, i) => {
+            ctxD.strokeRect(key.posX, key.posY, 5, 5)
+        })
+        regletaNull.map((key, i) => {
+            ctxD.clearRect(key.posX, key.posY, 5, 5)
+        })
+        ctxE.drawImage(obstt[0].imagen, 50, 20, (obstt[0].widthX * 5), (obstt[0].heightY * 5))
+
+    } else {
+        setTimeout(() => {
+            dibujar()
+        }, 5);
+    }
+}
