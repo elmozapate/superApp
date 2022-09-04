@@ -9,7 +9,7 @@ import BebeXf, { BebeXb } from "./prototiposSprites/protoBaby";
 import BodyXf from "./prototiposSprites/protoBody";
 import SierraXf from "./prototiposSprites/protoSierra";
 
-let off = true, colisioned = {
+let off = true, yaWey = true, colisioned = {
     state: false,
     item: 0,
     result: 'live'
@@ -459,6 +459,7 @@ const Test2 = () => {
                     if (hiter === ('malo') || hiter === ('proy') || hiter === ('obst')) {
                         const chokeInminente = Colisonador(propsImage.items[0], hiter === ('malo') ? malosFalses : hiter === ('proy') ? proyectiles : levelFalses, props, true, true, ctxD, hiter)
                         if (chokeInminente.state) {
+                            yaWey.play()
                             switch (chokeInminente.array[0].b.id.split('-')[chokeInminente.array[0].b.id.split('-').length - 1]) {
                                 case 'malo':
                                     if (dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'die' && dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'spirit' && dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'onDie') {
@@ -757,7 +758,7 @@ const Test2 = () => {
                                     if (dibujarMalos.new[i].posX < (stateImage.posX === -1 ? 35 : 1) || dibujarMalos.new[i].posX > 299) {
                                         dibujarMalos.new[i].canMove.direccion = dibujarMalos.new[i].posX < (stateImage.posX === -1 ? 35 : 1) ? 'xf' : 'xb'
                                     }
-                                    dibujarMalos.new[i].posY = dibujarMalos.new[i].posY + dibujarMalos.new[i].heightY > (actualFloor ) ? (actualFloor - dibujarMalos.new[i].heightY) : (key.state === 'onDie' || key.state === 'spirit') ? dibujarMalos.new[i].posY : !dibujarMalos.new[i].canMove.jumps.posibility ? dibujarMalos.new[i].posY : dibujarMalos.new[i].canMove.jumps.state ? (!dibujarMalos.new[i].canMove.jumps.gravity ? dibujarMalos.new[i].posY + dibujarMalos.new[i].heightY <= (actualFloor) ? dibujarMalos.new[i].posY - (.250 + dibujarMalos.new[i].canMove.jumps.speed) : (actualFloor - dibujarMalos.new[i].heightY) : dibujarMalos.new[i].posY + .250) : dibujarMalos.new[i].posY
+                                    dibujarMalos.new[i].posY = dibujarMalos.new[i].posY + dibujarMalos.new[i].heightY > (actualFloor) ? (actualFloor - dibujarMalos.new[i].heightY) : (key.state === 'onDie' || key.state === 'spirit') ? dibujarMalos.new[i].posY : !dibujarMalos.new[i].canMove.jumps.posibility ? dibujarMalos.new[i].posY : dibujarMalos.new[i].canMove.jumps.state ? (!dibujarMalos.new[i].canMove.jumps.gravity ? dibujarMalos.new[i].posY + dibujarMalos.new[i].heightY <= (actualFloor) ? dibujarMalos.new[i].posY - (.250 + dibujarMalos.new[i].canMove.jumps.speed) : (actualFloor - dibujarMalos.new[i].heightY) : dibujarMalos.new[i].posY + .250) : dibujarMalos.new[i].posY
                                     dibujarMalos.new[i].posX = (key.state === 'onDie' || key.state === 'spirit') ? dibujarMalos.new[i].posX : !dibujarMalos.new[i].canMove.walks.posibility ? dibujarMalos.new[i].posX : dibujarMalos.new[i].actions.shot.state || dibujarMalos.new[i].canMove.jumps.state ? dibujarMalos.new[i].posX : dibujarMalos.new[i].canMove.direccion === 'xf' ? dibujarMalos.new[i].posX + (.25 * dibujarMalos.new[i].canMove.walks.speed) : dibujarMalos.new[i].posX - (.25 * dibujarMalos.new[i].canMove.walks.speed)
 
                                 } else {
@@ -1946,6 +1947,7 @@ const Test2 = () => {
     }
     useEffect(() => {
         if (off) {
+            yaWey = new Audio('/audio/yaWey.mp3');
             portraitAudio = new Audio('/audio/portrait.mp3');
             portraitAudio.onload = (() => {
                 portraitAudio.play()
