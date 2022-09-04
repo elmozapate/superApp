@@ -43,7 +43,6 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
         return (300) / (level < 3 ? 1 : level < 5 ? 2 : 3)
     }
     let array = []
-    console.log(newArray);
     for (let index = 0; index < 11; index++) {
         let objCant = index === 0 ? (3 > level ? 1 : 2) : level < 3 ? 1 : level < 5 ? 2 : 3
         const distanceRange = maxDistance()

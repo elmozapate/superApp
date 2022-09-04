@@ -308,7 +308,6 @@ const Test2 = () => {
                             }
                             ctxD.drawImage(obstacule.killImagen, posXuse, posYuse, obstacule.killImagen.naturalWidth / 14, obstacule.killImagen.naturalHeight / 25)
                             let aDibujar = propsImage.imagen[`cuted_${obstacule.killLayer}`]
-                            console.log(propsImage, obstacule.killLayer);
                             ctxC.drawImage(aDibujar, posXuse - 5, posYuse - 10, 30, 25)
                             setTimeout(() => {
                                 ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
@@ -1559,7 +1558,6 @@ const Test2 = () => {
 
     const makeStage = (value = '+', recharge) => {
         if (recharge) {
-            console.log(inLayer, worldItems);
             levelFalses = []
             setTimeout(() => {
                 for (let index = 0; index < worldItems.length; index++) {

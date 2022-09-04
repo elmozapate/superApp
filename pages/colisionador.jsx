@@ -116,7 +116,6 @@ const Colisonador = (Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) => {
         regletaNull.map((key2, iMalos) => {
             if (key2.posX === key.posX && key2.posY === key.posY && !empty) {
                 empty = true
-                console.log('empty')
                 keyCopied = key
                 maloCopied = key2
                 ctx.fillStyle = "#ff2626"; // Color rojo
@@ -130,7 +129,6 @@ const Colisonador = (Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) => {
         objeto1.map((key) => {
             objeto2.map((key2, iMalos) => {
                 if (key2.state !== 'die' && key2.state !== 'spirit' && key2.state !== 'onDie' && key2.posX === key.posX && key2.posY === key.posY && !empty) {
-                    console.log('used')
                     choko = true
                     empty = true
                     returns.state = true

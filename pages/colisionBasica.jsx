@@ -102,8 +102,7 @@ const ColisionBasica = async (Objeto1 = [], Objeto2 = [], Objeto3 = { direccion:
     })
 
     let returns = { array: [], state: false }
-/*     console.log(objeto2,'obj2');
- */    objeto1.map((key) => {
+    objeto1.map((key) => {
         objeto2.map((key2, iMalos) => {
             if (key2.posX === key.posX && !returns.state) {
                 key.yArray.map((posA) => {
