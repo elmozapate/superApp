@@ -13,7 +13,7 @@ let off = true, yaWey = true, colisioned = {
     state: false,
     item: 0,
     result: 'live'
-}, obst = [], dolor = true, sierra = true, timeOfgame = 0, actualFloor = 150, lastDireccion = 'xf', armas = {
+}, obst = [], lazyImg = [], dolor = true, sierra = true, timeOfgame = 0, actualFloor = 150, lastDireccion = 'xf', armas = {
     bat: {
         onHit: false,
         damage: 7,
@@ -568,6 +568,7 @@ const Test2 = () => {
                                         dibujarMalos.new[chokePlayer.array[0].b.pos].state = 'hit'
                                         if (!armas.bat.onHit) {
                                             dibujarMalos.new[chokePlayer.array[0].b.pos].health = dibujarMalos.new[chokePlayer.array[0].b.pos].health - (armas.bat.damage * parseInt(Math.random() * 3) + 1)
+                                            dibujarMalos.new[chokePlayer.array[0].b.pos].lazy = { state: true, counter: 0 }
                                             joshisound2.play()
                                             if (dibujarMalos.new[chokePlayer.array[0].b.pos].health < 0) {
                                                 pow.play()
@@ -742,7 +743,6 @@ const Test2 = () => {
                                         if (key2.direccion === `hit-xb`) { position.hit.left = i }
                                     })
                                     let imagenready = key.state === 'onDie' ? key.imagen[position.die].imagen : key.state === 'hit' ? key.imagen[key.canMove.direccion === 'xf' ? position.hit.right : position.hit.left].imagen : key.imagen[key.canMove.direccion === 'xb' ? 1 : 0].imagen
-
                                     if (key.state === 'onDie') {
                                         if (key.explotionTime > 100) {
                                             dibujarMalos.new[i].state = 'spirit'
@@ -752,13 +752,40 @@ const Test2 = () => {
                                         }
                                         ctxE.drawImage(armas.bat.kills[0].imagen, key.posX, key.posY - (key.explotionTime / 10), (armas.bat.kills[0].imagen.naturalWidth / 22) + (key.explotionTime / 10), (armas.bat.kills[0].imagen.naturalHeight / 27) + (key.explotionTime / 10))
                                     } else {
+                                        if (key.lazy.state) {
+
+                                            if (key.lazy.fotograma < 23) {
+                                                dibujarMalos.new[i].lazy.fotograma = dibujarMalos.new[i].lazy.fotograma + 1
+                                            } else {
+                                                dibujarMalos.new[i].lazy.fotograma = 0
+                                                if (dibujarMalos.new[i].lazy.layer < 4) {
+                                                    dibujarMalos.new[i].lazy.layer = dibujarMalos.new[i].lazy.layer + 1
+                                                } else {
+                                                    dibujarMalos.new[i].lazy.layer = 0
+                                                }
+
+                                            }
+                                            let posLayer = 0
+                                            lazyImg.map((keyLazy, iLazy) => {
+                                                console.log(keyLazy.id, key.lazy.layer);
+                                                if (parseInt(keyLazy.id) === key.lazy.layer) {
+                                                    posLayer = iLazy
+                                                }
+                                            })
+                                            let imagenready2 = lazyImg[posLayer].imagen
+                                            ctxE.drawImage(imagenready2, (key.canMove.direccion === 'xb' ? key.posX - (imagenready2.naturalWidth / 44) : key.posX + (imagenready2.naturalWidth / 44)), key.posY - (imagenready2.naturalHeight / 27), imagenready2.naturalWidth / 22, imagenready2.naturalHeight / 27)
+
+                                        }
                                         ctxE.drawImage(imagenready, key.posX, key.posY, imagenready.naturalWidth / 22, imagenready.naturalHeight / 27)
                                     }
                                     if (dibujarMalos.new[i].posX < (stateImage.posX === -1 ? 35 : 1) || dibujarMalos.new[i].posX > 299) {
                                         dibujarMalos.new[i].canMove.direccion = dibujarMalos.new[i].posX < (stateImage.posX === -1 ? 35 : 1) ? 'xf' : 'xb'
                                     }
                                     dibujarMalos.new[i].posY = dibujarMalos.new[i].posY + dibujarMalos.new[i].heightY > (actualFloor) ? (actualFloor - dibujarMalos.new[i].heightY) : (key.state === 'onDie' || key.state === 'spirit') ? dibujarMalos.new[i].posY : !dibujarMalos.new[i].canMove.jumps.posibility ? dibujarMalos.new[i].posY : dibujarMalos.new[i].canMove.jumps.state ? (!dibujarMalos.new[i].canMove.jumps.gravity ? dibujarMalos.new[i].posY + dibujarMalos.new[i].heightY <= (actualFloor) ? dibujarMalos.new[i].posY - (.250 + dibujarMalos.new[i].canMove.jumps.speed) : (actualFloor - dibujarMalos.new[i].heightY) : dibujarMalos.new[i].posY + .250) : dibujarMalos.new[i].posY
-                                    dibujarMalos.new[i].posX = (key.state === 'onDie' || key.state === 'spirit') ? dibujarMalos.new[i].posX : !dibujarMalos.new[i].canMove.walks.posibility ? dibujarMalos.new[i].posX : dibujarMalos.new[i].actions.shot.state || dibujarMalos.new[i].canMove.jumps.state ? dibujarMalos.new[i].posX : dibujarMalos.new[i].canMove.direccion === 'xf' ? dibujarMalos.new[i].posX + (.25 * dibujarMalos.new[i].canMove.walks.speed) : dibujarMalos.new[i].posX - (.25 * dibujarMalos.new[i].canMove.walks.speed)
+                                    dibujarMalos.new[i].posX = (key.state === 'onDie' || key.state === 'spirit') ? dibujarMalos.new[i].posX : !dibujarMalos.new[i].canMove.walks.posibility ? dibujarMalos.new[i].posX : dibujarMalos.new[i].actions.shot.state || dibujarMalos.new[i].canMove.jumps.state ? dibujarMalos.new[i].posX : dibujarMalos.new[i].canMove.direccion === 'xf' ? dibujarMalos.new[i].posX + ((dibujarMalos.new[i].lazy.state ? .05 : .25) * dibujarMalos.new[i].canMove.walks.speed) : dibujarMalos.new[i].posX - ((dibujarMalos.new[i].lazy.state ? .05 : .25) * dibujarMalos.new[i].canMove.walks.speed)
+                                    if (dibujarMalos.new[i].lazy.state) {
+                                        dibujarMalos.new[i].lazy.counter < 1000 ? dibujarMalos.new[i].lazy.counter = dibujarMalos.new[i].lazy.counter + 1 : dibujarMalos.new[i].lazy = { counter: 0, state: false, fotograma: 0, layer: 0 }
+                                    }
 
                                 } else {
 
@@ -828,6 +855,7 @@ const Test2 = () => {
                                         heightY: key.heightY,
                                     })
                                 }
+
                             })
                             malosFalses = malosFalsesAux
                             proyectilesFalses = []
@@ -1083,7 +1111,31 @@ const Test2 = () => {
                 proyectilesImg.push(proyectil2)
             })
         })
-
+        let lazyIMG = new Image()
+        lazyIMG.src = '/img/enemigos/onHit/rata/onHit-0.png'
+        lazyIMG.onload = (() => {
+            lazyImg.push({ imagen: lazyIMG, id: '0' })
+            let lazyIMG1 = new Image()
+            lazyIMG1.src = '/img/enemigos/onHit/rata/onHit-1.png'
+            lazyIMG1.onload = (() => {
+                lazyImg.push({ imagen: lazyIMG1, id: '1' })
+                let lazyIMG2 = new Image()
+                lazyIMG2.src = '/img/enemigos/onHit/rata/onHit-2.png'
+                lazyIMG2.onload = (() => {
+                    lazyImg.push({ imagen: lazyIMG2, id: '2' })
+                    let lazyIMG3 = new Image()
+                    lazyIMG3.src = '/img/enemigos/onHit/rata/onHit-3.png'
+                    lazyIMG3.onload = (() => {
+                        lazyImg.push({ imagen: lazyIMG3, id: '3' })
+                        let lazyIMG4 = new Image()
+                        lazyIMG4.src = '/img/enemigos/onHit/rata/onHit-4.png'
+                        lazyIMG4.onload = (() => {
+                            lazyImg.push({ imagen: lazyIMG4, id: '4' })
+                        })
+                    })
+                })
+            })
+        })
 
         imagenA = new Image()
         imagenA.src = '/img/body/body-x-fs-0.png'

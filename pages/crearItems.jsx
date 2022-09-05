@@ -9,12 +9,12 @@ export const CrearItems = (newArray, posX, floor) => {
         posY: 0,
         widthX: 0,
         heightY: 0,
-        status:'live',
-        health:{
+        status: 'live',
+        health: {
 /*             resistencia:0,
- */            blindaje:0,
-            estado:'normal',
-            nivel:50
+ */            blindaje: 0,
+            estado: 'normal',
+            nivel: 50
         },
         canMove: {
             state: true,
@@ -47,7 +47,6 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
         let objCant = index === 0 ? (3 > level ? 1 : 2) : level < 3 ? 1 : level < 5 ? 2 : 3
         const distanceRange = maxDistance()
         let ejeX = 0
-
         for (let index2 = 0; index2 < objCant; index2++) {
             const max = ((300) / (level < 3 ? 1 : level < 5 ? 2 : 3)) - 20;
             const min = 20;
@@ -63,7 +62,7 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
                 damage: randomNumber === 0 ? 25 : 45,
                 type: 'obj',
                 posX: ejeX,
-                class:randomNumber === 0 ? 'cactus' : 'motosierra',
+                class: randomNumber === 0 ? 'cactus' : 'motosierra',
                 posY: (floor - 20),
                 widthX: newArray.xs_0.naturalWidth / 14,
                 heightY: newArray.xs_0.naturalWidth / 14,
@@ -95,12 +94,13 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
                     id: `${parseInt(Math.random() * 988888888)}-malo`,
                     hitDamage: 0,
                     state: 'live',
+                    lazy: { state: false, counter: 0, fotograma: 0, layer: 0 },
                     displayneed: true,
                     layerOnDisplay: index,
                     imagen: imagen,
                     type: 'npc',
-                    class:'johsi',
-                    damage:(Math.random() * 25) + 15,
+                    class: 'johsi',
+                    damage: (Math.random() * 25) + 15,
                     posX: objCant > 1 ? index2 === 0 ? (Math.random() * 95) + 50 : (Math.random() * 110) + 150 : (Math.random() * 250) + 30,
                     posY: (floor - (imagen[0].imagen.naturalHeight / 27)),
                     widthX: imagen[0].imagen.naturalWidth / 22,
@@ -138,7 +138,7 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
                             interval: parseInt((Math.random() * (1000 / level)) + 500),
                             inInterval: 0,
                             speed: (Math.random() * .5) + .5,
-                            damage:(Math.random() * 8) + 25
+                            damage: (Math.random() * 8) + 25
 
                         },
                         inCurse: true
@@ -181,12 +181,12 @@ export const PropsImage = {
         posY: 0,
         widthX: 0,
         heightY: 0,
-        status:'live',
-        health:{
+        status: 'live',
+        health: {
 /*             resistencia:0,
- */            blindaje:0,
-            estado:'normal',
-            nivel:50
+ */            blindaje: 0,
+            estado: 'normal',
+            nivel: 50
         },
         canMove: {
             state: true,
