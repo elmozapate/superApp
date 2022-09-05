@@ -569,8 +569,7 @@ const Test2 = () => {
                                         if (!armas.bat.onHit) {
                                             dibujarMalos.new[chokePlayer.array[0].b.pos].health = dibujarMalos.new[chokePlayer.array[0].b.pos].health - (armas.bat.damage * parseInt(Math.random() * 3) + 1)
                                             dibujarMalos.new[chokePlayer.array[0].b.pos].lazy = { state: true, counter: 0 }
-                                            onHitSound.play()
-
+                                            
                                             joshisound2.play()
                                             if (dibujarMalos.new[chokePlayer.array[0].b.pos].health < 0) {
                                                 pow.play()
@@ -786,7 +785,7 @@ const Test2 = () => {
                                     dibujarMalos.new[i].posY = dibujarMalos.new[i].posY + dibujarMalos.new[i].heightY > (actualFloor) ? (actualFloor - dibujarMalos.new[i].heightY) : (key.state === 'onDie' || key.state === 'spirit') ? dibujarMalos.new[i].posY : !dibujarMalos.new[i].canMove.jumps.posibility ? dibujarMalos.new[i].posY : dibujarMalos.new[i].canMove.jumps.state ? (!dibujarMalos.new[i].canMove.jumps.gravity ? dibujarMalos.new[i].posY + dibujarMalos.new[i].heightY <= (actualFloor) ? dibujarMalos.new[i].posY - (.250 + dibujarMalos.new[i].canMove.jumps.speed) : (actualFloor - dibujarMalos.new[i].heightY) : dibujarMalos.new[i].posY + .250) : dibujarMalos.new[i].posY
                                     dibujarMalos.new[i].posX = (key.state === 'onDie' || key.state === 'spirit') ? dibujarMalos.new[i].posX : !dibujarMalos.new[i].canMove.walks.posibility ? dibujarMalos.new[i].posX : dibujarMalos.new[i].actions.shot.state || dibujarMalos.new[i].canMove.jumps.state ? dibujarMalos.new[i].posX : dibujarMalos.new[i].canMove.direccion === 'xf' ? dibujarMalos.new[i].posX + ((dibujarMalos.new[i].lazy.state ? .05 : .25) * dibujarMalos.new[i].canMove.walks.speed) : dibujarMalos.new[i].posX - ((dibujarMalos.new[i].lazy.state ? .05 : .25) * dibujarMalos.new[i].canMove.walks.speed)
                                     if (dibujarMalos.new[i].lazy.state) {
-                                        onHitSound.pause()
+                                        
                                         dibujarMalos.new[i].lazy.counter < 1000 ? dibujarMalos.new[i].lazy.counter = dibujarMalos.new[i].lazy.counter + 1 : dibujarMalos.new[i].lazy = { counter: 0, state: false, fotograma: 0, layer: 0 }
                                     }
 
@@ -2036,6 +2035,7 @@ const Test2 = () => {
             pass = new Audio('/audio/pass.mp3');
             jump = new Audio('/audio/jump.mp3');
             jump.volume = 0.2;
+            onHitSound.volume = 0.2;
             risabebe.volume = 0.2;
             off = false
             let isMobile = new MobileDetect(navigator.userAgent)
