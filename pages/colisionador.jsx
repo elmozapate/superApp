@@ -6,7 +6,95 @@ import SierraXf from "./prototiposSprites/protoSierra";
 const Colisonador = (Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) => {
     let objeto1 = []
     let bodyEmpty = []
-    if (aux) {
+    if (aux && type === 'plataforma') {
+        let objetoPlataforma = []
+        /*  for (let index = 0; index < Objeto3.widthX; index++) {
+             const element = {
+                 posX: Objeto3.items[0].posX + index,
+                 posY: Objeto3.posY,
+                 widthX: Objeto3.widthX,
+                 heightY: Objeto3.heightY,
+                 id: `cabeza-${index}`,
+                 pos: index
+             };
+             const element2 = {
+                 posX: Objeto3.items[0].posX + index,
+                 posY: Objeto3.posY + parseInt(Objeto3.heightY),
+                 widthX: Objeto3.widthX,
+                 heightY: Objeto3.heightY,
+                 id: `pies-${index}`,
+                 pos: index
+             };
+             objeto1.push(element)
+             objeto1.push(element2)
+         } */
+        let objetoPlataformaAux = []
+        Objeto2.map((key, iss) => {
+            objetoPlataformaAux.push(key)
+        })
+        objetoPlataformaAux.map((key, iss) => {
+            if ((Objeto3.items[0].posX + Objeto3.widthX > key.posX && Objeto3.items[0].posX < key.posX) ||
+                Objeto3.items[0].posX < key.posX + key.widthX && Objeto3.items[0].posX > key.posX) {
+                key.falses.map((key2, i2) => {
+                    objetoPlataforma.push(key2)
+                })
+            }
+        })
+        const puntosNulosBody = Objeto3.direccion === 'xf' ? BodyXf() : BodyXb()
+        for (let i = 0; i < puntosNulosBody.length; i++) {
+            const bodyNull = puntosNulosBody[i]
+            for (let index = 0; index < parseInt(Objeto3.widthX); index++) {
+                const element = {
+                    colisionaEn: i === 0 || i === parseInt(Objeto3.heightY) - 1 ? 'y' : 'x',
+                    posX: parseInt(index + Objeto1.posX),
+                    posY: parseInt(Objeto3.posY + i),
+                    id: 'player',
+                    pos: 'player',
+                    widthX: parseInt(Objeto3.widthX),
+                    heightY: parseInt(Objeto3.heightY),
+                };
+                if (bodyNull.length === 3) {
+                    if (((index < bodyNull[2][1]) && (index > bodyNull[2][0])) || index < bodyNull[0] || index > parseInt(Objeto3.widthX) - bodyNull[1]) {
+                        bodyEmpty.push(element)
+                    } else {
+                        objeto1.push(element)
+                    }
+                } else
+                    if (index < bodyNull[0] || index > parseInt(Objeto3.widthX) - bodyNull[1]) {
+                        bodyEmpty.push(element)
+                    } else {
+                        objeto1.push(element)
+                    }
+            }
+        }
+
+        objeto1.map((key) => {
+            objetoPlataforma.map((key2, iMalos) => {
+                if ((key2.posX) === key.posX && key2.posY === key.posY && !choko) {
+                    choko = true
+                    returns.array.push({ a: key, b: key2 })
+                }
+            })
+        })
+        if (choko) {
+            returns.state = false
+            let point = (returns.array[0].b.colision).split('-')
+            if (point[0] === 'y') {
+                if (returns.array[0].a.colisionaEn === 'y') {
+                    returns.state = true
+                }
+            }
+            if (point[0] === 'x') {
+                returns.state = true
+            }
+            return (returns)
+        } else {
+            returns.state = false
+            return (returns)
+        }
+    }
+
+    if (aux && comprobe ) {
         if (Objeto3.direccion === 'xd') {
             for (let i = parseInt(Objeto3.heightY / 2); i < Objeto3.heightY; i++) {
                 for (let index = 0; index < Objeto3.widthX; index++) {
@@ -21,7 +109,8 @@ const Colisonador = (Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) => {
             }
         } else {
             const puntosNulosBody = Objeto3.direccion === 'xf' ? BodyXf() : Objeto3.direccion === 'xb' ? BodyXb() : BodyXf()
-            for (let i = 0; i < parseInt(Objeto3.heightY); i++) {
+            console.log(puntosNulosBody, parseInt(Objeto3.widthX));
+            for (let i = 0; i < puntosNulosBody.length - 1; i++) {
                 const bodyNull = puntosNulosBody[i]
                 for (let index = 0; index < parseInt(Objeto3.widthX); index++) {
                     const element = {
@@ -67,7 +156,7 @@ const Colisonador = (Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) => {
         const puntosNulos = type === 'malo' ? (Objeto2[0].canMove.direccion === 'xf' ? JoshiXf() : JoshiXb()) : type === 'proy' ?
             (Objeto2[0].direccion === 'xf' ? BebeXf() : BebeXb()) : SierraXf();
         Objeto2.map((key, iss) => {
-            for (let i = 0; i < parseInt(key.heightY); i++) {
+            for (let i = 0; i < puntosNulos.length; i++) {
                 const lugarNull = puntosNulos[i]
                 for (let index = 0; index < parseInt(key.widthX); index++) {
                     const element = {
@@ -133,17 +222,17 @@ const Colisonador = (Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) => {
                     empty = true
                     returns.state = true
                     returns.array.push({ a: key, b: key2 })
-                   /*  ctx.fillStyle = "#ff2626";
-                    ctx.beginPath();
-                    ctx.arc(key2.posX, key2.posY, 2.5, 0, Math.PI * 2, true); 
-                    ctx.fill(); */
+                    /*  ctx.fillStyle = "#ff2626";
+                     ctx.beginPath();
+                     ctx.arc(key2.posX, key2.posY, 2.5, 0, Math.PI * 2, true); 
+                     ctx.fill(); */
                 }
             })
         })
-    }else{
+    } else {
         objeto1.map((key) => {
             objeto2.map((key2, iMalos) => {
-                if ( key2.posX === key.posX && key2.posY === key.posY ) {
+                if (key2.posX === key.posX && key2.posY === key.posY) {
                     choko = true
                     keyCopied = key
                 }

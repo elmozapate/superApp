@@ -13,7 +13,7 @@ export const CrearItems = (newArray, posX, floor) => {
         health: {
 /*             resistencia:0,
  */            blindaje: 0,
-            estado: 'normal',
+            estado: 'inmortal',
             nivel: 50
         },
         canMove: {
@@ -85,7 +85,8 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
 
                 },
                 actions: {
-                    inCurse: false
+                    inCurse: false,
+
                 }
             }
             let randomDireccion = parseInt(Math.random() * 2)
@@ -141,6 +142,24 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
                             damage: (Math.random() * 8) + 25
 
                         },
+                        onDie: {
+                            efect: 'basic',
+                            dropItem: {
+                                state: false,
+                                startTaking: false,
+                                finishTaking: false,
+                                done: false,
+                                item: ''
+                            },
+                            comible: {
+                                state: true,
+                                done: false,
+                                efect: parseInt(Math.random() * 2) === 1 ? true : false,
+                                startTaking: false,
+                                finishTaking: false,
+                                cantidad: parseInt(Math.random() * 30) + parseInt(Math.random() * 20),
+                            }
+                        },
                         inCurse: true
                     }
                 }
@@ -174,7 +193,7 @@ export const PropsImage = {
     gravity: true,
     items: [{
         displayneed: true,
-        layerOnDisplay: 3,
+        layerOnDisplay: 0,
         imagen: [],
         type: 'hpc',
         posX: 0,
@@ -185,7 +204,7 @@ export const PropsImage = {
         health: {
 /*             resistencia:0,
  */            blindaje: 0,
-            estado: 'normal',
+            estado: 'inmortal',
             nivel: 50
         },
         canMove: {
@@ -212,3 +231,52 @@ export const PropsImage = {
 }
 export const LosFondos = ['green', 'purple', 'black', 'red']
 export default CrearItems
+export const Plataforma = (floor) => {
+    return ([/* {
+        id: `${parseInt(Math.random() * 988888888)}-platform`,
+        displayneed: true,
+        layerOnDisplay: index,
+        type: 'platform',
+        posX: 100,
+        posY: (floor - 20),
+        widthX: 50,
+        heightY: 20
+    },
+    {
+        id: `${parseInt(Math.random() * 988888888)}-platform`,
+        displayneed: true,
+        layerOnDisplay: 0,
+        type: 'platform',
+        posX: 160,
+        posY: (floor - 50),
+        widthX: 30,
+        heightY: 20
+    },{
+        id: `${parseInt(Math.random() * 988888888)}-platform`,
+        displayneed: true,
+        layerOnDisplay: 0,
+        type: 'platform',
+        posX: 130,
+        posY: (floor - 80),
+        widthX: 40,
+        heightY: 20
+    },{
+        id: `${parseInt(Math.random() * 988888888)}-platform`,
+        displayneed: true,
+        layerOnDisplay: 0,
+        type: 'platform',
+        posX: 100,
+        posY: (floor - 120),
+        widthX: 60,
+        heightY: 20
+    },{
+        id: `${parseInt(Math.random() * 988888888)}-platform`,
+        displayneed: true,
+        layerOnDisplay: 0,
+        type: 'platform',
+        posX: 140,
+        posY: (floor - 150),
+        widthX: 50,
+        heightY: 20
+    } */])
+}

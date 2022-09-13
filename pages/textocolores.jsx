@@ -147,10 +147,10 @@ const Colores = () => {
     return (
         <div className="fill">
             <div className="colorGrid">
-                {textos.map((key,i) => {
+                {textos.map((key, i) => {
                     return (
                         <button
-                        id={`coloritem-${i}`} key={`coloritem-${i}`}
+                            id={`coloritem-${i}`} key={`coloritem-${i}`}
                             onClick={(e) => { e.preventDefault(); setColor(key); }}
                             className={`btn-color bgcolor-${key}`}></button>)
                 })

@@ -3,17 +3,19 @@ import { useEffect, useState } from "react";
 import BotonesJuego from "./botonesJuego";
 import Colisonador from "./colisionador";
 import ColisionBasica from "./colisionBasica";
-import CrearItems, { CrearItemsWorld, LosFondos, PropsImage } from "./crearItems";
+import CrearItems, { CrearItemsWorld, LosFondos, Plataforma, PropsImage } from "./crearItems";
 import GamePad from "./gamePad";
+import InteractiveBotonCanvas from "./InteractiveBtnCanvas";
 import BebeXf, { BebeXb } from "./prototiposSprites/protoBaby";
 import BodyXf from "./prototiposSprites/protoBody";
+import ProtoPlataforma from "./prototiposSprites/protoPlataforma";
 import SierraXf from "./prototiposSprites/protoSierra";
 
-let off = true, yaWey = true, colisioned = {
+let off = true, initing = true, chargedLevel = [], yaWey = true, colisioned = {
     state: false,
     item: 0,
     result: 'live'
-}, obst = [], lazyImg = [],onHitSound=true, dolor = true, sierra = true, timeOfgame = 0, actualFloor = 150, lastDireccion = 'xf', armas = {
+}, obst = [], lazyImg = [], mapFloor = 150, actualFloorLimit = { state: false, x1: 0, x2: 300 }, onHitSound = true, dolor = true, sierra = true, timeOfgame = 0, actualFloor = 150, lastDireccion = 'xf', plataformaFalses = [], armas = {
     bat: {
         onHit: false,
         damage: 7,
@@ -30,8 +32,8 @@ let off = true, yaWey = true, colisioned = {
     },
 }, WeaponAudio = [true, true], audioPlaying = 0, jump, obtenerOrientacion = console.log, pass, audioPp, actualVidas = 5, mxActive = false, myActive = false, fantasmas = [], dibujarMalos = {
     die: false, last: [], new: []
-}, mxDirection = { left: false, right: false }, portraitAudio, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, muertebebe, joshisound, joshisound2, joshisound3 = [true, true, true, true], pow, proyectilesImg = [], imagenesSrc = [`/img/finales/foto-de-anime-4.png`, `/img/finales/foto-de-anime-3.png`, `/img/finales/foto-de-anime-2.png`, `/img/finales/foto-de-anime-1.png`, `/img/finales/foto-de-anime-0.png`], fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { jumping: false, gravity: true }, canvas, levelGo = 1, ctx, imgArray = [],
-    imagenA, canvasC, ctxC, canvasB, ctxB, canvasD, ctxD, canvasE, ctxE, imagenes = [{ onMove: false }], worldItems = [], timeRestart = false, levelDificulty = 20
+}, mxDirection = { left: false, right: false }, portraitAudio, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, muertebebe, joshisound, joshisound2, joshisound3 = [true, true, true, true], pow, proyectilesImg = [], imagenesSrc = [`/img/finales/foto-de-anime-4.png`, `/img/finales/foto-de-anime-3.png`, `/img/finales/foto-de-anime-2.png`, `/img/finales/foto-de-anime-1.png`, `/img/finales/foto-de-anime-0.png`], fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { jumping: false, gravity: true, eating: false }, canvas, levelGo = 1, ctx, imgArray = [],
+    imagenA, canvasC, ctxC, canvasB, ctxB, canvasD, ctxD, canvasE, ctxE, ctxF, canvasF, imagenes = [{ onMove: false }], worldItems = [], timeRestart = false, levelDificulty = 20
 const Test2 = () => {
     const [ejes, setEjes] = useState({ alpha: 0, beta: 0, gamma: 0 })
     const [dificulty, setDificulty] = useState(10)
@@ -52,6 +54,8 @@ const Test2 = () => {
         pause: false,
         level: 0,
     })
+
+    const [playerOnDrop, setplayerOnDrop] = useState({ state: false })
     const [onMobil, setOnMobil] = useState(false)
     const [salto, setsalto] = useState({
         gravity: true,
@@ -93,7 +97,7 @@ const Test2 = () => {
             setTimeout(() => {
                 propsImage.posX = 0
                 propsImage.items[0].posX = 0
-                propsImage.posY = (actualFloor - propsImage.heightY)
+                propsImage.posY = (actualFloor - parseInt(propsImage.heightY))
                 inLayer = 0
                 imagenes[0].onMove = true
                 setStateImage({
@@ -104,8 +108,8 @@ const Test2 = () => {
                 malosFalses = []
                 proyectilesFalses = []
                 malosFalses = []
-                dibujarMalos.new = []
                 dibujarMalos.die = false
+                inLayer = 0
                 ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
                 ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
                 makeStage()
@@ -127,6 +131,7 @@ const Test2 = () => {
                 armas.bat.onHit = false
             }, 5000);
         } else {
+            chargedLevel = []
             laFunt(propsImage, propsImage.items[0].posX)
             setTimeout(() => { reboot() }, 6000);
         }
@@ -179,7 +184,7 @@ const Test2 = () => {
         fondos = LosFondos;
         inLayer = 0;
         propsImage = PropsImage;
-        propsAction = { jumping: false, gravity: true };
+        propsAction = { jumping: false, gravity: true, eating: false };
         levelGo = 1;
         imgArray = [];
         imagenes = [{ onMove: false }];
@@ -222,7 +227,6 @@ const Test2 = () => {
             }
         }, 2500);
     }
-
     const dibujar = async (values, Props, value) => {
         let props = Props
         let propsimage = propsImage
@@ -253,7 +257,7 @@ const Test2 = () => {
                 if (itsMalo) {
                     ctxE.drawImage(dibujarMalos.new[indexHere].imagen[position.malo].imagen, dibujarMalos.new[indexHere].posX, dibujarMalos.new[indexHere].posY - 2, dibujarMalos.new[indexHere].imagen[position.malo].imagen.naturalWidth / 22, dibujarMalos.new[indexHere].imagen[position.malo].imagen.naturalHeight / 27)
                     let aDibujar = propsImage.imagen[`${dibujarMalos.new[indexHere].posX > propsImage.items[0].posX ? 'xb' : 'xf'}_die`]
-                    ctxC.drawImage(aDibujar, dibujarMalos.new[indexHere].posX < propsImage.items[0].posX ? dibujarMalos.new[indexHere].posX + dibujarMalos.new[indexHere].widthX - 5 : dibujarMalos.new[indexHere].posX - Props.widthX + 5, dibujarMalos.new[indexHere].posY, Props.widthX, Props.heightY)
+                    ctxC.drawImage(aDibujar, dibujarMalos.new[indexHere].posX < propsImage.items[0].posX ? dibujarMalos.new[indexHere].posX + dibujarMalos.new[indexHere].widthX - 5 : dibujarMalos.new[indexHere].posX - Props.widthX + 5, dibujarMalos.new[indexHere].posY, Props.widthX, parseInt(Props.heightY))
 
                     setTimeout(() => {
                         ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
@@ -332,7 +336,7 @@ const Test2 = () => {
                         imagenes[0].onMove = true
                         colisioned.state = false
                         colisioned.result = 'live'
-                        makeStage('+', true)
+                        makeStage('+', false, true)
                         audioPp.play()
                     }, 3000);
                 }
@@ -361,7 +365,7 @@ const Test2 = () => {
                 if (itsMalo) {
                     ctxE.drawImage(dibujarMalos.new[indexHere].imagen[position.malo].imagen, dibujarMalos.new[indexHere].posX, dibujarMalos.new[indexHere].posY, dibujarMalos.new[indexHere].imagen[position.malo].imagen.naturalWidth / 22, dibujarMalos.new[indexHere].imagen[position.malo].imagen.naturalHeight / 27)
                     let aDibujar = propsImage.imagen[`${dibujarMalos.new[indexHere].posX > propsImage.items[0].posX ? 'xf' : 'xb'}_die`]
-                    ctxC.drawImage(aDibujar, dibujarMalos.new[indexHere].posX < propsImage.items[0].posX ? dibujarMalos.new[indexHere].posX + dibujarMalos.new[indexHere].widthX - 5 : dibujarMalos.new[indexHere].posX - Props.widthX + 5, dibujarMalos.new[indexHere].posY - (dibujarMalos.new[indexHere].killLayer < 2 ? (dibujarMalos.new[indexHere].heightY / 2) : (dibujarMalos.new[indexHere].heightY / 4)), Props.widthX, Props.heightY)
+                    ctxC.drawImage(aDibujar, dibujarMalos.new[indexHere].posX < propsImage.items[0].posX ? dibujarMalos.new[indexHere].posX + dibujarMalos.new[indexHere].widthX - 5 : dibujarMalos.new[indexHere].posX - Props.widthX + 5, dibujarMalos.new[indexHere].posY - (dibujarMalos.new[indexHere].killLayer < 2 ? (parseInt(dibujarMalos.new[indexHere].heightY) / 2) : (parseInt(dibujarMalos.new[indexHere].heightY) / 4)), Props.widthX, parseInt(Props.heightY))
 
                     setTimeout(() => {
                         ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
@@ -446,26 +450,214 @@ const Test2 = () => {
             }
         } else {
             if (values === 'go' && props.posX <= (341 - 0.5) && imagenes[0].onMove) {
-                let aDibujar = armas.bat.state ? armas.bat.body : (props.imagen[`${propsImage.direccion === 'xs' && props.posY + props.heightY < actualFloor ? 'xj' : propsImage.direccion}_${propsAction.gravity && props.posY < actualFloor ? parseInt(props.layer / (8 * 4)) < 2 ? parseInt(props.layer / (8 * 4)) + 2 : parseInt(props.layer / (8 * 4)) : !propsAction.gravity && props.posY < actualFloor ? parseInt(props.layer / (8 * 4)) > 1 ? parseInt(props.layer / (8 * 4)) - 2 : parseInt(props.layer / (8 * 4)) : parseInt(props.layer / (8 * 4))}`])
+                if (props.posY + parseInt(propsImage.heightY) < actualFloor && !propsAction.jumping) {
+                    propsAction = {
+                        ...propsAction,
+                        gravity: true,
+                        jumping: true
+                    }
+                }
+                if (actualFloorLimit.state) {
+                    if ((propsImage.items[0].posX + props.widthX < actualFloorLimit.x1 + 1.1) && (actualFloorLimit.x2 > propsImage.items[0].posX)) {
+                        actualFloor = mapFloor
+                        actualFloorLimit.state = false
+                        propsAction = {
+                            ...propsAction,
+                            gravity: true,
+                            jumping: true
+                        }
+                    }
+                    if ((actualFloorLimit.x1 < propsImage.items[0].posX) && actualFloorLimit.x2 < propsImage.items[0].posX) {
+                        actualFloor = mapFloor
+                        actualFloorLimit.state = false
+                        propsAction = {
+                            ...propsAction,
+                            gravity: true,
+                            jumping: true
+                        }
+                    }
+                }
+
+
+                let aDibujar = propsAction.eating ? props.imagen[`${propsImage.direccion === 'xf' || propsImage.direccion === 'xb' ? propsImage.direccion : 'xf'}_eat_${parseInt(props.layer / (8 * 4)) < 2 ? parseInt(props.layer / (8 * 4)) + 2 : parseInt(props.layer / (8 * 4))}`] : armas.bat.state ? armas.bat.body : (props.imagen[`${propsImage.direccion === 'xs' && props.posY + parseInt(Props.heightY) < actualFloor ? 'xj' : propsImage.direccion}_${propsAction.gravity && props.posY < actualFloor ? parseInt(props.layer / (8 * 4)) < 2 ? parseInt(props.layer / (8 * 4)) + 2 : parseInt(props.layer / (8 * 4)) : !propsAction.gravity && props.posY < actualFloor ? parseInt(props.layer / (8 * 4)) > 1 ? parseInt(props.layer / (8 * 4)) - 2 : parseInt(props.layer / (8 * 4)) : parseInt(props.layer / (8 * 4))}`])
                 let psx = 0, Itemss = propsImage.items
                 const chokeObj = Colisonador(malosFalses, levelFalses, propsImage)
                 if (chokeObj.choke) {
                     dibujarMalos.new[chokeObj.pos].canMove.direccion = dibujarMalos.new[chokeObj.pos].canMove.direccion === 'xf' ? 'xb' : 'xf'
                 }
-                const chokePlayer = await ColisionBasica(propsImage.items[0], levelFalses, props, true, malosFalses, proyectilesFalses)
+                let isArmed = armas.bat.state
+                const chokePlayer = await ColisionBasica(propsImage.items[0], levelFalses, propsImage, true, malosFalses, proyectilesFalses, plataformaFalses, ctxF, isArmed)
+                let plataformaColision = { eje: '', state: false, valor: '' }
                 if (chokePlayer.state) {
-                    let hiter = (chokePlayer.array[0].b.id.split('-')[chokePlayer.array[0].b.id.split('-').length - 1])
-                    if (hiter === ('malo') || hiter === ('proy') || hiter === ('obst')) {
-                        const chokeInminente = Colisonador(propsImage.items[0], hiter === ('malo') ? malosFalses : hiter === ('proy') ? proyectiles : levelFalses, props, true, true, ctxD, hiter)
-                        if (chokeInminente.state) {
-                            switch (chokeInminente.array[0].b.id.split('-')[chokeInminente.array[0].b.id.split('-').length - 1]) {
-                                case 'malo':
-                                    if (dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'die' && dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'spirit' && dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'onDie') {
+                    if (chokePlayer.array[0].a === 'plataforma') {
+                        const colisionPlataforma = Colisonador(propsImage.items[0], plataformaFalses, props, true, true, ctxD, chokePlayer.array[0].a)
+                        if (colisionPlataforma.state) {
+                            let point = (colisionPlataforma.array[0].b.colision).split('-')
+                            if (point[0] === 'x') {
+                                if (point[1] === 'xb') {
+                                    if (propsImage.direccion === 'xf' || props.direccion === 'xf') {
+                                        propsImage.direccion = 'xs'
+                                        props.direccion === 'xs'
+                                    }
+                                    plataformaColision = { eje: 'x', state: true, valor: 'xb' }
+
+                                } else {
+                                    if (propsImage.direccion === 'xb' || props.direccion === 'xb') {
+                                        propsImage.direccion = 'xs'
+                                        props.direccion === 'xs'
+                                    }
+                                    plataformaColision = { eje: 'x', state: true, valor: 'xf' }
+                                }
+                            }
+                            if (point[0] === 'y') {
+                                if (point[1] === 'xd') {
+                                    plataformaColision = { eje: 'y', state: true, valor: 'xd' }
+                                    propsAction.gravity = true
+                                }
+                                if (point[1] === 'xs') {
+                                    let thePos = (
+                                        colisionPlataforma.array[0].b.fatherPosY
+                                    )
+                                    actualFloorLimit = { state: true, x1: colisionPlataforma.array[0].b.fatherPosX + (propsImage.widthX / 2), x2: colisionPlataforma.array[0].b.fatherPosX + colisionPlataforma.array[0].b.widthX - (propsImage.widthX / 2) }
+                                    actualFloor = thePos
+                                    props.posY = colisionPlataforma.array[0].b.fatherPosY - parseInt(Props.heightY) - 1.10
+                                    propsImage.posY = colisionPlataforma.array[0].b.fatherPosY - parseInt(propsImage.heightY) - 1.10
+                                    propsImage.items[0].posY = colisionPlataforma.array[0].b.fatherPosY - parseInt(propsImage.heightY) - 1.10
+
+                                    /* imagenes[0].onMove = false
+                                     actualFloor = colisionPlataforma.array[0].b.posY
+                                    console.log(actualFloor, props.posY);
+                                    plataformaColision = { eje: 'y', state: true, valor: 'xs' }*/
+                                }
+                            }
+                            /*                             console.log(colisionPlataforma);
+                            *//*                             imagenes[0].onMove = false
+                            */
+                        }
+                    } else {
+                        let hiter = (chokePlayer.array[0].b.id.split('-')[chokePlayer.array[0].b.id.split('-').length - 1])
+                        if (hiter === ('malo') || hiter === ('proy') || hiter === ('obst')) {
+                            if (hiter === 'obst') {
+                                hiter = chokePlayer.array[0].b.randomNumber === 0 ? 'obstA' : 'obstB'
+                            }
+                            const chokeInminente = Colisonador(propsImage.items[0], hiter === ('malo') ? malosFalses : hiter === ('proy') ? proyectiles : levelFalses, props, true, true, ctxD, hiter)
+                            if (chokeInminente) {
+                                console.log(chokeInminente, 'chokeInminente', props, propsImage);
+                            }
+                            if (chokeInminente.state && hiter === 'malo' && propsImage.items[0].health.estado === 'inmortal') {
+                                if (dibujarMalos.new[chokePlayer.array[0].b.pos].state === 'die' && dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.state && !dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.done) {
+                                    if (!propsAction.eating && !dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.done) {
+                                        setplayerOnDrop({
+                                            ...playerOnDrop,
+                                            state: true
+                                        })
+
+                                    }
+                                    if (propsAction.eating && !dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.startTaking) {
+                                        dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.startTaking = true
+                                    }
+                                    if (propsAction.eating && !dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.done && dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.startTaking && dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.cantidad > 0 && !dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.finishTaking) {
+                                        dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.cantidad = dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.cantidad - .05
+                                        let healtRes = .05 * (dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.efect ? 1 : -1)
+                                        setPlayerVidas({
+                                            ...playerVidas,
+                                            health: propsImage.items[0].health.nivel + healtRes
+                                        })
+                                        propsImage.items[0].health.nivel = propsImage.items[0].health.nivel + healtRes
+                                        if (dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.cantidad <= 0) {
+                                            dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.finishTaking = true
+                                            propsAction.eating = false
+                                        }
+
+                                    }
+
+                                    if (dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.finishTaking) {
+                                        dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.done = true
+                                        propsAction.eating = false
+                                        setplayerOnDrop({
+                                            state: false
+                                        })
+
+                                    }
+                                }
+                            }
+                            if (chokeInminente.state && propsImage.items[0].health.estado !== 'inmortal') {
+                                switch (chokeInminente.array[0].b.id.split('-')[chokeInminente.array[0].b.id.split('-').length - 1]) {
+                                    case 'malo':
+                                        if (dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'die' && dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'spirit' && dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'onDie') {
+                                            yaWey.play()
+                                            joshisound.play()
+                                            colisioned.state = true
+                                            colisioned.item = dibujarMalos.new[chokeInminente.array[0].b.pos].id
+                                            propsImage.items[0].health.nivel = propsImage.items[0].health.nivel - dibujarMalos.new[chokeInminente.array[0].b.pos].damage
+                                            setPlayerVidas({
+                                                ...playerVidas,
+                                                vidas: actualVidas,
+                                                health: propsImage.items[0].health.nivel
+                                            })
+                                            if (propsImage.items[0].health.nivel < 0) {
+                                                colisioned.result = 'die'
+                                                dibujarMalos.die = true
+                                                ctxD.save();
+                                                ctxD.font = "40px Arial";
+                                                ctxD.fillStyle = "red";
+                                                ctxD.strokeStyle = 'white';
+                                                ctxD.fillText(actualVidas > 1 ? `JOSHI TE ` : 'GAME OVER', 30, 50)
+                                                ctxD.strokeText(actualVidas > 1 ? `JOSHI TE ` : 'GAME OVER', 30, 50)
+                                                ctxD.fillText(actualVidas > 1 ? ` CULEO` : '', 30, 90)
+                                                ctxD.strokeText(actualVidas > 1 ? ` CULEO` : '', 30, 90)
+                                                ctxD.restore();
+                                                ctxD.stroke()
+                                                malosFalses = []
+                                            } else {
+                                                joshisound3[3].play()
+                                            }
+                                        } else {
+                                            if (dibujarMalos.new[chokePlayer.array[0].b.pos].state === 'die' && dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.state && !dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.done) {
+                                                if (!propsAction.eating && !dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.done) {
+                                                    setplayerOnDrop({
+                                                        ...playerOnDrop,
+                                                        state: true
+                                                    })
+
+                                                }
+                                                if (propsAction.eating && !dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.startTaking) {
+                                                    dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.startTaking = true
+                                                }
+                                                if (propsAction.eating && !dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.done && dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.startTaking && dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.cantidad > 0 && !dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.finishTaking) {
+                                                    dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.cantidad = dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.cantidad - .05
+                                                    let healtRes = .05 * (dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.efect ? 1 : -1)
+                                                    setPlayerVidas({
+                                                        ...playerVidas,
+                                                        health: propsImage.items[0].health.nivel + healtRes
+                                                    })
+                                                    propsImage.items[0].health.nivel = propsImage.items[0].health.nivel + healtRes
+                                                    if (dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.cantidad <= 0) {
+                                                        dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.finishTaking = true
+                                                        propsAction.eating = false
+                                                    }
+
+                                                }
+
+                                                if (dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.finishTaking) {
+                                                    dibujarMalos.new[chokePlayer.array[0].b.pos].actions.onDie.comible.done = true
+                                                    propsAction.eating = false
+                                                    setplayerOnDrop({
+                                                        state: false
+                                                    })
+
+                                                }
+                                            }
+
+                                        }
+                                        break;
+                                    case 'proy':
+                                        llantobebe.play()
                                         yaWey.play()
-                                        joshisound.play()
+                                        pow.play()
                                         colisioned.state = true
-                                        colisioned.item = dibujarMalos.new[chokeInminente.array[0].b.pos].id
-                                        propsImage.items[0].health.nivel = propsImage.items[0].health.nivel - dibujarMalos.new[chokeInminente.array[0].b.pos].damage
+                                        colisioned.item = proyectiles[chokeInminente.array[0].b.pos].id
+                                        propsImage.items[0].health.nivel = propsImage.items[0].health.nivel - proyectiles[chokeInminente.array[0].b.pos].damage
                                         setPlayerVidas({
                                             ...playerVidas,
                                             vidas: actualVidas,
@@ -473,130 +665,107 @@ const Test2 = () => {
                                         })
                                         if (propsImage.items[0].health.nivel < 0) {
                                             colisioned.result = 'die'
+                                            proyectilesFalses = []
                                             dibujarMalos.die = true
                                             ctxD.save();
-                                            ctxD.font = "40px Arial";
-                                            ctxD.fillStyle = "red";
-                                            ctxD.strokeStyle = 'white';
-                                            ctxD.fillText(actualVidas > 1 ? `JOSHI TE ` : 'GAME OVER', 30, 50)
-                                            ctxD.strokeText(actualVidas > 1 ? `JOSHI TE ` : 'GAME OVER', 30, 50)
-                                            ctxD.fillText(actualVidas > 1 ? ` CULEO` : '', 30, 90)
-                                            ctxD.strokeText(actualVidas > 1 ? ` CULEO` : '', 30, 90)
+                                            ctxD.fillText(actualVidas > 1 ? `TRAGASTE ` : 'GAME OVER', 30, 50)
+                                            ctxD.fillText(actualVidas > 1 ? `TRAGASTE ` : 'GAME OVER', 30, 50)
+                                            ctxD.fillText(actualVidas > 1 ? ` PAÑAL` : 'GAME OVER', 30, 100)
+                                            ctxD.strokeText(actualVidas > 1 ? ` PAÑAL` : 'GAME OVER', 30, 100)
                                             ctxD.restore();
                                             ctxD.stroke()
-                                            malosFalses = []
-                                        } else {
-                                            joshisound3[3].play()
                                         }
-                                    }
-                                    break;
-                                case 'proy':
-                                    llantobebe.play()
-                                    yaWey.play()
-                                    pow.play()
-                                    colisioned.state = true
-                                    colisioned.item = proyectiles[chokeInminente.array[0].b.pos].id
-                                    propsImage.items[0].health.nivel = propsImage.items[0].health.nivel - proyectiles[chokeInminente.array[0].b.pos].damage
-                                    setPlayerVidas({
-                                        ...playerVidas,
-                                        vidas: actualVidas,
-                                        health: propsImage.items[0].health.nivel
-                                    })
-                                    if (propsImage.items[0].health.nivel < 0) {
-                                        colisioned.result = 'die'
-                                        proyectilesFalses = []
-                                        dibujarMalos.die = true
-                                        ctxD.save();
-                                        ctxD.fillText(actualVidas > 1 ? `TRAGASTE ` : 'GAME OVER', 30, 50)
-                                        ctxD.fillText(actualVidas > 1 ? `TRAGASTE ` : 'GAME OVER', 30, 50)
-                                        ctxD.fillText(actualVidas > 1 ? ` PAÑAL` : 'GAME OVER', 30, 100)
-                                        ctxD.strokeText(actualVidas > 1 ? ` PAÑAL` : 'GAME OVER', 30, 100)
-                                        ctxD.restore();
-                                        ctxD.stroke()
-                                    }
-                                    break;
-                                case 'obst':
-                                    dolor.play()
-                                    colisioned.state = true
-                                    colisioned.item = levelFalses[chokePlayer.array[0].b.pos].id
-                                    propsImage.items[0].health.nivel = propsImage.items[0].health.nivel - levelFalses[chokePlayer.array[0].b.pos].damage
-                                    setPlayerVidas({
-                                        ...playerVidas,
-                                        vidas: actualVidas,
-                                        health: propsImage.items[0].health.nivel
-                                    })
-                                    sierra.play()
-                                    if (propsImage.items[0].health.nivel < 0) {
-                                        colisioned.result = 'die'
-                                        ctxD.save();
-                                        ctxD.fillText(actualVidas > 1 ? `MUERTISIMO` : 'GAME OVER', 30, 50)
-                                        ctxD.strokeText(actualVidas > 1 ? `MUERTISIMO` : 'GAME OVER', 30, 50)
-                                        ctxD.restore();
-                                        ctxD.stroke()
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
-                        } else {
-                            if (armas.bat.state) {
-                                if (hiter === ('proy')) {
-                                    audioPlaying = audioPlaying > 1 ? audioPlaying + 1 : 0
-                                    WeaponAudio[audioPlaying].play()
-                                    setTimeout(() => {
-                                        setTimeout(() => {
-                                            armas.bat.onHit = false
-
-                                        }, 500)
-                                        muertebebe.play()
-                                    }, 500);
-                                    if (proyectiles[chokePlayer.array[0].b.pos].state !== 'onDie') {
-                                        proyectiles[chokePlayer.array[0].b.pos].state = 'hit';
-                                        proyectiles[chokePlayer.array[0].b.pos].hitdirection = proyectiles[chokePlayer.array[0].b.pos].direccion === 'xf' ? (lastDireccion === 'xf' ? 'xf' : 'xb') : (lastDireccion === 'xb' ? 'xb' : 'xf')
-                                        if (!armas.bat.onHit) {
-                                            proyectiles[chokePlayer.array[0].b.pos].hitDamage = (Math.random() * 4);
-                                            proyectiles[chokePlayer.array[0].b.pos].health = armas.bat.onHit ? proyectiles[chokePlayer.array[0].b.pos].health : proyectiles[chokePlayer.array[0].b.pos].health - (proyectiles[chokePlayer.array[0].b.pos].health * (Math.random() * armas.bat.damage - 3) + 3)
-                                            armas.bat.onHit = true
+                                        break;
+                                    case 'obst':
+                                        dolor.play()
+                                        colisioned.state = true
+                                        colisioned.item = levelFalses[chokePlayer.array[0].b.pos].id
+                                        propsImage.items[0].health.nivel = propsImage.items[0].health.nivel - levelFalses[chokePlayer.array[0].b.pos].damage
+                                        setPlayerVidas({
+                                            ...playerVidas,
+                                            vidas: actualVidas,
+                                            health: propsImage.items[0].health.nivel
+                                        })
+                                        sierra.play()
+                                        if (propsImage.items[0].health.nivel < 0) {
+                                            colisioned.result = 'die'
+                                            ctxD.save();
+                                            ctxD.fillText(actualVidas > 1 ? `MUERTISIMO` : 'GAME OVER', 30, 50)
+                                            ctxD.strokeText(actualVidas > 1 ? `MUERTISIMO` : 'GAME OVER', 30, 50)
+                                            ctxD.restore();
+                                            ctxD.stroke()
                                         }
-                                        if (proyectiles[chokePlayer.array[0].b.pos].health < 0) {
-                                            proyectiles[chokePlayer.array[0].b.pos].state = 'die';
-                                        }
-                                    }
+                                        break;
+                                    default:
+                                        break;
                                 }
-                                if (hiter === ('malo')) {
-                                    if (dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'die' && dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'spirit' && dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'onDie') {
-                                        dibujarMalos.new[chokePlayer.array[0].b.pos].state = 'hit'
-                                        if (!armas.bat.onHit) {
-                                            dibujarMalos.new[chokePlayer.array[0].b.pos].health = dibujarMalos.new[chokePlayer.array[0].b.pos].health - (armas.bat.damage * parseInt(Math.random() * 3) + 1)
-                                            dibujarMalos.new[chokePlayer.array[0].b.pos].lazy = { state: true, counter: 0 }
+                            } else {
+                                if (armas.bat.state) {
+                                    if (hiter === ('proy')) {
+                                        audioPlaying = audioPlaying > 1 ? audioPlaying + 1 : 0
+                                        WeaponAudio[audioPlaying].play()
+                                        setTimeout(() => {
+                                            setTimeout(() => {
+                                                armas.bat.onHit = false
 
-                                            joshisound2.play()
-                                            if (dibujarMalos.new[chokePlayer.array[0].b.pos].health < 0) {
-                                                pow.play()
+                                            }, 500)
+                                            muertebebe.play()
+                                        }, 500);
+                                        if (proyectiles[chokePlayer.array[0].b.pos].state !== 'onDie') {
+                                            proyectiles[chokePlayer.array[0].b.pos].state = 'hit';
+                                            proyectiles[chokePlayer.array[0].b.pos].hitdirection = proyectiles[chokePlayer.array[0].b.pos].direccion === 'xf' ? (lastDireccion === 'xf' ? 'xf' : 'xb') : (lastDireccion === 'xb' ? 'xb' : 'xf')
+                                            if (!armas.bat.onHit) {
+                                                proyectiles[chokePlayer.array[0].b.pos].hitDamage = (Math.random() * 4);
+                                                proyectiles[chokePlayer.array[0].b.pos].health = armas.bat.onHit ? proyectiles[chokePlayer.array[0].b.pos].health : proyectiles[chokePlayer.array[0].b.pos].health - (proyectiles[chokePlayer.array[0].b.pos].health * (Math.random() * armas.bat.damage - 3) + 3)
                                                 armas.bat.onHit = true
-                                                joshisound3[2].play()
-                                                dibujarMalos.new[chokePlayer.array[0].b.pos].state = 'onDie'
-                                                setTimeout(() => {
-                                                    armas.bat.onHit = false
-                                                }, 1000);
-
-                                            } else {
-                                                onHitSound.play()
-                                                pow.play()
-                                                armas.bat.onHit = true
-                                                setTimeout(() => {
-                                                    armas.bat.onHit = false
-
-                                                }, 1000);
-                                                joshisound3[parseInt(Math.random() * 2)].play()
+                                            }
+                                            if (proyectiles[chokePlayer.array[0].b.pos].health < 0) {
+                                                proyectiles[chokePlayer.array[0].b.pos].state = 'die';
                                             }
                                         }
                                     }
-                                }
+                                    if (hiter === ('malo')) {
+                                        onHitSound.play()
 
+                                        if (dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'die' && dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'spirit' && dibujarMalos.new[chokePlayer.array[0].b.pos].state !== 'onDie') {
+                                            dibujarMalos.new[chokePlayer.array[0].b.pos].state = 'hit'
+                                            if (!armas.bat.onHit) {
+                                                dibujarMalos.new[chokePlayer.array[0].b.pos].health = dibujarMalos.new[chokePlayer.array[0].b.pos].health - (armas.bat.damage * parseInt(Math.random() * 3) + 1)
+                                                dibujarMalos.new[chokePlayer.array[0].b.pos].lazy = { state: true, counter: 0 }
+
+                                                joshisound2.play()
+                                                if (dibujarMalos.new[chokePlayer.array[0].b.pos].health < 0) {
+                                                    pow.play()
+                                                    armas.bat.onHit = true
+                                                    joshisound3[2].play()
+                                                    dibujarMalos.new[chokePlayer.array[0].b.pos].state = 'onDie'
+                                                    setTimeout(() => {
+                                                        armas.bat.onHit = false
+                                                    }, 1000);
+
+                                                } else {
+                                                    pow.play()
+                                                    armas.bat.onHit = true
+                                                    setTimeout(() => {
+                                                        armas.bat.onHit = false
+
+                                                    }, 1000);
+                                                    joshisound3[parseInt(Math.random() * 2)].play()
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                }
                             }
+
                         }
                     }
+                } else {
+                    setplayerOnDrop({
+                        ...playerOnDrop,
+                        state: false
+                    })
                 }
                 if (colisioned.state) {
                     if (colisioned.result === 'die') {
@@ -643,7 +812,7 @@ const Test2 = () => {
                                 Itemss[0].posX = propsImage.refreshData ? psx : propsImage.levelPass ? psx : props.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || newModel.posY < actualFloor ? Itemss[0].posX + ((1.25 / (40 * (1 / (levelDificulty))))) : Itemss[0].posX + ((1.25 / (40 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || newModel.posY < actualFloor ? Itemss[0].posX - ((1.25 / (40 * (1 / (levelDificulty))))) : Itemss[0].posX - ((1.25 / (40 * (1 / (levelDificulty))))) : Itemss[0].posX
                                 newModel = {
                                     ...newModel,
-                                    posY: propsAction.jumping && newModel.posY <= (actualFloor - newModel.heightY) ? newModel.posY === (actualFloor - newModel.heightY) && propsAction.jumping && propsAction.gravity ? (actualFloor - newModel.heightY) : !propsAction.gravity ? newModel.posY - 1.10 : propsAction.jumping && propsAction.gravity ? newModel.posY + 1.10 : newModel.posY === 50 ? (actualFloor - newModel.heightY) : (actualFloor - newModel.heightY) : (actualFloor - newModel.heightY),
+                                    posY: propsAction.jumping && newModel.posY <= (actualFloor - parseInt(newModel.heightY)) ? newModel.posY === (actualFloor - parseInt(newModel.heightY)) && propsAction.jumping && propsAction.gravity ? (actualFloor - parseInt(newModel.heightY)) : !propsAction.gravity ? newModel.posY - 1.10 : propsAction.jumping && propsAction.gravity ? newModel.posY + 1.10 : newModel.posY === 50 ? (actualFloor - parseInt(newModel.heightY)) : (actualFloor - parseInt(newModel.heightY)) : (actualFloor - parseInt(newModel.heightY)),
                                     posX: propsImage.refreshData ? props.posX : propsImage.levelPass ? props.posX : !propsImage.alive ? 0 : props.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || newModel.posY < actualFloor ? newModel.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || newModel.posY < actualFloor ? newModel.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX,
                                     items: propsImage.levelPass || !propsImage.alive ? props.items : Itemss,
                                     fotograma: newModel.fotograma + 1,
@@ -651,9 +820,10 @@ const Test2 = () => {
                                 propsImage = {
                                     ...propsImage,
                                     posX: propsImage.refreshData ? 0 : propsImage.levelPass ? props.posX : !propsImage.alive ? 0 : props.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || newModel.posY < actualFloor ? newModel.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : props.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || newModel.posY < actualFloor ? newModel.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : newModel.posX,
-                                    posY: propsAction.jumping && propsImage.posY <= (actualFloor - propsImage.heightY) ? newModel.posY === (actualFloor - propsImage.heightY) && propsAction.jumping && propsAction.gravity ? (actualFloor - propsImage.heightY) : propsAction.jumping && !propsAction.gravity ? propsImage.posY - 1.10 : propsAction.jumping && propsAction.gravity ? propsImage.posY + 1.10 : propsImage.posY === (actualFloor - propsImage.heightY) ? (actualFloor - propsImage.heightY) : (actualFloor - propsImage.heightY) : (actualFloor - propsImage.heightY),
+                                    posY: propsAction.jumping && propsImage.posY <= (actualFloor - parseInt(propsImage.heightY)) ? newModel.posY === (actualFloor - parseInt(propsImage.heightY)) && propsAction.jumping && propsAction.gravity ? (actualFloor - parseInt(propsImage.heightY)) : propsAction.jumping && !propsAction.gravity ? propsImage.posY - 1.10 : propsAction.jumping && propsAction.gravity ? propsImage.posY + 1.10 : propsImage.posY === (actualFloor - parseInt(propsImage.heightY)) ? (actualFloor - parseInt(propsImage.heightY)) : (actualFloor - parseInt(propsImage.heightY)) : (actualFloor - parseInt(propsImage.heightY)),
                                 }
                             }
+
                             setTimeout(() => {
                                 const propsImageLast = propsImage
                                 propsImage = {
@@ -677,10 +847,10 @@ const Test2 = () => {
                             let malosFalsesAux = []
                             dibujarMalos.new.map((key, i) => {
                                 if (key.state !== 'die' && key.state !== 'spirit' && key.state !== 'onDie') {
-                                    if (key.canMove.jumps.state && key.posY >= (actualFloor - key.heightY) && key.canMove.jumps.gravity) {
+                                    if (key.canMove.jumps.state && key.posY >= (actualFloor - parseInt(key.heightY)) && key.canMove.jumps.gravity) {
                                         dibujarMalos.new[i].canMove.jumps.gravity = false
                                         dibujarMalos.new[i].canMove.jumps.state = false
-                                        dibujarMalos.new[i].posY = (actualFloor - key.heightY)
+                                        dibujarMalos.new[i].posY = (actualFloor - parseInt(key.heightY))
                                         dibujarMalos.new[i].canMove.jumps.inInterval = 0
                                     }
                                     if (key.posY < key.canMove.jumps.maxJump) {
@@ -769,7 +939,6 @@ const Test2 = () => {
                                             }
                                             let posLayer = 0
                                             lazyImg.map((keyLazy, iLazy) => {
-                                                console.log(keyLazy.id, key.lazy.layer);
                                                 if (parseInt(keyLazy.id) === key.lazy.layer) {
                                                     posLayer = iLazy
                                                 }
@@ -783,11 +952,10 @@ const Test2 = () => {
                                     if (dibujarMalos.new[i].posX < (stateImage.posX === -1 ? 35 : 1) || dibujarMalos.new[i].posX > 299) {
                                         dibujarMalos.new[i].canMove.direccion = dibujarMalos.new[i].posX < (stateImage.posX === -1 ? 35 : 1) ? 'xf' : 'xb'
                                     }
-                                    dibujarMalos.new[i].posY = dibujarMalos.new[i].posY + dibujarMalos.new[i].heightY > (actualFloor) ? (actualFloor - dibujarMalos.new[i].heightY) : (key.state === 'onDie' || key.state === 'spirit') ? dibujarMalos.new[i].posY : !dibujarMalos.new[i].canMove.jumps.posibility ? dibujarMalos.new[i].posY : dibujarMalos.new[i].canMove.jumps.state ? (!dibujarMalos.new[i].canMove.jumps.gravity ? dibujarMalos.new[i].posY + dibujarMalos.new[i].heightY <= (actualFloor) ? dibujarMalos.new[i].posY - (.250 + dibujarMalos.new[i].canMove.jumps.speed) : (actualFloor - dibujarMalos.new[i].heightY) : dibujarMalos.new[i].posY + .250) : dibujarMalos.new[i].posY
+                                    dibujarMalos.new[i].posY = dibujarMalos.new[i].posY + parseInt(dibujarMalos.new[i].heightY) > (actualFloor) ? (actualFloor - parseInt(dibujarMalos.new[i].heightY)) : (key.state === 'onDie' || key.state === 'spirit') ? dibujarMalos.new[i].posY : !dibujarMalos.new[i].canMove.jumps.posibility ? dibujarMalos.new[i].posY : dibujarMalos.new[i].canMove.jumps.state ? (!dibujarMalos.new[i].canMove.jumps.gravity ? dibujarMalos.new[i].posY + parseInt(dibujarMalos.new[i].heightY) <= (actualFloor) ? dibujarMalos.new[i].posY - (.250 + dibujarMalos.new[i].canMove.jumps.speed) : (actualFloor - parseInt(dibujarMalos.new[i].heightY)) : dibujarMalos.new[i].posY + .250) : dibujarMalos.new[i].posY
                                     dibujarMalos.new[i].posX = (key.state === 'onDie' || key.state === 'spirit') ? dibujarMalos.new[i].posX : !dibujarMalos.new[i].canMove.walks.posibility ? dibujarMalos.new[i].posX : dibujarMalos.new[i].actions.shot.state || dibujarMalos.new[i].canMove.jumps.state ? dibujarMalos.new[i].posX : dibujarMalos.new[i].canMove.direccion === 'xf' ? dibujarMalos.new[i].posX + ((dibujarMalos.new[i].lazy.state ? .05 : .25) * dibujarMalos.new[i].canMove.walks.speed) : dibujarMalos.new[i].posX - ((dibujarMalos.new[i].lazy.state ? .05 : .25) * dibujarMalos.new[i].canMove.walks.speed)
                                     if (dibujarMalos.new[i].lazy.state) {
                                         dibujarMalos.new[i].lazy.counter < 1000 ? dibujarMalos.new[i].lazy.counter = dibujarMalos.new[i].lazy.counter + 1 : dibujarMalos.new[i].lazy = { counter: 0, state: false, fotograma: 0, layer: 0 }
-                                        onHitSound.pause()
 
                                     }
 
@@ -856,7 +1024,7 @@ const Test2 = () => {
                                         posX: key.posX,
                                         posY: key.posY,
                                         widthX: key.widthX,
-                                        heightY: key.heightY,
+                                        heightY: parseInt(key.heightY),
                                     })
                                 }
 
@@ -865,7 +1033,7 @@ const Test2 = () => {
                             proyectilesFalses = []
                             let existingProyectiles = []
                             proyectiles.map((key, i) => {
-                                ctxE.drawImage(key.imagen[key.direccion === 'xf' ? 1 : 0], key.posX, key.posY, key.widthX, key.heightY)
+                                ctxE.drawImage(key.imagen[key.direccion === 'xf' ? 1 : 0], key.posX, key.posY, key.widthX, parseInt(key.heightY))
                                 proyectiles[i].posX = key.state !== 'hit' ? (key.direccion === 'xf' ? key.posX + (.25 * key.speed) : key.posX - (.25 * key.speed)) : (key.hitdirection === 'xb' ? key.posX - (.25 * (key.speed * 2.5)) : key.posX + (.25 * (key.speed * 2.5)))
                                 proyectiles[i].posY = key.state === 'hit' ? key.efectDirection === 'up' ? proyectiles[i].posY - (.6 * key.speed * key.hitDamage) : proyectiles[i].posY + (.6 * key.speed * key.hitDamage) : proyectiles[i].posY
                                 if ((key.state !== 'die' && key.state !== 'onDie' && key.state !== 'spirit') && (key.posX < 300 && (key.posX + key.widthX) > 0) && (key.posY > 0 && key.posY > 0)) {
@@ -876,7 +1044,7 @@ const Test2 = () => {
                                         posX: key.posX,
                                         posY: key.posY,
                                         widthX: key.widthX,
-                                        heightY: key.heightY,
+                                        heightY: parseInt(key.heightY),
                                         health: key.health,
                                         damage: key.damage
                                     })
@@ -908,7 +1076,7 @@ const Test2 = () => {
                                             posLayer = i
                                         }
                                     })
-                                    ctxE.drawImage(armas.bat.imagenes[posLayer].imagen, psx - 15, props.posY - (props.heightY / 2), armas.bat.imagenes[posLayer].widthX, armas.bat.imagenes[posLayer].heightY);
+                                    ctxE.drawImage(armas.bat.imagenes[posLayer].imagen, psx - 15, props.posY - (parseInt(Props.heightY) / 2), armas.bat.imagenes[posLayer].widthX, armas.bat.imagenes[posLayer].heightY);
                                 } else {
                                     let posLayer = 0
                                     armas.bat.imagenes.map((key2, i) => {
@@ -916,10 +1084,19 @@ const Test2 = () => {
                                             posLayer = i
                                         }
                                     })
-                                    ctxE.drawImage(armas.bat.imagenes[posLayer].imagen, psx - 15, props.posY - (props.heightY / 2), armas.bat.imagenes[posLayer].widthX, armas.bat.imagenes[posLayer].heightY);
+                                    ctxE.drawImage(armas.bat.imagenes[posLayer].imagen, psx - 15, props.posY - (parseInt(Props.heightY) / 2), armas.bat.imagenes[posLayer].widthX, armas.bat.imagenes[posLayer].heightY);
                                 }
                             }
-                            ctxC.drawImage(aDibujar, propsImage.levelPass ? psx : propsImage.refreshData ? 10 : !propsImage.alive ? 0 : psx, propsImage.direccion === 'xd' ? props.posY + (props.heightY / 2) : props.posY, props.widthX, propsImage.direccion === 'xd' ? (props.heightY / 2) : props.heightY)
+                            if (propsImage.items[0].health.estado === 'inmortal') {
+                                let playerClothes = props.imagen[`body_ki_${parseInt((Math.random() * 2))}`]
+                                ctxC.drawImage(playerClothes, propsImage.levelPass ? psx : propsImage.refreshData ? 10 : !propsImage.alive ? 0 : psx - 8, propsImage.direccion === 'xd' ? props.posY + (parseInt(Props.heightY) / 2) : props.posY - 7, props.widthX + 16, propsImage.direccion === 'xd' ? (parseInt(Props.heightY) / 2) : parseInt(Props.heightY) + 14)
+                            }
+                            ctxC.drawImage(aDibujar, propsImage.levelPass ? psx : propsImage.refreshData ? 10 : !propsImage.alive ? 0 : psx, propsImage.direccion === 'xd' ? props.posY + (parseInt(Props.heightY) / 2) : props.posY, props.widthX, propsImage.direccion === 'xd' ? (parseInt(Props.heightY) / 2) : parseInt(Props.heightY))
+                            if (propsImage.items[0].health.estado === 'inmortal') {
+                                let playerClothes = props.imagen[`inmortal_${propsImage.direccion === 'xf' ? 'xb' : propsImage.direccion === 'xb' ? 'xf' : 'xb'}_${parseInt((Math.random() * 2))}`]
+                                ctxC.drawImage(playerClothes, psx + (propsImage.direccion === 'xb' ? -4 + (1 * (props.widthX / 2)) : propsImage.direccion === 'xf' ? -17 : -12),
+                                    propsImage.direccion === 'xd' ? props.posY + (parseInt(Props.heightY) / 2) - 8 : props.posY - 10.5, 30, 15)
+                            }
                         } else {
                             ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
                             ctxC.clearRect(0, 0, canvas.width, canvas.height)
@@ -943,7 +1120,7 @@ const Test2 = () => {
                                 }
                             })
                             let aDibujar = propsImage.imagen[`${propsImage.direccion}_die`]
-                            ctxC.drawImage(aDibujar, psx, props.posY, props.widthX, props.heightY)
+                            ctxC.drawImage(aDibujar, psx, props.posY, props.widthX, parseInt(Props.heightY))
                         }
                     }
                 }
@@ -1032,7 +1209,7 @@ const Test2 = () => {
             newModel.layer = newModel.layer + 1
         } else { newModel.layer = 0 }
         newModel.direccion = 'xs'
-        ctxC.drawImage(aDibujar, posFix, props.posY, props.widthX, props.heightY)
+        ctxC.drawImage(aDibujar, posFix, props.posY, props.widthX, parseInt(props.heightY))
         if (imagenes[0].onMove === false) {
             setTimeout(() => {
                 ctxC.clearRect(0, 0, canvas.width, canvas.height)
@@ -1151,6 +1328,8 @@ const Test2 = () => {
         ctxD = canvasD.getContext('2d')
         canvasE = document.getElementById('canvas-ItMalo')
         ctxE = canvasE.getContext('2d')
+        canvasF = document.getElementById('canvas-ItPlatform')
+        ctxF = canvasF.getContext('2d')
         canvas = document.getElementById('canvas-Pp')
         ctx = canvas.getContext('2d')
         aparecer(levelGo)
@@ -1185,6 +1364,27 @@ const Test2 = () => {
                 })
             })
         }
+        let otraImagen = new Image()
+        otraImagen.src = `/img/obstaculos/obst-0.png`
+        obst = []
+        otraImagen.onload = (() => {
+            obst.push(otraImagen)
+            let otraImagen1 = new Image()
+            otraImagen1.src = `/img/obstaculos/obst-1.png`
+            otraImagen1.onload = (() => {
+                obst.push(otraImagen1)
+                let otraImagen2 = new Image()
+                otraImagen2.src = `/img/obstaculos/sangre.png`
+                otraImagen2.onload = (() => {
+                    obst.push(otraImagen2)
+                    let otraImagen3 = new Image()
+                    otraImagen3.src = `/img/obstaculos/obst-0-onHit.png`
+                    otraImagen3.onload = (() => {
+                        obst.push(otraImagen3)
+                    })
+                })
+            })
+        })
         let elemento = new Image
         elemento.src = `/armas/bat/body.png`
         elemento.onload = (() => {
@@ -1207,10 +1407,35 @@ const Test2 = () => {
                 })
             }
         })
+        for (let index = 0; index < 2; index++) {
+            let elementN = new Image
+            elementN.src = `/img/body/body-ki-${index}.png`
+            elementN.onload = (() => {
+                oImgW = elementN.naturalWidth / 10
+                oImgH = elementN.naturalHeight / 10
+                newArrayB = {
+                    ...newArrayB,
+                    [`body_ki_${index}`]: elementN
+                }
+            })
+        }
+
         let imagesValue2 = ['xb', 'xf']
         let oImgW2 = 0
         let oImgH2 = 0
         imagesValue2.map((key, i) => {
+            for (let AuxIndex = 0; AuxIndex < 2; AuxIndex++) {
+                let element2 = new Image
+                element2.src = `/img/body/inmortal-${key}-${AuxIndex}.png`
+                element2.onload = (() => {
+                    oImgW2 = element2.naturalWidth / 10
+                    oImgH2 = element2.naturalHeight / 10
+                    newArrayB = {
+                        ...newArrayB,
+                        [`inmortal_${key}_${AuxIndex}`]: element2
+                    }
+                })
+            }
             for (let index = 0; index < 2; index++) {
                 let element = new Image
                 element.src = `/img/body/body-${key}-die.png`
@@ -1220,6 +1445,21 @@ const Test2 = () => {
                     newArrayB = {
                         ...newArrayB,
                         [`${key}_die`]: element
+                    }
+                })
+
+            }
+        })
+        imagesValue2.map((key, i) => {
+            for (let index = 0; index < 4; index++) {
+                let element = new Image
+                element.src = `/img/body/body-${key}-eat-${index}.png`
+                element.onload = (() => {
+                    oImgW2 = element.naturalWidth / 10
+                    oImgH2 = element.naturalHeight / 10
+                    newArrayB = {
+                        ...newArrayB,
+                        [`${key}_eat_${index}`]: element
                     }
                 })
             }
@@ -1319,6 +1559,21 @@ const Test2 = () => {
                                                                 if (keyValue === 'ArrowUp') {
                                                                     if (!armas.bat.state) {
                                                                         armas.bat.state = true
+                                                                    }
+                                                                }
+                                                                if (keyValue === 's') {
+                                                                    if (propsImage.items[0].health.estado === 'inmortal') {
+
+                                                                        propsImage.items[0].health.estado = 'normal'
+                                                                    } else {
+                                                                        propsImage.items[0].health.estado = 'inmortal'
+                                                                    }
+                                                                }
+                                                                if (keyValue === 'e') {
+                                                                    try {
+                                                                        propsAction.eating = propsAction.eating ? false : true
+                                                                    } catch (error) {
+                                                                        console.log(error);
                                                                     }
                                                                 }
                                                                 if (keyValue === 'ArrowDown') {
@@ -1535,6 +1790,8 @@ const Test2 = () => {
         audioPp.src = `/audio/gameSound-${pista ? pista - 1 : playerStage.stage}.mp3`
     }
     const brincar = () => {
+        actualFloorLimit.state = false
+        actualFloor = mapFloor
         jump.play()
         propsAction = {
             ...propsAction,
@@ -1553,13 +1810,24 @@ const Test2 = () => {
             jump.currentTime = 0;
             setsalto(setSaltoFunt())
             setTimeout(() => {
-                propsAction = {
-                    ...propsAction,
-                    jumping: false,
-                    gravity: false
+                if (propsImage.posY + parseInt(propsImage.heightY) < actualFloor) {
+                    propsAction = {
+                        ...propsAction,
+                        jumping: true,
+                        gravity: true
+                    }
+                    myActive = false
+                    setsalto(setSaltoFunt())
+                } else {
+                    propsAction = {
+                        ...propsAction,
+                        jumping: false,
+                        gravity: true
+                    }
+                    myActive = false
+                    setsalto(setSaltoFunt())
                 }
-                myActive = false
-                setsalto(setSaltoFunt())
+
 
             }, 400);
         }, 400);
@@ -1612,7 +1880,7 @@ const Test2 = () => {
         }
     }
 
-    const makeStage = (value = '+', recharge) => {
+    const makeStage = (value = '+', values, recharge) => {
         if (recharge) {
             levelFalses = []
             setTimeout(() => {
@@ -1644,125 +1912,233 @@ const Test2 = () => {
 
         }
         else {
-            propsImage.posY = (actualFloor - propsImage.heightY)
+
+            propsImage.posY = (actualFloor - parseInt(propsImage.heightY))
             proyectiles = []
             fantasmas = []
             levelFalses = []
             malosFalses = []
             proyectilesFalses = []
             ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
-            dibujarMalos = { last: [], new: [] }
-            let otraImagen = new Image()
-            otraImagen.src = `/img/obstaculos/obst-0.png`
-            obst = []
-            otraImagen.onload = (() => {
-                obst.push(otraImagen)
-                let otraImagen1 = new Image()
-                otraImagen1.src = `/img/obstaculos/obst-1.png`
-                otraImagen1.onload = (() => {
-                    obst.push(otraImagen1)
-                    let otraImagen2 = new Image()
-                    otraImagen2.src = `/img/obstaculos/sangre.png`
-                    otraImagen2.onload = (() => {
-                        obst.push(otraImagen2)
-                        let otraImagen3 = new Image()
-                        otraImagen3.src = `/img/obstaculos/obst-0-onHit.png`
-                        otraImagen3.onload = (() => {
-                            obst.push(otraImagen3)
-                            for (let index = 0; index < worldItems.length; index++) {
-                                const element = worldItems[index];
-                                if (element.layerOnDisplay === inLayer && element.displayneed
-                                ) {
-                                    if (element.type === 'obj') {
-                                        const randomNumber = element.randomNumber
-                                        levelFalses.push({
-                                            killLayer: 0,
-                                            fotograma: 0,
-                                            randomNumber: randomNumber,
-                                            randomImage: randomNumber,
-                                            imagen: obst[randomNumber],
-                                            killImagen: randomNumber === 0 ? obst[3] : obst[randomNumber],
-                                            posX: element.posX > 290 ? 280 : element.posX,
-                                            posY: element.posY,
-                                            widthX: element.widthX,
-                                            heightY: element.heightY,
-                                            id: element.id,
-                                            damage: element.damage
-                                        })
-                                        /*   ctxD.beginPath();
-                                          ctxD.moveTo(element.posX, (element.posY - element.heightY));
-                                          ctxD.lineTo(element.posX, (element.posY));
-                                          ctxD.lineTo(element.posX + element.widthX, (element.posY));
-                                          ctxD.lineTo(element.posX + element.widthX, (element.posY - element.heightY));
-                                          ctxD.closePath();
-                                          ctxD.fillStyle = 'green';
-                                          ctxD.moveTo(0, 0);
-                                          ctxD.stroke(); */
-                                        ctxD.drawImage(obst[randomNumber], element.posX, element.posY, obst[randomNumber].naturalWidth / 14, obst[randomNumber].naturalHeight / 25)
-                                    } else {
-                                        if (element.type === 'npc') {
-                                            dibujarMalos.last.push(
-                                                {
-                                                    ...element,
-                                                    damage: element.class === 'joshy' ? Math.floor(Math.random() * 10) + 5 : 0
-                                                })
-                                            dibujarMalos.new.push({
-                                                ...element,
-                                            })
+            let done = false
+            if (!initing) {
+                chargedLevel.map((key) => {
+                    if (parseInt(key) === parseInt(inLayer)) { done = true }
+                })
+            } else {
+                chargedLevel = []
+                dibujarMalos.new = []
+                dibujarMalos.last = []
+                for (let index = 0; index < worldItems.length; index++) {
+                    const element = worldItems[index];
 
-                                        }
-                                    }
-
-                                }
-                            }
-                            levelFalses.map((key, i) => {
-                                dibujarMalos.new.map((key2, i2) => {
-                                    if ((key.posX + key.widthX > key2.posX) && (key.posX + key.widthX < key2.posX + key2.widthX) || (key.posX + key.widthX < key2.posX && (key.posX > key2.posX))) {
-                                        dibujarMalos.last[i2].posX = dibujarMalos.new[i2].posX - 35
-                                        dibujarMalos.new[i2].posX = dibujarMalos.new[i2].posX - 35
-                                    }
-
-                                })
+                    if (element.layerOnDisplay === inLayer && element.displayneed
+                    ) {
+                        if (element.type === 'obj') {
+                            const randomNumber = element.randomNumber
+                            levelFalses.push({
+                                killLayer: 0,
+                                fotograma: 0,
+                                randomNumber: randomNumber,
+                                randomImage: randomNumber,
+                                imagen: obst[randomNumber],
+                                killImagen: randomNumber === 0 ? obst[3] : obst[randomNumber],
+                                posX: element.posX > 290 ? 280 : element.posX,
+                                posY: element.posY,
+                                widthX: element.widthX,
+                                heightY: element.heightY,
+                                id: element.id,
+                                damage: element.damage
                             })
+                            /*   ctxD.beginPath();
+                              ctxD.moveTo(element.posX, (element.posY - element.heightY));
+                              ctxD.lineTo(element.posX, (element.posY));
+                              ctxD.lineTo(element.posX + element.widthX, (element.posY));
+                              ctxD.lineTo(element.posX + element.widthX, (element.posY - element.heightY));
+                              ctxD.closePath();
+                              ctxD.fillStyle = 'green';
+                              ctxD.moveTo(0, 0);
+                              ctxD.stroke(); */
+                            ctxD.drawImage(obst[randomNumber], element.posX, element.posY, obst[randomNumber].naturalWidth / 14, obst[randomNumber].naturalHeight / 25)
+                            dibujarMalos.last.push(element)
+                        } else {
+                            if (element.type === 'npc') {
+                                dibujarMalos.new.push(element)
 
-                            myActive = false
-                            if (inLayer !== 0) {
-                                propsImage.items[0].posY = (actualFloor - propsImage.heightY)
-                                setTimeout(() => {
-                                    propsImage.items[0].posY = (actualFloor - propsImage.items[0].heightY)
-                                    propsImage.posY = (actualFloor - propsImage.heightY)
-                                    propsAction = {
-                                        ...propsAction,
-                                        jumping: false,
-                                        gravity: true
-                                    }
-                                    imagenes[0].onMove = false
-                                    setTimeout(() => {
-                                        imagenes[0].onMove = true
-                                        propsImage.items[0].posX = value === '+' ? 1 : 299
-                                        setPlayerGo({
-                                            ...playerGo,
-                                            go: true
-                                        })
-
-                                        dibujar('go', propsImage)
-                                    }, 2000);
-                                }, 10);
-                            } else {
-                                setPlayerGo({
-                                    ...playerGo,
-                                    go: true
-                                })
                             }
-                        })
+                        }
+
+                    }
+                }
+                levelFalses.map((key, i) => {
+                    dibujarMalos.new.map((key2, i2) => {
+                        if ((key.posX + key.widthX > key2.posX) && (key.posX + key.widthX < key2.posX + key2.widthX) || (key.posX + key.widthX < key2.posX && (key.posX > key2.posX))) {
+                            dibujarMalos.new[i2].posX = dibujarMalos.new[i2].posX - 35
+                        }
+
                     })
                 })
-            })
+                initing = false
+            }
+            if (done) {
+                dibujarMalos.new = []
+                for (let index = 0; index < dibujarMalos.last.length; index++) {
+                    const element = dibujarMalos.last[index];
+                    if (element.layerOnDisplay === parseInt(inLayer)
+                    ) {
+                        if (element.type === 'obj') {
+                            const randomNumber = element.randomNumber
+                            levelFalses.push({
+                                killLayer: 0,
+                                fotograma: 0,
+                                randomNumber: randomNumber,
+                                randomImage: randomNumber,
+                                imagen: obst[randomNumber],
+                                killImagen: randomNumber === 0 ? obst[3] : obst[randomNumber],
+                                posX: element.posX > 290 ? 280 : element.posX,
+                                posY: element.posY,
+                                widthX: element.widthX,
+                                heightY: element.heightY,
+                                id: element.id,
+                                damage: element.damage
+                            })
+                            /*   ctxD.beginPath();
+                              ctxD.moveTo(element.posX, (element.posY - element.heightY));
+                              ctxD.lineTo(element.posX, (element.posY));
+                              ctxD.lineTo(element.posX + element.widthX, (element.posY));
+                              ctxD.lineTo(element.posX + element.widthX, (element.posY - element.heightY));
+                              ctxD.closePath();
+                              ctxD.fillStyle = 'green';
+                              ctxD.moveTo(0, 0);
+                              ctxD.stroke(); */
+                            ctxD.drawImage(obst[randomNumber], element.posX, element.posY, obst[randomNumber].naturalWidth / 14, obst[randomNumber].naturalHeight / 25)
+
+                        } else {
+                            if (element.type === 'npc') {
+                                dibujarMalos.new.push(element)
+
+                            }
+                        }
+
+                    }
+                }
+
+                myActive = false
+
+                setPlayerGo({
+                    ...playerGo,
+                    go: true
+                })
+            } else {
+                dibujarMalos.new.map((key) => {
+                    dibujarMalos.last.push(key)
+                })
+                chargedLevel.push(value === '+' ? inLayer - 1 : inLayer + 1)
+                dibujarMalos.new = []
+
+                for (let index = 0; index < worldItems.length; index++) {
+                    const element = worldItems[index];
+
+                    if (element.layerOnDisplay === inLayer && element.displayneed
+                    ) {
+                        if (element.type === 'obj') {
+                            const randomNumber = element.randomNumber
+                            levelFalses.push({
+                                killLayer: 0,
+                                fotograma: 0,
+                                randomNumber: randomNumber,
+                                randomImage: randomNumber,
+                                imagen: obst[randomNumber],
+                                killImagen: randomNumber === 0 ? obst[3] : obst[randomNumber],
+                                posX: element.posX > 290 ? 280 : element.posX,
+                                posY: element.posY,
+                                widthX: element.widthX,
+                                heightY: element.heightY,
+                                id: element.id,
+                                damage: element.damage
+                            })
+                            /*   ctxD.beginPath();
+                              ctxD.moveTo(element.posX, (element.posY - element.heightY));
+                              ctxD.lineTo(element.posX, (element.posY));
+                              ctxD.lineTo(element.posX + element.widthX, (element.posY));
+                              ctxD.lineTo(element.posX + element.widthX, (element.posY - element.heightY));
+                              ctxD.closePath();
+                              ctxD.fillStyle = 'green';
+                              ctxD.moveTo(0, 0);
+                              ctxD.stroke(); */
+                            ctxD.drawImage(obst[randomNumber], element.posX, element.posY, obst[randomNumber].naturalWidth / 14, obst[randomNumber].naturalHeight / 25)
+                            dibujarMalos.last.push(element)
+                        } else {
+                            if (element.type === 'npc') {
+                                dibujarMalos.new.push(element)
+
+                            }
+                        }
+
+                    }
+                }
+                levelFalses.map((key, i) => {
+                    dibujarMalos.new.map((key2, i2) => {
+                        if ((key.posX + key.widthX > key2.posX) && (key.posX + key.widthX < key2.posX + key2.widthX) || (key.posX + key.widthX < key2.posX && (key.posX > key2.posX))) {
+                            dibujarMalos.new[i2].posX = dibujarMalos.new[i2].posX - 35
+                        }
+
+                    })
+                })
+
+                myActive = false
+                if (inLayer !== 0) {
+                    propsImage.items[0].posY = (actualFloor - parseInt(propsImage.heightY))
+                    setTimeout(() => {
+                        propsImage.items[0].posY = (actualFloor - parseInt(propsImage.items[0].heightY))
+                        propsImage.posY = (actualFloor - parseInt(propsImage.heightY))
+                        propsAction = {
+                            ...propsAction,
+                            jumping: false,
+                            gravity: true
+                        }
+                        imagenes[0].onMove = false
+                        setTimeout(() => {
+                            imagenes[0].onMove = true
+                            propsImage.items[0].posX = value === '+' ? 1 : 299
+                            setPlayerGo({
+                                ...playerGo,
+                                go: true
+                            })
+
+                            dibujar('go', propsImage)
+                        }, 2000);
+                    }, 10);
+                } else {
+                    setPlayerGo({
+                        ...playerGo,
+                        go: true
+                    })
+                }
+            }
         }
-
-
-
-        if (!recharge) { }
+        let auxPlatformas = []
+        const plataformas = Plataforma(actualFloor)
+        plataformas.map((keyPlataforma, iPlataforma) => {
+            ctxF.beginPath()
+            ctxF.fillStyle = 'brown'
+            ctxF.fillRect(keyPlataforma.posX, keyPlataforma.posY, keyPlataforma.widthX, keyPlataforma.heightY)
+            ctxF.closePath()
+            auxPlatformas.push(keyPlataforma)
+        })
+        const falsesMuros = async () => {
+            for (let index = 0; index < auxPlatformas.length; index++) {
+                const element = auxPlatformas[index];
+                const res = await ProtoPlataforma(element)
+                if (res) {
+                    plataformaFalses.push({
+                        ...element,
+                        falses: res
+                    })
+                }
+            }
+        }
+        falsesMuros()
     }
     const moverCanvas = (die, level, props, auxBoolean) => {
         if (auxBoolean) {
@@ -1780,6 +2156,10 @@ const Test2 = () => {
                 propsImage.posX = 10
                 propsImage.refreshData = false
                 propsImage.levelPass = false
+                initing = true
+                dibujarMalos.new = []
+                dibujarMalos.last = []
+                chargedLevel = []
             }
             if (die || level) {
                 inLayer = 0
@@ -1798,9 +2178,18 @@ const Test2 = () => {
                 window.alert('melo papi ganaste')
             } else {
                 if (inLayer === 11) {
+                    initing = true
+
+                    chargedLevel = []
                     audioPp.src = ''
                     pass.play()
-                    worldItems = CrearItemsWorld([], levelGo, imgArray, actualFloor, obst[0])
+                    let otraImagen2 = new Image()
+                    otraImagen2.src = `/img/enemigos/joshi/joshi-${parseInt(Math.floor(Math.random() * 3))}.png`
+                    otraImagen2.onload = (() => {
+                        worldItems = CrearItemsWorld(otraImagen2, levelGo, imgArray, actualFloor, obst[0])
+                    })
+                    dibujarMalos.new = []
+                    dibujarMalos.last = []
                     levelFalses = []
                     malosFalses = []
                     proyectilesFalses = []
@@ -1844,6 +2233,9 @@ const Test2 = () => {
                     ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
                     ctxD.fillText('BRAVISIMO', 30, 50)
                     ctxD.strokeText(`BRAVISIMO`, 30, 50)
+                    dibujarMalos.new = []
+                    dibujarMalos.last = []
+                    chargedLevel = []
                     ctxD.restore();
                     ctxD.stroke();
                     auxnow = auxnow + 1
@@ -1870,11 +2262,17 @@ const Test2 = () => {
                         otraImagen2.onload = (() => {
                             worldItems = CrearItemsWorld(otraImagen2, levelGo, imgArray, actualFloor, obst[0])
                         })
+                        aparecer(levelGo)
+                        chargedLevel = []
+                        dibujarMalos.new = []
+                        dibujarMalos.last = []
+                        chargedLevel = []
+                        initing = true
+                        makeStage()
                         setPlayerStage({
                             ...playerStage,
                             stage: levelGo - 1
                         })
-                        aparecer(levelGo)
                         setStateImage({
                             ...stateImage,
                             posX: -1
@@ -1898,11 +2296,12 @@ const Test2 = () => {
                         propsImage.refreshData = false
                         propsImage.alive = true
                         inLayer = 0
-                        makeStage(levelGo)
                         dibujar('go', propsImage)
                         setTimeout(() => {
                             setHalfVolume(levelGo)
                         }, 1000);
+
+
 
                     }, 5000);
                 } else {
@@ -1910,6 +2309,7 @@ const Test2 = () => {
                         ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
                         levelFalses = []
                         if (level && die) {
+                            chargedLevel = []
                             propsImage.items[0].posX = 0
                             propsImage.posX = 0
                             dibujar('go', propsImage)
@@ -1999,6 +2399,10 @@ const Test2 = () => {
             }
         }
     }
+    const comer = () => {
+        propsAction.eating = true
+        setplayerOnDrop({ state: false })
+    }
     useEffect(() => {
         if (off) {
             yaWey = new Audio('/audio/yaWey.mp3');
@@ -2031,7 +2435,7 @@ const Test2 = () => {
             sierra = new Audio('/audio/sierra.mp3');
             dolor = new Audio('/audio/dolor.mp3');
             dolor.volume = 0.15
-            onHitSound =new Audio('/audio/onHit.mp3');
+            onHitSound = new Audio('/audio/onHit.mp3');
             risabebe = new Audio('/audio/bebe-0.mp3');
             muertebebe = new Audio('/audio/bebe-2.mp3');
             pass = new Audio('/audio/pass.mp3');
@@ -2059,6 +2463,9 @@ const Test2 = () => {
     return (
         <>
             <div className={`IDiv-main column bgGame relativeCanvasContainer ${!gameStart ? '' : 'horizontal-mode'}`}>
+                {playerOnDrop.state ?
+                    <InteractiveBotonCanvas comer={comer} drop={{ posX: propsImage.items[0].posX, posY: propsImage.posY }} />
+                    : <></>}
                 <div className={gameStart ? "hide" : 'game-opt'}>
                     <BotonesJuego funtion={setLevelDificulty} value={playerVidas} id='vidas' name='Vidas' setValue={setPlayerVidas} />
                     {<BotonesJuego funtion={setLevelDificulty} setValue={setPlayerStage} value={playerStage} id='stage' name='Stage' />}
@@ -2164,11 +2571,12 @@ const Test2 = () => {
                     </canvas>
                     <canvas className={`bgcolor-${nowStage.color} lienzo-final-${parseInt(stateImage.height)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Fn">
                     </canvas>
-                    <canvas className={`lienzo-items ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-It">
+                    <canvas className={`lienzo-items z-mayor ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-It">
                     </canvas>
                     <canvas className={`lienzo-items ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-ItObj">
                     </canvas>
                     <canvas className={`lienzo-items ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-ItMalo">
+                    </canvas> <canvas className={`lienzo-items ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-ItPlatform">
                     </canvas>
 
 
