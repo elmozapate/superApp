@@ -739,3 +739,11 @@ const Colisonador = (Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) => {
 
 }
 export default Colisonador
+
+
+
+
+
+
+
+

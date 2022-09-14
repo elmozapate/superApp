@@ -68,6 +68,7 @@ export const BodyXb = () => {
 
 export const BodyXs = () => {
     return ([
+        [2, 2],
         [5, 5],
         [5, 5],
         [5, 5],
@@ -93,7 +94,6 @@ export const BodyXs = () => {
         [5, 5],
         [5, 5],
         [5, 5],
-        [5, 5],
-        [5, 5],
+        [2, 2],
     ])
 }

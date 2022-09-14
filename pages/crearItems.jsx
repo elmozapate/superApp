@@ -232,51 +232,21 @@ export const PropsImage = {
 export const LosFondos = ['green', 'purple', 'black', 'red']
 export default CrearItems
 export const Plataforma = (floor) => {
-    return ([/* {
-        id: `${parseInt(Math.random() * 988888888)}-platform`,
-        displayneed: true,
-        layerOnDisplay: index,
-        type: 'platform',
-        posX: 100,
-        posY: (floor - 20),
-        widthX: 50,
-        heightY: 20
-    },
-    {
-        id: `${parseInt(Math.random() * 988888888)}-platform`,
-        displayneed: true,
-        layerOnDisplay: 0,
-        type: 'platform',
-        posX: 160,
-        posY: (floor - 50),
-        widthX: 30,
-        heightY: 20
-    },{
-        id: `${parseInt(Math.random() * 988888888)}-platform`,
-        displayneed: true,
-        layerOnDisplay: 0,
-        type: 'platform',
-        posX: 130,
-        posY: (floor - 80),
-        widthX: 40,
-        heightY: 20
-    },{
-        id: `${parseInt(Math.random() * 988888888)}-platform`,
-        displayneed: true,
-        layerOnDisplay: 0,
-        type: 'platform',
-        posX: 100,
-        posY: (floor - 120),
-        widthX: 60,
-        heightY: 20
-    },{
-        id: `${parseInt(Math.random() * 988888888)}-platform`,
-        displayneed: true,
-        layerOnDisplay: 0,
-        type: 'platform',
-        posX: 140,
-        posY: (floor - 150),
-        widthX: 50,
-        heightY: 20
-    } */])
+    let Plataformas = []
+    for (let index = 0; index < 3; index++) {
+        let heightY = parseInt(Math.random() * 10) + 5
+        const element = {
+            id: `${parseInt(Math.random() * 988888888)}-platform`,
+            displayneed: true,
+            layerOnDisplay: (index * 3) + parseInt(Math.random() * 3),
+            type: 'platform',
+            posX: parseInt(Math.random() * 150) + 50,
+            posY: floor - (parseInt(Math.random() * 10) + 20) - heightY,
+            widthX: parseInt(Math.random() * 50) + 50,
+            heightY: heightY
+        };
+        Plataformas.push(element)
+    }
+
+    return Plataformas
 }
