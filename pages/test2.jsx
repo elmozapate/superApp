@@ -1224,7 +1224,13 @@ const Test2 = () => {
                 let psx = 0, Itemss = propsImage.items
                 const chokeObj = Colisonador(malosFalses, levelFalses, propsImage)
                 if (chokeObj.choke) {
-                    dibujarMalos.new[chokeObj.pos].canMove.direccion = dibujarMalos.new[chokeObj.pos].canMove.direccion === 'xf' ? 'xb' : 'xf'
+                    if (dibujarMalos.new[chokeObj.pos].canMove.lastChoke < 200) {
+                        dibujarMalos.new[chokeObj.pos].canMove.direccion === 'xf' && dibujarMalos.new[chokeObj.pos].posX < 280 ? dibujarMalos.new[chokeObj.pos].posX + 15 : dibujarMalos.new[chokeObj.pos].posX > 30 ? dibujarMalos.new[chokeObj.pos].posX - 15 : dibujarMalos.new[chokeObj.pos].posX + 15
+                    } else {
+                        dibujarMalos.new[chokeObj.pos].canMove.direccion = dibujarMalos.new[chokeObj.pos].canMove.direccion === 'xf' ? 'xb' : 'xf'
+                        dibujarMalos.new[chokeObj.pos].canMove.lastChoke = 0
+                    }
+
                 }
                 let isArmed = armas.bat.state
                 const chokePlayer = await ColisionBasica(propsImage.items[0], levelFalses, propsImage, true, malosFalses, proyectilesFalses, plataformaFalses, ctxF, isArmed)
@@ -1583,6 +1589,7 @@ const Test2 = () => {
 
                                 let malosFalsesAux = []
                                 dibujarMalos.new.map((key, i) => {
+                                    dibujarMalos.new[i].canMove.lastChoke = dibujarMalos.new[i].canMove.lastChoke + 1
                                     if (key.state !== 'die' && key.state !== 'spirit' && key.state !== 'onDie') {
                                         if (key.canMove.jumps.state && key.posY >= (mapFloor - parseInt(key.heightY)) && key.canMove.jumps.gravity) {
                                             dibujarMalos.new[i].canMove.jumps.gravity = false

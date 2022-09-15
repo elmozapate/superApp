@@ -112,6 +112,7 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
                     killLayer: 0,
                     killFotograma: 0,
                     canMove: {
+                        lastChoke: 0,
                         state: true,
                         colision: true,
                         direccion: randomDireccion === 0 ? 'xb' : 'xf',
