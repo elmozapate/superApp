@@ -11,7 +11,7 @@ import BodyXf from "./prototiposSprites/protoBody";
 import ProtoPlataforma from "./prototiposSprites/protoPlataforma";
 import SierraXf from "./prototiposSprites/protoSierra";
 
-let off = true, auxPlataformas = [], initing = true, chargedLevel = [], yaWey = true, colisioned = {
+let off = true, auxPlataformas = [], newArrayB = {}, initing = true, chargedLevel = [], yaWey = true, colisioned = {
     state: false,
     item: 0,
     result: 'live'
@@ -75,14 +75,8 @@ const Test2 = () => {
             })
     }
     const morir = () => {
-        proyectiles = []
-        levelFalses = []
-        malosFalses = []
-        fantasmas = [],
-            dibujarMalos.new = []
+
         dibujarMalos.die = true
-        malosFalses = []
-        proyectilesFalses = []
         setNowStage({
             color: fondos[0],
             stage: 0
@@ -95,7 +89,8 @@ const Test2 = () => {
             })
             actualVidas = actualVidas - 1
             propsImage.items[0].health.nivel = 50
-
+            propsImage.posX = 0
+            propsImage.items[0].posX = 0
             setTimeout(() => {
                 propsImage.posX = 0
                 propsImage.items[0].posX = 0
@@ -114,7 +109,7 @@ const Test2 = () => {
                 inLayer = 0
                 ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
                 ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
-                makeStage()
+                moverCanvas(true)
                 setPlayerGo({
                     ...playerGo,
                     go: true
@@ -133,7 +128,6 @@ const Test2 = () => {
                 armas.bat.onHit = false
             }, 5000);
         } else {
-            chargedLevel = []
             laFunt(propsImage, propsImage.items[0].posX)
             setTimeout(() => { reboot() }, 6000);
         }
@@ -195,39 +189,6 @@ const Test2 = () => {
         levelDificulty = 10
 
 
-    }
-    const darVida = (theLevel, value2) => {
-        setTimeout(() => {
-            propsImage.posX = 0
-            propsImage.items[0].posX = 0
-            let toChange = propsImage.items[0]
-            actualVidas = 5
-            levelGo = theLevel
-            propsImage.alive = false
-            worldItems = CrearItemsWorld([], theLevel, imgArray, mapFloor, obst[0])
-            let whileAux = []
-            whileAux.push(toChange)
-            whileAux.push(worldItems)
-            propsImage.items = whileAux
-            aparecer(theLevel)
-
-            if (!value2) {
-                moverCanvas(true)
-                setTimeout(() => {
-                    imagenes[0].onMove = true
-                    setPlayerVidas({
-                        ...playerVidas,
-                        vidas: 5
-                    })
-                    propsImage.alive = true
-                    setPlayerGo({
-                        ...playerGo,
-                        go: true
-                    })
-                    dibujar('go', propsImage)
-                }, 2500);
-            }
-        }, 2500);
     }
 
     const aparecer = (level) => {
@@ -493,7 +454,7 @@ const Test2 = () => {
             oImgH = elemento.naturalHeight
             armas.bat.body = elemento
         })
-        let imagesValue = ['xs', 'xf', 'xb', 'xj', 'xd', 'cuted'], newArrayB = {}, oImgW = 0, oImgH = 0
+        let imagesValue = ['xs', 'xf', 'xb', 'xj', 'xd', 'cuted'], oImgW = 0, oImgH = 0
         imagesValue.map((key, i) => {
             for (let index = 0; index < 4; index++) {
                 let element = new Image
@@ -867,7 +828,7 @@ const Test2 = () => {
                                                             setHalfVolume()
                                                             startTime(0)
                                                             falsesMuros()
-                                                            makeStage()
+                                                            makeStage(true)
                                                         }
                                                     })
                                                 }
@@ -1116,7 +1077,7 @@ const Test2 = () => {
                         imagenes[0].onMove = true
                         colisioned.state = false
                         colisioned.result = 'live'
-                        makeStage('+', false, true)
+                        makeStage(false, true)
                         audioPp.play()
                     }, 3000);
                 }
@@ -1563,11 +1524,11 @@ const Test2 = () => {
                     } else {
                         psx = Itemss[0].posX
                         if (!value && props.posX <= (341 - 0.5) && props.posX > -1 && propsImage.direccion === 'xf' && (((props.posX / (31 - 0.5)) === (1)) || ((props.posX / (61 - 0.5)) === (1)) || ((props.posX / (91 - 0.5)) === (1)) || ((props.posX / (121 - 0.5)) === (1)) || ((props.posX / (151 - 0.5)) === (1)) || ((props.posX / (181 - 0.5)) === (1)) || ((props.posX / (211 - 0.5)) === (1)) || ((props.posX / (241 - 0.5)) === (1)) || ((props.posX / (271 - 0.5)) === (1)) || ((props.posX / (301 - 0.5)) === (1)) || ((props.posX / (331 - 0.5)) === (1)) || (((props.posX / (341 - 0.5)) === (1)))) && propsImage.alive && !propsImage.levelPass) {
-                            moverCanvas()
+                            moverCanvas(false)
                         }
                         if (!value && props.posX < 351 && props.posX > 28 && propsImage.direccion === 'xb' && (((props.posX / (29 - 0.5)) === (1)) || ((props.posX / (59 - 0.5)) === (1)) ||
                             ((props.posX / (89 + 0.5)) === (1)) || ((props.posX / (119 + 0.5)) === (1)) || ((props.posX / (149 + 0.5)) === (1)) || ((props.posX / (179 + 0.5)) === (1)) || ((props.posX / (209 + 0.5)) === (1)) || ((props.posX / (239 + 0.5)) === (1)) || ((props.posX / (269 + 0.5)) === (1)) || ((props.posX / (299 + 0.5)) === (1)) || ((props.posX / (319 + 0.5)) === (1)))) {
-                            moverCanvas()
+                            moverCanvas(false)
                         }
                         else {
                             console.log
@@ -1611,7 +1572,7 @@ const Test2 = () => {
                                     if (propsImage.posX > (341 - 0.5)) {
                                         setTimeout(() => {
                                             propsImage.posX = 0
-                                            moverCanvas()
+                                            moverCanvas(false)
                                         }, 4000);
 
                                     }
@@ -1906,11 +1867,8 @@ const Test2 = () => {
             }
         }
     }
-    const makeStage = (value = '+', values, recharge) => {
-
-
+    const makeStage = (create, recharge) => {
         if (recharge) {
-            levelFalses = []
             setTimeout(() => {
                 for (let index = 0; index < worldItems.length; index++) {
                     const element = worldItems[index];
@@ -1918,20 +1876,7 @@ const Test2 = () => {
                     ) {
                         if (element.type === 'obj') {
                             const randomNumber = element.randomNumber
-                            levelFalses.push({
-                                killLayer: 0,
-                                fotograma: 0,
-                                randomNumber: randomNumber,
-                                randomImage: randomNumber,
-                                imagen: obst[randomNumber],
-                                killImagen: randomNumber === 0 ? obst[3] : obst[randomNumber],
-                                posX: element.posX > 290 ? 280 : element.posX,
-                                posY: element.posY,
-                                widthX: element.widthX,
-                                heightY: element.heightY,
-                                id: element.id,
-                                damage: element.damage
-                            })
+
                             ctxD.drawImage(obst[randomNumber], element.posX, element.posY, obst[randomNumber].naturalWidth / 14, obst[randomNumber].naturalHeight / 25)
                         }
                     }
@@ -1939,9 +1884,53 @@ const Test2 = () => {
             }, 50);
 
         }
-        else {
+        if (create) {
+            dibujarMalos.die = false
+            malosFalses = []
+            proyectiles = []
+            proyectilesFalses = []
+            levelFalses = []
+            dibujarMalos.new = []
+            dibujarMalos.last = []
+            for (let index = 0; index < worldItems.length; index++) {
+                const element = worldItems[index];
+                dibujarMalos.last.push(element)
+                if (element.layerOnDisplay === inLayer
+                ) {
+                    if (element.type === 'obj') {
+                        const randomNumber = element.randomNumber
+                        levelFalses.push({
+                            killLayer: 0,
+                            fotograma: 0,
+                            randomNumber: randomNumber,
+                            randomImage: randomNumber,
+                            imagen: obst[randomNumber],
+                            killImagen: randomNumber === 0 ? obst[3] : obst[randomNumber],
+                            posX: element.posX > 290 ? 280 : element.posX,
+                            posY: element.posY,
+                            widthX: element.widthX,
+                            heightY: element.heightY,
+                            id: element.id,
+                            damage: element.damage
+                        })
+                        ctxD.drawImage(obst[randomNumber], element.posX, element.posY, obst[randomNumber].naturalWidth / 14, obst[randomNumber].naturalHeight / 25)
+                    } else {
+                        if (element.type === 'npc') {
+                            dibujarMalos.new.push(element)
+                        }
+                    }
+                    /*   levelFalses.map((key, i) => {
+                          dibujarMalos.new.map((key2, i2) => {
+                              if ((key.posX + key.widthX > key2.posX) && (key.posX + key.widthX < key2.posX + key2.widthX) || (key.posX + key.widthX < key2.posX && (key.posX > key2.posX))) {
+                                  dibujarMalos.new[i2].posX = dibujarMalos.new[i2].posX - 35
+                              }
+      
+                          })
+                      }) */
 
-
+                }
+            }
+        } else {
             propsImage.posY = (mapFloor - parseInt(propsImage.heightY))
             proyectiles = []
             fantasmas = []
@@ -1949,250 +1938,141 @@ const Test2 = () => {
             malosFalses = []
             proyectilesFalses = []
             ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
-            let done = false
-            if (!initing && chargedLevel.length > 0) {
-                chargedLevel.map((key) => {
-                    if (parseInt(key) === parseInt(inLayer)) { done = true }
-                })
-            }
-            if (done) {
-                dibujarMalos.new = []
-                for (let index = 0; index < dibujarMalos.last.length; index++) {
-                    const element = dibujarMalos.last[index];
-                    if (element.layerOnDisplay === parseInt(inLayer)
-                    ) {
-                        if (element.type === 'obj') {
-                            const randomNumber = element.randomNumber
-                            levelFalses.push({
-                                killLayer: 0,
-                                fotograma: 0,
-                                randomNumber: randomNumber,
-                                randomImage: randomNumber,
-                                imagen: obst[randomNumber],
-                                killImagen: randomNumber === 0 ? obst[3] : obst[randomNumber],
-                                posX: element.posX > 290 ? 280 : element.posX,
-                                posY: element.posY,
-                                widthX: element.widthX,
-                                heightY: element.heightY,
-                                id: element.id,
-                                damage: element.damage
-                            })
-                            /*   ctxD.beginPath();
-                              ctxD.moveTo(element.posX, (element.posY - element.heightY));
-                              ctxD.lineTo(element.posX, (element.posY));
-                              ctxD.lineTo(element.posX + element.widthX, (element.posY));
-                              ctxD.lineTo(element.posX + element.widthX, (element.posY - element.heightY));
-                              ctxD.closePath();
-                              ctxD.fillStyle = 'green';
-                              ctxD.moveTo(0, 0);
-                              ctxD.stroke(); */
-                            ctxD.drawImage(obst[randomNumber], element.posX, element.posY, obst[randomNumber].naturalWidth / 14, obst[randomNumber].naturalHeight / 25)
-
-                        } else {
-                            if (element.type === 'npc') {
-                                dibujarMalos.new.push(element)
-
-                            }
+            dibujarMalos.new = []
+            for (let index = 0; index < dibujarMalos.last.length; index++) {
+                const element = dibujarMalos.last[index];
+                if (element.layerOnDisplay === inLayer && element.displayneed
+                ) {
+                    if (element.type === 'obj') {
+                        const randomNumber = element.randomNumber
+                        levelFalses.push({
+                            killLayer: 0,
+                            fotograma: 0,
+                            randomNumber: randomNumber,
+                            randomImage: randomNumber,
+                            imagen: obst[randomNumber],
+                            killImagen: randomNumber === 0 ? obst[3] : obst[randomNumber],
+                            posX: element.posX > 290 ? 280 : element.posX,
+                            posY: element.posY,
+                            widthX: element.widthX,
+                            heightY: element.heightY,
+                            id: element.id,
+                            damage: element.damage
+                        })
+                        ctxD.drawImage(obst[randomNumber], element.posX, element.posY, obst[randomNumber].naturalWidth / 14, obst[randomNumber].naturalHeight / 25)
+                    } else {
+                        if (element.type === 'npc') {
+                            dibujarMalos.new.push(element)
                         }
-
                     }
+                    /*   levelFalses.map((key, i) => {
+                          dibujarMalos.new.map((key2, i2) => {
+                              if ((key.posX + key.widthX > key2.posX) && (key.posX + key.widthX < key2.posX + key2.widthX) || (key.posX + key.widthX < key2.posX && (key.posX > key2.posX))) {
+                                  dibujarMalos.new[i2].posX = dibujarMalos.new[i2].posX - 35
+                              }
+      
+                          })
+                      }) */
+
                 }
-
-                myActive = false
-
+            }
+            myActive = false
+            if (inLayer !== 0) {
+                /*     propsImage.items[0].posY = (actualFloor - parseInt(propsImage.heightY))
+                    setTimeout(() => {
+                        propsImage.items[0].posY = (actualFloor - parseInt(propsImage.items[0].heightY))
+                        propsImage.posY = (actualFloor - parseInt(propsImage.heightY))
+                        propsAction = {
+                            ...propsAction,
+                            jumping: false,
+                            gravity: true
+                        }
+                        imagenes[0].onMove = false
+                        setTimeout(() => {
+                            imagenes[0].onMove = true
+                            propsImage.items[0].posX = value === '+' ? 1 : 299
+                            setPlayerGo({
+                                ...playerGo,
+                                go: true
+                            })
+ 
+                            dibujar('go', propsImage)
+                        }, 2000);
+                    }, 10); */
+            } else {
                 setPlayerGo({
                     ...playerGo,
                     go: true
                 })
-            } else {
-                dibujarMalos.new.map((key) => {
-                    dibujarMalos.last.push(key)
-                })
-                chargedLevel.push(value === '+' ? inLayer - 1 : inLayer + 1)
-                dibujarMalos.new = []
-                for (let index = 0; index < worldItems.length; index++) {
-                    const element = worldItems[index];
-
-                    if (element.layerOnDisplay === inLayer && element.displayneed
-                    ) {
-                        if (element.type === 'obj') {
-                            const randomNumber = element.randomNumber
-                            levelFalses.push({
-                                killLayer: 0,
-                                fotograma: 0,
-                                randomNumber: randomNumber,
-                                randomImage: randomNumber,
-                                imagen: obst[randomNumber],
-                                killImagen: randomNumber === 0 ? obst[3] : obst[randomNumber],
-                                posX: element.posX > 290 ? 280 : element.posX,
-                                posY: element.posY,
-                                widthX: element.widthX,
-                                heightY: element.heightY,
-                                id: element.id,
-                                damage: element.damage
-                            })
-                            /*   ctxD.beginPath();
-                              ctxD.moveTo(element.posX, (element.posY - element.heightY));
-                              ctxD.lineTo(element.posX, (element.posY));
-                              ctxD.lineTo(element.posX + element.widthX, (element.posY));
-                              ctxD.lineTo(element.posX + element.widthX, (element.posY - element.heightY));
-                              ctxD.closePath();
-                              ctxD.fillStyle = 'green';
-                              ctxD.moveTo(0, 0);
-                              ctxD.stroke(); */
-                            ctxD.drawImage(obst[randomNumber], element.posX, element.posY, obst[randomNumber].naturalWidth / 14, obst[randomNumber].naturalHeight / 25)
-                            dibujarMalos.last.push(element)
-                        } else {
-                            if (element.type === 'npc') {
-                                dibujarMalos.new.push(element)
-
-                            }
-                        }
-
-                    }
-                }
-                levelFalses.map((key, i) => {
-                    dibujarMalos.new.map((key2, i2) => {
-                        if ((key.posX + key.widthX > key2.posX) && (key.posX + key.widthX < key2.posX + key2.widthX) || (key.posX + key.widthX < key2.posX && (key.posX > key2.posX))) {
-                            dibujarMalos.new[i2].posX = dibujarMalos.new[i2].posX - 35
-                        }
-
-                    })
-                })
-
-                myActive = false
-                if (inLayer !== 0) {
-                    /*     propsImage.items[0].posY = (actualFloor - parseInt(propsImage.heightY))
-                        setTimeout(() => {
-                            propsImage.items[0].posY = (actualFloor - parseInt(propsImage.items[0].heightY))
-                            propsImage.posY = (actualFloor - parseInt(propsImage.heightY))
-                            propsAction = {
-                                ...propsAction,
-                                jumping: false,
-                                gravity: true
-                            }
-                            imagenes[0].onMove = false
-                            setTimeout(() => {
-                                imagenes[0].onMove = true
-                                propsImage.items[0].posX = value === '+' ? 1 : 299
-                                setPlayerGo({
-                                    ...playerGo,
-                                    go: true
-                                })
-    
-                                dibujar('go', propsImage)
-                            }, 2000);
-                        }, 10); */
-                } else {
-                    setPlayerGo({
-                        ...playerGo,
-                        go: true
-                    })
-                }
             }
         }
 
+
     }
-    const moverCanvas = (die, level, props, auxBoolean) => {
+    const moverCanvas = (die) => {
         falsesMuros()
-        if (auxBoolean) {
-            makeStage((playerStage.stage + 1))
+
+        let value = '?'
+        if (((propsImage.posX) - (propsImage.posX.toFixed()) / 30) - ((propsImage.posX) - (propsImage.posX.toFixed()) / 30).toFixed() > 0) {
+            value = '+'
         } else {
-            let value = '?'
-            if (((propsImage.posX) - (propsImage.posX.toFixed()) / 30) - ((propsImage.posX) - (propsImage.posX.toFixed()) / 30).toFixed() > 0) {
-                value = '+'
-            } else {
-                value = '-'
-            }
-
-            if (die === true && level === true) {
-                imagenes[0].onMove = true
-                propsImage.posX = 10
-                propsImage.refreshData = false
-                propsImage.levelPass = false
-                initing = true
-                dibujarMalos.new = []
-                dibujarMalos.last = []
-                chargedLevel = []
-            }
-            if (die || level) {
-                inLayer = 0
-            } else {
-                inLayer = die && level ? 0 : value === '-' ? (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) : ((((propsImage.posX + .5) / 30).toFixed()) * 1) === 0 ? -1 : (((propsImage.posX + .5) / 30).toFixed()) * 1
-            }
-            setPlayer({
-                ...player,
-                level: inLayer,
+            value = '-'
+        }
+        if (die === true) {
+            imagenes[0].onMove = true
+            propsImage.posX = 10
+            propsImage.refreshData = false
+            propsImage.levelPass = false
+            initing = true
+            inLayer = 0
+            setStateImage({
+                ...stateImage,
+                onMove: false,
+                direccion: 'xs',
+                posX: -1,
+                width: 1080,
+                height: 720,
+                level: levelGo
             })
-            setPlayerGo({
-                ...playerGo,
-                go: false
-            })
-            if (inLayer === 11 && gameStage === 5 && levelGo === 5) {
-                window.alert('melo papi ganaste')
-            } else {
-                if (inLayer === 11) {
+        }
+        else {
+            inLayer = die ? 0 : value === '-' ? (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) : ((((propsImage.posX + .5) / 30).toFixed()) * 1) === 0 ? -1 : (((propsImage.posX + .5) / 30).toFixed()) * 1
+        }
+        setPlayer({
+            ...player,
+            level: inLayer,
+        })
+        setPlayerGo({
+            ...playerGo,
+            go: false
+        })
+        if (inLayer === 11 && gameStage === 5 && levelGo === 5) {
+            window.alert('melo papi ganaste')
+        } else {
+            if (inLayer === 11) {
+                let otraImagen2 = new Image()
+                otraImagen2.src = `/img/enemigos/joshi/joshi-xf.png`
+                otraImagen2.onload = (() => {
+                    worldItems = CrearItemsWorld(newArrayB, levelGo, imgArray, mapFloor, obst[0])
                     initing = true
-
-                    chargedLevel = []
                     audioPp.src = ''
                     pass.play()
-                    let otraImagen2 = new Image()
-                    otraImagen2.src = `/img/enemigos/joshi/joshi-${parseInt(Math.floor(Math.random() * 3))}.png`
-                    otraImagen2.onload = (() => {
-                        worldItems = CrearItemsWorld(otraImagen2, levelGo, imgArray, mapFloor, obst[0])
-                    })
-                    dibujarMalos.new = []
-                    dibujarMalos.last = []
-                    levelFalses = []
-                    malosFalses = []
-                    proyectilesFalses = []
-                    if (levelGo === 5) {
-                        ctxB.clearRect(0, 0, canvasB.width, canvasB.height)
-                        fondos = fondos.slice(1, fondos.length)
-                        setTimeout(() => {
-                            setPlayer({
-                                ...player,
-                                level: 0
-                            })
-                            setNowStage({
-                                ...nowStage,
-                                color: fondos[0],
-                                stage: nowStage.stage + 1
-                            })
-                        }, 4500);
-
-                        levelDificulty = levelDificulty < 40 ? levelDificulty * 2 : levelDificulty + 40
-                        setDificulty(levelDificulty)
-
-                        gameStage = gameStage + 1
-                        levelGo = 1
-                        setPlayerVidas({
-                            ...playerVidas,
-                            health: playerVidas.maxHealth,
-                            vidas: playerVidas.vidas + 3
-                        })
-                    } else {
-
-                        levelGo = levelGo + 1
-                    }
-                    setStateImage({
-                        ...stateImage,
-                        posX: 11
-                    })
-                    levelFalses = []
                     imagenes[0].onMove = false
                     propsImage.levelPass = true
                     ctxD.save();
                     ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
                     ctxD.fillText('BRAVISIMO', 30, 50)
                     ctxD.strokeText(`BRAVISIMO`, 30, 50)
-                    dibujarMalos.new = []
-                    dibujarMalos.last = []
-                    chargedLevel = []
                     ctxD.restore();
                     ctxD.stroke();
                     auxnow = auxnow + 1
+                    const lastProp = propsImage
+                    laFunt(lastProp, 90)
+                    makeStage(true)
+                    setPlayerGo({
+                        ...playerGo,
+                        go: false
+                    })
                     setPlayerGo({
                         ...playerGo,
                         go: false
@@ -2201,87 +2081,22 @@ const Test2 = () => {
                         ...playerStage,
                         stage: gameStage
                     })
-                    const lastProp = propsImage
-                    laFunt(lastProp, 90)
-                    setPlayerGo({
-                        ...playerGo,
-                        go: false
+                    setStateImage({
+                        ...stateImage,
+                        posX: 11
                     })
-                    setTimeout(() => {
-                        ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
-                        propsImage.refreshData = true
-                        propsImage.alive = false
-                        let otraImagen2 = new Image()
-                        otraImagen2.src = `/img/enemigos/joshi/joshi-${parseInt(Math.floor(Math.random() * 3))}.png`
-                        otraImagen2.onload = (() => {
-                            worldItems = CrearItemsWorld(otraImagen2, levelGo, imgArray, actualFloor, obst[0])
-                        })
-                        aparecer(levelGo)
-                        chargedLevel = []
-                        dibujarMalos.new = []
-                        dibujarMalos.last = []
-                        chargedLevel = []
-                        initing = true
-                        makeStage()
-                        setPlayerStage({
-                            ...playerStage,
-                            stage: levelGo - 1
-                        })
-                        setStateImage({
-                            ...stateImage,
-                            posX: -1
-                        })
-                        imagenes[0].onMove = true
+                    setDificulty(levelDificulty)
+                    if (levelGo === 5) {
+                        ctxB.clearRect(0, 0, canvasB.width, canvasB.height)
+                        levelDificulty = levelDificulty < 40 ? levelDificulty * 2 : levelDificulty + 40
+                        fondos = fondos.slice(1, fondos.length)
+                        gameStage = gameStage + 1
 
-                        setPlayer({
-                            ...player,
-                            level: 0
-                        })
-                        propsImage.alive = true
-                        setPlayerGo({
-                            ...playerGo,
-                            go: true
-                        })
-                        timeRestart = false
-                        propsImage.posX = 0
-                        propsImage.items[0].posX = 0
-                        propsImage.direccion = 'xs'
-                        propsImage.levelPass = false
-                        propsImage.refreshData = false
-                        propsImage.alive = true
-                        inLayer = 0
-                        dibujar('go', propsImage)
                         setTimeout(() => {
-                            setHalfVolume(levelGo)
-                        }, 1000);
-
-
-
-                    }, 5000);
-                } else {
-                    if (value === '+' || value === '-' || die || level) {
-                        ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
-                        levelFalses = []
-                        if (level && die) {
-                            chargedLevel = []
-                            propsImage.items[0].posX = 0
-                            propsImage.posX = 0
-                            dibujar('go', propsImage)
-                            let toChange = propsImage.items[0]
-                            toChange.posX = 0
-                            let whileAux = []
-                            whileAux.push(toChange)
-                            whileAux.push(worldItems)
-                            propsImage.items = whileAux
-                            propsImage.refreshData = false
-                            propsImage.levelPass = false
-                            propsImage.alive = true
-                            propsImage.posX = 0
-                            propsImage.direccion = 'xs'
-                            levelGo = levelGo + 1
-                        }
-                        makeStage(value)
-                        if (die || level) {
+                            setPlayer({
+                                ...player,
+                                level: 0
+                            })
                             setStateImage({
                                 ...stateImage,
                                 onMove: false,
@@ -2289,33 +2104,95 @@ const Test2 = () => {
                                 posX: -1,
                                 width: 1080,
                                 height: 720,
-                                level: level ? levelGo : 1
+                                level: levelGo
                             })
-                            propsImage = {
-                                ...propsImage,
-                                posX: 0,
-                                posY: 145,
-                                fotograma: 0,
-                                direccion: 'xs',
-                                onMove: false,
-                                layer: 0,
-                                jumping: false,
-                                gravity: true
-                            }
-                            levelFalses = []
-                            malosFalses = []
-                            proyectilesFalses = []
-                        } else {
-                            propsImage.items[0].posX = value === '+' ? 1 : 299
-                            setStateImage({
-                                ...stateImage,
-                                posX: level ? -1 : propsImage.refreshData ? -1 : value === '-' ? (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) === 0 ? -1 : (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) : ((((propsImage.posX + .5) / 30).toFixed()) * 1) === 0 ? -1 : (((propsImage.posX + .5) / 30).toFixed()) * 1
+                            setNowStage({
+                                ...nowStage,
+                                color: fondos[0],
+                                stage: nowStage.stage + 1
                             })
-                        }
-                    }
-                }
-            }
+                            levelGo = 1
+                        }, 4500);
 
+                        setPlayerVidas({
+                            ...playerVidas,
+                            health: playerVidas.maxHealth,
+                            vidas: playerVidas.vidas + 3
+                        })
+                    } else {
+                        levelGo = levelGo + 1
+                    }
+
+                })
+                setTimeout(() => {
+                    ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
+                    propsImage.refreshData = true
+                    propsImage.alive = false
+                    aparecer(levelGo)
+
+                    initing = true
+                    setPlayerStage({
+                        ...playerStage,
+                        stage: levelGo - 1
+                    })
+                    setStateImage({
+                        ...stateImage,
+                        posX: -1
+                    })
+                    imagenes[0].onMove = true
+
+                    setPlayer({
+                        ...player,
+                        level: 0
+                    })
+                    propsImage.alive = true
+                    setPlayerGo({
+                        ...playerGo,
+                        go: true
+                    })
+                    timeRestart = false
+                    propsImage.posX = 0
+                    propsImage.items[0].posX = 0
+                    propsImage.direccion = 'xs'
+                    propsImage.levelPass = false
+                    propsImage.refreshData = false
+                    propsImage.alive = true
+                    inLayer = 0
+                    makeStage(true)
+                    dibujar('go', propsImage)
+                    setTimeout(() => {
+                        setHalfVolume(levelGo)
+                    }, 1000);
+                }, 5000);
+            } else {
+                ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
+                levelFalses = []
+                makeStage(false)
+                /*       if ( die) {
+                          chargedLevel = []
+                          propsImage.items[0].posX = 0
+                          propsImage.posX = 0
+                          dibujar('go', propsImage)
+                          let toChange = propsImage.items[0]
+                          toChange.posX = 0
+                          let whileAux = []
+                          whileAux.push(toChange)
+                          whileAux.push(worldItems)
+                          propsImage.items = whileAux
+                          propsImage.refreshData = false
+                          propsImage.levelPass = false
+                          propsImage.alive = true
+                          propsImage.posX = 0
+                          propsImage.direccion = 'xs'
+                          levelGo = levelGo + 1
+                      } */
+
+                propsImage.items[0].posX = die ? 10 : value === '+' ? 1 : 299
+                setStateImage({
+                    ...stateImage,
+                    posX: die ? -1 : propsImage.refreshData ? -1 : value === '-' ? (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) === 0 ? -1 : (((((propsImage.posX - .5) / 30).toFixed()) * 1) - 1) : ((((propsImage.posX + .5) / 30).toFixed()) * 1) === 0 ? -1 : (((propsImage.posX + .5) / 30).toFixed()) * 1
+                })
+            }
         }
     }
     const setProps = (value1, value2, value3) => {

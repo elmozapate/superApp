@@ -150,6 +150,7 @@ const ColisionBasica = async (Objeto1 = [], Objeto2 = [], Objeto3 = { direccion:
     let checking = false
     let checkingPp = false
     objeto1.map((key) => {
+        
         objeto2.map((key2, iMalos) => {
             checkingPp = false
             idsIn.map((key) => {
@@ -157,7 +158,7 @@ const ColisionBasica = async (Objeto1 = [], Objeto2 = [], Objeto3 = { direccion:
                     checkingPp = true
                 }
             })
-            if (key2.posX === key.posX && !checkingPp) {
+            if ( !checkingPp &&parseInt(key2.posX) === parseInt(key.posX) ) {
                 key.yArray.map((posA) => {
                     key2.yArray.map((posB) => {
                         checking = false
@@ -166,7 +167,7 @@ const ColisionBasica = async (Objeto1 = [], Objeto2 = [], Objeto3 = { direccion:
                                 checking = true
                             }
                         })
-                        if (posA === posB && !checking) {
+                        if (parseInt(posA) === parseInt(posB) && !checking) {
                             idsIn.push(key2.id)
                             returns.array.push({ a: key, b: key2 })
                             returns.state = true

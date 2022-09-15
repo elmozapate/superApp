@@ -52,7 +52,7 @@ const Colisonador = (Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) => {
             for (let index = 3; index < Objeto3.widthX - 3; index++) {
                 const element = {
                     posX: parseInt(index + Objeto1.posX),
-                    posY: i === 0 ? Objeto1.posY : Objeto1.posY + Objeto3.heightY,
+                    posY: i === 0 ?  parseInt(Objeto3.posY) :  parseInt(Objeto3.posY + Objeto3.heightY),
                     colisionaEn: 'y',
                     id: 'player',
                     pos: 'player',
@@ -91,12 +91,15 @@ const Colisonador = (Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) => {
         }
 
         objeto1.map((key) => {
-            objetoPlataforma.map((key2, iMalos) => {
-                if (parseInt(key2.posX) === parseInt(key.posX) && parseInt(key2.posY) === parseInt(key.posY) && !choko) {
-                    choko = true
-                    returns.array.push({ a: key, b: key2 })
-                }
-            })
+            if (!choko) {
+                objetoPlataforma.map((key2, iMalos) => {
+                    if (parseInt(key2.posX) === parseInt(key.posX) && parseInt(key2.posY) === parseInt(key.posY) && !choko) {
+                        choko = true
+                        returns.array.push({ a: key, b: key2 })
+                    }
+                })
+            }
+
         })
         if (choko) {
             returns.state = false
@@ -241,9 +244,9 @@ const Colisonador = (Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) => {
                             returns.state = true
                             returns.array.push({ a: key, b: key2 })
                         }
-                    })  
+                    })
                 }
-               
+
             })
         } else {
             objeto1.map((key) => {
