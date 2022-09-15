@@ -2019,6 +2019,10 @@ const Test2 = () => {
             value = '-'
         }
         if (die === true) {
+            setPlayerGo({
+                ...playerGo,
+                go: false
+            })
             imagenes[0].onMove = true
             propsImage.posX = 10
             propsImage.refreshData = false
@@ -2042,10 +2046,7 @@ const Test2 = () => {
             ...player,
             level: inLayer,
         })
-        setPlayerGo({
-            ...playerGo,
-            go: false
-        })
+
         if (inLayer === 11 && gameStage === 5 && levelGo === 5) {
             window.alert('melo papi ganaste')
         } else {
@@ -2069,14 +2070,7 @@ const Test2 = () => {
                     const lastProp = propsImage
                     laFunt(lastProp, 90)
                     makeStage(true)
-                    setPlayerGo({
-                        ...playerGo,
-                        go: false
-                    })
-                    setPlayerGo({
-                        ...playerGo,
-                        go: false
-                    })
+
                     setPlayerStage({
                         ...playerStage,
                         stage: gameStage
