@@ -1881,6 +1881,7 @@ const Test2 = () => {
                         }
                     }
                 }
+
             }, 50);
 
         }
@@ -2006,8 +2007,10 @@ const Test2 = () => {
                 })
             }
         }
-
-
+        setPlayerGo({
+            ...playerGo,
+            go: true
+        })
     }
     const moverCanvas = (die) => {
         falsesMuros()
