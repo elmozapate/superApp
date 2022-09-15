@@ -1225,7 +1225,7 @@ const Test2 = () => {
                 const chokeObj = Colisonador(malosFalses, levelFalses, propsImage)
                 if (chokeObj.choke) {
                     if (dibujarMalos.new[chokeObj.pos].canMove.lastChoke < 70) {
-                        dibujarMalos.new[chokeObj.pos].canMove.direccion === 'xf' && dibujarMalos.new[chokeObj.pos].posX < 280 ? dibujarMalos.new[chokeObj.pos].posX + 15 : dibujarMalos.new[chokeObj.pos].posX > 30 ? dibujarMalos.new[chokeObj.pos].posX - 15 : dibujarMalos.new[chokeObj.pos].posX + 15
+                        dibujarMalos.new[chokeObj.pos].canMove.direccion === 'xf' && dibujarMalos.new[chokeObj.pos].posX < 280 ? dibujarMalos.new[chokeObj.pos].posX + 30 : dibujarMalos.new[chokeObj.pos].posX > 30 ? dibujarMalos.new[chokeObj.pos].posX - 30 : dibujarMalos.new[chokeObj.pos].posX + 30
                     } else {
                         dibujarMalos.new[chokeObj.pos].canMove.direccion = dibujarMalos.new[chokeObj.pos].canMove.direccion === 'xf' ? 'xb' : 'xf'
                         dibujarMalos.new[chokeObj.pos].canMove.lastChoke = 0
