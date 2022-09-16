@@ -1239,21 +1239,25 @@ const Test2 = () => {
                     if (chokePlayer.state) {
                         for (let indd = 0; indd < chokePlayer.array.length; indd++) {
                             if (chokePlayer.array[indd].a === 'plataforma') {
+                                mxDirection.right = false
+                                mxDirection.left = false
+                                mxActive = false
                                 const colisionPlataforma = Colisonador(propsImage.items[0], plataformaFalses, props, true, true, ctxD, chokePlayer.array[indd].a)
                                 if (colisionPlataforma.state) {
                                     let point = (colisionPlataforma.array[0].b.colision).split('-')
                                     if (point[0] === 'x') {
                                         if (point[1] === 'xb') {
+
                                             if (propsImage.direccion === 'xf' || props.direccion === 'xf') {
-                                                propsImage.direccion = 'xs'
-                                                props.direccion === 'xs'
+                                                propsImage.items[0].posX = propsImage.items[0].posX - ((1.25 / (40 * (1 / (levelDificulty)))))
+                                                props.posX = props.posX - ((0.125 / (40 * (1 / (levelDificulty)))))
                                             }
                                             plataformaColision = { eje: 'x', state: true, valor: 'xb' }
 
                                         } else {
                                             if (propsImage.direccion === 'xb' || props.direccion === 'xb') {
-                                                propsImage.direccion = 'xs'
-                                                props.direccion === 'xs'
+                                                propsImage.items[0].posX = propsImage.items[0].posX + ((1.25 / (40 * (1 / (levelDificulty)))))
+                                                props.posX = props.posX + ((0.125 / (40 * (1 / (levelDificulty)))))
                                             }
                                             plataformaColision = { eje: 'x', state: true, valor: 'xf' }
                                         }
@@ -1286,6 +1290,43 @@ const Test2 = () => {
                                         hiter = chokePlayer.array[indd].b.randomNumber === 0 ? 'obstA' : 'obstB'
                                     }
                                     const chokeInminente = Colisonador(propsImage.items[0], hiter === ('malo') ? malosFalses : hiter === ('proy') ? proyectiles : levelFalses, props, true, true, ctxD, hiter)
+                                    if (chokeInminente.state && hiter === 'malo' && propsImage.items[0].health.estado === 'inmortal') {
+                                        if (dibujarMalos.new[chokePlayer.array[indd].b.pos].state === 'die' && dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.state && !dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.done) {
+                                            if (!propsAction.eating && !dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.done) {
+                                                setplayerOnDrop({
+                                                    ...playerOnDrop,
+                                                    state: true
+                                                })
+
+                                            }
+                                            if (propsAction.eating && !dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.startTaking) {
+                                                dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.startTaking = true
+                                            }
+                                            if (propsAction.eating && !dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.done && dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.startTaking && dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.cantidad > 0 && !dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.finishTaking) {
+                                                dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.cantidad = dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.cantidad - .05
+                                                let healtRes = .05 * (dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.efect ? 1 : -1)
+                                                setPlayerVidas({
+                                                    ...playerVidas,
+                                                    health: propsImage.items[0].health.nivel + healtRes
+                                                })
+                                                propsImage.items[0].health.nivel = propsImage.items[0].health.nivel + healtRes
+                                                if (dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.cantidad <= 0) {
+                                                    dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.finishTaking = true
+                                                    propsAction.eating = false
+                                                }
+
+                                            }
+
+                                            if (dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.finishTaking) {
+                                                dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.done = true
+                                                propsAction.eating = false
+                                                setplayerOnDrop({
+                                                    state: false
+                                                })
+
+                                            }
+                                        }
+                                    }
                                     if (chokeInminente.state && hiter === 'malo' && propsImage.items[0].health.estado === 'inmortal') {
                                         if (dibujarMalos.new[chokePlayer.array[indd].b.pos].state === 'die' && dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.state && !dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.done) {
                                             if (!propsAction.eating && !dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.done) {
@@ -1442,6 +1483,16 @@ const Test2 = () => {
                                                 break;
                                         }
                                     } else {
+                                        if ((hiter === ('obst') || hiter === ('obstA') || hiter === ('obstB')) && (chokeInminente.state && propsImage.items[0].health.estado === 'inmortal')) {
+                                            if (propsImage.direccion === 'xb' || props.direccion === 'xb') {
+                                                propsImage.items[0].posX = propsImage.items[0].posX + ((1.25 / (40 * (1 / (levelDificulty)))))
+                                                props.posX = props.posX + ((0.125 / (40 * (1 / (levelDificulty)))))
+                                            }
+                                            if (propsImage.direccion === 'xf' || props.direccion === 'xf') {
+                                                propsImage.items[0].posX = propsImage.items[0].posX - ((1.25 / (40 * (1 / (levelDificulty)))))
+                                                props.posX = props.posX - ((0.125 / (40 * (1 / (levelDificulty)))))
+                                            }
+                                        }
                                         if (armas.bat.state) {
                                             if (hiter === ('proy')) {
                                                 audioPlaying = audioPlaying > 1 ? audioPlaying + 1 : 0
