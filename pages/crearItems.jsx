@@ -13,7 +13,7 @@ export const CrearItems = (newArray, posX, floor) => {
         health: {
 /*             resistencia:0,
  */            blindaje: 0,
-            estado: 'inmortal',
+            estado: 'normal',
             nivel: 50
         },
         canMove: {
@@ -205,7 +205,7 @@ export const PropsImage = {
         health: {
 /*             resistencia:0,
  */            blindaje: 0,
-            estado: 'inmortal',
+            estado: 'normal',
             nivel: 50
         },
         canMove: {

@@ -11,7 +11,7 @@ import io from "socket.io-client"
 import { SelectedNumber } from '../creador/tools/selectedNumber';
 import ReactPlayer from 'react-player';
 import { EnvM } from '../../envMachetero';
-const envM=EnvM()
+const envM = EnvM()
 
 const socket = io(envM.hostBack)
 
@@ -643,7 +643,7 @@ export default function Master(props) {
             let actionTodo = msg.actionTodo
             let dataIn = msg.dataIn
             let pageFrom = msg.pageFrom || ''
-            console.log(dataIn,'oeeeeeeeeeeeeeee',msg);
+            console.log(dataIn, 'oeeeeeeeeeeeeeee', msg);
 
             switch (actionTodo) {
                 case 'getback':
@@ -692,9 +692,9 @@ export default function Master(props) {
                 case "players":
                     if (pageFrom === fromPage) {
                         const inputName = document.getElementById('player') ? document.getElementById('player').value : ''
-                        const resName = dataIn.dataIn.name 
-                        console.log(resName,'oeeeeeeeeeeeeeee',inputName);
-                        if (resName ===  inputName) {
+                        const resName = dataIn.dataIn.name
+                        console.log(resName, 'oeeeeeeeeeeeeeee', inputName);
+                        if (resName === inputName) {
                             console.log('silohace');
                             setregistring(true);
                         }
@@ -702,24 +702,24 @@ export default function Master(props) {
                            checkplayers(vectorEnd); */
                     }
                     break;
-                    case "playersMaster":
-                        console.log(dataIn,'oeeeeeeeeeeeeeee',msg);
+                case "playersMaster":
+                    console.log(dataIn, 'oeeeeeeeeeeeeeee', msg);
 
-                        if (pageFrom === fromPage) {
-                            let vector = dataIn || []
-                            let vectorEnd = []
-                            vector.map((key, i) => {
-                                if (key.id === fromPage) {
-                                    vectorEnd.push(key.dataIn)
-                                }
-                                return
-                            })
-                            console.log(dataIn);
-                            setPlayersIn(vectorEnd);
-                            checkplayers(vectorEnd);
+                    if (pageFrom === fromPage) {
+                        let vector = dataIn || []
+                        let vectorEnd = []
+                        vector.map((key, i) => {
+                            if (key.id === fromPage) {
+                                vectorEnd.push(key.dataIn)
+                            }
+                            return
+                        })
+                        console.log(dataIn);
+                        setPlayersIn(vectorEnd);
+                        checkplayers(vectorEnd);
 
                     }
-                    
+
                     break;
 
                 case "startedGame":
@@ -846,7 +846,7 @@ export default function Master(props) {
             socket.emit('BINGO', {
                 'dataIn': true,
                 actionTodo: "restart",
-                pageFrom:fromPage
+                pageFrom: fromPage
             });
         }
         if (value === 'elmotemandaavolar') {
@@ -1382,12 +1382,13 @@ export default function Master(props) {
                         </body>
                     </> :
                     <>{
-                        !pagefuntion ? <><iframe
-                            src='https://magweb.com.co/'
-                            width={'100vw'}
-                            height={'199vh'}
-                            className='iframe-magweb'
-                        ></iframe>
+                        !pagefuntion ? <>
+                            <iframe
+                                src='https://magweb.com.co/'
+                                width={'100vw'}
+                                height={'199vh'}
+                                className='iframe-magweb'
+                            ></iframe>
                             <button className='btn-logout' onClick={(e) => {
                                 e.preventDefault(),
                                     send5()

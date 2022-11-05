@@ -116,6 +116,8 @@ const GamePad = (props) => {
                             onTouchEnd={() => {
                                 setTimeout(() => {
                                     setProps('propsAction', 'gravity', true);
+                                    setProps('itemsSound', 'jetPack', false);
+
                                 }, 30);
                             }}
                             onTouchStart={(e) => {
