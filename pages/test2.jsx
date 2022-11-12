@@ -1260,7 +1260,6 @@ const Test2 = () => {
         setHalfVolume(levelGo, value, inkey)
     }
     const setObject = (action, value, division, modo) => {
-        console.log(action, value, division, modo);
         if (!modo || (modo !== 'key' && modo !== 'barra')) {
             setPlayerGo({
                 ...playerGo,
@@ -1792,7 +1791,6 @@ const Test2 = () => {
                                 if (colisionPlataforma) {
                                     if (colisionPlataforma.state) {
                                         let point = (colisionPlataforma.array[0].b.colision).split('-')
-                                        console.log(point);
                                         if (point[0] === 'x') {
                                             if (point[1] === 'xb') {
                                                 if (propsImage.direccion === 'xf' || propsImage.direccion === 'xf') {
@@ -2065,7 +2063,6 @@ const Test2 = () => {
                                                 if (hiter === ('malo')) {
                                                     if (!onHitSoundNow) {
                                                         onHitSoundNow = true
-                                                        console.log(parseInt(Math.random() * 3));
                                                         armas[armasGet.enUso].sound[parseInt(Math.random() * 3)].play()
                                                         setTimeout(() => {
                                                             onHitSoundNow = false

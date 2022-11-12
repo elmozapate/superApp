@@ -62,14 +62,13 @@ const ColisionBasica = async (Objeto1 = [], Objeto2 = [], Objeto3 = { direccion:
         objetoPlataforma.map((key2, iMalos) => {
             if (parseInt(key2.posX) === parseInt(key.posX) && !sinChoke) {
                 if (key2.posY > parseInt(key.posY) && key2.posY < parseInt(key.posY) + key.heightY && !returns.state) {
-                    ctx.fillStyle = "#ff2626"; // Color rojo
+                   /*  ctx.fillStyle = "#ff2626"; // Color rojo
                     ctx.beginPath(); // Iniciar trazo
                     ctx.arc(key2.posX, key2.posY, 1, 0, Math.PI * 2, true); // Dibujar un punto usando la funcion arc
-                    ctx.fill();
+                    ctx.fill(); */
                     returns.state = true
                     isplatform = true
                     returns.array.push({ a: 'plataforma', b: key2.colision })
-                    console.log(key,key2);
                     sinChoke = true
                     return returns
                 }
