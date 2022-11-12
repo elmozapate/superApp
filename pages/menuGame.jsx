@@ -56,31 +56,31 @@ const MenuGame = (props) => {
                             </>
                             :
                             powerUpsLabel ?
-                             <div className="label-armas">
-                                {powerUpsGet.map((key, i) => {
-                                    return (
-                                        <div
-                                        className={key.active?' bgcolor-green':'bgcolor-red'}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                setObject(`powerUps-${key.nombre}`, key.active ? 'normal' : key.nombre, 'powerUps', 'barra');
-                                                refreshValue()
+                                <div className="label-armas">
+                                    {powerUpsGet.map((key, i) => {
+                                        return (
+                                            <div
+                                                className={key.active ? ' bgcolor-green' : 'bgcolor-red'}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    setObject(`powerUps-${key.nombre}`, key.active ? 'normal' : key.nombre, 'powerUps', 'barra');
+                                                    refreshValue()
 
-                                            }}
-                                        >
-                                            <img src={`/powerUps/${key.nombre}/img/btn.png`}
-                                                alt={`powerUps-${key.nombre}-btn`}
-                                                width={'70px'}
-                                                height={'70px'} />
-                                        </div>
-                                    )
-                                })
-                                }
-                                <button onClick={(e) => {
-                                    e.preventDefault();
-                                    setPowerUpsLabel(false);
-                                }}>close</button>
-                            </div> :
+                                                }}
+                                            >
+                                                <img src={`/powerUps/${key.nombre}/img/btn.png`}
+                                                    alt={`powerUps-${key.nombre}-btn`}
+                                                    width={'70px'}
+                                                    height={'70px'} />
+                                            </div>
+                                        )
+                                    })
+                                    }
+                                    <button onClick={(e) => {
+                                        e.preventDefault();
+                                        setPowerUpsLabel(false);
+                                    }}>close</button>
+                                </div> :
                                 powerUpsGet.map((key, i) => {
                                     if (key.active) {
                                         return (
@@ -128,7 +128,7 @@ const MenuGame = (props) => {
                                         >
                                             {itemsGet.array.map((key2, i2) => {
                                                 return (<div
-                                                    className={key2.active?'bgcolor-green':'bgcolor-red'}
+                                                    className={key2.active ? 'bgcolor-green' : 'bgcolor-red'}
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         setObject(`items-${key2.nombre}`, key2.active ? false : true, 'items', 'barra');
@@ -143,12 +143,12 @@ const MenuGame = (props) => {
                                                 </div>)
                                             })}
                                             <button onClick={(e) => {
-                                            e.preventDefault();
-                                            setItemsLabel(false);
-                                        }}>close</button>
+                                                e.preventDefault();
+                                                setItemsLabel(false);
+                                            }}>close</button>
                                         </div>
                                     }
-                                        
+
                                     </>
 
                                 }
@@ -165,54 +165,56 @@ const MenuGame = (props) => {
                                 </div>
                             </>
                             : armasGet.array.map((key, i) => {
-                                if (key.active) {
-                                    return (
-                                        <>{
-                                            armasLabel ? <div className="label-armas"
-                                            >
-                                                {armasGet.array.map((key2, i2) => {
-                                                    return (<div
-                                                    className={key2.active?'bgcolor-green':'bgcolor-red'}
-                                                        onClick={(e) => {
-                                                            e.preventDefault();
-                                                            setObject(`armas-${key2.nombre}`, key2.active ? false : true, 'armas', 'barra'); 
-                                                        }}>
-                                                        <img
-                                                            id={`label-${i2}`}
+                                return (
+                                    <>{
+                                        armasLabel ? <div className="label-armas"
+                                        >
+                                            {armasGet.array.map((key2, i2) => {
+                                                return (<div
+                                                    className={key2.active ? 'bgcolor-green' : 'bgcolor-red'}
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        setObject(`armas-${key2.nombre}`, key2.active ? false : true, 'armas', 'barra');
+                                                    }}>
+                                                    <img
+                                                        id={`label-${i2}`}
 
-                                                            src={`/armas/${key2.nombre}/img/btn.png`}
-                                                            alt={`armas-${key2.nombre}-btn`}
-                                                            width={'70px'}
-                                                            height={'70px'} />
-                                                    </div>)
-                                                })}
-                                                <button onClick={(e) => {
-                                                    e.preventDefault();
-                                                    setArmasLabel(false);
-                                                }}>close</button>
-                                            </div> : <div onClick={(e) => { e.preventDefault(); setArmasLabel(!armasLabel) }}
-                                            > <img
-                                                    id={`labelClose`}
-                                                    src={`/armas/${key.nombre}/img/btn.png`}
-                                                    alt={`armas-${key.nombre}-btn`}
-                                                    width={'70px'}
-                                                    height={'70px'} /></div>
-                                        }
+                                                        src={`/armas/${key2.nombre}/img/btn.png`}
+                                                        alt={`armas-${key2.nombre}-btn`}
+                                                        width={'70px'}
+                                                        height={'70px'} />
+                                                </div>)
+                                            })}
+                                            <button onClick={(e) => {
+                                                e.preventDefault();
+                                                setArmasLabel(false);
+                                            }}>close</button>
+                                        </div> :
+                                            key.active ?
+                                                <div onClick={(e) => { e.preventDefault(); setArmasLabel(!armasLabel) }}
+                                                > <img
+                                                        id={`labelClose`}
+                                                        src={`/armas/${key.nombre}/img/btn.png`}
+                                                        alt={`armas-${key.nombre}-btn`}
+                                                        width={'70px'}
+                                                        height={'70px'} /></div> : <></>
+                                    }
 
-                                        </>
-                                    )
-                                }
+                                    </>
+                                )
+
                             })}
                     </div>
                 </div>
                 <div className={`barra-health`}>
+                    <div className="barra-health-valor"><span className={`porcentaje-${(parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) > 0 ? (parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) : 0}`} >
+                        {(parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) > 0 ? (parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) : 0}
+                    </span></div>
                     <div className={`valorplus valor2-${((100 - (parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) < 100) ? 100 - (parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) : 100)}`}>
 
                     </div>
                     <div className={`valorplus valor-${(parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) > 100 ? 100 : (parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) > 0 ? (parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) : 0}`}>
-                        <span className={`porcentaje-${(parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) > 0 ? (parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) : 0}`} >
-                            {(parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) > 0 ? (parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) : 0}
-                        </span>
+
                     </div>
 
                     {/* <div className="vidas">

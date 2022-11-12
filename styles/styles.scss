@@ -2409,12 +2409,14 @@ h1 {
         height: getRemSize(70px);
     }
     .porcentaje-#{$i} {
+        position: absolute;
+        top:calc( 50% - 13px);
+        left: 0;
         text-align: center;
         font-weight: 900;
         font-size: getRemSize(26px);
-        width: 150px;
-        color: gold;
-        margin-bottom: getRemSize(3px * ($i)-26);
+        width: (3px * (100));
+        height: getRemSize(70px);        color: gold;
     }
     .btn-interactivo-y-#{$i} {
         top: (1% * (($i/1.5)-10)) !important;
@@ -2623,12 +2625,15 @@ h1 {
     z-index: 90000;
     flex-wrap: nowrap;
     position: fixed;
-    top: getRemSize(-180px);
+    top: 50px;
     right: 4.01vw;
     justify-content: space-between;
     display: flex;
-    min-height: 300px;
-    align-items: flex-end;
+   
+    .barra-health-valor{
+        position: relative;
+        
+    }
 }
 .text-align-center {
     text-align: center;

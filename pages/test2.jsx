@@ -16,7 +16,7 @@ let off = true, itemsSound = [], muted = false, auxPlataformas = [], newArrayB =
     state: false,
     item: 0,
     result: 'live'
-}, obst = [], onHitSoundNow = false, itemsImage = [[]], lazyImg = [], mapFloor = 150, actualFloorLimit = { state: false, x1: 0, x2: 300 }, onPunalSound = true, onHitSound = true, dolor = true, sierra = true, timeOfgame = 0, actualFloor = 150, lastDireccion = 'xf', plataformaFalses = [], armas = {
+}, obst = [], onHitSoundNow = false, itemsImage = { jetPack: [], patineta: [] }, lazyImg = [], mapFloor = 150, actualFloorLimit = { state: false, x1: 0, x2: 300 }, onPunalSound = true, onHitSound = true, dolor = true, sierra = true, timeOfgame = 0, actualFloor = 150, lastDireccion = 'xf', plataformaFalses = [], armas = {
     bat: {
         onHit: false,
         damage: 10,
@@ -75,7 +75,7 @@ let off = true, itemsSound = [], muted = false, auxPlataformas = [], newArrayB =
     }
 }, WeaponAudio = [true, true], audioPlaying = 0, jump, obtenerOrientacion = console.log, pass, audioPp, actualVidas = 5, mxActive = false, myActive = false, fantasmas = [], dibujarMalos = {
     die: false, last: [], new: []
-}, mxDirection = { left: false, right: false }, portraitAudio, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, muertebebe, joshisound, joshisound2, joshisound3 = [true, true, true, true], pow, proyectilesImg = [], imagenesSrc = [`/img/finales/foto-de-anime-4.png`, `/img/finales/foto-de-anime-3.png`, `/img/finales/foto-de-anime-2.png`, `/img/finales/foto-de-anime-1.png`, `/img/finales/foto-de-anime-0.png`], soundToch = false, itemsImageAux = {}, soundLevels = { sfx: 2, music: 2 }, inPausetouch = false, fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { strikeLevel: 1, jumping: false, gravity: true, eating: false, jumpLevel: 1.10, gravityLevel: 1.10 }, canvas, levelGo = 1, ctx, imgArray = [],
+}, mxDirection = { left: false, right: false }, portraitAudio, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, muertebebe, joshisound, joshisound2, joshisound3 = [true, true, true, true], pow, proyectilesImg = [], imagenesSrc = [`/img/finales/foto-de-anime-4.png`, `/img/finales/foto-de-anime-3.png`, `/img/finales/foto-de-anime-2.png`, `/img/finales/foto-de-anime-1.png`, `/img/finales/foto-de-anime-0.png`], soundToch = false, itemsImageAux = {}, soundLevels = { sfx: 2, music: 2 }, inPausetouch = false, fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { speedLevel: 1, strikeLevel: 1, jumping: false, gravity: true, eating: false, jumpLevel: 1.10, gravityLevel: 1.10 }, canvas, levelGo = 1, ctx, imgArray = [],
     imagenA, canvasC, ctxC, canvasB, ctxB, canvasD, ctxD, canvasE, ctxE, ctxF, canvasF, imagenes = [{ onMove: false }], worldItems = [], timeRestart = false, levelDificulty = 20
 const Test2 = () => {
     const [windowOpen, setwindowOpen] = useState({
@@ -96,12 +96,12 @@ const Test2 = () => {
     })
     const [powerUpsGet, setPowerUpsGet] = useState([{ nombre: 'inmortal', active: false }, { nombre: 'fumado', active: false }])
     const [armasGet, setArmasGet] = useState({
-        enUso: 'bat',
-        array: [{ nombre: 'lata', active: false, obtenida: true }, { nombre: 'desArmado', active: false, obtenida: true }, { nombre: 'bat', active: true, obtenida: true }, { nombre: 'otroBat', active: false, obtenida: true }]
+        enUso: 'desArmado',
+        array: [{ nombre: 'lata', active: false, obtenida: true }, { nombre: 'desArmado', active: false, obtenida: true }, { nombre: 'bat', active: false, obtenida: true }, { nombre: 'otroBat', active: false, obtenida: true }]
     })
     const [itemsGet, setItemsGet] = useState({
         enUso: 'ninguno',
-        array: [{ nombre: 'jetPack', active: false, obtenida: true }]
+        array: [{ nombre: 'jetPack', active: false, obtenida: true }, { nombre: 'patineta', active: false, obtenida: true }]
     })
     const [gameStart, setGameStart] = useState(false)
     const [fullScreen, setFullScreen] = useState(false)
@@ -149,6 +149,9 @@ const Test2 = () => {
             jump.volume = start ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10) : value === 'mute' ? (volumenEfectsLevel.mute ? (inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10 : 0) : (value === '+' ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) + .5) : ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) - .5)) / 10
             if (itemsSound[0] && itemsSound[0].sound) {
                 itemsSound[0].sound.volume = start ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10) : value === 'mute' ? (volumenEfectsLevel.mute ? (inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10 : 0) : (value === '+' ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) + .5) : ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) - .5)) / 10
+            }
+            if (itemsSound[1] && itemsSound[1].sound) {
+                itemsSound[1].sound.volume = start ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10) : value === 'mute' ? (volumenEfectsLevel.mute ? (inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10 : 0) : (value === '+' ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) + .5) : ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) - .5)) / 10
             }
             const soundDatas = ['bat', 'otroBat', 'desArmado', 'lata']
             soundDatas.map((key, i) => {
@@ -415,10 +418,10 @@ const Test2 = () => {
             newModel.layer = newModel.layer + 1
         } else { newModel.layer = 0 }
         newModel.direccion = 'xs'
-        ctxC.drawImage(aDibujar, posFix, props.posY, props.widthX, parseInt(props.heightY))
-        if (imagenes[0].onMove === false) {
+        ctxE.drawImage(aDibujar, props.posX, props.posY, props.widthX, parseInt(props.heightY))
+        if (propsImage.levelPass) {
             setTimeout(() => {
-                ctxC.clearRect(0, 0, canvas.width, canvas.height)
+                ctxE.clearRect(0, 0, canvas.width, canvas.height)
                 laFunt(props, posFix)
             }, 5);
         }
@@ -539,18 +542,26 @@ const Test2 = () => {
         canvas = document.getElementById('canvas-Pp')
         ctx = canvas.getContext('2d')
         let orient = ['xf', 'xs', 'xb']
+        let losItems = ['jetPack', 'patineta']
+
         orient.map((key, i) => {
             for (let index = 0; index < 3; index++) {
-                let laimagen = new Image
-                laimagen.src = `/img/items/jetPack/jetPack-${key}-${index !== 2 ? `on-${index}` : 'off'}.png`
-                laimagen.onload = (() => {
-                    itemsImage[0].push({ direccion: key, estado: index !== 2 ? 'on' : 'off', layer: index, nombre: `jetPack-${key}-${index !== 2 ? `on-${index}` : 'off'}`, imagen: laimagen })
+                losItems.map((keyItem, iItem) => {
+                    let laimagen = new Image
+                    laimagen.src = `/items/${keyItem}/img/${keyItem}-${key}-${index !== 2 ? `on-${index}` : 'off'}.png`
+                    laimagen.onload = (() => {
+                        itemsImage[keyItem].push({ direccion: key, estado: index !== 2 ? 'on' : 'off', layer: index, nombre: `${keyItem}-${key}-${index !== 2 ? `on-${index}` : 'off'}`, imagen: laimagen })
+                    })
                 })
+
             }
         })
         let audioItem = new Audio
-        audioItem.src = '/img/items/jetPack/sound.mp3'
+        audioItem.src = '/items/jetPack/sound.mp3'
         itemsSound[0] = ({ item: 'jetPack', sound: audioItem })
+        let audioItem2 = new Audio
+        audioItem2.src = '/items/patineta/sound.mp3'
+        itemsSound[1] = ({ item: 'patineta', sound: audioItem2 })
         aparecer(levelGo)
         for (let index = 0; index < 14; index++) {
             let element = new Image
@@ -894,6 +905,11 @@ const Test2 = () => {
                                                                     refreshValue()
 
                                                                 }
+                                                                if (keyValue === 'k') {
+                                                                    setObject('items-patineta', itemsGet.enUso === 'patineta' ? false : true, 'items', 'key')
+                                                                    refreshValue()
+
+                                                                }
                                                                 if (keyValue === '1' || keyValue === '2' || keyValue === '3' || keyValue === '4') {
                                                                     switch (keyValue) {
                                                                         case '1':
@@ -996,6 +1012,9 @@ const Test2 = () => {
                                                                     }
                                                                 }
                                                                 if (keyValue === 'ArrowRight' && !mxActive && !mxDirection.left) {
+                                                                    if (itemsGet.enUso === 'patineta') {
+                                                                        itemsSound[1].sound.play()
+                                                                    }
                                                                     mxActive = true
                                                                     mxDirection = {
                                                                         ...mxDirection,
@@ -1010,6 +1029,9 @@ const Test2 = () => {
                                                                     dibujarMouseOn('+', true)
                                                                 } else {
                                                                     if ((keyValue === 'ArrowRight' && mxActive)) {
+                                                                        if (itemsGet.enUso === 'patineta') {
+                                                                            itemsSound[1].sound.play()
+                                                                        }
                                                                         propsImage = {
                                                                             ...propsImage,
                                                                             direccion: 'xf',
@@ -1022,6 +1044,9 @@ const Test2 = () => {
                                                                         }
                                                                     } else
                                                                         if ((keyValue === 'ArrowRight' && mxActive && mxDirection.left)) {
+                                                                            if (itemsGet.enUso === 'patineta') {
+                                                                                itemsSound[1].sound.play()
+                                                                            }
                                                                             propsImage = {
                                                                                 ...propsImage,
                                                                                 direccion: 'xf',
@@ -1036,6 +1061,9 @@ const Test2 = () => {
                                                                         }
                                                                 }
                                                                 if (keyValue === 'ArrowLeft' && !mxActive) {
+                                                                    if (itemsGet.enUso === 'patineta') {
+                                                                        itemsSound[1].sound.play()
+                                                                    }
                                                                     mxActive = true
                                                                     dibujarMouseOn('-', true)
                                                                     propsImage = {
@@ -1045,6 +1073,9 @@ const Test2 = () => {
                                                                     lastDireccion = 'xb'
                                                                 } else {
                                                                     if ((keyValue === 'ArrowLeft' && mxActive)) {
+                                                                        if (itemsGet.enUso === 'patineta') {
+                                                                            itemsSound[1].sound.play()
+                                                                        }
                                                                         propsImage = {
                                                                             ...propsImage,
                                                                             direccion: 'xb',
@@ -1057,6 +1088,9 @@ const Test2 = () => {
                                                                         }
                                                                     } else
                                                                         if ((keyValue === 'ArrowLeft' && mxActive && mxDirection.left)) {
+                                                                            if (itemsGet.enUso === 'patineta') {
+                                                                                itemsSound[1].sound.play()
+                                                                            }
                                                                             propsImage = {
                                                                                 ...propsImage,
                                                                                 direccion: 'xb',
@@ -1116,6 +1150,9 @@ const Test2 = () => {
                                                                     }
                                                                 } else {
                                                                     if (mxActive && (keyValue === 'ArrowLeft' || keyValue === 'ArrowRight' || keyValue === 'ArrowDown')) {
+                                                                        if (itemsGet.enUso === 'patineta') {
+                                                                            itemsSound[1].sound.pause()
+                                                                        }
                                                                         if (keyValue === 'ArrowDown') {
                                                                             propsImage = {
                                                                                 ...propsImage,
@@ -1362,6 +1399,9 @@ const Test2 = () => {
                     if (key.nombre === itemNom) {
                         inOtorg.array[i].active = true
                         darItem({ key: itemNom, value: true })
+                    } else {
+                        darItem({ key: key.nombre, value: false })
+                        inOtorg.array[i].active = false
                     }
                 })
             }
@@ -1396,6 +1436,12 @@ const Test2 = () => {
                 propsAction = {
                     ...propsAction,
                     strikeLevel: props.value ? 4 : 1
+                }
+                break;
+            case 'patineta':
+                propsAction = {
+                    ...propsAction,
+                    speedLevel: props.value ? 2 : 1
                 }
                 break;
             default:
@@ -1570,6 +1616,9 @@ const Test2 = () => {
                 }
             })
             if (itsMalo) {
+                ctxC.clearRect(0, 0, canvas.width, canvas.height)
+                /*         ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
+                 */        ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
                 ctxE.drawImage(dibujarMalos.new[indexHere].imagen[position.malo].imagen, dibujarMalos.new[indexHere].posX, dibujarMalos.new[indexHere].posY - 2, dibujarMalos.new[indexHere].imagen[position.malo].imagen.naturalWidth / 22, dibujarMalos.new[indexHere].imagen[position.malo].imagen.naturalHeight / 27)
                 let aDibujar = propsImage.imagen[`${dibujarMalos.new[indexHere].posX > propsImage.items[0].posX ? 'xb' : 'xf'}_die`]
                 ctxC.drawImage(aDibujar, dibujarMalos.new[indexHere].posX < propsImage.items[0].posX ? dibujarMalos.new[indexHere].posX + dibujarMalos.new[indexHere].widthX - 5 : dibujarMalos.new[indexHere].posX - propsImage.widthX + 5, dibujarMalos.new[indexHere].posY, propsImage.widthX, parseInt(propsImage.heightY))
@@ -1613,6 +1662,8 @@ const Test2 = () => {
                             ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
                             ctxE.drawImage(obst[2], posXuse + ((Math.random() * 10) - 10), posYuse + ((Math.random() * 2) - 2) - 12.5, obst[2].naturalWidth / 20, obst[2].naturalHeight / 32)
                         }
+                        ctxC.clearRect(0, 0, canvas.width, canvas.height)
+                        ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
                         ctxD.drawImage(obstacule.killImagen, posXuse, posYuse, obstacule.killImagen.naturalWidth / 14, obstacule.killImagen.naturalHeight / 25)
                         let aDibujar = propsImage.imagen[`cuted_${obstacule.killLayer}`]
                         ctxC.drawImage(aDibujar, posXuse - 5, posYuse - 10, 30, 25)
@@ -1630,6 +1681,7 @@ const Test2 = () => {
             if (colisioned.result === 'live') {
                 colisioned.result = 'rewind'
                 setTimeout(() => {
+                    ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
                     propsImage.posX = propsImage.posX - 2
                     propsImage.items[0].posX = propsImage.items[0].posX - 20
                     propsImage.posX = propsImage.posX - 2
@@ -1664,6 +1716,8 @@ const Test2 = () => {
                 }
             })
             if (itsMalo) {
+                ctxC.clearRect(0, 0, canvas.width, canvas.height)
+                ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
                 ctxE.drawImage(dibujarMalos.new[indexHere].imagen[position.malo].imagen, dibujarMalos.new[indexHere].posX, dibujarMalos.new[indexHere].posY, dibujarMalos.new[indexHere].imagen[position.malo].imagen.naturalWidth / 22, dibujarMalos.new[indexHere].imagen[position.malo].imagen.naturalHeight / 27)
                 let aDibujar = propsImage.imagen[`${dibujarMalos.new[indexHere].posX > propsImage.items[0].posX ? 'xf' : 'xb'}_die`]
                 ctxC.drawImage(aDibujar, dibujarMalos.new[indexHere].posX < propsImage.items[0].posX ? dibujarMalos.new[indexHere].posX + dibujarMalos.new[indexHere].widthX - 5 : dibujarMalos.new[indexHere].posX - propsImage.widthX + 5, dibujarMalos.new[indexHere].posY - (dibujarMalos.new[indexHere].killLayer < 2 ? (parseInt(dibujarMalos.new[indexHere].heightY) / 2) : (parseInt(dibujarMalos.new[indexHere].heightY) / 4)), propsImage.widthX, parseInt(propsImage.heightY))
@@ -1707,6 +1761,8 @@ const Test2 = () => {
                             ctxE.clearRect(0, 0, canvasE.width, canvasE.height)
                             ctxE.drawImage(obst[2], posXuse + ((Math.random() * 10) - 10), posYuse + ((Math.random() * 2) - 2) - 12.5, obst[2].naturalWidth / 20, obst[2].naturalHeight / 32)
                         }
+                        ctxD.clearRect(0, 0, canvasD.width, canvasD.height)
+                        ctxC.clearRect(0, 0, canvas.width, canvas.height)
                         ctxD.drawImage(obstacule.killImagen, posXuse, posYuse, obstacule.killImagen.naturalWidth / 14, obstacule.killImagen.naturalHeight / 25)
                         let aDibujar = propsImage.imagen[`cuted_${obstacule.killLayer}`]
                         ctxC.drawImage(aDibujar, posXuse - 5, posYuse - 10, 30, 25)
@@ -2125,11 +2181,11 @@ const Test2 = () => {
 /*                         dibujar('go', propsImage)
 */                    } else {
                         psx = Itemss[0].posX
-                        if (propsImage.posX <= (341 - 0.5) && propsImage.posX > -1 && propsImage.direccion === 'xf' && (((propsImage.posX / (31 - 0.5)) === (1)) || ((propsImage.posX / (61 - 0.5)) === (1)) || ((propsImage.posX / (91 - 0.5)) === (1)) || ((propsImage.posX / (121 - 0.5)) === (1)) || ((propsImage.posX / (151 - 0.5)) === (1)) || ((propsImage.posX / (181 - 0.5)) === (1)) || ((propsImage.posX / (211 - 0.5)) === (1)) || ((propsImage.posX / (241 - 0.5)) === (1)) || ((propsImage.posX / (271 - 0.5)) === (1)) || ((propsImage.posX / (301 - 0.5)) === (1)) || ((propsImage.posX / (331 - 0.5)) === (1)) || (((propsImage.posX / (341 - 0.5)) === (1)))) && propsImage.alive && !propsImage.levelPass) {
+                        if (propsImage.posX <= (341 - 0.5) && propsImage.posX > -1 && propsImage.direccion === 'xf' && ((((propsImage.posX / (31 - 0.5)) === (1)) || (propsImage.posX > 29.9 && inLayer === 0)) || (((propsImage.posX / (61 - 0.5)) === (1)) || (propsImage.posX > 59.9 && inLayer === 1)) || (((propsImage.posX / (91 - 0.5)) === (1)) || (propsImage.posX > 89.9 && inLayer === 2)) || (((propsImage.posX / (121 - 0.5)) === (1)) || (propsImage.posX > 119.9 && inLayer === 3)) || (((propsImage.posX / (151 - 0.5)) === (1)) || (propsImage.posX > 149.9 && inLayer === 4)) || (((propsImage.posX / (181 - 0.5)) === (1)) || (propsImage.posX > 179.9 && inLayer === 5)) || (((propsImage.posX / (211 - 0.5)) === (1)) || (propsImage.posX > 209.9 && inLayer === 6)) || (((propsImage.posX / (241 - 0.5)) === (1)) || (propsImage.posX > 239.9 && inLayer === 7)) || (((propsImage.posX / (271 - 0.5)) === (1)) || (propsImage.posX > 269.9 && inLayer === 8)) || (((propsImage.posX / (301 - 0.5)) === (1)) || (propsImage.posX > 299.9 && inLayer === 9)) || (((propsImage.posX / (331 - 0.5)) === (1)) || (propsImage.posX > 330.9 && inLayer === 10)) || ((((propsImage.posX / (341 - 0.5)) === (1)))) || (propsImage.posX > 340.9 && inLayer === 11)) && propsImage.alive && !propsImage.levelPass) {
                             moverCanvas(false)
                         }
-                        if (propsImage.posX < 351 && propsImage.posX > 28 && propsImage.direccion === 'xb' && (((propsImage.posX / (29 - 0.5)) === (1)) || ((propsImage.posX / (59 - 0.5)) === (1)) ||
-                            ((propsImage.posX / (89 + 0.5)) === (1)) || ((propsImage.posX / (119 + 0.5)) === (1)) || ((propsImage.posX / (149 + 0.5)) === (1)) || ((propsImage.posX / (179 + 0.5)) === (1)) || ((propsImage.posX / (209 + 0.5)) === (1)) || ((propsImage.posX / (239 + 0.5)) === (1)) || ((propsImage.posX / (269 + 0.5)) === (1)) || ((propsImage.posX / (299 + 0.5)) === (1)) || ((propsImage.posX / (319 + 0.5)) === (1)))) {
+                        if (propsImage.posX < 351 && propsImage.posX > 28 && propsImage.direccion === 'xb' && ((((propsImage.posX / (29 - 0.5)) === (1)) || (propsImage.posX < 29.9 && inLayer === 1)) || (((propsImage.posX / (59 - 0.5)) === (1)) || (propsImage.posX < 59.9 && inLayer === 2)) ||
+                            (((propsImage.posX / (89 + 0.5)) === (1)) || (propsImage.posX < 89.9 && inLayer === 3)) || (((propsImage.posX / (119 + 0.5)) === (1)) || (propsImage.posX < 119.9 && inLayer === 4)) || (((propsImage.posX / (149 + 0.5)) === (1)) || (propsImage.posX < 149.9 && inLayer === 5)) || (((propsImage.posX / (179 + 0.5)) === (1)) || (propsImage.posX < 179.9 && inLayer === 6)) || (((propsImage.posX / (209 + 0.5)) === (1)) || (propsImage.posX < 209.9 && inLayer === 7)) || (((propsImage.posX / (239 + 0.5)) === (1)) || (propsImage.posX < 239.9 && inLayer === 8)) || (((propsImage.posX / (269 + 0.5)) === (1)) || (propsImage.posX < 269.9 && inLayer === 9)) || (((propsImage.posX / (299 + 0.5)) === (1)) || (propsImage.posX < 299.9 && inLayer === 10)) || (((propsImage.posX / (319 + 0.5)) === (1)) || (propsImage.posX < 319.9 && inLayer === 11)))) {
                             moverCanvas(false)
                         }
                         else {
@@ -2146,11 +2202,11 @@ const Test2 = () => {
                                     propsImage.direccion = propsImage.direccion
                                 }
                                 if ((propsImage.direccion === 'xf' && propsImage.posX < 342) || ((propsImage.direccion === 'xs' || propsImage.direccion === 'xd') && propsImage.posX < 355) || (propsImage.direccion === 'xb' && propsImage.posX > 0)) {
-                                    Itemss[0].posX = propsImage.refreshData ? psx : propsImage.levelPass ? psx : propsImage.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || propsImage.posY < actualFloor ? Itemss[0].posX + ((1.25 / (40 * (1 / (levelDificulty))))) : Itemss[0].posX + ((1.25 / (40 * (1 / (levelDificulty))))) : propsImage.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || propsImage.posY < actualFloor ? Itemss[0].posX - ((1.25 / (40 * (1 / (levelDificulty))))) : Itemss[0].posX - ((1.25 / (40 * (1 / (levelDificulty))))) : Itemss[0].posX
+                                    Itemss[0].posX = propsImage.refreshData ? psx : propsImage.levelPass ? psx : propsImage.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || propsImage.posY < actualFloor ? Itemss[0].posX + ((1.25 / (40 * (1 / (levelDificulty)))) * propsAction.speedLevel) : Itemss[0].posX + ((1.25 / (40 * (1 / (levelDificulty)))) * propsAction.speedLevel) : propsImage.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || propsImage.posY < actualFloor ? Itemss[0].posX - ((1.25 / (40 * (1 / (levelDificulty)))) * propsAction.speedLevel) : Itemss[0].posX - ((1.25 / (40 * (1 / (levelDificulty)))) * propsAction.speedLevel) : Itemss[0].posX
                                     propsImage = {
                                         ...propsImage,
                                         posY: propsAction.jumping && propsImage.posY <= (actualFloor - parseInt(propsImage.heightY)) ? propsImage.posY === (actualFloor - parseInt(propsImage.heightY)) && propsAction.jumping && propsAction.gravity ? (actualFloor - parseInt(propsImage.heightY)) : !propsAction.gravity ? propsImage.posY - propsAction.jumpLevel : propsAction.jumping && propsAction.gravity ? propsImage.posY + propsAction.gravityLevel : propsImage.posY === 50 ? (actualFloor - parseInt(propsImage.heightY)) : (actualFloor - parseInt(propsImage.heightY)) : (actualFloor - parseInt(propsImage.heightY)),
-                                        posX: propsImage.refreshData ? propsImage.posX : propsImage.levelPass ? propsImage.posX : !propsImage.alive ? 0 : propsImage.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || propsImage.posY < actualFloor ? propsImage.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : propsImage.posX + ((0.125 / (40 * (1 / (levelDificulty))))) : propsImage.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || propsImage.posY < actualFloor ? propsImage.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : propsImage.posX - ((0.125 / (40 * (1 / (levelDificulty))))) : propsImage.posX,
+                                        posX: propsImage.refreshData ? propsImage.posX : propsImage.levelPass ? propsImage.posX : !propsImage.alive ? 0 : propsImage.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || propsImage.posY < actualFloor ? propsImage.posX + ((0.125 / (40 * (1 / (levelDificulty)))) * propsAction.speedLevel) : propsImage.posX + ((0.125 / (40 * (1 / (levelDificulty)))) * propsAction.speedLevel) : propsImage.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || propsImage.posY < actualFloor ? propsImage.posX - ((0.125 / (40 * (1 / (levelDificulty)))) * propsAction.speedLevel) : propsImage.posX - ((0.125 / (40 * (1 / (levelDificulty)))) * propsAction.speedLevel) : propsImage.posX,
                                         items: propsImage.levelPass || !propsImage.alive ? propsImage.items : Itemss,
                                         fotograma: propsImage.fotograma + 1,
                                     }
@@ -2368,6 +2424,27 @@ const Test2 = () => {
                                     }
                                 })
                                 proyectiles = existingProyectiles
+                                if (itemsGet.enUso !== 'ninguno') {
+                                    let playerClothes = itemsImage[itemsGet.enUso].imagen
+                                    let estado = itemsGet.enUso === 'jetPack' ? !propsAction.gravity : ((propsImage.direccion === 'xf' || propsImage.direccion === 'xb') || (itemsGet.enUso === 'patineta' && propsAction.jumping && !propsAction.gravity) ? true : false)
+                                    let ladireccion = armas[armasGet.enUso].state || (propsImage.direccion === 'xj' || propsImage.direccion === 'xd') || (itemsGet.enUso === 'patineta' && propsAction.jumping) ? 'xs' : propsImage.direccion
+                                    let rand = itemsGet.enUso === 'patineta' && propsAction.jumping ? (propsImage.direccion === 'xb' ? 1 : 0) : parseInt((Math.random() * 2))
+                                    if (estado) {
+                                        itemsImage[itemsGet.enUso].map((key, i) => {
+                                            if (key.direccion === ladireccion && key.layer === rand && key.estado === 'on') {
+                                                playerClothes = key.imagen
+                                            }
+                                        })
+
+                                    } else {
+                                        itemsImage[itemsGet.enUso].map((key, i) => {
+                                            if (key.direccion === ladireccion && key.estado === 'off') {
+                                                playerClothes = key.imagen
+                                            }
+                                        })
+                                    }
+                                    ctxE.drawImage(playerClothes, propsImage.levelPass ? psx : propsImage.refreshData ? 10 : !propsImage.alive ? 0 : psx - 8, propsImage.direccion === 'xd' ? propsImage.posY + (parseInt(propsImage.heightY) / 2) : propsImage.posY - 7, propsImage.widthX + 16, propsImage.direccion === 'xd' ? (parseInt(propsImage.heightY) / 2) : parseInt(propsImage.heightY) + 14)
+                                }
                                 if (armas[armasGet.enUso].state) {
                                     let indexFor = armas[armasGet.enUso].fotograma
                                     if (armas[armasGet.enUso].layer < 13) {
@@ -2426,28 +2503,7 @@ const Test2 = () => {
                                     let playerClothes = itemsImageAux[`body_fumado_${((propsImage.direccion !== 'xf' && propsImage.direccion !== 'xb' || armas[armasGet.enUso].state) ? 'xs' : propsImage.direccion)}`]
                                     ctxC.drawImage(playerClothes, propsImage.levelPass ? psx : propsImage.refreshData ? 10 : !propsImage.alive ? 0 : psx - 8, propsImage.direccion === 'xd' ? propsImage.posY + (parseInt(propsImage.heightY) / 2) : propsImage.posY - 7, propsImage.widthX + 16, propsImage.direccion === 'xd' ? (parseInt(propsImage.heightY) / 2) : parseInt(propsImage.heightY) + 14)
                                 }
-                                if (propsAction.jumpLevel > 1.10) {
-                                    let playerClothes = itemsImage[0].imagen
-                                    let estado = !propsAction.gravity
-
-                                    let ladireccion = armas[armasGet.enUso].state || (propsImage.direccion === 'xj' || propsImage.direccion === 'xd') ? 'xs' : propsImage.direccion
-                                    let rand = parseInt((Math.random() * 2))
-                                    if (estado) {
-                                        itemsImage[0].map((key, i) => {
-                                            if (key.direccion === ladireccion && key.layer === rand && key.estado === 'on') {
-                                                playerClothes = key.imagen
-                                            }
-                                        })
-
-                                    } else {
-                                        itemsImage[0].map((key, i) => {
-                                            if (key.direccion === ladireccion && key.estado === 'off') {
-                                                playerClothes = key.imagen
-                                            }
-                                        })
-                                    }
-                                    ctxC.drawImage(playerClothes, propsImage.levelPass ? psx : propsImage.refreshData ? 10 : !propsImage.alive ? 0 : psx - 8, propsImage.direccion === 'xd' ? propsImage.posY + (parseInt(propsImage.heightY) / 2) : propsImage.posY - 7, propsImage.widthX + 16, propsImage.direccion === 'xd' ? (parseInt(propsImage.heightY) / 2) : parseInt(propsImage.heightY) + 14)
-                                }
+                       
                                 ctxC.drawImage(aDibujar, propsImage.levelPass ? psx : propsImage.refreshData ? 10 : !propsImage.alive ? 0 : psx, propsImage.direccion === 'xd' ? propsImage.posY + (parseInt(propsImage.heightY) / 2) : propsImage.posY, propsImage.widthX, propsImage.direccion === 'xd' ? (parseInt(propsImage.heightY) / 2) : parseInt(propsImage.heightY))
                                 if (propsImage.items[0].health.estado === 'inmortal') {
                                     let playerClothes = propsImage.imagen[`inmortal_${armas[armasGet.enUso].state ? 'xf' : propsImage.direccion === 'xf' ? 'xb' : propsImage.direccion === 'xb' ? 'xf' : 'xb'}_${parseInt((Math.random() * 2))}`]
