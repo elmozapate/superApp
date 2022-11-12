@@ -57,9 +57,10 @@ const ColisionBasica = async (Objeto1 = [], Objeto2 = [], Objeto3 = { direccion:
         }
     })
     let isplatform = false
+    let sinChoke = false
     objeto1.map((key) => {
         objetoPlataforma.map((key2, iMalos) => {
-            if (parseInt(key2.posX) === parseInt(key.posX)) {
+            if (parseInt(key2.posX) === parseInt(key.posX) && !sinChoke) {
                 if (key2.posY > parseInt(key.posY) && key2.posY < parseInt(key.posY) + key.heightY && !returns.state) {
                     ctx.fillStyle = "#ff2626"; // Color rojo
                     ctx.beginPath(); // Iniciar trazo
@@ -68,6 +69,9 @@ const ColisionBasica = async (Objeto1 = [], Objeto2 = [], Objeto3 = { direccion:
                     returns.state = true
                     isplatform = true
                     returns.array.push({ a: 'plataforma', b: key2.colision })
+                    console.log(key,key2);
+                    sinChoke = true
+                    return returns
                 }
             }
         })
@@ -150,7 +154,7 @@ const ColisionBasica = async (Objeto1 = [], Objeto2 = [], Objeto3 = { direccion:
     let checking = false
     let checkingPp = false
     objeto1.map((key) => {
-        
+
         objeto2.map((key2, iMalos) => {
             checkingPp = false
             idsIn.map((key) => {
@@ -158,7 +162,7 @@ const ColisionBasica = async (Objeto1 = [], Objeto2 = [], Objeto3 = { direccion:
                     checkingPp = true
                 }
             })
-            if ( !checkingPp &&parseInt(key2.posX) === parseInt(key.posX) ) {
+            if (!checkingPp && parseInt(key2.posX) === parseInt(key.posX)) {
                 key.yArray.map((posA) => {
                     key2.yArray.map((posB) => {
                         checking = false

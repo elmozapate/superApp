@@ -3,7 +3,7 @@ import BodyXf, { BodyXb, BodyXs } from "./prototiposSprites/protoBody";
 import JoshiXf, { JoshiXb } from "./prototiposSprites/protoJoshi";
 import SierraXf from "./prototiposSprites/protoSierra";
 
-const Colisonador = (Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) => {
+const Colisonador = async(Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) => {
     let objeto1 = []
     let bodyEmpty = []
     let objeto2 = []
@@ -96,6 +96,7 @@ const Colisonador = (Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) => {
                     if (parseInt(key2.posX) === parseInt(key.posX) && parseInt(key2.posY) === parseInt(key.posY) && !choko) {
                         choko = true
                         returns.array.push({ a: key, b: key2 })
+                        return (returns)
                     }
                 })
             }

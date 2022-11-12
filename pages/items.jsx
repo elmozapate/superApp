@@ -1,14 +1,16 @@
 
 const Items = (props) => {
-    const {itemsGet={
-        enUso:'ninguno',
-        array:[]}, armasGet={
-        enUso:'ninguna',
-        array:[]}, setObject = console.log, volver = console.log, efectVolumen = console.log, volumenEfectsLevel = { value: 2, mute: false }, volumenLevel = { value: 2, mute: false }, setFullScreen = console.log, requestFullScreen = console.log, reboot = console.log, setGameStart = console.log, playerStage = { stage: 0 }, playerTime = { time: 0 }, playerVidas = { vidas: 5, health: 100, maxHealth: 100 }, player = { pause: false }, onMobil = false, fullScreen = false, gameStart = false, setProps = console.log, volumenSet = console.log } = props
+    const { itemsGet = {
+        enUso: 'ninguno',
+        array: []
+    }, armasGet = {
+        enUso: 'ninguna',
+        array: []
+    }, setObject = console.log, volver = console.log, efectVolumen = console.log, volumenEfectsLevel = { value: 2, mute: false }, volumenLevel = { value: 2, mute: false }, setFullScreen = console.log, requestFullScreen = console.log, reboot = console.log, setGameStart = console.log, playerStage = { stage: 0 }, playerTime = { time: 0 }, playerVidas = { vidas: 5, health: 100, maxHealth: 100 }, player = { pause: false }, onMobil = false, fullScreen = false, gameStart = false, setProps = console.log, volumenSet = console.log } = props
     return (
         <>
             <div className="open noOpacity">
-                <div className="game-info">
+                <div className="game-info menu-cont">
                     <span className={(parseInt(100 / playerVidas.maxHealth) * playerVidas.health) < 30 ? "fontcolor-red" : ((parseInt(100 / playerVidas.maxHealth) * playerVidas.health) > 30) && ((parseInt(100 / playerVidas.maxHealth) * playerVidas.health) < 60) ? 'fontcolor-yellow' : 'fontcolor-green'}>SALUD:{(parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) > 0 ? (parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) : 0}%</span>
                     <span>STAGE:{playerStage.stage}</span>
                     <span>NIVEL:{player.level}</span>
@@ -17,40 +19,61 @@ const Items = (props) => {
 
                     <div></div>
                 </div>
-                <div className="grandes">
-                    <div className="itemsBox">
-                        <p className="fontcolor-white">ARMAS {armasGet.enUso==='desArmado'?'DESARMADO':`Actualmente ${armasGet.enUso}`}</p>
-                        {armasGet.array.map((key, i) => {
-                            if (key.nombre!=='desArmado') {
-                              return (<>
-                                <button onClick={(e) => { e.preventDefault(); setObject(`armas-${key.nombre}`, key.active ? false : true, 'items') }}
-                                >
-                                    {key.nombre}
-                                    <br />
-                                    Estado: {key.active ? 'Activado' : 'En espera'}
-                                </button>
-                            </>)   
-                            }
-                        })}
+                <div className="grandes menu-cont">
+                    <div className="itemsBox ">
+                        <h1 className="fontcolor-white">ARMAS {armasGet.enUso === 'desArmado' ? 'desArmado' : ` ${armasGet.enUso}`}</h1>
+                        <div className=" itemsBoxDouble">
+                            {armasGet.array.map((key, i) => {
+                                if (key.nombre !== 'desArmados') {
+                                    return (<>
+
+                                        <div className="btn-game-menu-content">
+                                            <div className="info-game-box">
+                                                <h2 className="fontcolor-white">{key.nombre}</h2>
+                                                <button className={key.active ? 'bgcolorInedit-green' : ''} onClick={(e) => { e.preventDefault(); setObject(`armas-${key.nombre}`, key.active ? false : true, 'items') }}
+                                                >                                        Estado: {key.active ? 'Activado' : 'En espera'}
+                                                </button>
+                                            </div>
+
+                                            <img src={`/armas/${key.nombre}/img/btn.png`}
+                                                alt={`armas-${key.nombre}-btn`}
+                                                width={'100px'}
+                                                height={'100px'} />
+
+                                        </div>
+
+                                    </>)
+                                }
+                            })}
+                        </div>
                     </div>
                     <div className="itemsBox">
-                        Items
+                        <h1 className="fontcolor-white">Items</h1>
                         {itemsGet.array.map((key, i) => {
-                            if (key.nombre!=='ninguno') {
-                              return (<>
-                                <button onClick={(e) => { e.preventDefault(); setObject(`items-${key.nombre}`, key.active ? false : true, 'items') }}
-                                >
-                                    {key.nombre}
-                                    <br />
-                                    Estado: {key.active ? 'Activado' : 'En espera'}
-                                </button>
-                            </>)   
+                            if (key.nombre !== 'ninguno') {
+                                return (<>
+                                    <div className="btn-game-menu-content">
+                                        <div className="info-game-box">
+                                            <h2 className="fontcolor-white">{key.nombre}</h2>
+                                            <button className={key.active ? 'bgcolorInedit-green' : ''} onClick={(e) => { e.preventDefault(); setObject(`items-${key.nombre}`, key.active ? false : true, 'items') }}
+                                            >
+                                                Estado: {key.active ? 'Activado' : 'En espera'}
+                                            </button>
+                                        </div>
+
+                                        <img src={`/items/${key.nombre}/img/btn.png`}
+                                            alt={`items-${key.nombre}-btn`}
+                                            width={'100px'}
+                                            height={'100px'} />
+
+                                    </div>
+
+                                </>)
                             }
                         })}
-                        itemsGet
                     </div>
                 </div>
-                <div>
+                <div className="menu-cont">
 
                     <div className="game-sound">
                         <span>
@@ -58,7 +81,7 @@ const Items = (props) => {
                         </span>
                         <span>
                             <button
-                                className={` ${!(volumenLevel.value > 0) ? ' hide' : 'bgcolor-green'}`}
+                                className={` ${!(volumenLevel.value > 0) ? ' ocult' : 'bgcolor-green'}`}
                                 onClick={(e) => { e.preventDefault(); volumenSet('-') }}
                             >--</button>
                             <button
@@ -66,7 +89,7 @@ const Items = (props) => {
                                 onClick={(e) => { e.preventDefault(); volumenSet('mute') }}
                             >Mute</button>
                             <button
-                                className={` ${!(volumenLevel.value < 10) ? ' hide' : 'bgcolor-green'}`}
+                                className={` ${!(volumenLevel.value < 10) ? ' ocult' : 'bgcolor-green'}`}
 
                                 onClick={(e) => { e.preventDefault(); volumenSet('+') }}
                             >+</button>
@@ -80,7 +103,7 @@ const Items = (props) => {
                         </span>
                         <span>
                             <button
-                                className={` ${!(volumenEfectsLevel.value > 0) ? ' hide' : 'bgcolor-green'}`}
+                                className={` ${!(volumenEfectsLevel.value > 0) ? ' ocult' : 'bgcolor-green'}`}
                                 onClick={(e) => { e.preventDefault(); efectVolumen(false, '-') }}
                             >--</button>
                             <button
@@ -88,7 +111,7 @@ const Items = (props) => {
                                 onClick={(e) => { e.preventDefault(); efectVolumen(false, 'mute') }}
                             >Mute</button>
                             <button
-                                className={` ${!(volumenEfectsLevel.value < 10) ? ' hide' : 'bgcolor-green'}`}
+                                className={` ${!(volumenEfectsLevel.value < 10) ? ' ocult' : 'bgcolor-green'}`}
 
                                 onClick={(e) => { e.preventDefault(); efectVolumen(false, '+') }}
                             >+</button>

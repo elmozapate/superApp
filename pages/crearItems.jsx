@@ -239,7 +239,7 @@ export const Plataforma = (floor) => {
         const element = {
             id: `${parseInt(Math.random() * 988888888)}-platform`,
             displayneed: true,
-            layerOnDisplay: (index * 3) + parseInt(Math.random() * 3),
+            layerOnDisplay: index/* (index * 3) + parseInt(Math.random() * 3) */,
             type: 'platform',
             posX: parseInt(Math.random() * 150) + 50,
             posY: floor - (parseInt(Math.random() * 10) + 20) - heightY,

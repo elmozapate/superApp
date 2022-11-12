@@ -4,7 +4,7 @@ const Mapa = (props) => {
     return (
         <>
             <div className="open noOpacity">
-                <div className="game-info">
+                <div className="game-info menu-cont">
                     <span className={(parseInt(100 / playerVidas.maxHealth) * playerVidas.health) < 30 ? "fontcolor-red" : ((parseInt(100 / playerVidas.maxHealth) * playerVidas.health) > 30) && ((parseInt(100 / playerVidas.maxHealth) * playerVidas.health) < 60) ? 'fontcolor-yellow' : 'fontcolor-green'}>SALUD:{(parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) > 0 ? (parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) : 0}%</span>
                     <span>STAGE:{playerStage.stage}</span>
                     <span>NIVEL:{player.level}</span>
@@ -16,7 +16,7 @@ const Mapa = (props) => {
                 <div className="onWindow">
                     MAPA
                 </div>
-                <div>
+                <div className="menu-cont">
 
                     <div className="game-sound">
                         <span>
@@ -24,7 +24,7 @@ const Mapa = (props) => {
                         </span>
                         <span>
                             <button
-                                className={` ${!(volumenLevel.value > 0) ? ' hide' : 'bgcolor-green'}`}
+                                className={` ${!(volumenLevel.value > 0) ? ' ocult' : 'bgcolor-green'}`}
                                 onClick={(e) => { e.preventDefault(); volumenSet('-') }}
                             >--</button>
                             <button
@@ -32,7 +32,7 @@ const Mapa = (props) => {
                                 onClick={(e) => { e.preventDefault(); volumenSet('mute') }}
                             >Mute</button>
                             <button
-                                className={` ${!(volumenLevel.value < 10) ? ' hide' : 'bgcolor-green'}`}
+                                className={` ${!(volumenLevel.value < 10) ? ' ocult' : 'bgcolor-green'}`}
 
                                 onClick={(e) => { e.preventDefault(); volumenSet('+') }}
                             >+</button>
@@ -40,13 +40,13 @@ const Mapa = (props) => {
                         </span>
 
                     </div>
-                    <div className="game-sound">
+                    <div className="game-sound ">
                         <span>
-                            {`Efectos = ${volumenEfectsLevel.mute ? 'Muted' : volumenEfectsLevel.value * 10}%`}
+                            {`Efectos =   ${volumenEfectsLevel.mute ? 'Muted' : volumenEfectsLevel.value * 10}%`}
                         </span>
                         <span>
                             <button
-                                className={` ${!(volumenEfectsLevel.value > 0) ? ' hide' : 'bgcolor-green'}`}
+                                className={` ${!(volumenEfectsLevel.value > 0) ? ' ocult' : 'bgcolor-green'}`}
                                 onClick={(e) => { e.preventDefault(); efectVolumen(false,'-') }}
                             >--</button>
                             <button
@@ -54,7 +54,7 @@ const Mapa = (props) => {
                                 onClick={(e) => { e.preventDefault(); efectVolumen(false,'mute') }}
                             >Mute</button>
                             <button
-                                className={` ${!(volumenEfectsLevel.value < 10) ? ' hide' : 'bgcolor-green'}`}
+                                className={` ${!(volumenEfectsLevel.value < 10) ? ' ocult' : 'bgcolor-green'}`}
 
                                 onClick={(e) => { e.preventDefault(); efectVolumen(false,'+') }}
                             >+</button>
