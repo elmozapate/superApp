@@ -1452,12 +1452,23 @@ const Test2 = () => {
     const brincar = () => {
         actualFloorLimit.state = false
         actualFloor = mapFloor
-        if (propsAction.jumpLevel > 1.10) {
-            itemsSound[0].sound.loop = true
-            itemsSound[0].sound.play()
-        } else {
-            jump.play()
-
+        switch (itemsGet.enUso) {
+            case 'jetPack':
+                itemsSound[0].sound.loop = true
+                itemsSound[0].sound.play()
+                break;
+            case 'patineta':
+                itemsSound[1].sound.loop = true
+                itemsSound[1].sound.play()
+                break;
+            case 'ninguna':
+                jump.play()
+                break;
+            case 'ninguno':
+                jump.play()
+                break;
+            default:
+                break;
         }
         propsAction = {
             ...propsAction,
@@ -2503,7 +2514,7 @@ const Test2 = () => {
                                     let playerClothes = itemsImageAux[`body_fumado_${((propsImage.direccion !== 'xf' && propsImage.direccion !== 'xb' || armas[armasGet.enUso].state) ? 'xs' : propsImage.direccion)}`]
                                     ctxC.drawImage(playerClothes, propsImage.levelPass ? psx : propsImage.refreshData ? 10 : !propsImage.alive ? 0 : psx - 8, propsImage.direccion === 'xd' ? propsImage.posY + (parseInt(propsImage.heightY) / 2) : propsImage.posY - 7, propsImage.widthX + 16, propsImage.direccion === 'xd' ? (parseInt(propsImage.heightY) / 2) : parseInt(propsImage.heightY) + 14)
                                 }
-                       
+
                                 ctxC.drawImage(aDibujar, propsImage.levelPass ? psx : propsImage.refreshData ? 10 : !propsImage.alive ? 0 : psx, propsImage.direccion === 'xd' ? propsImage.posY + (parseInt(propsImage.heightY) / 2) : propsImage.posY, propsImage.widthX, propsImage.direccion === 'xd' ? (parseInt(propsImage.heightY) / 2) : parseInt(propsImage.heightY))
                                 if (propsImage.items[0].health.estado === 'inmortal') {
                                     let playerClothes = propsImage.imagen[`inmortal_${armas[armasGet.enUso].state ? 'xf' : propsImage.direccion === 'xf' ? 'xb' : propsImage.direccion === 'xb' ? 'xf' : 'xb'}_${parseInt((Math.random() * 2))}`]
@@ -2861,7 +2872,22 @@ const Test2 = () => {
 /*             value3 ? dibujar('go', propsImage) : console.log
  */        }
         if (value1 === 'itemsSound') {
-            itemsSound[0].sound.pause()
+            if (value2 === 'jetPack' && !value3) {
+                itemsSound[0].sound.pause()
+
+            }
+            if (value2 === 'patineta' && !value3) {
+                itemsSound[1].sound.pause()
+
+            }
+            if (value2 === 'jetPack' && value3) {
+                itemsSound[0].sound.play()
+
+            }
+            if (value2 === 'patineta' && value3) {
+                itemsSound[1].sound.play()
+
+            }
         }
         if (value1 === 'propsAction' || value1 === 'propsImage' || value1 === 'mxDirection') {
             if (value1 === 'mxDirection') {
@@ -2964,7 +2990,7 @@ const Test2 = () => {
     }, [off])
     return (
         <>
-            <div className={`IDiv-main column bgGame relativeCanvasContainer ${!gameStart ? '' : 'horizontal-mode'}`}>
+            <div className={onMobil ? `IDiv-main column bgGame bgGame-mobil relativeCanvasContainer ${!gameStart ? '' : 'horizontal-mode'}` : `IDiv-main column bgGame relativeCanvasContainer ${!gameStart ? '' : 'horizontal-mode'}`}>
                 {playerOnDrop.state ?
                     <InteractiveBotonCanvas comer={comer} drop={{ posX: propsImage.items[0].posX, posY: propsImage.posY }} />
                     : <></>}
@@ -3022,7 +3048,7 @@ const Test2 = () => {
                             'Mover a la Derecha' : 'Mover a la Izquierda'}</button>
                     </div>
                     {onMobil ?
-                        <GamePad setProps={setProps} propsAction={propsAction} setSaltoFunt={setSaltoFunt} brincar={brincar} setsalto={setsalto} dibujarMouseOn={dibujarMouseOn} /> : <></>
+                        <GamePad onMobil={onMobil} itemsGet={itemsGet} armasGet={armasGet} powerUpsGet={powerUpsGet} setProps={setProps} propsAction={propsAction} setSaltoFunt={setSaltoFunt} brincar={brincar} setsalto={setsalto} dibujarMouseOn={dibujarMouseOn} /> : <></>
                     }
                     <canvas className={`${onMobil ? 'bgUrlmobil' : 'bgUrl'}-${(playerStage.stage + 1)} lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Pp">
                     </canvas>

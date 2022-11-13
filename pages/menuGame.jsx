@@ -44,8 +44,8 @@ const MenuGame = (props) => {
     return (
         <>
             {inRefreshing ? <></> : <>
-                <div className={`barra-items`}>
-                    <div className={'labelBarra'}>
+            <div className={onMobil?`barra-items barra-items-mobil`:`barra-items`}>
+            <div className={onMobil?'labelBarra-mobil':'labelBarra'}>
                         {powerCuant === 0 && !powerUpsLabel ?
                             <>
                                 <div
@@ -70,8 +70,8 @@ const MenuGame = (props) => {
                                             >
                                                 <img src={`/powerUps/${key.nombre}/img/btn.png`}
                                                     alt={`powerUps-${key.nombre}-btn`}
-                                                    width={'70px'}
-                                                    height={'70px'} />
+                                                    width={onMobil?'40px':'70px'}
+                                                    height={onMobil?'40px':'70px'} />
                                             </div>
                                         )
                                     })
@@ -88,8 +88,8 @@ const MenuGame = (props) => {
                                                 onClick={(e) => { e.preventDefault(); setPowerUpsLabel(!powerUpsLabel) }}>
                                                 <img src={`/powerUps/${key.nombre}/img/btn.png`}
                                                     alt={`powerUps-${key.nombre}-btn`}
-                                                    width={'70px'}
-                                                    height={'70px'} />
+                                                    width={onMobil?'40px':'70px'}
+                                                    height={onMobil?'40px':'70px'} />
                                             </div>
                                         )
                                     }
@@ -99,7 +99,7 @@ const MenuGame = (props) => {
                         }
 
                     </div>
-                    <div className={'labelBarra'}>
+                    <div className={onMobil?'labelBarra-mobil':'labelBarra'}>
                         {(itemsGet.enUso === 'ninguno' || itemsGet.enUso === 'ninguna') && !itemsLabel ?
                             <>
                                 <div
@@ -109,8 +109,8 @@ const MenuGame = (props) => {
                                 </div>
                             </>
                             :
-                            <div className={'labelBarra'}>
-                                {!itemsLabel ?
+                            <div className={onMobil?'labelBarra-mobil':'labelBarra'}>
+                            {!itemsLabel ?
                                     itemsGet.array.map((key, i) => {
                                         if (key.active) {
                                             return (<div onClick={(e) => { e.preventDefault(); setItemsLabel(!itemsLabel) }}
@@ -118,8 +118,8 @@ const MenuGame = (props) => {
                                                     id={`labelClose`}
                                                     src={`/items/${key.nombre}/img/btn.png`}
                                                     alt={`items-${key.nombre}-btn`}
-                                                    width={'70px'}
-                                                    height={'70px'} /></div>)
+                                                    width={onMobil?'40px':'70px'}
+                                                    height={onMobil?'40px':'70px'} /></div>)
                                         }
                                     })
                                     :
@@ -138,8 +138,8 @@ const MenuGame = (props) => {
 
                                                         src={`/items/${key2.nombre}/img/btn.png`}
                                                         alt={`items-${key2.nombre}-btn`}
-                                                        width={'70px'}
-                                                        height={'70px'} />
+                                                        width={onMobil?'40px':'70px'}
+                                                        height={onMobil?'40px':'70px'} />
                                                 </div>)
                                             })}
                                             <button onClick={(e) => {
@@ -155,7 +155,7 @@ const MenuGame = (props) => {
                             </div>}
 
                     </div>
-                    <div className={'labelBarra'}>
+                    <div className={onMobil?'labelBarra-mobil':'labelBarra'}>
                         {(armasGet.enUso === 'ninguno' || armasGet.enUso === 'ninguna' || armasGet.enUso === 'desArmado') && !armasLabel ?
                             <>
                                 <div
@@ -164,40 +164,41 @@ const MenuGame = (props) => {
                                     <p className="fontcolor-white">ARMAS</p>
                                 </div>
                             </>
-                            : armasGet.array.map((key, i) => {
+                            :armasLabel ?
+                            <div className="label-armas"
+                           >
+                               {armasGet.array.map((key2, i2) => {
+                                   return (<div
+                                       className={key2.active ? 'bgcolor-green' : 'bgcolor-red'}
+                                       onClick={(e) => {
+                                           e.preventDefault();
+                                           setObject(`armas-${key2.nombre}`, key2.active ? false : true, 'armas', 'barra');
+                                       }}>
+                                       <img
+                                           id={`label-${i2}`}
+
+                                           src={`/armas/${key2.nombre}/img/btn.png`}
+                                           alt={`armas-${key2.nombre}-btn`}
+                                           width={onMobil?'40px':'70px'}
+                                           height={onMobil?'40px':'70px'} />
+                                   </div>)
+                               })}
+                               <button onClick={(e) => {
+                                   e.preventDefault();
+                                   setArmasLabel(false);
+                               }}>close</button>
+                           </div> : armasGet.array.map((key, i) => {
                                 return (
                                     <>{
-                                        armasLabel ? <div className="label-armas"
-                                        >
-                                            {armasGet.array.map((key2, i2) => {
-                                                return (<div
-                                                    className={key2.active ? 'bgcolor-green' : 'bgcolor-red'}
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        setObject(`armas-${key2.nombre}`, key2.active ? false : true, 'armas', 'barra');
-                                                    }}>
-                                                    <img
-                                                        id={`label-${i2}`}
-
-                                                        src={`/armas/${key2.nombre}/img/btn.png`}
-                                                        alt={`armas-${key2.nombre}-btn`}
-                                                        width={'70px'}
-                                                        height={'70px'} />
-                                                </div>)
-                                            })}
-                                            <button onClick={(e) => {
-                                                e.preventDefault();
-                                                setArmasLabel(false);
-                                            }}>close</button>
-                                        </div> :
+                                        
                                             key.active ?
                                                 <div onClick={(e) => { e.preventDefault(); setArmasLabel(!armasLabel) }}
                                                 > <img
                                                         id={`labelClose`}
                                                         src={`/armas/${key.nombre}/img/btn.png`}
                                                         alt={`armas-${key.nombre}-btn`}
-                                                        width={'70px'}
-                                                        height={'70px'} /></div> : <></>
+                                                        width={onMobil?'40px':'70px'}
+                                                        height={onMobil?'40px':'70px'} /></div> : <></>
                                     }
 
                                     </>
@@ -206,7 +207,7 @@ const MenuGame = (props) => {
                             })}
                     </div>
                 </div>
-                <div className={`barra-health`}>
+                <div className={onMobil?`barra-health barra-health-mobil`:`barra-health`}>
                     <div className="barra-health-valor"><span className={`porcentaje-${(parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) > 0 ? (parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) : 0}`} >
                         {(parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) > 0 ? (parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) : 0}
                     </span></div>
@@ -221,7 +222,7 @@ const MenuGame = (props) => {
                     {playerVidas.vidas}
                 </div> */}
                 </div>
-                <div className={` close-menu `}>
+                <div className={onMobil?`close-menu close-menu-mobil`:` close-menu `}>
                     <button className={menuActive ? 'bgcolor-red' : 'bgcolor-green'} onClick={(e) => { e.preventDefault(); activeMenu(player.pause ? true : false) }}>
                         <Image
                             src="/icons/menu.png"
@@ -232,7 +233,7 @@ const MenuGame = (props) => {
                     </button>
                 </div>
 
-                <div className={` menuLayer ${menuActive ? 'opened' : 'closed'} `}>
+                <div className={` menuLayer ${menuActive ?(onMobil?`opened opened-mobil`:'opened' ) : 'closed'} `}>
 
                     {
                         !menuActive ?
@@ -240,7 +241,7 @@ const MenuGame = (props) => {
                             : <>
                                 {
                                     !windowOpen.active ?
-                                        <div className="open">
+                                        <div className={(onMobil?`open open-mobil`:'open' )}>
                                             <div className="game-info menu-cont">
                                                 <span className={(parseInt(100 / playerVidas.maxHealth) * playerVidas.health) < 30 ? "fontcolor-red" : ((parseInt(100 / playerVidas.maxHealth) * playerVidas.health) > 30) && ((parseInt(100 / playerVidas.maxHealth) * playerVidas.health) < 60) ? 'fontcolor-yellow' : 'fontcolor-green'}>SALUD:{(parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) > 0 ? (parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) : 0}%</span>
                                                 <span>STAGE:{playerStage.stage}</span>
