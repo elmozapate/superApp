@@ -16,7 +16,7 @@ let off = true, itemsSound = [], muted = false, auxPlataformas = [], newArrayB =
     state: false,
     item: 0,
     result: 'live'
-}, obst = [], onHitSoundNow = false, itemsImage = { jetPack: [], patineta: [] }, lazyImg = [], mapFloor = 150, actualFloorLimit = { state: false, x1: 0, x2: 300 }, onPunalSound = true, onHitSound = true, dolor = true, sierra = true, timeOfgame = 0, actualFloor = 150, lastDireccion = 'xf', plataformaFalses = [], armas = {
+}, obst = [], balaSound = true, onHitSoundNow = false, itemsImage = { jetPack: [], patineta: [] }, lazyImg = [], mapFloor = 150, actualFloorLimit = { state: false, x1: 0, x2: 300 }, onPunalSound = true, onHitSound = true, dolor = true, inShot = false, sierra = true, timeOfgame = 0, actualFloor = 150, lastDireccion = 'xf', plataformaFalses = [], armas = {
     bat: {
         onHit: false,
         damage: 10,
@@ -75,7 +75,7 @@ let off = true, itemsSound = [], muted = false, auxPlataformas = [], newArrayB =
     }
 }, WeaponAudio = [true, true], audioPlaying = 0, jump, obtenerOrientacion = console.log, pass, audioPp, actualVidas = 5, mxActive = false, myActive = false, fantasmas = [], dibujarMalos = {
     die: false, last: [], new: []
-}, mxDirection = { left: false, right: false }, portraitAudio, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, muertebebe, joshisound, joshisound2, joshisound3 = [true, true, true, true], pow, proyectilesImg = [], imagenesSrc = [`/img/finales/foto-de-anime-4.png`, `/img/finales/foto-de-anime-3.png`, `/img/finales/foto-de-anime-2.png`, `/img/finales/foto-de-anime-1.png`, `/img/finales/foto-de-anime-0.png`], soundToch = false, itemsImageAux = {}, soundLevels = { sfx: 2, music: 2 }, inPausetouch = false, fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { speedLevel: 1, strikeLevel: 1, jumping: false, gravity: true, eating: false, jumpLevel: 1.10, gravityLevel: 1.10 }, canvas, levelGo = 1, ctx, imgArray = [],
+}, mxDirection = { left: false, right: false }, portraitAudio, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, muertebebe, joshisound, joshisound2, joshisound3 = [true, true, true, true], pow, proyectilesImg = [], balasImg = [], imagenesSrc = [`/img/finales/foto-de-anime-4.png`, `/img/finales/foto-de-anime-3.png`, `/img/finales/foto-de-anime-2.png`, `/img/finales/foto-de-anime-1.png`, `/img/finales/foto-de-anime-0.png`], soundToch = false, itemsImageAux = {}, soundLevels = { sfx: 2, music: 2 }, inPausetouch = false, fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { speedLevel: 1, strikeLevel: 1, jumping: false, gravity: true, eating: false, jumpLevel: 1.10, gravityLevel: 1.10 }, canvas, levelGo = 1, ctx, imgArray = [],
     imagenA, canvasC, ctxC, canvasB, ctxB, canvasD, ctxD, canvasE, ctxE, ctxF, canvasF, imagenes = [{ onMove: false }], worldItems = [], timeRestart = false, levelDificulty = 20
 const Test2 = () => {
     const [windowOpen, setwindowOpen] = useState({
@@ -131,6 +131,7 @@ const Test2 = () => {
             portraitAudio.volume = start ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10) : value === 'mute' ? (volumenEfectsLevel.mute ? (inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10 : 0) : (value === '+' ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) + .5) : ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) - .5)) / 10
             WeaponAudio[0].volume = start ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10) : value === 'mute' ? (volumenEfectsLevel.mute ? (inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10 : 0) : (value === '+' ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) + .5) : ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) - .5)) / 10
             WeaponAudio[1].volume = start ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10) : value === 'mute' ? (volumenEfectsLevel.mute ? (inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10 : 0) : (value === '+' ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) + .5) : ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) - .5)) / 10
+            balaSound.volume = start ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10) : value === 'mute' ? (volumenEfectsLevel.mute ? (inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10 : 0) : (value === '+' ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) + .5) : ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) - .5)) / 10
             llantobebe.volume = start ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10) : value === 'mute' ? (volumenEfectsLevel.mute ? (inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10 : 0) : (value === '+' ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) + .5) : ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) - .5)) / 10
             joshisound.volume = start ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10) : value === 'mute' ? (volumenEfectsLevel.mute ? (inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10 : 0) : (value === '+' ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) + .5) : ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) - .5)) / 10
             joshisound2.volume = start ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10) : value === 'mute' ? (volumenEfectsLevel.mute ? (inKey ? soundLevels.sfx : volumenEfectsLevel.value) / 10 : 0) : (value === '+' ? ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) + .5) : ((inKey ? soundLevels.sfx : volumenEfectsLevel.value) - .5)) / 10
@@ -499,6 +500,16 @@ const Test2 = () => {
             proyectil2.src = '/proyectiles/bebe-1.png'
             proyectil2.onload = (() => {
                 proyectilesImg.push(proyectil2)
+            })
+        })
+        let bala1 = new Image()
+        bala1.src = '/proyectiles/bala-0.png'
+        bala1.onload = (() => {
+            balasImg.push(bala1)
+            let bala2 = new Image()
+            bala2.src = '/proyectiles/bala-1.png'
+            bala2.onload = (() => {
+                balasImg.push(bala2)
             })
         })
         let lazyIMG = new Image()
@@ -908,6 +919,17 @@ const Test2 = () => {
                                                                 if (keyValue === 'k') {
                                                                     setObject('items-patineta', itemsGet.enUso === 'patineta' ? false : true, 'items', 'key')
                                                                     refreshValue()
+
+                                                                }
+                                                                if (keyValue === 'g') {
+                                                                    if (!inShot) {
+                                                                        inShot = true
+                                                                        disparar()
+                                                                        setTimeout(() => {
+                                                                            inShot = false
+                                                                        }, 300);
+                                                                    }
+
 
                                                                 }
                                                                 if (keyValue === '1' || keyValue === '2' || keyValue === '3' || keyValue === '4') {
@@ -1449,6 +1471,38 @@ const Test2 = () => {
         }
 
     }
+    const disparar = () => {
+        try {
+            balaSound.play()
+        } catch (error) {
+
+        }
+        balaSound.loop = true
+        balaSound.volume = 1
+        let imgUsed = balasImg
+        let efectRandom = parseInt(Math.random() * 2)
+        proyectiles.push({
+            id: `${'player-shot'}-${parseInt(Math.random() * 500)}-proy`,
+            damageFor: 'npc',
+            health: 22,
+            hitdirection: lastDireccion,
+            hitDamage: 0,
+            state: 'live',
+            imagen: imgUsed,
+            type: 'gun',
+            posX: !propsImage.direccion === 'xf' ? propsImage.items[0].posX - 60 : propsImage.items[0].posX + 10,
+            posY: (propsImage.posY) + 15,
+            widthX: imgUsed[0].naturalWidth / 30,
+            heightY: imgUsed[0].naturalHeight / 30,
+            direccion: propsImage.direccion !== 'xb' && propsImage.direccion !== 'xf' ? lastDireccion : propsImage.direccion,
+            speed: 4,
+            efectDirection: efectRandom === 0 ? 'up' : 'down',
+            damage: 20,
+        })
+        setTimeout(() => {
+            balaSound.volume = 0
+        }, 300);
+    }
     const brincar = () => {
         actualFloorLimit.state = false
         actualFloor = mapFloor
@@ -1737,7 +1791,7 @@ const Test2 = () => {
                 let isProy = false
                 let proy = 'no es proyectil'
                 proyectiles.map((key, i) => {
-                    if (colisioned.item === key.id) {
+                    if (key.damageFor === 'player' && colisioned.item === key.id) {
                         proy = key
                         isProy = true
                     }
@@ -1833,7 +1887,7 @@ const Test2 = () => {
             }
             let aDibujar = propsAction.eating ? propsImage.imagen[`${propsImage.direccion === 'xf' || propsImage.direccion === 'xb' ? propsImage.direccion : 'xf'}_eat_${parseInt(propsImage.layer / (8 * 4)) < 2 ? parseInt(propsImage.layer / (8 * 4)) + 2 : parseInt(propsImage.layer / (8 * 4))}`] : armas[armasGet.enUso].state ? armas[armasGet.enUso].body : (propsImage.imagen[`${propsImage.direccion === 'xs' && propsImage.posY + parseInt(propsImage.heightY) < actualFloor ? 'xj' : propsImage.direccion}_${propsAction.gravity && propsImage.posY < actualFloor ? parseInt(propsImage.layer / (8 * 4)) < 2 ? parseInt(propsImage.layer / (8 * 4)) + 2 : parseInt(propsImage.layer / (8 * 4)) : !propsAction.gravity && propsImage.posY < actualFloor ? parseInt(propsImage.layer / (8 * 4)) > 1 ? parseInt(propsImage.layer / (8 * 4)) - 2 : parseInt(propsImage.layer / (8 * 4)) : parseInt(propsImage.layer / (8 * 4))}`])
             let psx = 0, Itemss = propsImage.items
-            const chokeObj = await Colisonador(malosFalses, levelFalses, propsImage)
+            const chokeObj = await Colisonador(malosFalses, levelFalses, propsImage, false, false, false, false, inLayer)
             if (chokeObj) {
                 if (chokeObj.choke) {
                     if (dibujarMalos.new[chokeObj.pos].canMove.lastChoke < 200) {
@@ -1844,12 +1898,11 @@ const Test2 = () => {
                     }
                 }
                 let isArmed = armas[armasGet.enUso].state
-                const chokePlayer = await ColisionBasica(propsImage.items[0], levelFalses, propsImage, true, malosFalses, proyectilesFalses, plataformaFalses, ctxF, isArmed)
+                const chokePlayer = await ColisionBasica(propsImage.items[0], levelFalses, propsImage, true, malosFalses, proyectilesFalses, plataformaFalses, ctxF, isArmed, inLayer)
                 let plataformaColision = { eje: '', state: false, valor: '' }
                 if (chokePlayer) {
                     if (chokePlayer.state) {
-/*                     imagenes[0].onMove = false
- */                    for (let indd = 0; indd < chokePlayer.array.length; indd++) {
+                    for (let indd = 0; indd < chokePlayer.array.length; indd++) {
                             if (chokePlayer.array[indd].a === 'plataforma') {
                                 mxDirection.right = false
                                 mxDirection.left = false
@@ -1897,12 +1950,46 @@ const Test2 = () => {
                                 }
 
                             } else {
-                                let hiter = (chokePlayer.array[indd].b.id.split('-')[chokePlayer.array[indd].b.id.split('-').length - 1])
+                                let hiter = chokePlayer.array[indd].c ? 'malo' : (chokePlayer.array[indd].b.id.split('-')[chokePlayer.array[indd].b.id.split('-').length - 1])
                                 if (hiter === ('malo') || hiter === ('proy') || hiter === ('obst')) {
                                     if (hiter === 'obst') {
                                         hiter = chokePlayer.array[indd].b.randomNumber === 0 ? 'obstA' : 'obstB'
                                     }
-                                    const chokeInminente = await Colisonador(propsImage.items[0], hiter === ('malo') ? malosFalses : hiter === ('proy') ? proyectiles : levelFalses, propsImage, true, true, ctxD, hiter)
+                                    if (hiter === 'malo' && chokePlayer.array[indd].c) {
+                                        if (!onHitSoundNow) {
+                                            onHitSoundNow = true
+                                            armas[armasGet.enUso].sound[parseInt(Math.random() * 3)].play()
+                                            setTimeout(() => {
+                                                onHitSoundNow = false
+                                            }, 5000);
+                                        }
+                                        /* onHitSound.play() */
+                                        if (dibujarMalos.new[chokePlayer.array[indd].b.pos].state !== 'die' && dibujarMalos.new[chokePlayer.array[indd].b.pos].state !== 'spirit' && dibujarMalos.new[chokePlayer.array[indd].b.pos].state !== 'onDie') {
+                                            dibujarMalos.new[chokePlayer.array[indd].b.pos].state = 'hit'
+                                            if (!armas[armasGet.enUso].onHit) {
+                                                dibujarMalos.new[chokePlayer.array[indd].b.pos].health = dibujarMalos.new[chokePlayer.array[indd].b.pos].health - ((armas[armasGet.enUso].damage * parseInt(Math.random() * 3) + 1) * propsAction.strikeLevel)
+                                                dibujarMalos.new[chokePlayer.array[indd].b.pos].lazy = { state: true, counter: 0 }
+                                                joshisound2.play()
+                                                if (dibujarMalos.new[chokePlayer.array[indd].b.pos].health < 0) {
+                                                    pow.play()
+                                                    armas[armasGet.enUso].onHit = true
+                                                    joshisound3[2].play()
+                                                    dibujarMalos.new[chokePlayer.array[indd].b.pos].state = 'onDie'
+                                                    setTimeout(() => {
+                                                        armas[armasGet.enUso].onHit = false
+                                                    }, 1000);
+                                                } else {
+                                                    pow.play()
+                                                    armas[armasGet.enUso].onHit = true
+                                                    setTimeout(() => {
+                                                        armas[armasGet.enUso].onHit = false
+                                                    }, 1000);
+                                                    joshisound3[parseInt(Math.random() * 2)].play()
+                                                }
+                                            }
+                                        }
+                                    }
+                                    const chokeInminente = await Colisonador(propsImage.items[0], hiter === ('malo') ? malosFalses : hiter === ('proy') ? proyectiles : levelFalses, propsImage, true, true, ctxD, hiter, inLayer)
                                     if (chokeInminente) {
                                         if (chokeInminente.state && hiter === 'malo' && propsImage.items[0].health.estado === 'inmortal') {
                                             if (dibujarMalos.new[chokePlayer.array[indd].b.pos].state === 'die' && dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.state && !dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.done) {
@@ -1941,6 +2028,7 @@ const Test2 = () => {
                                                 }
                                             }
                                         }
+
                                         if (chokeInminente.state && hiter === 'malo' && propsImage.items[0].health.estado === 'inmortal') {
                                             if (dibujarMalos.new[chokePlayer.array[indd].b.pos].state === 'die' && dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.state && !dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.done) {
                                                 if (!propsAction.eating && !dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.done) {
@@ -2165,6 +2253,7 @@ const Test2 = () => {
                                         }
                                         imagenes[0].onMove = true
                                     }
+
                                 }
                             }
                         }
@@ -2269,6 +2358,7 @@ const Test2 = () => {
                                             let efectRandom = parseInt(Math.random() * 2)
                                             proyectiles.push({
                                                 id: `${dibujarMalos.new[i].id.split('-')[0]}-${parseInt(Math.random() * 500)}-proy`,
+                                                damageFor: 'player',
                                                 health: 22,
                                                 hitdirection: 'xf',
                                                 hitDamage: 0,
@@ -2422,6 +2512,7 @@ const Test2 = () => {
                                     if ((key.state !== 'die' && key.state !== 'onDie' && key.state !== 'spirit') && (key.posX < 300 && (key.posX + key.widthX) > 0) && (key.posY > 0 && key.posY > 0)) {
                                         proyectilesFalses.push({
                                             ...key,
+                                            damageFor: key.damageFor,
                                             id: key.id,
                                             state: key.posX,
                                             posX: key.posX,
@@ -2438,7 +2529,7 @@ const Test2 = () => {
                                 if (itemsGet.enUso !== 'ninguno') {
                                     let playerClothes = itemsImage[itemsGet.enUso].imagen
                                     let estado = itemsGet.enUso === 'jetPack' ? !propsAction.gravity : ((propsImage.direccion === 'xf' || propsImage.direccion === 'xb') || (itemsGet.enUso === 'patineta' && propsAction.jumping && !propsAction.gravity) ? true : false)
-                                    let ladireccion = armas[armasGet.enUso].state || (propsImage.direccion === 'xj' || propsImage.direccion === 'xd') || (itemsGet.enUso === 'patineta' && propsAction.jumping) ? 'xs' : propsImage.direccion
+                                    let ladireccion = armas[armasGet.enUso].state || (propsImage.direccion === 'xj' || propsImage.direccion === 'xd') || (itemsGet.enUso === 'patineta' && propsAction.jumping) ? 'xs' : lastDireccion
                                     let rand = itemsGet.enUso === 'patineta' && propsAction.jumping ? (propsImage.direccion === 'xb' ? 1 : 0) : parseInt((Math.random() * 2))
                                     if (estado) {
                                         itemsImage[itemsGet.enUso].map((key, i) => {
@@ -2954,6 +3045,7 @@ const Test2 = () => {
             joshisound = new Audio('/audio/joshi-0.mp3');
             joshisound2 = new Audio('/audio/joshi-1.mp3');
             joshisound3 = [new Audio('/audio/joshi-1.mp3'), new Audio('/audio/joshi-2.mp3'), new Audio('/audio/joshi-3.mp3'), new Audio('/audio/joshi-4.mp3')];
+            balaSound = new Audio('/audio/bala.mp3');
             pow = new Audio('/audio/pow-0.mp3');
             sierra = new Audio('/audio/sierra.mp3');
             dolor = new Audio('/audio/dolor.mp3');

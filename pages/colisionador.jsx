@@ -3,7 +3,7 @@ import BodyXf, { BodyXb, BodyXs } from "./prototiposSprites/protoBody";
 import JoshiXf, { JoshiXb } from "./prototiposSprites/protoJoshi";
 import SierraXf from "./prototiposSprites/protoSierra";
 
-const Colisonador = async(Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) => {
+const Colisonador = async (Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type, inLayer) => {
     let objeto1 = []
     let bodyEmpty = []
     let objeto2 = []
@@ -52,7 +52,7 @@ const Colisonador = async(Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) =
             for (let index = 3; index < Objeto3.widthX - 3; index++) {
                 const element = {
                     posX: parseInt(index + Objeto1.posX),
-                    posY: i === 0 ?  parseInt(Objeto3.posY) :  parseInt(Objeto3.posY + Objeto3.heightY),
+                    posY: i === 0 ? parseInt(Objeto3.posY) : parseInt(Objeto3.posY + Objeto3.heightY),
                     colisionaEn: 'y',
                     id: 'player',
                     pos: 'player',
@@ -163,17 +163,20 @@ const Colisonador = async(Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) =
 
         } else {
             Objeto1.map((key, iss) => {
-                for (let i = 0; i < parseInt(key.heightY); i++) {
-                    for (let index = 0; index < parseInt(key.widthX); index++) {
-                        const element = {
-                            posX: parseInt(index + key.posX),
-                            posY: parseInt(key.posY + i),
-                            id: key.id,
-                            pos: iss
-                        };
-                        objeto1.push(element)
-                    }
+                if (parseInt(key.layerOnDisplay)===parseInt(inLayer)) {
+                    for (let i = 0; i < parseInt(key.heightY); i++) {
+                        for (let index = 0; index < parseInt(key.widthX); index++) {
+                            const element = {
+                                posX: parseInt(index + key.posX),
+                                posY: parseInt(key.posY + i),
+                                id: key.id,
+                                pos: iss
+                            };
+                            objeto1.push(element)
+                        }
+                    } 
                 }
+                
             })
         }
 
@@ -244,6 +247,7 @@ const Colisonador = async(Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) =
                             empty = true
                             returns.state = true
                             returns.array.push({ a: key, b: key2 })
+                            return
                         }
                     })
                 }
@@ -256,6 +260,7 @@ const Colisonador = async(Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type) =
                         if (key2.posX === key.posX && key2.posY === key.posY && !choko) {
                             choko = true
                             keyCopied = key
+                            return
                         }
                     })
                 }
