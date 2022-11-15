@@ -791,7 +791,7 @@ const Test2 = () => {
 
         }, 5000);
     }
-    const keyListener = (document) => {
+    const keyListener = () => {
         document.addEventListener('keydown', async (event) => {
             event.preventDefault();
             let keyValue = event.key;
