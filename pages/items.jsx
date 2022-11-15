@@ -1,3 +1,4 @@
+import VolumenComponent from "./volumenComponente";
 
 const Items = (props) => {
     const { itemsGet = {
@@ -75,50 +76,8 @@ const Items = (props) => {
                 </div>
                 <div className="menu-cont">
 
-                    <div className="game-sound">
-                        <span>
-                            {`Música = ${volumenLevel.mute ? 'Muted' : volumenLevel.value * 10}%`}
-                        </span>
-                        <span>
-                            <button
-                                className={` ${!(volumenLevel.value > 0) ? ' ocult' : 'bgcolor-green'}`}
-                                onClick={(e) => { e.preventDefault(); volumenSet('-') }}
-                            >--</button>
-                            <button
-                                className={`mute ${volumenLevel.mute || volumenLevel.value === 0 ? ' bgcolorInedit-red' : 'bgcolorInedit-green'}`}
-                                onClick={(e) => { e.preventDefault(); volumenSet('mute') }}
-                            >Mute</button>
-                            <button
-                                className={` ${!(volumenLevel.value < 10) ? ' ocult' : 'bgcolor-green'}`}
+                <VolumenComponent volumenSet={volumenSet} volumenLevel={volumenLevel} volumenEfectsLevel={volumenEfectsLevel} efectVolumen={efectVolumen} />
 
-                                onClick={(e) => { e.preventDefault(); volumenSet('+') }}
-                            >+</button>
-
-                        </span>
-
-                    </div>
-                    <div className="game-sound">
-                        <span>
-                            {`Efectos = ${volumenEfectsLevel.mute ? 'Muted' : volumenEfectsLevel.value * 10}%`}
-                        </span>
-                        <span>
-                            <button
-                                className={` ${!(volumenEfectsLevel.value > 0) ? ' ocult' : 'bgcolor-green'}`}
-                                onClick={(e) => { e.preventDefault(); efectVolumen(false, '-') }}
-                            >--</button>
-                            <button
-                                className={`mute ${volumenEfectsLevel.mute || volumenEfectsLevel.value === 0 ? ' bgcolorInedit-red' : 'bgcolorInedit-green'}`}
-                                onClick={(e) => { e.preventDefault(); efectVolumen(false, 'mute') }}
-                            >Mute</button>
-                            <button
-                                className={` ${!(volumenEfectsLevel.value < 10) ? ' ocult' : 'bgcolor-green'}`}
-
-                                onClick={(e) => { e.preventDefault(); efectVolumen(false, '+') }}
-                            >+</button>
-
-                        </span>
-
-                    </div>
                     <button
                         onClick={(e) => { e.preventDefault(), volver() }}
                     >

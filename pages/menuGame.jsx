@@ -3,6 +3,7 @@ import Image from "next/image"
 import Mapa from "./mapa"
 import Items from "./items"
 import PowerUps from "./powerUps"
+import VolumenComponent from "./volumenComponente"
 
 const MenuGame = (props) => {
     const { refreshValue = console.log, inRefreshing = false, powerCuant = 0, itemsGet = {
@@ -44,8 +45,8 @@ const MenuGame = (props) => {
     return (
         <>
             {inRefreshing ? <></> : <>
-            <div className={onMobil?`barra-items barra-items-mobil`:`barra-items`}>
-            <div className={onMobil?'labelBarra-mobil':'labelBarra'}>
+                <div className={onMobil ? `barra-items barra-items-mobil` : `barra-items`}>
+                    <div className={onMobil ? 'labelBarra-mobil' : 'labelBarra'}>
                         {powerCuant === 0 && !powerUpsLabel ?
                             <>
                                 <div
@@ -70,8 +71,8 @@ const MenuGame = (props) => {
                                             >
                                                 <img src={`/powerUps/${key.nombre}/img/btn.png`}
                                                     alt={`powerUps-${key.nombre}-btn`}
-                                                    width={onMobil?'40px':'70px'}
-                                                    height={onMobil?'40px':'70px'} />
+                                                    width={onMobil ? '40px' : '70px'}
+                                                    height={onMobil ? '40px' : '70px'} />
                                             </div>
                                         )
                                     })
@@ -88,8 +89,8 @@ const MenuGame = (props) => {
                                                 onClick={(e) => { e.preventDefault(); setPowerUpsLabel(!powerUpsLabel) }}>
                                                 <img src={`/powerUps/${key.nombre}/img/btn.png`}
                                                     alt={`powerUps-${key.nombre}-btn`}
-                                                    width={onMobil?'40px':'70px'}
-                                                    height={onMobil?'40px':'70px'} />
+                                                    width={onMobil ? '40px' : '70px'}
+                                                    height={onMobil ? '40px' : '70px'} />
                                             </div>
                                         )
                                     }
@@ -99,7 +100,7 @@ const MenuGame = (props) => {
                         }
 
                     </div>
-                    <div className={onMobil?'labelBarra-mobil':'labelBarra'}>
+                    <div className={onMobil ? 'labelBarra-mobil' : 'labelBarra'}>
                         {(itemsGet.enUso === 'ninguno' || itemsGet.enUso === 'ninguna') && !itemsLabel ?
                             <>
                                 <div
@@ -109,8 +110,8 @@ const MenuGame = (props) => {
                                 </div>
                             </>
                             :
-                            <div className={onMobil?'labelBarra-mobil':'labelBarra'}>
-                            {!itemsLabel ?
+                            <div className={onMobil ? 'labelBarra-mobil' : 'labelBarra'}>
+                                {!itemsLabel ?
                                     itemsGet.array.map((key, i) => {
                                         if (key.active) {
                                             return (<div onClick={(e) => { e.preventDefault(); setItemsLabel(!itemsLabel) }}
@@ -118,8 +119,8 @@ const MenuGame = (props) => {
                                                     id={`labelClose`}
                                                     src={`/items/${key.nombre}/img/btn.png`}
                                                     alt={`items-${key.nombre}-btn`}
-                                                    width={onMobil?'40px':'70px'}
-                                                    height={onMobil?'40px':'70px'} /></div>)
+                                                    width={onMobil ? '40px' : '70px'}
+                                                    height={onMobil ? '40px' : '70px'} /></div>)
                                         }
                                     })
                                     :
@@ -138,8 +139,8 @@ const MenuGame = (props) => {
 
                                                         src={`/items/${key2.nombre}/img/btn.png`}
                                                         alt={`items-${key2.nombre}-btn`}
-                                                        width={onMobil?'40px':'70px'}
-                                                        height={onMobil?'40px':'70px'} />
+                                                        width={onMobil ? '40px' : '70px'}
+                                                        height={onMobil ? '40px' : '70px'} />
                                                 </div>)
                                             })}
                                             <button onClick={(e) => {
@@ -155,7 +156,7 @@ const MenuGame = (props) => {
                             </div>}
 
                     </div>
-                    <div className={onMobil?'labelBarra-mobil':'labelBarra'}>
+                    <div className={onMobil ? 'labelBarra-mobil' : 'labelBarra'}>
                         {(armasGet.enUso === 'ninguno' || armasGet.enUso === 'ninguna' || armasGet.enUso === 'desArmado') && !armasLabel ?
                             <>
                                 <div
@@ -164,50 +165,50 @@ const MenuGame = (props) => {
                                     <p className="fontcolor-white">ARMAS</p>
                                 </div>
                             </>
-                            :armasLabel ?
-                            <div className="label-armas"
-                           >
-                               {armasGet.array.map((key2, i2) => {
-                                   return (<div
-                                       className={key2.active ? 'bgcolor-green' : 'bgcolor-red'}
-                                       onClick={(e) => {
-                                           e.preventDefault();
-                                           setObject(`armas-${key2.nombre}`, key2.active ? false : true, 'armas', 'barra');
-                                       }}>
-                                       <img
-                                           id={`label-${i2}`}
+                            : armasLabel ?
+                                <div className="label-armas"
+                                >
+                                    {armasGet.array.map((key2, i2) => {
+                                        return (<div
+                                            className={key2.active ? 'bgcolor-green' : 'bgcolor-red'}
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                setObject(`armas-${key2.nombre}`, key2.active ? false : true, 'armas', 'barra');
+                                            }}>
+                                            <img
+                                                id={`label-${i2}`}
 
-                                           src={`/armas/${key2.nombre}/img/btn.png`}
-                                           alt={`armas-${key2.nombre}-btn`}
-                                           width={onMobil?'40px':'70px'}
-                                           height={onMobil?'40px':'70px'} />
-                                   </div>)
-                               })}
-                               <button onClick={(e) => {
-                                   e.preventDefault();
-                                   setArmasLabel(false);
-                               }}>close</button>
-                           </div> : armasGet.array.map((key, i) => {
-                                return (
-                                    <>{
-                                        
+                                                src={`/armas/${key2.nombre}/img/btn.png`}
+                                                alt={`armas-${key2.nombre}-btn`}
+                                                width={onMobil ? '40px' : '70px'}
+                                                height={onMobil ? '40px' : '70px'} />
+                                        </div>)
+                                    })}
+                                    <button onClick={(e) => {
+                                        e.preventDefault();
+                                        setArmasLabel(false);
+                                    }}>close</button>
+                                </div> : armasGet.array.map((key, i) => {
+                                    return (
+                                        <>{
+
                                             key.active ?
                                                 <div onClick={(e) => { e.preventDefault(); setArmasLabel(!armasLabel) }}
                                                 > <img
                                                         id={`labelClose`}
                                                         src={`/armas/${key.nombre}/img/btn.png`}
                                                         alt={`armas-${key.nombre}-btn`}
-                                                        width={onMobil?'40px':'70px'}
-                                                        height={onMobil?'40px':'70px'} /></div> : <></>
-                                    }
+                                                        width={onMobil ? '40px' : '70px'}
+                                                        height={onMobil ? '40px' : '70px'} /></div> : <></>
+                                        }
 
-                                    </>
-                                )
+                                        </>
+                                    )
 
-                            })}
+                                })}
                     </div>
                 </div>
-                <div className={onMobil?`barra-health barra-health-mobil`:`barra-health`}>
+                <div className={onMobil ? `barra-health barra-health-mobil` : `barra-health`}>
                     <div className="barra-health-valor"><span className={`porcentaje-${(parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) > 0 ? (parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) : 0}`} >
                         {(parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) > 0 ? (parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) : 0}
                     </span></div>
@@ -222,7 +223,7 @@ const MenuGame = (props) => {
                     {playerVidas.vidas}
                 </div> */}
                 </div>
-                <div className={onMobil?`close-menu close-menu-mobil`:` close-menu `}>
+                <div className={onMobil ? `close-menu close-menu-mobil` : ` close-menu `}>
                     <button className={menuActive ? 'bgcolor-red' : 'bgcolor-green'} onClick={(e) => { e.preventDefault(); activeMenu(player.pause ? true : false) }}>
                         <Image
                             src="/icons/menu.png"
@@ -233,7 +234,7 @@ const MenuGame = (props) => {
                     </button>
                 </div>
 
-                <div className={` menuLayer ${menuActive ?(onMobil?`opened opened-mobil`:'opened' ) : 'closed'} `}>
+                <div className={` menuLayer ${menuActive ? (onMobil ? `opened opened-mobil` : 'opened') : 'closed'} `}>
 
                     {
                         !menuActive ?
@@ -241,7 +242,7 @@ const MenuGame = (props) => {
                             : <>
                                 {
                                     !windowOpen.active ?
-                                        <div className={(onMobil?`open open-mobil`:'open' )}>
+                                        <div className={(onMobil ? `open open-mobil` : 'open')}>
                                             <div className="game-info menu-cont">
                                                 <span className={(parseInt(100 / playerVidas.maxHealth) * playerVidas.health) < 30 ? "fontcolor-red" : ((parseInt(100 / playerVidas.maxHealth) * playerVidas.health) > 30) && ((parseInt(100 / playerVidas.maxHealth) * playerVidas.health) < 60) ? 'fontcolor-yellow' : 'fontcolor-green'}>SALUD:{(parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) > 0 ? (parseInt((100 / playerVidas.maxHealth) * playerVidas.health)) : 0}%</span>
                                                 <span>STAGE:{playerStage.stage}</span>
@@ -284,54 +285,11 @@ const MenuGame = (props) => {
                                                 <button
                                                     onClick={(e) => { e.preventDefault(); activeMenu(true) }}
                                                 >Continue</button>
-                                                <div className="game-sound">
-                                                    <span>
-                                                        {`Música = ${volumenLevel.mute ? 'Muted' : volumenLevel.value * 10}%`}
-                                                    </span>
-                                                    <span>
-                                                        <button
-                                                            className={` ${!(volumenLevel.value > 0) ? ' ocult' : 'bgcolor-green'}`}
-                                                            onClick={(e) => { e.preventDefault(); volumenSet('-') }}
-                                                        >--</button>
-                                                        <button
-                                                            className={`mute ${volumenLevel.mute || volumenLevel.value === 0 ? ' bgcolorInedit-red' : 'bgcolorInedit-green'}`}
-                                                            onClick={(e) => { e.preventDefault(); volumenSet('mute') }}
-                                                        >Mute</button>
-                                                        <button
-                                                            className={` ${!(volumenLevel.value < 10) ? ' ocult' : 'bgcolor-green'}`}
-
-                                                            onClick={(e) => { e.preventDefault(); volumenSet('+') }}
-                                                        >+</button>
-
-                                                    </span>
-
-                                                </div>
-                                                <div className="game-sound">
-                                                    <span>
-                                                        {`Efectos = ${volumenEfectsLevel.mute ? 'MUTED' : volumenEfectsLevel.value * 10}%`}
-                                                    </span>
-                                                    <span>
-                                                        <button
-                                                            className={` ${!(volumenEfectsLevel.value > 0) ? ' ocult' : 'bgcolor-green'}`}
-                                                            onClick={(e) => { e.preventDefault(); efectVolumen(false, '-') }}
-                                                        >--</button>
-                                                        <button
-                                                            className={`mute ${volumenEfectsLevel.mute || volumenEfectsLevel.value === 0 ? ' bgcolorInedit-red' : 'bgcolorInedit-green'}`}
-                                                            onClick={(e) => { e.preventDefault(); efectVolumen(false, 'mute') }}
-                                                        >Mute</button>
-                                                        <button
-                                                            className={` ${!(volumenEfectsLevel.value < 10) ? ' ocult' : 'bgcolor-green'}`}
-
-                                                            onClick={(e) => { e.preventDefault(); efectVolumen(false, '+') }}
-                                                        >+</button>
-
-                                                    </span>
-
-                                                </div>
+                                                <VolumenComponent volumenSet={volumenSet} volumenLevel={volumenLevel} volumenEfectsLevel={volumenEfectsLevel} efectVolumen={efectVolumen} />
                                             </div>
                                         </div> : <>
                                             {
-                                                windowOpen.selected === 'mapa' ? <><Mapa volver={getBack} setFullScreen={setFullScreen} requestFullScreen={requestFullScreen} reboot={reboot} setGameStart={setGameStart} player={player} onMobil={onMobil} fullScreen={fullScreen} gameStart={gameStart} setProps={setProps} playerStage={playerStage} playerTime={playerTime} playerVidas={playerVidas} volumenSet={volumenSet} volumenLevel={volumenLevel} efectVolumen={efectVolumen} volumenEfectsLevel={volumenEfectsLevel} /></> : <></>
+                                                windowOpen.selected ===  'mapa' ? <><Mapa volver={getBack} setFullScreen={setFullScreen} requestFullScreen={requestFullScreen} reboot={reboot} setGameStart={setGameStart} player={player} onMobil={onMobil} fullScreen={fullScreen} gameStart={gameStart} setProps={setProps} playerStage={playerStage} playerTime={playerTime} playerVidas={playerVidas} volumenSet={volumenSet} volumenLevel={volumenLevel} efectVolumen={efectVolumen} volumenEfectsLevel={volumenEfectsLevel} /></> : <></>
                                             }
                                             {
                                                 windowOpen.selected === 'items' ? <><Items itemsGet={itemsGet} armasGet={armasGet} setObject={setObject} volver={getBack} setFullScreen={setFullScreen} requestFullScreen={requestFullScreen} reboot={reboot} setGameStart={setGameStart} player={player} onMobil={onMobil} fullScreen={fullScreen} gameStart={gameStart} setProps={setProps} playerStage={playerStage} playerTime={playerTime} playerVidas={playerVidas} volumenSet={volumenSet} volumenLevel={volumenLevel} efectVolumen={efectVolumen} volumenEfectsLevel={volumenEfectsLevel} /></> : <></>

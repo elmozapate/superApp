@@ -1,7 +1,7 @@
 import Colisonador from "./colisionador";
 import ProtoPlataforma from "./prototiposSprites/protoPlataforma";
 
-const ColisionBasica = async (player = [], levelFalses = [], propsImage = { direccion: '' }, aux = false, malosFalses = [], proyectilesFalses = [], plataformas = [], ctx, isShoting, inLayer) => {
+const ColisionBasica = async (player = [], levelFalses = [], propsImage = { direccion: '' }, aux = false, malosFalses = [], proyectilesFalses = [], plataformas = [], ctx, isShoting = false, inLayer = 0, drops = []) => {
     let objeto1 = []
     let yArray = []
     let returns = { array: [], state: false }
@@ -113,7 +113,7 @@ const ColisionBasica = async (player = [], levelFalses = [], propsImage = { dire
     })
     let yArray4 = []
     malosFalses.map((key, iss) => {
-        if (parseInt(key.layerOnDisplay) === parseInt(inLayer)) {
+        if (key.state !== 'die' && parseInt(key.layerOnDisplay) === parseInt(inLayer)) {
             for (let ind = 0; ind < key.heightY; ind++) {
                 yArray4.push(parseInt(key.posY + ind))
             }
@@ -134,42 +134,39 @@ const ColisionBasica = async (player = [], levelFalses = [], propsImage = { dire
         }
 
     })
+    let yArrayN = []
+    let objetoDrops = []
+    drops.map((key, iss) => {
+        if (parseInt(key.layerOnDisplay) === parseInt(inLayer)) {
+            for (let ind = 0; ind < key.heightY; ind++) {
+                yArrayN.push(parseInt(key.posY + ind))
+            }
+            for (let index = 0; index < key.widthX; index++) {
+                const element = {
+                    posX: parseInt(index + key.posX),
+                    posY: parseInt(key.posY),
+                    posYmax: parseInt(key.posY) + key.heightY,
+                    yArray: yArrayN,
+                    id: key.id,
+                    pos: iss,
+                    widthX: key.widthX,
+                    heightY: key.heightY,
 
-    
+                };
+                objetoDrops.push(element)
+            }
+        }
+
+    })
+
     let yArray5 = []
     let npcAmo = 0
     let playerAmo = 0
-    proyectilesFalses.map((key, iss) => {
-        for (let ind = 0; ind < key.heightY; ind++) {
-            yArray5.push(parseInt(key.posY + ind))
-        }
-        for (let index = 0; index < key.widthX; index++) {
-            const element = {
-                damageFor: key.damageFor,
-                posX: parseInt(index + key.posX),
-                posY: parseInt(key.posY),
-                posYmax: parseInt(key.posY) + key.heightY,
-                yArray: yArray5,
-                id: key.id,
-                widthX: key.widthX,
-                heightY: key.heightY,
-                pos: iss
-            };
-            if (key.damageFor === 'player') {
-                objeto2.push(element)
-                npcAmo = npcAmo + 1
-            } else {
-                objeto3.push(element)
-                playerAmo = playerAmo + 1
-
-            }
-        }
-    })
     let idsIn = []
     let checking = false
     let checkingPp = false
-    objeto1.map((key) => {
-        objeto2.map((key2, iMalos) => {
+    objeto2.map((key2, iMalos) => {
+        objeto1.map((key) => {
             checkingPp = false
             idsIn.map((key) => {
                 if (key === key2.id) {
@@ -196,6 +193,61 @@ const ColisionBasica = async (player = [], levelFalses = [], propsImage = { dire
             }
         })
     })
+    objetoDrops.map((key2, iMalos) => {
+        objeto1.map((key) => {
+            checkingPp = false
+            idsIn.map((key) => {
+                if (key === key2.id) {
+                    checkingPp = true
+                }
+            })
+            if (!checkingPp && parseInt(key2.posX) === parseInt(key.posX)) {
+                key.yArray.map((posA) => {
+                    key2.yArray.map((posB) => {
+                        checking = false
+                        idsIn.map((key) => {
+                            if (key === key2.id) {
+                                checking = true
+                            }
+                        })
+                        if (parseInt(posA) === parseInt(posB) && !checking) {
+                            idsIn.push(key2.id)
+                            returns.array.push({ a: key, b: key2, c: 'trues' })
+                            returns.state = true
+                            return returns
+                        }
+                    })
+                })
+            }
+        })
+    })
+    proyectilesFalses.map((key, iss) => {
+        for (let ind = 0; ind < key.heightY; ind++) {
+            yArray5.push(parseInt(key.posY + ind))
+        }
+        for (let index = 0; index < key.widthX; index++) {
+            const element = {
+                damageFor: key.damageFor,
+                posX: parseInt(index + key.posX),
+                posY: parseInt(key.posY),
+                posYmax: parseInt(key.posY) + key.heightY,
+                yArray: yArray5,
+                id: key.id,
+                widthX: key.widthX,
+                heightY: key.heightY,
+                pos: iss
+            };
+            if (key.damageFor === 'player') {
+                objeto2.push(element)
+                npcAmo = npcAmo + 1
+            } else {
+                objeto3.push(element)
+                playerAmo = playerAmo + 1
+
+            }
+        }
+    })
+
     if (playerAmo > 0) {
         let objMalosFalses = []
         let newYArray = []
