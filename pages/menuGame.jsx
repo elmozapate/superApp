@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import Mapa from "./mapa"
-import Items from "./items"
 import PowerUps from "./powerUps"
 import VolumenComponent from "./volumenComponente"
+import Armas from "./armas"
 
 const MenuGame = (props) => {
     const { refreshValue = console.log, inRefreshing = false, powerCuant = 0, itemsGet = {
@@ -12,15 +12,17 @@ const MenuGame = (props) => {
     }, armasGet = {
         enUso: 'ninguna',
         array: []
+    },gunsGet = {
+        enUso: 'ninguna',
+        array: []
     }, windowOpen = {
         active: false,
         selected: ''
     }, setwindowOpen = console.log, menuActive = false, setmenuActive = console.log, powerUpsGet = [], setObject = console.log, efectVolumen = console.log, volumenEfectsLevel = { value: 2, mute: false }, volumenLevel = { value: 2, mute: false }, setFullScreen = console.log, requestFullScreen = console.log, reboot = console.log, setGameStart = console.log, playerStage = { stage: 0 }, playerTime = { time: 0 }, playerVidas = { vidas: 5, health: 100, maxHealth: 100 }, player = { pause: false }, onMobil = false, fullScreen = false, gameStart = false, setProps = console.log, volumenSet = console.log } = props
     const [armasLabel, setArmasLabel] = useState(false)
     const [itemsLabel, setItemsLabel] = useState(false)
+    const [gunsLabel, setGunsLabel] = useState(false)
     const [powerUpsLabel, setPowerUpsLabel] = useState(false)
-
-
     const goWindow = (value) => {
         setwindowOpen({
             ...windowOpen,
@@ -157,6 +159,62 @@ const MenuGame = (props) => {
 
                     </div>
                     <div className={onMobil ? 'labelBarra-mobil' : 'labelBarra'}>
+                        {(gunsGet.enUso === 'ninguno' || gunsGet.enUso === 'ninguna') && !gunsLabel ?
+                            <>
+                                <div
+                                    onClick={(e) => { e.preventDefault(); setGunsLabel(true) }}
+                                >
+                                    <p className="fontcolor-white">GUNS</p>
+                                </div>
+                            </>
+                            :
+                            <div className={onMobil ? 'labelBarra-mobil' : 'labelBarra'}>
+                                {!gunsLabel ?
+                                    gunsGet.array.map((key, i) => {
+                                        if (key.active) {
+                                            return (<div onClick={(e) => { e.preventDefault(); setGunsLabel(!gunsLabel) }}
+                                            > <img
+                                                    id={`labelCloseGuns`}
+                                                    src={`/guns/${key.nombre}/img/btn.png`}
+                                                    alt={`guns-${key.nombre}-btn`}
+                                                    width={onMobil ? '40px' : '70px'}
+                                                    height={onMobil ? '40px' : '70px'} /></div>)
+                                        }
+                                    })
+                                    :
+                                    <>{
+                                        <div className="label-armas"
+                                        >
+                                            {gunsGet.array.map((key2, i2) => {
+                                                return (<div
+                                                    className={key2.active ? 'bgcolor-green' : 'bgcolor-red'}
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        setObject(`guns-${key2.nombre}`, key2.active ? false : true, 'guns', 'barra');
+                                                    }}>
+                                                    <img
+                                                        id={`label-${i2}`}
+
+                                                        src={`/guns/${key2.nombre}/img/btn.png`}
+                                                        alt={`guns-${key2.nombre}-btn`}
+                                                        width={onMobil ? '40px' : '70px'}
+                                                        height={onMobil ? '40px' : '70px'} />
+                                                </div>)
+                                            })}
+                                            <button onClick={(e) => {
+                                                e.preventDefault();
+                                                setGunsLabel(false);
+                                            }}>close</button>
+                                        </div>
+                                    }
+
+                                    </>
+
+                                }
+                            </div>}
+
+                    </div>
+                    <div className={onMobil ? 'labelBarra-mobil' : 'labelBarra'}>
                         {(armasGet.enUso === 'ninguno' || armasGet.enUso === 'ninguna' || armasGet.enUso === 'desArmado') && !armasLabel ?
                             <>
                                 <div
@@ -254,7 +312,7 @@ const MenuGame = (props) => {
                                             </div>
                                             <div className="grandes menu-cont">
                                                 <button onClick={(e) => { e.preventDefault(); goWindow('mapa') }}> Mapa </button>
-                                                <button onClick={(e) => { e.preventDefault(); goWindow('items') }}> Items </button>
+                                                <button onClick={(e) => { e.preventDefault(); goWindow('armas') }}> Armas </button>
                                                 <button onClick={(e) => { e.preventDefault(); goWindow('powerUps') }}> Power Up </button>
                                             </div>
                                             <div className=" menu-cont">
@@ -292,10 +350,10 @@ const MenuGame = (props) => {
                                                 windowOpen.selected ===  'mapa' ? <><Mapa volver={getBack} setFullScreen={setFullScreen} requestFullScreen={requestFullScreen} reboot={reboot} setGameStart={setGameStart} player={player} onMobil={onMobil} fullScreen={fullScreen} gameStart={gameStart} setProps={setProps} playerStage={playerStage} playerTime={playerTime} playerVidas={playerVidas} volumenSet={volumenSet} volumenLevel={volumenLevel} efectVolumen={efectVolumen} volumenEfectsLevel={volumenEfectsLevel} /></> : <></>
                                             }
                                             {
-                                                windowOpen.selected === 'items' ? <><Items itemsGet={itemsGet} armasGet={armasGet} setObject={setObject} volver={getBack} setFullScreen={setFullScreen} requestFullScreen={requestFullScreen} reboot={reboot} setGameStart={setGameStart} player={player} onMobil={onMobil} fullScreen={fullScreen} gameStart={gameStart} setProps={setProps} playerStage={playerStage} playerTime={playerTime} playerVidas={playerVidas} volumenSet={volumenSet} volumenLevel={volumenLevel} efectVolumen={efectVolumen} volumenEfectsLevel={volumenEfectsLevel} /></> : <></>
+                                                windowOpen.selected === 'armas' ? <><Armas gunsGet={gunsGet} armasGet={armasGet} setObject={setObject} volver={getBack} setFullScreen={setFullScreen} requestFullScreen={requestFullScreen} reboot={reboot} setGameStart={setGameStart} player={player} onMobil={onMobil} fullScreen={fullScreen} gameStart={gameStart} setProps={setProps} playerStage={playerStage} playerTime={playerTime} playerVidas={playerVidas} volumenSet={volumenSet} volumenLevel={volumenLevel} efectVolumen={efectVolumen} volumenEfectsLevel={volumenEfectsLevel} /></> : <></>
                                             }
                                             {
-                                                windowOpen.selected === 'powerUps' ? <><PowerUps powerUpsGet={powerUpsGet} setObject={setObject} volver={getBack} setFullScreen={setFullScreen} requestFullScreen={requestFullScreen} reboot={reboot} setGameStart={setGameStart} player={player} onMobil={onMobil} fullScreen={fullScreen} gameStart={gameStart} setProps={setProps} playerStage={playerStage} playerTime={playerTime} playerVidas={playerVidas} volumenSet={volumenSet} volumenLevel={volumenLevel} efectVolumen={efectVolumen} volumenEfectsLevel={volumenEfectsLevel} /></> : <></>
+                                                windowOpen.selected === 'powerUps' ? <><PowerUps itemsGet={itemsGet} powerUpsGet={powerUpsGet} setObject={setObject} volver={getBack} setFullScreen={setFullScreen} requestFullScreen={requestFullScreen} reboot={reboot} setGameStart={setGameStart} player={player} onMobil={onMobil} fullScreen={fullScreen} gameStart={gameStart} setProps={setProps} playerStage={playerStage} playerTime={playerTime} playerVidas={playerVidas} volumenSet={volumenSet} volumenLevel={volumenLevel} efectVolumen={efectVolumen} volumenEfectsLevel={volumenEfectsLevel} /></> : <></>
                                             }
                                         </>
                                 }

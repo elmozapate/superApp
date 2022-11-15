@@ -1,6 +1,6 @@
 
 const GamePad = (props) => {
-    const {onMobil=false, itemsGet = [], armasGet = [], powerUpsGet = [], propsAction = { jumping: false }, setSaltoFunt = console.log, brincar = console.log, setsalto = console.log, dibujarMouseOn = console.log, setProps = console.log, armas = { bat: { state: false } } } = props
+    const { onMobil = false, gunsGet = {enUso:'revolver',array:[]}, itemsGet = [], armasGet = [], powerUpsGet = [], propsAction = { jumping: false }, setSaltoFunt = console.log, brincar = console.log, setsalto = console.log, disparar = console.log, dibujarMouseOn = console.log, setProps = console.log, armas = { bat: { state: false } } } = props
 
     return (
         <>
@@ -47,7 +47,7 @@ const GamePad = (props) => {
 
                                     setProps('mxActive', null, false);
                                     setProps('propsImage', 'direccion', 'xs')
-                                    itemsGet.enUso==='patineta'?   setProps('itemsSound', itemsGet.enUso, false):console.log;
+                                    itemsGet.enUso === 'patineta' ? setProps('itemsSound', itemsGet.enUso, false) : console.log;
 
                                     setProps('mxDirection', 'all', 'false')
 
@@ -58,7 +58,7 @@ const GamePad = (props) => {
                                     dibujarMouseOn('-', true)
                                     setProps('propsImage', 'direccion', 'xb')
                                     setProps('lastDireccion', null, 'xb');
-                                    itemsGet.enUso==='patineta'?   setProps('itemsSound', itemsGet.enUso, true):console.log;
+                                    itemsGet.enUso === 'patineta' ? setProps('itemsSound', itemsGet.enUso, true) : console.log;
                                 }}></button>
                         </div>
                         <div className="arrow">
@@ -70,14 +70,14 @@ const GamePad = (props) => {
                                     setProps('propsImage', 'direccion', 'xs');
                                     setProps('mxDirection', 'all', false);
                                     setProps('mxActive', null, false);
-                                    itemsGet.enUso==='patineta'?   setProps('itemsSound', itemsGet.enUso, false):console.log;
+                                    itemsGet.enUso === 'patineta' ? setProps('itemsSound', itemsGet.enUso, false) : console.log;
                                 }}
                                 onTouchStart={(e) => {
                                     setProps('mxActive', null, true);
                                     dibujarMouseOn('+', true)
                                     setProps('propsImage', 'direccion', 'xf');
                                     setProps('lastDireccion', null, 'xf');
-                                    itemsGet.enUso==='patineta'?   setProps('itemsSound', itemsGet.enUso, true):console.log;
+                                    itemsGet.enUso === 'patineta' ? setProps('itemsSound', itemsGet.enUso, true) : console.log;
                                 }}></button>
                         </div>
                     </div>
@@ -114,11 +114,11 @@ const GamePad = (props) => {
                                 setProps('armas', 'state', true);
 
                             }}>
-                                <img src={armasGet.enUso!=='ninguno'&&armasGet.enUso!=='ninguna'?`/armas/${armasGet.enUso}/img/btn.png`:`/armas/desArmado/img/btn.png`}
-                                                alt={`armas-${armasGet.enUso}-btn`}
-                                                width={onMobil?'60px':'100px'}
-                                        height={onMobil?'60px':'100px'} />
-                            </button>
+                            <img src={armasGet.enUso !== 'ninguno' && armasGet.enUso !== 'ninguna' ? `/armas/${armasGet.enUso}/img/btn.png` : `/armas/desArmado/img/btn.png`}
+                                alt={`armas-${armasGet.enUso}-btn`}
+                                width={onMobil ? '60px' : '100px'}
+                                height={onMobil ? '60px' : '100px'} />
+                        </button>
                     </div>
                     <div className="btn-gamepad btn-b">
                         <button
@@ -133,10 +133,27 @@ const GamePad = (props) => {
                                 setsalto(setSaltoFunt())
                                 brincar()
 
-                            }}> <img src={itemsGet.enUso!=='ninguno'&&itemsGet.enUso!=='ninguna'?`/items/${itemsGet.enUso}/img/btn.png`:`/items/botas/img/btn.png`}
-                            alt={`items-${itemsGet.enUso}-btn`}
-                            width={onMobil?'60px':'100px'}
-                    height={onMobil?'60px':'100px'} /></button>
+                            }}> <img src={itemsGet.enUso !== 'ninguno' && itemsGet.enUso !== 'ninguna' ? `/items/${itemsGet.enUso}/img/btn.png` : `/items/botas/img/btn.png`}
+                                alt={`items-${itemsGet.enUso}-btn`}
+                                width={onMobil ? '60px' : '100px'}
+                                height={onMobil ? '60px' : '100px'} /></button>
+                    </div>
+                    <div className={gunsGet.enUso === 'ninguno' || gunsGet.enUso === 'ninguna'?'hide':"btn-gamepad btn-c"}>
+                        <button
+                            onTouchEnd={() => {
+                                setTimeout(() => {
+                                    /*    setProps('propsAction', 'gravity', true);
+                                       setProps('itemsSound', itemsGet.enUso, false); */
+
+                                }, 30);
+                            }}
+                            onTouchStart={(e) => {
+                                disparar()
+
+                            }}> <img src={gunsGet.enUso === 'ninguno' || gunsGet.enUso === 'ninguna' ? `/guns/revolver/img/btn.png` : `/guns/${gunsGet.enUso}/img/btn.png`}
+                                alt={`guns-${gunsGet.enUso}-btn`}
+                                width={onMobil ? '60px' : '100px'}
+                                height={onMobil ? '60px' : '100px'} /></button>
                     </div>
                 </div>
             </div>

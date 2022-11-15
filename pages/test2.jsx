@@ -75,7 +75,7 @@ let off = true, itemsSound = [], muted = false, auxPlataformas = [], newArrayB =
     }
 }, WeaponAudio = [true, true], audioPlaying = 0, jump, obtenerOrientacion = console.log, pass, audioPp, actualVidas = 5, mxActive = false, myActive = false, fantasmas = [], dibujarMalos = {
     die: false, last: [], new: []
-}, mxDirection = { left: false, right: false }, portraitAudio, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], dropsFalses = [], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, muertebebe, joshisound, joshisound2, joshisound3 = [true, true, true, true], pow, proyectilesImg = [], balasImg = [], imagenesSrc = [`/img/finales/foto-de-anime-4.png`, `/img/finales/foto-de-anime-3.png`, `/img/finales/foto-de-anime-2.png`, `/img/finales/foto-de-anime-1.png`, `/img/finales/foto-de-anime-0.png`], soundToch = false, itemsImageAux = {}, soundLevels = { sfx: 2, music: 2 }, inPausetouch = false, fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = {onDrop:false, speedLevel: 1, strikeLevel: 1, jumping: false, gravity: true, eating: false, jumpLevel: 1.10, gravityLevel: 1.10 }, canvas, levelGo = 1, ctx, imgArray = [],
+}, mxDirection = { left: false, right: false }, portraitAudio, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], dropsFalses = [], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, muertebebe, joshisound, joshisound2, joshisound3 = [true, true, true, true], pow, proyectilesImg = [], balasImg = [], imagenesSrc = [`/img/finales/foto-de-anime-4.png`, `/img/finales/foto-de-anime-3.png`, `/img/finales/foto-de-anime-2.png`, `/img/finales/foto-de-anime-1.png`, `/img/finales/foto-de-anime-0.png`], soundToch = false, itemsImageAux = {}, soundLevels = { sfx: 2, music: 2 }, inPausetouch = false, fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { onDrop: false, speedLevel: 1, strikeLevel: 1, jumping: false, gravity: true, eating: false, jumpLevel: 1.10, gravityLevel: 1.10 }, canvas, levelGo = 1, ctx, imgArray = [],
     imagenA, canvasC, ctxC, canvasB, ctxB, canvasD, ctxD, canvasE, ctxE, ctxF, canvasF, imagenes = [{ onMove: false }], worldItems = [], timeRestart = false, levelDificulty = 20
 /* ----------------------------------------------------------------------------------- */
 
@@ -103,6 +103,10 @@ const Test2 = () => {
     const [armasGet, setArmasGet] = useState({
         enUso: 'desArmado',
         array: [{ nombre: 'lata', active: false, obtenida: true }, { nombre: 'desArmado', active: false, obtenida: true }, { nombre: 'bat', active: false, obtenida: true }, { nombre: 'otroBat', active: false, obtenida: true }]
+    })
+    const [gunsGet, setGunsGet] = useState({
+        enUso: 'ninguna',
+        array: [{ nombre: 'revolver', active: false, obtenida: true }]
     })
     const [itemsGet, setItemsGet] = useState({
         enUso: 'ninguno',
@@ -900,7 +904,7 @@ const Test2 = () => {
 
             }
             if (keyValue === 'e') {
-                
+
                 if (propsAction.onDrop) {
                     try {
                         propsAction.eating = propsAction.eating ? false : true
@@ -908,7 +912,7 @@ const Test2 = () => {
                         console.log(error);
                     }
                 }
-                
+
             }
             if (keyValue === 'ArrowDown') {
                 mxActive = true
@@ -1746,6 +1750,46 @@ const Test2 = () => {
             }
             setItemsGet(inOtorg)
         }
+        if (action.split('-')[0] === 'guns') {
+            let nomArma = action.split('-')[1]
+            let inOtorg = gunsGet
+            if (modo === 'barra') {
+                let suposis = -1
+                inOtorg.array.map((key, i) => {
+                    if (key.nombre === nomArma && nomArma !== gunsGet.enUso && nomArma !== 'ninguna') {
+                        suposis = i
+                    } else {
+                        inOtorg.enUso = 'ninguna'
+                        inOtorg.array[i].active = false
+                    }
+                })
+                if (suposis !== -1) {
+                    gunsGet.array.map((key, i) => {
+                        if (suposis === i) {
+                            inOtorg.array[i].active = true
+                            inOtorg.enUso = nomArma
+                        }
+                    })
+                }
+            } else {
+                if (nomArma === gunsGet.enUso && gunsGet.enUso !== 'ninguna') {
+                    inOtorg.enUso = 'ninguna'
+                    inOtorg.array.map((key, i) => {
+                        inOtorg.array[i].active = false
+                    })
+                } else {
+                    inOtorg.enUso = nomArma
+                    inOtorg.array.map((key, i) => {
+                        if (key.nombre === nomArma) {
+                            inOtorg.array[i].active = true
+                        } else {
+                            inOtorg.array[i].active = false
+                        }
+                    })
+                }
+            }
+            setGunsGet(inOtorg)
+        }
         if (!modo || (modo !== 'key' && modo !== 'barra')) {
             setTimeout(() => {
                 setPlayerGo({
@@ -1783,6 +1827,7 @@ const Test2 = () => {
                     speedLevel: props.value ? 2 : 1
                 }
                 break;
+
             default:
                 break;
         }
@@ -1791,34 +1836,35 @@ const Test2 = () => {
     const disparar = () => {
         try {
             balaSound.play()
+            balaSound.loop = true
+            balaSound.volume = 1
+            let imgUsed = balasImg
+            let efectRandom = parseInt(Math.random() * 2)
+            proyectiles.push({
+                id: `${'player-shot'}-${parseInt(Math.random() * 500)}-proy`,
+                damageFor: 'npc',
+                health: 22,
+                hitdirection: lastDireccion,
+                hitDamage: 0,
+                state: 'live',
+                imagen: imgUsed,
+                type: 'gun',
+                posX: !propsImage.direccion === 'xf' ? propsImage.items[0].posX - 60 : propsImage.items[0].posX + 10,
+                posY: (propsImage.posY) + 15,
+                widthX: imgUsed[0].naturalWidth / 30,
+                heightY: imgUsed[0].naturalHeight / 30,
+                direccion: propsImage.direccion !== 'xb' && propsImage.direccion !== 'xf' ? lastDireccion : propsImage.direccion,
+                speed: 4,
+                efectDirection: efectRandom === 0 ? 'up' : 'down',
+                damage: 20,
+            })
+            setTimeout(() => {
+                balaSound.volume = 0
+            }, 300);
         } catch (error) {
 
         }
-        balaSound.loop = true
-        balaSound.volume = 1
-        let imgUsed = balasImg
-        let efectRandom = parseInt(Math.random() * 2)
-        proyectiles.push({
-            id: `${'player-shot'}-${parseInt(Math.random() * 500)}-proy`,
-            damageFor: 'npc',
-            health: 22,
-            hitdirection: lastDireccion,
-            hitDamage: 0,
-            state: 'live',
-            imagen: imgUsed,
-            type: 'gun',
-            posX: !propsImage.direccion === 'xf' ? propsImage.items[0].posX - 60 : propsImage.items[0].posX + 10,
-            posY: (propsImage.posY) + 15,
-            widthX: imgUsed[0].naturalWidth / 30,
-            heightY: imgUsed[0].naturalHeight / 30,
-            direccion: propsImage.direccion !== 'xb' && propsImage.direccion !== 'xf' ? lastDireccion : propsImage.direccion,
-            speed: 4,
-            efectDirection: efectRandom === 0 ? 'up' : 'down',
-            damage: 20,
-        })
-        setTimeout(() => {
-            balaSound.volume = 0
-        }, 300);
+
     }
     const comer = () => {
         propsAction.eating = true
@@ -2255,7 +2301,7 @@ const Test2 = () => {
                     }
                 }
             }
-            let aDibujar = propsAction.eating &&propsAction.onDrop ? propsImage.imagen[`${propsImage.direccion === 'xf' || propsImage.direccion === 'xb' ? propsImage.direccion : 'xf'}_eat_${parseInt(propsImage.layer / (8 * 4)) < 2 ? parseInt(propsImage.layer / (8 * 4)) + 2 : parseInt(propsImage.layer / (8 * 4))}`] : armas[armasGet.enUso].state ? armas[armasGet.enUso].body : (propsImage.imagen[`${propsImage.direccion === 'xs' && propsImage.posY + parseInt(propsImage.heightY) < actualFloor ? 'xj' : propsImage.direccion}_${propsAction.gravity && propsImage.posY < actualFloor ? parseInt(propsImage.layer / (8 * 4)) < 2 ? parseInt(propsImage.layer / (8 * 4)) + 2 : parseInt(propsImage.layer / (8 * 4)) : !propsAction.gravity && propsImage.posY < actualFloor ? parseInt(propsImage.layer / (8 * 4)) > 1 ? parseInt(propsImage.layer / (8 * 4)) - 2 : parseInt(propsImage.layer / (8 * 4)) : parseInt(propsImage.layer / (8 * 4))}`])
+            let aDibujar = propsAction.eating && propsAction.onDrop ? propsImage.imagen[`${propsImage.direccion === 'xf' || propsImage.direccion === 'xb' ? propsImage.direccion : 'xf'}_eat_${parseInt(propsImage.layer / (8 * 4)) < 2 ? parseInt(propsImage.layer / (8 * 4)) + 2 : parseInt(propsImage.layer / (8 * 4))}`] : armas[armasGet.enUso].state ? armas[armasGet.enUso].body : (propsImage.imagen[`${propsImage.direccion === 'xs' && propsImage.posY + parseInt(propsImage.heightY) < actualFloor ? 'xj' : propsImage.direccion}_${propsAction.gravity && propsImage.posY < actualFloor ? parseInt(propsImage.layer / (8 * 4)) < 2 ? parseInt(propsImage.layer / (8 * 4)) + 2 : parseInt(propsImage.layer / (8 * 4)) : !propsAction.gravity && propsImage.posY < actualFloor ? parseInt(propsImage.layer / (8 * 4)) > 1 ? parseInt(propsImage.layer / (8 * 4)) - 2 : parseInt(propsImage.layer / (8 * 4)) : parseInt(propsImage.layer / (8 * 4))}`])
             let psx = 0, Itemss = propsImage.items
             const chokeObj = await Colisonador(malosFalses, levelFalses, propsImage, false, false, false, false, inLayer)
             if (chokeObj) {
@@ -2282,19 +2328,19 @@ const Test2 = () => {
                                     if (colisionPlataforma.state) {
                                         let point = (colisionPlataforma.array[0].b.colision).split('-')
                                         if (point[0] === 'x') {
-                                            if (point[1] === 'xb') {
-                                                if (propsImage.direccion === 'xf' || propsImage.direccion === 'xf') {
-                                                    propsImage.items[0].posX = propsImage.items[0].posX - ((1.25 / (40 * (1 / (levelDificulty)))))
-                                                    propsImage.posX = propsImage.posX - ((0.125 / (40 * (1 / (levelDificulty)))))
-                                                }
-                                                plataformaColision = { eje: 'x', state: true, valor: 'xb' }
-                                            } else {
-                                                if (propsImage.direccion === 'xb' || propsImage.direccion === 'xb') {
-                                                    propsImage.items[0].posX = propsImage.items[0].posX + ((1.25 / (40 * (1 / (levelDificulty)))))
-                                                    propsImage.posX = propsImage.posX + ((0.125 / (40 * (1 / (levelDificulty)))))
-                                                }
-                                                plataformaColision = { eje: 'x', state: true, valor: 'xf' }
-                                            }
+                                            /*  if (point[1] === 'xb') {
+                                                 if (propsImage.direccion === 'xf' || propsImage.direccion === 'xf') {
+                                                     propsImage.items[0].posX = propsImage.items[0].posX - ((1.25 / (40 * (1 / (levelDificulty)))))
+                                                     propsImage.posX = propsImage.posX - ((0.125 / (40 * (1 / (levelDificulty)))))
+                                                 }
+                                                 plataformaColision = { eje: 'x', state: true, valor: 'xb' }
+                                             } else {
+                                                 if (propsImage.direccion === 'xb' || propsImage.direccion === 'xb') {
+                                                     propsImage.items[0].posX = propsImage.items[0].posX + ((1.25 / (40 * (1 / (levelDificulty)))))
+                                                     propsImage.posX = propsImage.posX + ((0.125 / (40 * (1 / (levelDificulty)))))
+                                                 }
+                                                 plataformaColision = { eje: 'x', state: true, valor: 'xf' }
+                                             } */
                                         }
                                         if (point[0] === 'y') {
                                             if (point[1] === 'xs') {
@@ -2359,20 +2405,20 @@ const Test2 = () => {
                                                 }
                                             }
                                         } else {
-                                            if (dropsFalses.length>0&& dropsFalses[chokePlayer.array[indd].b.pos].state === 'die' && dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.state && !dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.done) {
-                                                if (dropsFalses.length>0&&!propsAction.eating && !dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.done) {
+                                            if (dropsFalses.length > 0 && dropsFalses[chokePlayer.array[indd].b.pos].state === 'die' && dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.state && !dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.done) {
+                                                if (dropsFalses.length > 0 && !propsAction.eating && !dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.done) {
                                                     setplayerOnDrop({
                                                         ...playerOnDrop,
                                                         state: true
                                                     })
-                                                    propsAction.onDrop=true
+                                                    propsAction.onDrop = true
 
                                                 }
-                                                if (dropsFalses.length>0 &&propsAction.eating && !dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.startTaking) {
+                                                if (dropsFalses.length > 0 && propsAction.eating && !dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.startTaking) {
                                                     dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.startTaking = true
                                                     console.log(dropsFalses);
                                                 }
-                                                if (dropsFalses.length>0&&propsAction.eating && !dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.done && dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.startTaking && dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.cantidad > 0 && !dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.finishTaking) {
+                                                if (dropsFalses.length > 0 && propsAction.eating && !dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.done && dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.startTaking && dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.cantidad > 0 && !dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.finishTaking) {
                                                     dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.cantidad = dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.cantidad - .25
                                                     let healtRes = .25 * (dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.efect ? 1 : -1)
                                                     setPlayerVidas({
@@ -2380,7 +2426,7 @@ const Test2 = () => {
                                                         health: propsImage.items[0].health.nivel + healtRes
                                                     })
                                                     propsImage.items[0].health.nivel = propsImage.items[0].health.nivel + healtRes
-                                                    if (dropsFalses.length>0&&dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.cantidad <= 0) {
+                                                    if (dropsFalses.length > 0 && dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.cantidad <= 0) {
                                                         dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.finishTaking = true
                                                         propsAction.eating = false
                                                         dropsFalses = dropsFalses.filter(drop => drop !== dropsFalses[chokePlayer.array[indd].b.pos])
@@ -2389,7 +2435,7 @@ const Test2 = () => {
 
                                                 }
 
-                                                if (dropsFalses.length>0&&dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.finishTaking) {
+                                                if (dropsFalses.length > 0 && dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.finishTaking) {
                                                     dropsFalses[chokePlayer.array[indd].b.pos].actions.onDie.comible.done = true
                                                     propsAction.eating = false
                                                     setplayerOnDrop({
@@ -2481,7 +2527,7 @@ const Test2 = () => {
                                                                         ...playerOnDrop,
                                                                         state: true
                                                                     })
-                                                                    propsAction.onDrop=true
+                                                                    propsAction.onDrop = true
 
                                                                 }
                                                                 if (propsAction.eating && !dibujarMalos.new[chokePlayer.array[indd].b.pos].actions.onDie.comible.startTaking) {
@@ -2508,7 +2554,7 @@ const Test2 = () => {
                                                                     setplayerOnDrop({
                                                                         state: false
                                                                     })
-                                                                    propsAction.onDrop=false
+                                                                    propsAction.onDrop = false
 
                                                                 }
                                                             }
@@ -2647,7 +2693,7 @@ const Test2 = () => {
                             ...playerOnDrop,
                             state: false
                         })
-                        propsAction.onDrop=false
+                        propsAction.onDrop = false
                     }
                     if (colisioned.state) {
                         if (colisioned.result === 'die') {
@@ -2995,7 +3041,7 @@ const Test2 = () => {
                                 }
 
                                 ctxC.drawImage(aDibujar, propsImage.levelPass ? psx : propsImage.refreshData ? 10 : !propsImage.alive ? 0 : psx, propsImage.direccion === 'xd' ? propsImage.posY + (parseInt(propsImage.heightY) / 2) : propsImage.posY, propsImage.widthX, propsImage.direccion === 'xd' ? (parseInt(propsImage.heightY) / 2) : parseInt(propsImage.heightY))
-                                if (propsImage.items[0].health.estado === 'inmortal'&&!propsAction.eating) {
+                                if (propsImage.items[0].health.estado === 'inmortal' && !propsAction.eating) {
                                     let playerClothes = propsImage.imagen[`inmortal_${armas[armasGet.enUso].state ? 'xf' : propsImage.direccion === 'xf' ? 'xb' : propsImage.direccion === 'xb' ? 'xf' : 'xb'}_${parseInt((Math.random() * 2))}`]
                                     ctxC.drawImage(playerClothes, psx + (armas[armasGet.enUso].state ? -2 : propsImage.direccion === 'xb' ? -4 + (1 * (propsImage.widthX / 2)) : propsImage.direccion === 'xf' ? -17 : -12),
                                         propsImage.direccion === 'xd' ? propsImage.posY + (parseInt(propsImage.heightY) / 2) - 8 : propsImage.posY - 10.5, 30, 15)
@@ -3115,7 +3161,7 @@ const Test2 = () => {
                     {<BotonesJuego funtion={setLevelDificulty} setValue={setPlayerStage} value={playerStage} id='stage' name='Stage' />}
                     <BotonesJuego funtion={setLevelDificulty} value={player} id='level' name='Nivel' />
                     <BotonesJuego funtion={setLevelDificulty} value={dificulty} id='dificulty' name='Velocidad' />
-                    <BotonesJuego  volumenSet={volumenSet} volumenLevel={volumenLevel} volumenEfectsLevel={volumenEfectsLevel} efectVolumen={efectVolumen} inSound/>
+                    <BotonesJuego volumenSet={volumenSet} volumenLevel={volumenLevel} volumenEfectsLevel={volumenEfectsLevel} efectVolumen={efectVolumen} inSound />
                     <button className="button-game into"
                         onClick={(e) => {
                             e.preventDefault();
@@ -3138,14 +3184,14 @@ const Test2 = () => {
                     /> : null}
                     {gameStart && playerGo.go ?
                         <MenuGame refreshValue={refreshValue} inRefreshing={inRefreshing} powerCuant={powerCuant} itemsGet={itemsGet} armasGet={armasGet} windowOpen={windowOpen} setwindowOpen={setwindowOpen} menuActive={menuActive} setmenuActive={setmenuActive}
-                            powerUpsGet={powerUpsGet} setObject={setObject} setFullScreen={setFullScreen} requestFullScreen={requestFullScreen} reboot={reboot} setGameStart={setGameStart} player={player} onMobil={onMobil} fullScreen={fullScreen} gameStart={gameStart} setProps={setProps} playerStage={playerStage} playerTime={playerTime} playerVidas={playerVidas} volumenSet={volumenSet} volumenLevel={volumenLevel} efectVolumen={efectVolumen} volumenEfectsLevel={volumenEfectsLevel} />
+                            powerUpsGet={powerUpsGet} gunsGet={gunsGet} setObject={setObject} setFullScreen={setFullScreen} requestFullScreen={requestFullScreen} reboot={reboot} setGameStart={setGameStart} player={player} onMobil={onMobil} fullScreen={fullScreen} gameStart={gameStart} setProps={setProps} playerStage={playerStage} playerTime={playerTime} playerVidas={playerVidas} volumenSet={volumenSet} volumenLevel={volumenLevel} efectVolumen={efectVolumen} volumenEfectsLevel={volumenEfectsLevel} />
                         : <></>}
 
                     <div className={playerGo.go ? "action action-go" : 'action action-wait'}>
                         {playerGo.go ? "Go" : 'Wait'}
                     </div>
                     {onMobil ?
-                        <GamePad onMobil={onMobil} itemsGet={itemsGet} armasGet={armasGet} powerUpsGet={powerUpsGet} setProps={setProps} propsAction={propsAction} setSaltoFunt={setSaltoFunt} brincar={brincar} setsalto={setsalto} dibujarMouseOn={dibujarMouseOn} /> : <></>
+                        <GamePad gunsGet={gunsGet} onMobil={onMobil} itemsGet={itemsGet} armasGet={armasGet} powerUpsGet={powerUpsGet} setProps={setProps} propsAction={propsAction} setSaltoFunt={setSaltoFunt} brincar={brincar} disparar={disparar} setsalto={setsalto} dibujarMouseOn={dibujarMouseOn} /> : <></>
                     }
                     <canvas className={`${onMobil ? 'bgUrlmobil' : 'bgUrl'}-${(playerStage.stage + 1)} lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Pp">
                     </canvas>
