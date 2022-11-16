@@ -16,7 +16,7 @@ let off = true, itemsSound = [], muted = false, auxPlataformas = [], newArrayB =
     state: false,
     item: 0,
     result: 'live'
-}, obst = [], balaSound = true, onHitSoundNow = false, itemsImage = { jetPack: [], patineta: [] }, lazyImg = [], mapFloor = 150, actualFloorLimit = { state: false, x1: 0, x2: 300 }, onPunalSound = true, onHitSound = true, dolor = true, inShot = false, sierra = true, timeOfgame = 0, actualFloor = 150, lastDireccion = 'xf', plataformaFalses = [], armas = {
+}, obst = [], balaSound = true, onHitSoundNow = false, itemsImage = { jetPack: [], patineta: [] }, lazyImg = [], mapFloor = 150, actualFloorLimit = { state: false, x1: 0, x2: 300, y: mapFloor }, onPunalSound = true, onHitSound = true, dolor = true, inShot = false, sierra = true, timeOfgame = 0, actualFloor = 150, lastDireccion = 'xf', plataformaFalses = [], armas = {
     bat: {
         onHit: false,
         damage: 10,
@@ -75,7 +75,7 @@ let off = true, itemsSound = [], muted = false, auxPlataformas = [], newArrayB =
     }
 }, WeaponAudio = [true, true], audioPlaying = 0, jump, obtenerOrientacion = console.log, pass, audioPp, actualVidas = 5, mxActive = false, myActive = false, fantasmas = [], dibujarMalos = {
     die: false, last: [], new: []
-}, mxDirection = { left: false, right: false }, portraitAudio, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], dropsFalses = [], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, muertebebe, joshisound, joshisound2, joshisound3 = [true, true, true, true], pow, proyectilesImg = [], balasImg = [], imagenesSrc = [`/img/finales/foto-de-anime-4.png`, `/img/finales/foto-de-anime-3.png`, `/img/finales/foto-de-anime-2.png`, `/img/finales/foto-de-anime-1.png`, `/img/finales/foto-de-anime-0.png`], soundToch = false, itemsImageAux = {}, soundLevels = { sfx: 2, music: 2 }, inPausetouch = false, fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { onDrop: false, speedLevel: 1, strikeLevel: 1, jumping: false, gravity: true, eating: false, jumpLevel: 1.10, gravityLevel: 1.10 }, canvas, levelGo = 1, ctx, imgArray = [],
+}, mxDirection = { left: false, right: false }, portraitAudio, auxnow = 0, gameStage = 1, proyectiles = [], malosFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], dropsFalses = [], levelFalses = [{ posX: 150, posY: 0, widthX: 0, heightY: 0, }], proyectilesFalses = [], risabebe, llantobebe, muertebebe, joshisound, joshisound2, joshisound3 = [true, true, true, true], pow, proyectilesImg = [], balasImg = [], imagenesSrc = [`/img/finales/foto-de-anime-4.png`, `/img/finales/foto-de-anime-3.png`, `/img/finales/foto-de-anime-2.png`, `/img/finales/foto-de-anime-1.png`, `/img/finales/foto-de-anime-0.png`], soundToch = false, itemsImageAux = {}, soundLevels = { sfx: 2, music: 2 }, inPausetouch = false, fondos = LosFondos, inLayer = 0, propsImage = PropsImage, propsAction = { onPlataform: true, onDrop: false, speedLevel: 1, strikeLevel: 1, jumping: false, gravity: true, eating: false, jumpLevel: 1.10, gravityLevel: 1.10 }, canvas, levelGo = 1, ctx, imgArray = [],
     imagenA, canvasC, ctxC, canvasB, ctxB, canvasD, ctxD, canvasE, ctxE, ctxF, canvasF, imagenes = [{ onMove: false }], worldItems = [], timeRestart = false, levelDificulty = 20
 /* ----------------------------------------------------------------------------------- */
 
@@ -185,7 +185,7 @@ const Test2 = () => {
         fondos = LosFondos;
         inLayer = 0;
         propsImage = PropsImage;
-        propsAction = { jumping: false, gravity: true, eating: false };
+        propsAction = { onPlataform: true, onDrop: false, speedLevel: 1, strikeLevel: 1, jumping: false, gravity: true, eating: false, jumpLevel: 1.10, gravityLevel: 1.10 };
         levelGo = 1;
         imgArray = [];
         imagenes = [{ onMove: false }];
@@ -686,7 +686,7 @@ const Test2 = () => {
             propsImage = {
                 ...propsImage,
                 imagen: newArrayB,
-                posY: 145,
+                posY: mapFloor - (parseInt(oImgH)),
                 widthX: oImgW,
                 heightY: oImgH,
                 fotograma: 0,
@@ -1024,8 +1024,15 @@ const Test2 = () => {
                     }
             }
             if (keyValue === ' ' && !myActive) {
+                if (itemsGet.enUso === 'jetPack') {
+                    actualFloorLimit.y = mapFloor
+                    actualFloorLimit.state = false
+                    propsAction.jumping = true
+                    propsAction.onPlataform = false
+                    actualFloor = mapFloor
+                }
                 myActive = true
-                dibujarMouseOn('up', true)
+                brincar()
             }
         }, false);
         document.addEventListener('keyup', (event) => {
@@ -1048,25 +1055,17 @@ const Test2 = () => {
                 }
             }
             if (keyValue === ' ') {
-                if (propsAction.jumping) {
-                    setTimeout(() => {
-                        if (armasGet.enUso === 'jetPack') {
-                            propsAction = {
-                                ...propsAction,
-                                jumping: true,
-                                gravity: true
-                            }
-                            myActive = false
-                            itemsSound[0].sound.pause()
-                        }
-                        let nowJump = propsAction
-                        nowJump.gravity = true
-                        propsAction = {
-                            ...propsAction,
-                            ...nowJump
-                        }
-                    }, 30);
+                if (itemsGet.enUso === 'jetPack') {
+                    actualFloorLimit.y = mapFloor
+                    actualFloorLimit.state = false
+                    propsAction.gravity = true
+                    propsAction.jumping = true
+                    propsAction.onPlataform = false
+                    itemsSound[0].sound.pause()
+                    myActive = false
+
                 }
+
             } else {
                 if (mxActive && (keyValue === 'ArrowLeft' || keyValue === 'ArrowRight' || keyValue === 'ArrowDown')) {
                     if (itemsGet.enUso === 'patineta') {
@@ -1214,7 +1213,6 @@ const Test2 = () => {
                 }
             }
         } else {
-            propsImage.posY = (mapFloor - parseInt(propsImage.heightY))
             proyectiles = []
             fantasmas = []
             levelFalses = []
@@ -1250,7 +1248,6 @@ const Test2 = () => {
                     }
                 }
             }
-            myActive = false
             if (inLayer !== 0) {
                 /*     propsImage.items[0].posY = (actualFloor - parseInt(propsImage.heightY))
                     setTimeout(() => {
@@ -1871,8 +1868,11 @@ const Test2 = () => {
         setplayerOnDrop({ state: false })
     }
     const brincar = () => {
-        actualFloorLimit.state = false
-        actualFloor = mapFloor
+        myActive = true
+        propsAction.jumping = true
+        propsAction.gravity = false
+        setsalto(setSaltoFunt())
+
         switch (itemsGet.enUso) {
             case 'jetPack':
                 itemsSound[0].sound.loop = true
@@ -1891,24 +1891,14 @@ const Test2 = () => {
             default:
                 break;
         }
-        propsAction = {
-            ...propsAction,
-            jumping: true,
-            gravity: false
-        }
-        setsalto(setSaltoFunt())
-        myActive = true
-        if (armasGet.enUso !== 'jetPack') {
+        if (itemsGet.enUso !== 'jetPack') {
             setTimeout(() => {
-                propsAction = {
-                    ...propsAction,
-                    jumping: true,
-                    gravity: true
-                }
+                propsAction.jumping = true
+                propsAction.gravity = true
                 jump.pause();
                 jump.currentTime = 0;
                 setsalto(setSaltoFunt())
-                setTimeout(() => {
+                /* setTimeout(() => {
                     if (propsImage.posY + parseInt(propsImage.heightY) < actualFloor) {
                         propsAction = {
                             ...propsAction,
@@ -1928,8 +1918,8 @@ const Test2 = () => {
                     }
 
 
-                }, 400);
-            }, 400);
+                }, 400); */
+            }, (onMobil ? 1000 : 400));
         }
 
     }
@@ -2273,32 +2263,48 @@ const Test2 = () => {
 
     }
     const colisionadoFalse = async () => {
-        if (propsImage.posX <= (341 - 0.5) && imagenes[0].onMove) {
-            if (propsImage.posY + parseInt(propsImage.heightY) < actualFloor && !propsAction.jumping) {
-                propsAction = {
-                    ...propsAction,
-                    gravity: true,
-                    jumping: true
-                }
+        if (propsImage.posX <= (350 - 0.5) && imagenes[0].onMove) {
+            if (propsImage.posY + parseInt(propsImage.heightY) >= mapFloor && propsAction.gravity) {
+                propsAction.gravity = true
+                propsAction.jumping = false
+                actualFloorLimit.state = false
+                actualFloor = mapFloor
+                myActive = false
+                propsAction.onPlataform = true
+                propsImage.posY, propsImage.items[0].posY = mapFloor - parseInt(propsImage.heightY)
+                actualFloorLimit.y = mapFloor
             }
-            if (actualFloorLimit.state) {
+            if (actualFloor - propsImage.heightY <= propsImage.posY && propsAction.gravity) {
+                if (!actualFloorLimit.state) {
+                    actualFloor, actualFloorLimit.y = mapFloor
+                }
+
+            }
+
+            if (actualFloorLimit.state && propsAction.gravity) {
+
                 if ((propsImage.items[0].posX + propsImage.widthX < actualFloorLimit.x1 + 1.1) && (actualFloorLimit.x2 > propsImage.items[0].posX)) {
                     actualFloor = mapFloor
+                    actualFloorLimit.y = mapFloor
                     actualFloorLimit.state = false
-                    propsAction = {
-                        ...propsAction,
-                        gravity: true,
-                        jumping: true
-                    }
+                    propsAction.gravity = true
+                    propsAction.jumping = true
+                    propsAction.onPlataform = false
+                    myActive = true
+
                 }
                 if ((actualFloorLimit.x1 < propsImage.items[0].posX) && actualFloorLimit.x2 < propsImage.items[0].posX) {
                     actualFloor = mapFloor
                     actualFloorLimit.state = false
-                    propsAction = {
-                        ...propsAction,
-                        gravity: true,
-                        jumping: true
-                    }
+                    propsAction.gravity = true
+                    propsAction.jumping = true
+                    propsAction.onPlataform = false
+                    actualFloorLimit.y = mapFloor
+                    myActive = true
+
+                }
+                if (actualFloorLimit.y - propsImage.heightY <= propsImage.posY && propsAction.gravity) {
+                    myActive = false
                 }
             }
             let aDibujar = propsAction.eating && propsAction.onDrop ? propsImage.imagen[`${propsImage.direccion === 'xf' || propsImage.direccion === 'xb' ? propsImage.direccion : 'xf'}_eat_${parseInt(propsImage.layer / (8 * 4)) < 2 ? parseInt(propsImage.layer / (8 * 4)) + 2 : parseInt(propsImage.layer / (8 * 4))}`] : armas[armasGet.enUso].state ? armas[armasGet.enUso].body : (propsImage.imagen[`${propsImage.direccion === 'xs' && propsImage.posY + parseInt(propsImage.heightY) < actualFloor ? 'xj' : propsImage.direccion}_${propsAction.gravity && propsImage.posY < actualFloor ? parseInt(propsImage.layer / (8 * 4)) < 2 ? parseInt(propsImage.layer / (8 * 4)) + 2 : parseInt(propsImage.layer / (8 * 4)) : !propsAction.gravity && propsImage.posY < actualFloor ? parseInt(propsImage.layer / (8 * 4)) > 1 ? parseInt(propsImage.layer / (8 * 4)) - 2 : parseInt(propsImage.layer / (8 * 4)) : parseInt(propsImage.layer / (8 * 4))}`])
@@ -2320,12 +2326,12 @@ const Test2 = () => {
                     if (chokePlayer.state) {
                         for (let indd = 0; indd < chokePlayer.array.length; indd++) {
                             if (chokePlayer.array[indd].a === 'plataforma') {
-                                mxDirection.right = false
-                                mxDirection.left = false
-                                mxActive = false
+                                /*  mxDirection.right = false
+                                 mxDirection.left = false
+                                 mxActive = false */
                                 const colisionPlataforma = await Colisonador(propsImage.items[0], plataformaFalses, propsImage, true, true, ctxD, chokePlayer.array[indd].a)
                                 if (colisionPlataforma) {
-                                    if (colisionPlataforma.state) {
+                                    if (propsAction.jumping && colisionPlataforma.state) {
                                         let point = (colisionPlataforma.array[0].b.colision).split('-')
                                         if (point[0] === 'x') {
                                             /*  if (point[1] === 'xb') {
@@ -2343,23 +2349,30 @@ const Test2 = () => {
                                              } */
                                         }
                                         if (point[0] === 'y') {
-                                            if (point[1] === 'xs') {
-                                                plataformaColision = { eje: 'y', state: true, valor: 'xd' }
-                                                propsAction.gravity = true
-                                            }
+                                            /*  if (point[1] === 'xs') {
+                                                 plataformaColision = { eje: 'y', state: true, valor: 'xd' }
+                                                 propsAction.gravity = true
+                                                 propsAction.jumping = false
+                                                 actualFloor = mapFloor
+                                             } */
                                             if (point[1] === 'xd') {
-                                                imagenes[0].onMove = false
-                                                let thePos = (
-                                                    colisionPlataforma.array[0].b.fatherPosY
-                                                )
-                                                actualFloorLimit = { state: true, x1: colisionPlataforma.array[0].b.fatherPosX + (propsImage.widthX / 2), x2: colisionPlataforma.array[0].b.fatherPosX + colisionPlataforma.array[0].b.widthX - (propsImage.widthX / 2) }
-                                                actualFloor = thePos
-                                                propsImage.items[0].posY = colisionPlataforma.array[0].b.fatherPosY - parseInt(propsImage.heightY) - (propsAction.jumpLevel / (onMobil ? (40 * (1 / (levelDificulty))) : 1))
-                                                propsImage.posY = colisionPlataforma.array[0].b.fatherPosY - parseInt(propsImage.heightY) - (propsAction.jumpLevel / (onMobil ? (40 * (1 / (levelDificulty))) : 1))
-                                                propsImage.posY = colisionPlataforma.array[0].b.fatherPosY - parseInt(propsImage.heightY) - (propsAction.jumpLevel / (onMobil ? (40 * (1 / (levelDificulty))) : 1))
-                                                propsImage.items[0].posY = colisionPlataforma.array[0].b.fatherPosY - parseInt(propsImage.heightY) - (propsAction.jumpLevel / (onMobil ? (40 * (1 / (levelDificulty))) : 1))
-                                                imagenes[0].onMove = true
+                                                if (propsAction.jumping) {
+                                                    let thePos = (
+                                                        colisionPlataforma.array[0].b.fatherPosY
+                                                    )
+                                                    actualFloorLimit = { state: true, x1: colisionPlataforma.array[0].b.fatherPosX + (propsImage.widthX / 2), x2: colisionPlataforma.array[0].b.fatherPosX + colisionPlataforma.array[0].b.widthX - (propsImage.widthX / 2), y: colisionPlataforma.array[0].b.fatherPosY }
+                                                    actualFloor = thePos
+                                                    propsImage.items[0].posY, propsImage.posY = colisionPlataforma.array[0].b.fatherPosY - parseInt(propsImage.heightY)/*  - (propsAction.jumpLevel / (onMobil ? (40 * (1 / (levelDificulty))) : 1)) */
+                                                    /* - (propsAction.jumpLevel / (onMobil ? (40 * (1 / (levelDificulty))) : 1)) */
+                                                    propsAction.onPlataform = true
+                                                    propsAction.gravity = true
+                                                    propsAction.jumping = false
+                                                }
                                             }
+                                        }
+                                    } else {
+                                        if (!propsAction.jumping) {
+                                            myActive = false
                                         }
                                     }
                                     imagenes[0].onMove = true
@@ -2734,10 +2747,11 @@ const Test2 = () => {
                                     propsImage.direccion = propsImage.direccion
                                 }
                                 if ((propsImage.direccion === 'xf' && propsImage.posX < 342) || ((propsImage.direccion === 'xs' || propsImage.direccion === 'xd') && propsImage.posX < 355) || (propsImage.direccion === 'xb' && propsImage.posX > 0)) {
+                                    Itemss[0].posY = !propsAction.onPlataform && !propsAction.jumping && propsImage.posY + parseInt(propsImage.heightY) > (mapFloor) ? mapFloor - (parseInt(propsImage.heightY)) : propsAction.jumping && propsImage.posY <= (actualFloor - parseInt(propsImage.heightY)) ? propsImage.posY === (actualFloor - parseInt(propsImage.heightY)) && propsAction.jumping && propsAction.gravity ? (actualFloor - parseInt(propsImage.heightY)) : !propsAction.gravity ? propsImage.posY - (propsAction.jumpLevel / (onMobil ? (40 * (1 / (levelDificulty))) : 1)) : propsAction.jumping && propsAction.gravity ? propsImage.posY + propsAction.gravityLevel : propsImage.posY === 50 ? (actualFloor - parseInt(propsImage.heightY)) : (actualFloor - parseInt(propsImage.heightY)) : (actualFloor - parseInt(propsImage.heightY))
                                     Itemss[0].posX = propsImage.refreshData ? psx : propsImage.levelPass ? psx : propsImage.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || propsImage.posY < actualFloor ? Itemss[0].posX + ((1.25 / (40 * (1 / (levelDificulty)))) * propsAction.speedLevel) : Itemss[0].posX + ((1.25 / (40 * (1 / (levelDificulty)))) * propsAction.speedLevel) : propsImage.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || propsImage.posY < actualFloor ? Itemss[0].posX - ((1.25 / (40 * (1 / (levelDificulty)))) * propsAction.speedLevel) : Itemss[0].posX - ((1.25 / (40 * (1 / (levelDificulty)))) * propsAction.speedLevel) : Itemss[0].posX
                                     propsImage = {
                                         ...propsImage,
-                                        posY: propsAction.jumping && propsImage.posY <= (actualFloor - parseInt(propsImage.heightY)) ? propsImage.posY === (actualFloor - parseInt(propsImage.heightY)) && propsAction.jumping && propsAction.gravity ? (actualFloor - parseInt(propsImage.heightY)) : !propsAction.gravity ? propsImage.posY - (propsAction.jumpLevel / (onMobil ? (40 * (1 / (levelDificulty))) : 1)) : propsAction.jumping && propsAction.gravity ? propsImage.posY + propsAction.gravityLevel : propsImage.posY === 50 ? (actualFloor - parseInt(propsImage.heightY)) : (actualFloor - parseInt(propsImage.heightY)) : (actualFloor - parseInt(propsImage.heightY)),
+                                        posY: propsAction.onPlataform && !propsAction.jumping ? propsImage.posY : propsAction.jumping && propsImage.posY <= (actualFloor - parseInt(propsImage.heightY)) ? propsImage.posY === (actualFloor - parseInt(propsImage.heightY)) && propsAction.jumping && propsAction.gravity ? (actualFloor - parseInt(propsImage.heightY)) : !propsAction.gravity ? propsImage.posY - (propsAction.jumpLevel / (onMobil ? (40 * (1 / (levelDificulty))) : 1)) : propsAction.jumping && propsAction.gravity ? propsImage.posY + propsAction.gravityLevel : propsImage.posY === 50 ? (actualFloor - parseInt(propsImage.heightY)) : (actualFloor - parseInt(propsImage.heightY)) : (actualFloor - parseInt(propsImage.heightY)),
                                         posX: propsImage.refreshData ? propsImage.posX : propsImage.levelPass ? propsImage.posX : !propsImage.alive ? 0 : propsImage.direccion === 'xf' && propsImage.direccion === 'xf' ? propsAction.jumping || propsImage.posY < actualFloor ? propsImage.posX + ((0.125 / (40 * (1 / (levelDificulty)))) * propsAction.speedLevel) : propsImage.posX + ((0.125 / (40 * (1 / (levelDificulty)))) * propsAction.speedLevel) : propsImage.direccion === 'xb' && propsImage.direccion === 'xb' ? propsAction.jumping || propsImage.posY < actualFloor ? propsImage.posX - ((0.125 / (40 * (1 / (levelDificulty)))) * propsAction.speedLevel) : propsImage.posX - ((0.125 / (40 * (1 / (levelDificulty)))) * propsAction.speedLevel) : propsImage.posX,
                                         items: propsImage.levelPass || !propsImage.alive ? propsImage.items : Itemss,
                                         fotograma: propsImage.fotograma + 1,
@@ -2963,7 +2977,7 @@ const Test2 = () => {
                                 if (itemsGet.enUso !== 'ninguno') {
                                     let playerClothes = itemsImage[itemsGet.enUso].imagen
                                     let estado = itemsGet.enUso === 'jetPack' ? !propsAction.gravity : ((propsImage.direccion === 'xf' || propsImage.direccion === 'xb') || (itemsGet.enUso === 'patineta' && propsAction.jumping && !propsAction.gravity) ? true : false)
-                                    let ladireccion = armas[armasGet.enUso].state || (propsImage.direccion === 'xj' || propsImage.direccion === 'xd') || (itemsGet.enUso === 'patineta' && propsAction.jumping) ? 'xs' : itemsGet.enUso === 'jetPack' ? 'xf' : lastDireccion
+                                    let ladireccion = armas[armasGet.enUso].state || (propsImage.direccion === 'xj' || propsImage.direccion === 'xd') || (itemsGet.enUso === 'patineta' && propsAction.jumping) ? 'xs' : itemsGet.enUso === 'jetPack' ? (propsImage.direccion === 'xj' || propsImage.direccion === 'xd') ? 'xs' : propsImage.direccion : lastDireccion
                                     let rand = itemsGet.enUso === 'patineta' && propsAction.jumping ? (propsImage.direccion === 'xb' ? 1 : 0) : parseInt((Math.random() * 2))
                                     if (estado) {
                                         itemsImage[itemsGet.enUso].map((key, i) => {

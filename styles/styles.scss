@@ -2387,7 +2387,7 @@ h1 {
     height: getRemSize(70px);
 }
 .barra-items-mobil {
-    width: (4px * (60));
+    width: (7px * (60));
     top: 0;
     right: calc(2.1vw + (3px * (100)));
     height: getRemSize(50px);
@@ -2421,6 +2421,14 @@ h1 {
             color: #fff;
             font-weight: 700;
         }
+    }
+}
+.labelBarra-mobil{
+    width: 60px !important;
+    button {
+        min-width: 60px !important;
+        width: 60px !important;
+        max-width: 60px !important;
     }
 }
 @for $i from 1 through 300 {
