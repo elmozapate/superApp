@@ -1,7 +1,6 @@
 
 const GamePad = (props) => {
     const { onMobil = false, gunsGet = {enUso:'revolver',array:[]}, itemsGet = [], armasGet = [], powerUpsGet = [], propsAction = { jumping: false }, setSaltoFunt = console.log, brincar = console.log, setsalto = console.log, disparar = console.log, dibujarMouseOn = console.log, setProps = console.log, armas = { bat: { state: false } } } = props
-
     return (
         <>
             <div className={"botonesCanvasInteractivos"}>

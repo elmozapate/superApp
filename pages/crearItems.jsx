@@ -64,8 +64,8 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
                 posX: ejeX,
                 class: randomNumber === 0 ? 'cactus' : 'motosierra',
                 posY: (floor - 20),
-                widthX: newArray.xs_0.naturalWidth / 14,
-                heightY: newArray.xs_0.naturalWidth / 14,
+                widthX: newArray.body_xs_0.naturalWidth / 14,
+                heightY: newArray.body_xs_0.naturalWidth / 14,
                 canMove: {
                     state: true,
                     colision: true,

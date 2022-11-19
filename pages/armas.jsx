@@ -1,3 +1,4 @@
+import Image from "next/image";
 import VolumenComponent from "./volumenComponente";
 
 const Armas = (props) => {
@@ -60,11 +61,13 @@ const Armas = (props) => {
                                                 Estado: {key.active ? 'Activado' : 'En espera'}
                                             </button>
                                         </div>
-
-                                        <img src={`/guns/${key.nombre}/img/btn.png`}
-                                            alt={`guns-${key.nombre}-btn`}
+                                        <Image
+                            src={`/guns/${key.nombre}/img/btn.png`}
+                            alt={`guns-${key.nombre}-btn`}
                                             width={onMobil ? '60px' : '100px'}
-                                            height={onMobil ? '60px' : '100px'} />
+                                            height={onMobil ? '60px' : '100px'}
+                        />
+                                        
 
                                     </div>
 
