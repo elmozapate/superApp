@@ -2559,7 +2559,7 @@ const Test2 = () => {
                                                     if (key2.direccion === `hit_xf_0`) { position.hit.right.imagen = key2.imagen }
                                                     if (key2.direccion === `hit_xb_${key.layer}`) { position.hit.left.imagen = key2.imagen }
                                                 })
-                                               /*  ctxE.drawImage(position.spirit.imagen, key.posX, keySpirit.posY, position.spirit.imagen.naturalWidth / 22, position.spirit.imagen.naturalHeight / 27) */
+                                                /*  ctxE.drawImage(position.spirit.imagen, key.posX, keySpirit.posY, position.spirit.imagen.naturalWidth / 22, position.spirit.imagen.naturalHeight / 27) */
                                                 ctxE.drawImage(position.die.imagen, key.posX, key.posY, position.die.imagen.naturalWidth / 22, position.die.imagen.naturalHeight / 27)
                                             })
                                         }
@@ -2779,65 +2779,67 @@ const Test2 = () => {
             />
             {sinCargar ?
                 <></> : <>
-                    <div className={onMobil ? `IDiv-main column bgGame bgGame-mobil relativeCanvasContainer ${!gameStart ? '' : 'horizontal-mode'}` : `IDiv-main column bgGame relativeCanvasContainer ${!gameStart ? '' : 'horizontal-mode'}`}>
-                        {playerOnDrop.state ?
-                            <InteractiveBotonCanvas comer={comer} drop={{ posX: propsImage.items[0].posX, posY: propsImage.posY }} />
-                            : <></>}
-                        <div className={gameStart ? "hide" : 'game-opt'}>
-                            <BotonesJuego funtion={setLevelDificulty} value={playerVidas} id='vidas' name='Vidas' setValue={setPlayerVidas} />
-                            {<BotonesJuego funtion={setLevelDificulty} setValue={setPlayerStage} value={playerStage} id='stage' name='Stage' />}
-                            <BotonesJuego funtion={setLevelDificulty} value={player} id='level' name='Nivel' />
-                            <BotonesJuego funtion={setLevelDificulty} value={dificulty} id='dificulty' name='Velocidad' />
-                            <BotonesJuego volumenSet={volumenSet} volumenLevel={volumenLevel} volumenEfectsLevel={volumenEfectsLevel} efectVolumen={efectVolumen} inSound />
-                            <button className="button-game into"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    setGameStart(true);
-                                    onMobil ? setTimeout(() => {
-                                        setFullScreen(!fullScreen);
-                                        requestFullScreen();
-                                    }, 5) : null;
-                                    initApp()
-                                }}
-                            >EMPEZAR JUEGO</button>
-                        </div>
-                        <div className={gameStart ? '' : 'ocult'}>
-                            {gameStart ? <audio
-                                id='gameTracak'
-                                autoPlay
-                                loop
-                                controls={false}
-                                className='hide'
-                            /> : null}
-                            {gameStart && playerGo.go ?
-                                <MenuGame refreshValue={refreshValue} inRefreshing={inRefreshing} powerCuant={powerCuant} itemsGet={itemsGet} armasGet={armasGet} windowOpen={windowOpen} setwindowOpen={setwindowOpen} menuActive={menuActive} setmenuActive={setmenuActive}
-                                    powerUpsGet={powerUpsGet} gunsGet={gunsGet} setObject={setObject} setFullScreen={setFullScreen} requestFullScreen={requestFullScreen} reboot={reboot} setGameStart={setGameStart} player={player} onMobil={onMobil} fullScreen={fullScreen} gameStart={gameStart} setProps={setProps} playerStage={playerStage} playerTime={playerTime} playerVidas={playerVidas} volumenSet={volumenSet} volumenLevel={volumenLevel} efectVolumen={efectVolumen} volumenEfectsLevel={volumenEfectsLevel} />
+                    <div className="IDiv-main column align-center">
+                        <div className={onMobil ? `IDiv-main column bgGame bgGame-mobil relativeCanvasContainer ${!gameStart ? '' : 'horizontal-mode'}` : `IDiv-main column bgGame relativeCanvasContainer ${!gameStart ? '' : 'horizontal-mode'}`}>
+                            {playerOnDrop.state ?
+                                <InteractiveBotonCanvas comer={comer} drop={{ posX: propsImage.items[0].posX, posY: propsImage.posY }} />
                                 : <></>}
-
-                            <div className={playerGo.go ? "action action-go" : 'action action-wait'}>
-                                {playerGo.go ? "Go" : 'Wait'}
+                            <div className={gameStart ? "hide" : 'game-opt'}>
+                                <BotonesJuego funtion={setLevelDificulty} value={playerVidas} id='vidas' name='Vidas' setValue={setPlayerVidas} />
+                                {<BotonesJuego funtion={setLevelDificulty} setValue={setPlayerStage} value={playerStage} id='stage' name='Stage' />}
+                                <BotonesJuego funtion={setLevelDificulty} value={player} id='level' name='Nivel' />
+                                <BotonesJuego funtion={setLevelDificulty} value={dificulty} id='dificulty' name='Velocidad' />
+                                <BotonesJuego volumenSet={volumenSet} volumenLevel={volumenLevel} volumenEfectsLevel={volumenEfectsLevel} efectVolumen={efectVolumen} inSound />
+                                <button className="button-game into"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setGameStart(true);
+                                        onMobil ? setTimeout(() => {
+                                            setFullScreen(!fullScreen);
+                                            requestFullScreen();
+                                        }, 5) : null;
+                                        initApp()
+                                    }}
+                                >EMPEZAR JUEGO</button>
                             </div>
-                            {onMobil ?
-                                <GamePad gunsGet={gunsGet} onMobil={onMobil} itemsGet={itemsGet} armasGet={armasGet} powerUpsGet={powerUpsGet} setProps={setProps} propsAction={propsAction} setSaltoFunt={setSaltoFunt} brincar={brincar} disparar={disparar} setsalto={setsalto} dibujarMouseOn={dibujarMouseOn} /> : <></>
-                            }
-                            <canvas className={`${onMobil ? 'bgUrlmobil' : 'bgUrl'}-${(playerStage.stage + 1)} lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Pp">
-                            </canvas>
-                            <canvas className={`bgcolor-${nowStage.color} lienzo-final-${parseInt(stateImage.height)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Fn">
-                            </canvas>
-                            <canvas className={`lienzo-items z-mayor ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-It">
-                            </canvas>
-                            <canvas className={`lienzo-items ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-ItObj">
-                            </canvas>
-                            <canvas className={`lienzo-items ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-ItMalo">
-                            </canvas> <canvas className={`lienzo-items ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-ItPlatform">
-                            </canvas>
+                            <div className={gameStart ? '' : 'ocult'}>
+                                {gameStart ? <audio
+                                    id='gameTracak'
+                                    autoPlay
+                                    loop
+                                    controls={false}
+                                    className='hide'
+                                /> : null}
+                                {gameStart && playerGo.go ?
+                                    <MenuGame refreshValue={refreshValue} inRefreshing={inRefreshing} powerCuant={powerCuant} itemsGet={itemsGet} armasGet={armasGet} windowOpen={windowOpen} setwindowOpen={setwindowOpen} menuActive={menuActive} setmenuActive={setmenuActive}
+                                        powerUpsGet={powerUpsGet} gunsGet={gunsGet} setObject={setObject} setFullScreen={setFullScreen} requestFullScreen={requestFullScreen} reboot={reboot} setGameStart={setGameStart} player={player} onMobil={onMobil} fullScreen={fullScreen} gameStart={gameStart} setProps={setProps} playerStage={playerStage} playerTime={playerTime} playerVidas={playerVidas} volumenSet={volumenSet} volumenLevel={volumenLevel} efectVolumen={efectVolumen} volumenEfectsLevel={volumenEfectsLevel} />
+                                    : <></>}
+
+                                <div className={playerGo.go ? "action action-go" : 'action action-wait'}>
+                                    {playerGo.go ? "Go" : 'Wait'}
+                                </div>
+                                {onMobil ?
+                                    <GamePad gunsGet={gunsGet} onMobil={onMobil} itemsGet={itemsGet} armasGet={armasGet} powerUpsGet={powerUpsGet} setProps={setProps} propsAction={propsAction} setSaltoFunt={setSaltoFunt} brincar={brincar} disparar={disparar} setsalto={setsalto} dibujarMouseOn={dibujarMouseOn} /> : <></>
+                                }
+                                <canvas className={`${onMobil ? 'bgUrlmobil' : 'bgUrl'}-${(playerStage.stage + 1)} lienzo-${stateImage.posX} lienzoW-${parseInt(stateImage.width)} ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Pp">
+                                </canvas>
+                                <canvas className={`bgcolor-${nowStage.color} lienzo-final-${parseInt(stateImage.height)} ${onMobil ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-Fn">
+                                </canvas>
+                                <canvas className={`lienzo-items z-mayor ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-It">
+                                </canvas>
+                                <canvas className={`lienzo-items ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-ItObj">
+                                </canvas>
+                                <canvas className={`lienzo-items ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-ItMalo">
+                                </canvas> <canvas className={`lienzo-items ${onMobil ? !fullScreen ? `lienzoHM` : `lienzoH-${parseInt(stateImage.height)}` : `lienzoH-${parseInt(stateImage.height)}`}`} id="canvas-ItPlatform">
+                                </canvas>
+                            </div>
+
+
                         </div>
+                        <div className={`IDiv-main column bgGame relativeCanvasContainer  ${!gameStart ? '' : 'vertical-mode'}`}>
+                            <div className="divRotate">
 
-
-                    </div>
-                    <div className={`IDiv-main column bgGame relativeCanvasContainer  ${!gameStart ? '' : 'vertical-mode'}`}>
-                        <div className="divRotate">
-
+                            </div>
                         </div>
                     </div>
                 </>
