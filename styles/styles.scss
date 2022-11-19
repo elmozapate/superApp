@@ -1918,7 +1918,7 @@ h1 {
 }
 
 .lienzoHM {
-    max-width: calc( (100vh * (16/9)))!important;
+    max-width: calc( (100vw * (16/9)))!important;
 
     height: ((100vh * (1 / 1)));
 }
