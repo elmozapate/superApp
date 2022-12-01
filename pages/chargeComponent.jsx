@@ -1,24 +1,14 @@
+import ImageN from "next/image";
 import { useEffect, useState } from "react"
+import { ArmasEstInit } from "./armasEst";
 import { aCargar2, charguingItemEstructura, charguingItemEstructuraFalse } from "./chargingItems"
-let armasImg, armas, playerImg, killsImg, itemsImg = {}
-let off, notlog, sinEmpezar = false
-let newEntry = true
-let getedOut = false
-let notlog2 = 0
-let restarting = true
-let proyectilesImg = { malos: [], balas: [] }
-let onHitImg = []
-let malosImg = []
-let obst = []
-let items = 0
-let itemsImgNum = 0
-let itemsImgAudio = 0
-let mapeadas = 0
-let allPhotos = []
-let allAudios = []
-let erroresCarga = []
-let funciona = console.log
-let chargesCopy = console.log
+let armasImg, armas, playerImg, killsImg, itemsImg = {}, returnCharge = console.log, getOut = false
+let off, notlog, sinEmpezar = false; let newEntry = true; let inWork = true; let getedOut = false; let notlog2 = 0
+let restarting = true; let proyectilesImg = { malos: [], balas: [] }; let onHitImg = []; let malosImg = []
+let obst = []; let items = 0; let itemsImgNum = 0; let itemsImgAudio = 0; let mapeadas = 0; let itemNumber = -1; let AudioNumber = -1; let allPhotos = []
+let allAudios = []; let erroresCarga = []; let funciona = console.log; let chargesCopy = console.log; let objToCharge = {
+    bodyToCharge: [], playerToCharge: [], armasToCharge: [], obstaculosToCharge: [], accionesToCharge: [], powerUpsToCharge: [], itemsToCharge: [], enemigosToCharge: [], proyectilesToCharge: [], onHitToCharge: [], killsToCharge: [], sfxToCharge: []
+}
 const ChargeComponent = (props) => {
     const { returnCharge = console.log, getOut = false } = props
     const [charged, setCharged] = useState(false)
@@ -27,552 +17,358 @@ const ChargeComponent = (props) => {
     const [manyAudio, setManyAudio] = useState(0)
     const [manyNeed, setManyNeed] = useState(0)
     const [imgNeed, setimgNeed] = useState(0)
-    const toChargue = aCargar2
-    const bodyToCharge = toChargue.imagenes.body
-    const playerToCharge = toChargue.imagenes.player
-    const armasToCharge = toChargue.imagenes.armas
-    const obstaculosToCharge = toChargue.imagenes.obstaculos
-    const accionesToCharge = toChargue.imagenes.acciones
-    const powerUpsToCharge = toChargue.imagenes.powerUps
-    const itemsToCharge = toChargue.imagenes.items
-    const enemigosToCharge = toChargue.imagenes.enemigos
-    const proyectilesToCharge = toChargue.imagenes.proyectiles
-    const onHitToCharge = toChargue.imagenes.onHit
-    const killsToCharge = toChargue.imagenes.kills
-    const sfxToCharge = toChargue.sonidos.sfx
     const [randomImg, setrandomImg] = useState('/items/patineta/img/btn.png')
+
+    const toChargue = aCargar2
+    const willChargeImg = [
+        'armas', 'obstaculos', 'body', 'player', 'acciones', 'powerUps', 'items', 'enemigos', 'proyectiles', 'onHit', 'kills',]
+    const willChargeSound = [
+        'sfx']
+
+
+    objToCharge.bodyToCharge = toChargue.imagenes.body
+    objToCharge.playerToCharge = toChargue.imagenes.player
+    objToCharge.armasToCharge = toChargue.imagenes.armas
+    objToCharge.obstaculosToCharge = toChargue.imagenes.obstaculos
+    objToCharge.accionesToCharge = toChargue.imagenes.acciones
+    objToCharge.powerUpsToCharge = toChargue.imagenes.powerUps
+    objToCharge.itemsToCharge = toChargue.imagenes.items
+    objToCharge.enemigosToCharge = toChargue.imagenes.enemigos
+    objToCharge.proyectilesToCharge = toChargue.imagenes.proyectiles
+    objToCharge.onHitToCharge = toChargue.imagenes.onHit
+    objToCharge.killsToCharge = toChargue.imagenes.kills
+    objToCharge.sfxToCharge = toChargue.sonidos.sfx
     let largoImg = Object.values(toChargue)[0]
     let largoImgMap = Object.values(largoImg)
     let largoImgFinal = 0
-    largoImgMap.map((key, i) => {
-        key.map((keyIn, iIn) => {
-            keyIn.estructura.map((keyEst, iEst) => {
-                largoImgFinal = largoImgFinal + keyEst.sprites
+    let checkObj = {}
+    if (inWork) {
+        objToCharge.sfxToCharge.map((key, i) => {
+            let nameis = `audio-${i}`
+            checkObj = {
+                ...checkObj,
+                [nameis]: {
+                    revisado: false,
+                    correcto: false
+                }
+            }
+        }
+        )
+
+        largoImgMap.map((key, i) => {
+            key.map((keyIn, iIn) => {
+                keyIn.estructura.map((keyEst, iEst) => {
+                    for (let index = 0; index < keyEst.sprites; index++) {
+                        let nameis = `item-${largoImgFinal}`
+                        checkObj = {
+                            ...checkObj,
+                            [nameis]: {
+                                revisado: false,
+                                correcto: false
+                            }
+                        }
+                        largoImgFinal = largoImgFinal + 1
+
+                    }
+                })
             })
         })
-    })
-    const restart = () => {
-        if (!getedOut && !getOut) {
-            armasImg = {}
-            armas = {}
-            playerImg = {}
-            killsImg = {}
-            itemsImg = {}
-            notlog = false
-            sinEmpezar = false
-            notlog2 = 0
-            proyectilesImg = { malos: [], balas: [] }
-            onHitImg = []
-            malosImg = []
-            obst = []
-            items = 0
-            itemsImgNum = 0
-            itemsImgAudio = 0
-            mapeadas = 0
-            allPhotos = []
-            allAudios = []
-            erroresCarga = []
-            setCharged(false)
-            setMany(0)
-            setManyImg(0)
-            setManyAudio(0)
-            setManyNeed(0)
-            setimgNeed(0)
-            setTimeout(() => {
-                chargesCopy()
-            }, 500);
-        }
+        const sumarMas = (elemento, ele2) => {
+            setMany(items + 1)
+            setManyImg(itemsImgNum + 1)
+            itemsImgNum = itemsImgNum + 1
+            items = items + 1
 
-    }
-    const sumarMas = () => {
-        setMany(items + 1)
-        setManyImg(itemsImgNum + 1)
-        itemsImgNum = itemsImgNum + 1
-        items = items + 1
-    }
-    const newImg = () => {
-        let randmooo = 0
-        randmooo = parseInt(Math.floor(Math.random() * (allPhotos.length - 1)))
-        if (randmooo >= 0 && randmooo < allPhotos.length && allPhotos.length > 0) {
-            let randomImgAux = allPhotos[randmooo].img
-            let randomsSrc = funciona(randomImgAux)
-            setrandomImg(randomsSrc)
         }
-        setTimeout(() => {
-            newImg()
-        }, 1500);
-    }
-    useEffect(() => {
-        if (getOut) {
-            getedOut = true
-        }
-    }, [getOut])
+        const newImg = () => {
+            if (!getedOut && !getedOut && !getOut) {
+                let randmooo = 0
+                randmooo = parseInt(Math.floor(Math.random() * (allPhotos.length - 1)))
+                if (randmooo >= 0 && randmooo < allPhotos.length && allPhotos.length > 0) {
+                    let randomImgAux = allPhotos[randmooo].img
+                    let randomsSrc = funciona(randomImgAux)
+                    setrandomImg(randomsSrc)
+                }
+                setTimeout(() => {
+                    newImg()
+                }, 1500);
+            }
 
-    useEffect(() => {
-        if (!off && !getedOut && !getOut) {
-            const charges = (charguingItem) => {
-                if (!getOut && !getedOut) {
-                    charguingItem.sfxToCharge.load && sfxToCharge.map((key, i) => {
+        }
+        const correctLoad = (key, iI, Chargekey, nombreToCharge, theKey, estructura, KeyEst, IEst, howMuch, keyEstNombre, howIndex, howIndexAux, tipoToCharge, element, suId) => {
+            const nameis = `item-${suId}`
+            sumarMas(suId, nombreToCharge)
+            allPhotos.push({ img: element, id: `${nombreToCharge}-${keyEstNombre}-${howIndexAux}` })
+            let oImgW = element.naturalWidth
+            let oImgH = element.naturalHeight
+            switch (key) {
+                case 'armas':
+                    armas[nombreToCharge].imagenes.push({
+                        direccion: keyEstNombre,
+                        id: howIndexAux,
+                        imagen: element,
+                        widthX: oImgW / 10,
+                        heightY: oImgH / 10,
+                    })
+                    break;
+                case 'obstaculos':
+                    obst.push(element)
+                    break;
+                case 'body':
+                    armas[nombreToCharge].body = (element)
+                    break;
+                case 'player':
+                    playerImg = {
+                        ...playerImg,
+                        [`${nombreToCharge}_${keyEstNombre}_${howIndexAux}`]: element
+                    }
+                    break;
+                case 'acciones':
+                    playerImg = {
+                        ...playerImg,
+                        [`${nombreToCharge}_${keyEstNombre}_${howIndexAux}`]: element
+                    }
+                    break;
+                case 'powerUps':
+                    playerImg = {
+                        ...playerImg,
+                        [`${nombreToCharge}_${keyEstNombre}_${howIndexAux}`]: element
+                    }
+                    break;
+                case 'items':
+                    itemsImg[nombreToCharge].push({ direccion: keyEstNombre, estado: tipoToCharge, layer: howIndexAux, nombre: `${nombreToCharge}-${tipoToCharge}-${keyEstNombre}-${howIndexAux}`, imagen: element })
+                    break;
+                case 'enemigos':
+                    malosImg.push({
+                        direccion: `${tipoToCharge}_${keyEstNombre}_${howIndexAux}`,
+                        imagen: element
+                    })
+                    break;
+                case 'proyectiles':
+                    proyectilesImg[tipoToCharge].push(element)
+
+                    break;
+                case 'onHit':
+                    onHitImg.push({ imagen: element, id: howIndexAux, direccion: keyEstNombre })
+
+                    break;
+                case 'kills':
+                    killsImg = {
+                        ...killsImg,
+                        [`${tipoToCharge}_${keyEstNombre}_${howIndexAux}`]: element
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        const introImg = (firstKey, theName, charguingItem, iI, Chargekey, nombreToCharge, theKey, estructura, KeyEst, IEst, howMuch, keyEstNombre, howIndex, howIndexAux, tipoToCharge, suId) => {
+            const SuId = suId
+            const nameis = `item-${SuId}`
+            if (!charguingItem[theName].restart) {
+                itemNumber = itemNumber + 1
+                checkObj[nameis].revisado = true
+            }
+            let element = new Image
+            if (!checkObj[nameis].correcto) {
+                switch (firstKey) {
+                    case 'armas':
+                        element.src = `/armas/${nombreToCharge}/img/bat-${howIndexAux}-${keyEstNombre}.png`
+                        break;
+                    case 'obstaculos':
+                        element.src = `/img/obstaculos/${keyEstNombre}.png`
+
+                        break;
+                    case 'body':
+                        element.src = `/armas/${nombreToCharge}/${tipoToCharge}/body.png`
+
+                        break;
+                    case 'player':
+                        element.src = `/img/body/${nombreToCharge}-${nombreToCharge}-${keyEstNombre}-${howIndexAux}.png`
+
+                        break;
+                    case 'acciones':
+                        element.src = `/img/body/body-${nombreToCharge}-${keyEstNombre}-${howIndexAux}.png`
+
+                        break;
+                    case 'powerUps':
+                        element.src = `/powerUps/${nombreToCharge}/img/${tipoToCharge}-${nombreToCharge}-${keyEstNombre}-${howIndexAux}.png`
+                        break;
+                    case 'items':
+                        element.src = `/items/${nombreToCharge}/img/${nombreToCharge}-${tipoToCharge}-${keyEstNombre}-${howIndexAux}.png`
+                        break;
+                    case 'enemigos':
+                        element.src = `/enemigos/${nombreToCharge}/${nombreToCharge}-${tipoToCharge}-${keyEstNombre}-${howIndexAux}.png`
+                        break;
+                    case 'proyectiles':
+                        element.src = `/proyectiles/${tipoToCharge}-${nombreToCharge}-${keyEstNombre}-${howIndexAux}.png`
+
+                        break;
+                    case 'onHit':
+                        element.src = `/onHit/${nombreToCharge}/${nombreToCharge}-${tipoToCharge}-${keyEstNombre}-${howIndexAux}.png`
+                        break;
+                    case 'kills':
+                        element.src = `/kills/${nombreToCharge}/${tipoToCharge}-${nombreToCharge}-${keyEstNombre}-${howIndexAux}.png`
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+            if (element.src !== 'null' && !getedOut && !getOut) {
+                element.onerror = ((error) => {
+                    let esquema = charguingItemEstructuraFalse
+                    esquema.Init.load = false
+                    mapeadas = mapeadas - 1
+                    esquema[theName].restart = true
+                    esquema[theName].load = true
+                    esquema[theName].key = { key: theKey, i: iI, keyEst: KeyEst, iEst: IEst, index: howIndexAux }
+                    if (!checkObj[nameis].correcto) {
+                        setTimeout(() => {
+                            if (!checkObj[nameis].correcto) {
+
+                                reTry({ msg: `${nombreToCharge}-${iI}-${keyEstNombre}-${IEst}`, error: error, esquema: esquema, itemNumber: SuId, firstKey: firstKey, theName: theName, charguingItem: charguingItem, iI: iI, Chargekey: Chargekey, nombreToCharge: nombreToCharge, theKey: theKey, estructura: estructura, KeyEst: KeyEst, IEst: IEst, howMuch: howMuch, keyEstNombre: keyEstNombre, howIndex: howIndex, howIndexAux: howIndexAux, tipoToCharge: tipoToCharge, suId: suId, })
+                            }
+                        }, 2000)
+                    }
+                })
+                mapeadas = mapeadas + 1
+                element.onload = (() => {
+                    if (!checkObj[nameis].correcto) {
+                        checkObj[nameis].correcto = true
+                        correctLoad(firstKey, iI, Chargekey, nombreToCharge, theKey, estructura, KeyEst, IEst, howMuch, keyEstNombre, howIndex, howIndexAux, tipoToCharge, element, SuId)
+                    }
+
+                })
+            }
+
+        }
+        const reTry = (key) => {
+            const theRealKey = key
+            const nameis = `item-${theRealKey.itemNumber}`
+            if (theRealKey && theRealKey.esquema && !checkObj[nameis].correcto && !getedOut && !getOut) {
+                const suId = theRealKey.itemNumber
+                introImg(theRealKey.firstKey, theRealKey.theName, theRealKey.charguingItem, theRealKey.iI, theRealKey.Chargekey, theRealKey.nombreToCharge, theRealKey.theKey, theRealKey.estructura, theRealKey.KeyEst, theRealKey.IEst, theRealKey.howMuch, theRealKey.keyEstNombre, theRealKey.howIndex, theRealKey.howIndexAux, theRealKey.tipoToCharge, suId)
+            }
+        }
+        useEffect(() => {
+            const ac = new AbortController();
+            if (inWork) {
+
+
+
+                const loadAudio = (key, suId) => {
+                    mapeadas = mapeadas + 1
+                    const SuId = suId
+                    const nameis = `audio-${SuId}`
+                    if (!checkObj[nameis].correcto && !getedOut && !getOut) {
+                        let trusted = false
                         const elAudio = new Audio(key.url)
-                        mapeadas = mapeadas + 1
+                        const reDo = (event, key2, suIdRea, suNameReal) => {
+                            console.log(1 < 0 ? event : ''), setTimeout(() => {
+                                if (!checkObj[suNameReal].correcto) {
+                                    mapeadas = mapeadas - 1
+                                    loadAudio(key2, suIdRea)
+                                }
+                            }, 2000);
+                        }
                         elAudio.addEventListener('loadeddata', () => {
+                            trusted = true
                             if (elAudio.readyState >= 2) {
-                                setMany(items + 1)
-                                setManyAudio(itemsImgAudio + 1)
-                                itemsImgAudio = itemsImgAudio + 1
-                                allAudios.push({ tipo: key.tipo, nombre: key.nombre, archivo: elAudio, url: `${key.url}` })
+                                if (!checkObj[nameis].correcto) {
+                                    checkObj[nameis].correcto = true
+                                    setMany(items + 1)
+                                    setManyAudio(itemsImgAudio + 1)
+                                    itemsImgAudio = itemsImgAudio + 1
+                                    allAudios.push({ tipo: key.tipo, nombre: key.nombre, archivo: elAudio, url: `${key.url}` })
+                                }
+                            } else {
+                                if (!checkObj[nameis].correcto) {
+                                    checkObj[nameis].correcto = true
+    /*                             reDo('oooo', key, SuId)
+     */                        }
+                            }
+                        })
+                        elAudio.addEventListener('error', (event) => {
+                            if (!checkObj[nameis].correcto) {
+                                trusted = true
+                                reDo(event, key, SuId, nameis)
                             }
                         });
-                    })
-                    charguingItem.Init.load && armasToCharge.map((key, i) => {
-                        armas = {
-                            ...armas,
-                            [key.nombre]: {
-                                onHit: false,
-                                damage: 2,
-                                sound: [],
-                                type: 'strike',
-                                speed: 1,
-                                state: false,
-                                fotograma: 0,
-                                layer: 0,
-                                onEnd: false,
-                                kills: [],
-                                body: [],
-                                imagenes: []
+                        setTimeout(() => {
+                            if (!trusted && !checkObj[nameis].correcto) {
+                                const suRealId = SuId
+                                const reKey = key
+                                trusted = true
+                                reDo('oooo', reKey, suRealId, nameis)
                             }
-                        }
-                    })
-                    charguingItem.armasToCharge.load && armasToCharge.map((key, i) => {
-                        if ((!charguingItem.armasToCharge.restart) || (charguingItem.armasToCharge.restart && i === 0)) {
-                            const iI = charguingItem.armasToCharge.restart ? charguingItem.armasToCharge.key.i : i
-                            const Chargekey = charguingItem.armasToCharge.restart ? charguingItem.armasToCharge.key : key
-                            const nombreToCharge = charguingItem.armasToCharge.restart ? charguingItem.armasToCharge.key.key.nombre : key.nombre
-                            const theKey = charguingItem.armasToCharge.restart ? charguingItem.armasToCharge.key.key : key
-                            const estructura = charguingItem.armasToCharge.restart ? charguingItem.armasToCharge.key.key.estructura : key.estructura
-                            estructura.map((keyEst, iEst) => {
-                                if ((!charguingItem.armasToCharge.restart) || (charguingItem.armasToCharge.restart && iEst === 0)) {
-                                    const KeyEst = charguingItem.armasToCharge.restart ? charguingItem.armasToCharge.key.keyEst : keyEst
-                                    const IEst = charguingItem.armasToCharge.restart ? charguingItem.armasToCharge.key.iEst : iEst
-                                    let howIndex = charguingItem.armasToCharge.restart ? charguingItem.armasToCharge.key.index : 0
-                                    const howMuch = charguingItem.armasToCharge.restart ? howIndexAux + 1 : keyEst.sprites
-                                    const keyEstNombre = charguingItem.armasToCharge.restart ? charguingItem.armasToCharge.key.keyEst.nombre : keyEst.nombre
-                                    for (let howIndexAux = howIndex; howIndexAux < howMuch; howIndexAux++) {
-                                        let oImgW, oImgH = 0
-                                        let element = new Image
-                                        element.src = `/armas/${nombreToCharge}/img/bat-${howIndexAux}-${keyEstNombre}.png`
-                                        element.onerror = ((error) => {
-                                            let esquema = charguingItemEstructuraFalse
-                                            esquema.Init.load = false
-                                            mapeadas = mapeadas - 1
-                                            esquema.armasToCharge.restart = true
-                                            esquema.armasToCharge.load = true
-                                            esquema.armasToCharge.key = { key: theKey, i: iI, keyEst: KeyEst, iEst: IEst, index: howIndexAux }
-                                            reTry({ msg: `${nombreToCharge}-${iI}-${keyEstNombre}-${IEst}`, error: error, esquema: esquema })
-                                        })
-                                        mapeadas = mapeadas + 1
-                                        element.onload = (() => {
-                                            sumarMas()
-                                            allPhotos.push({ img: element, id: `${nombreToCharge}-${keyEstNombre}-${howIndexAux}` })
-                                            oImgW = element.naturalWidth
-                                            oImgH = element.naturalHeight
-                                            armas[nombreToCharge].imagenes.push({
-                                                direccion: keyEstNombre,
-                                                id: howIndexAux,
-                                                imagen: element,
-                                                widthX: oImgW / 10,
-                                                heightY: oImgH / 10,
-                                            })
-                                        })
-                                    }
-                                }
-                            })
-                        }
-                    })
-                    charguingItem.bodyToCharge.load && bodyToCharge.map((key, i) => {
-                        if ((!charguingItem.bodyToCharge.restart) || (charguingItem.bodyToCharge.restart && i === 0)) {
-                            const iI = charguingItem.bodyToCharge.restart ? charguingItem.bodyToCharge.key.i : i
-                            const Chargekey = charguingItem.bodyToCharge.restart ? charguingItem.bodyToCharge.key : key
-                            const nombreToCharge = charguingItem.bodyToCharge.restart ? charguingItem.bodyToCharge.key.key.nombre : key.nombre
-                            const tipoToCharge = charguingItem.bodyToCharge.restart ? charguingItem.bodyToCharge.key.key.tipo : key.tipo
-                            const theKey = charguingItem.bodyToCharge.restart ? charguingItem.bodyToCharge.key.key : key
-                            const estructura = charguingItem.bodyToCharge.restart ? charguingItem.bodyToCharge.key.key.estructura : key.estructura
-                            estructura.map((keyEst, iEst) => {
-                                if ((!charguingItem.bodyToCharge.restart) || (charguingItem.bodyToCharge.restart && iEst === 0)) {
-                                    const KeyEst = charguingItem.bodyToCharge.restart ? charguingItem.bodyToCharge.key.keyEst : keyEst
-                                    const IEst = charguingItem.bodyToCharge.restart ? charguingItem.bodyToCharge.key.iEst : iEst
-                                    let howIndex = charguingItem.bodyToCharge.restart ? charguingItem.bodyToCharge.key.index : 0
-                                    const howMuch = charguingItem.bodyToCharge.restart ? howIndexAux + 1 : keyEst.sprites
-                                    const keyEstNombre = charguingItem.bodyToCharge.restart ? charguingItem.bodyToCharge.key.keyEst.nombre : keyEst.nombre
-                                    for (let howIndexAux = howIndex; howIndexAux < howMuch; howIndexAux++) {
-                                        let element = new Image
-                                        element.src = `/armas/${nombreToCharge}/${tipoToCharge}/body.png`
-                                        element.onerror = ((error) => {
-                                            let esquema = charguingItemEstructuraFalse
-                                            esquema.Init.load = false
-                                            mapeadas = mapeadas - 1
-                                            esquema.bodyToCharge.restart = true
-                                            esquema.bodyToCharge.load = true
-                                            esquema.bodyToCharge.key = { key: theKey, i: iI, keyEst: KeyEst, iEst: IEst, index: howIndexAux }
-                                            reTry({ msg: `${nombreToCharge}-${iI}-${keyEstNombre}-${IEst}`, error: error, esquema: esquema })
-                                        })
-                                        mapeadas = mapeadas + 1
-                                        element.onload = (() => {
-                                            sumarMas()
-                                            allPhotos.push({ img: element, id: `${nombreToCharge}-${keyEstNombre}-${IEst}` })
-                                            armas[nombreToCharge].body = (element)
-                                        })
-                                    }
-                                }
-                            })
-                        }
-                    })
-                    charguingItem.playerToCharge.load && playerToCharge.map((key, i) => {
-                        if ((!charguingItem.playerToCharge.restart) || (charguingItem.playerToCharge.restart && i === 0)) {
-                            const iI = charguingItem.playerToCharge.restart ? charguingItem.playerToCharge.key.i : i
-                            const nombreToCharge = charguingItem.playerToCharge.restart ? charguingItem.playerToCharge.key.key.nombre : key.nombre
-                            const theKey = charguingItem.playerToCharge.restart ? charguingItem.playerToCharge.key.key : key
-                            const estructura = charguingItem.playerToCharge.restart ? charguingItem.playerToCharge.key.key.estructura : key.estructura
-                            estructura.map((keyEst, iEst) => {
-                                if ((!charguingItem.playerToCharge.restart) || (charguingItem.playerToCharge.restart && iEst === 0)) {
-                                    const KeyEst = charguingItem.playerToCharge.restart ? charguingItem.playerToCharge.key.keyEst : keyEst
-                                    const IEst = charguingItem.playerToCharge.restart ? charguingItem.playerToCharge.key.iEst : iEst
-                                    let howIndex = charguingItem.playerToCharge.restart ? charguingItem.playerToCharge.key.index : 0
-                                    const howMuch = charguingItem.playerToCharge.restart ? howIndexAux + 1 : keyEst.sprites
-                                    const keyEstNombre = charguingItem.playerToCharge.restart ? charguingItem.playerToCharge.key.keyEst.nombre : keyEst.nombre
-                                    for (let howIndexAux = howIndex; howIndexAux < howMuch; howIndexAux++) {
-                                        let element = new Image
-                                        element.src = `/img/body/${nombreToCharge}-${nombreToCharge}-${keyEstNombre}-${howIndexAux}.png`
-                                        element.onerror = ((error) => {
-                                            let esquema = charguingItemEstructuraFalse
-                                            esquema.Init.load = false
-                                            mapeadas = mapeadas - 1
-                                            esquema.playerToCharge.restart = true
-                                            esquema.playerToCharge.load = true
-                                            esquema.playerToCharge.key = { key: theKey, i: iI, keyEst: KeyEst, iEst: IEst, index: howIndexAux }
-                                            reTry({ msg: `${nombreToCharge}-${iI}-${keyEstNombre}-${IEst}`, error: error, esquema: esquema })
-                                        })
-                                        mapeadas = mapeadas + 1
-                                        element.onload = (() => {
-                                            sumarMas()
-                                            allPhotos.push({ img: element, id: `${nombreToCharge}-${keyEstNombre}-${iI}` })
-                                            playerImg = {
-                                                ...playerImg,
-                                                [`${nombreToCharge}_${keyEstNombre}_${howIndexAux}`]: element
-                                            }
-                                        })
-                                    }
-                                }
-                            })
-                        }
-                    })
-                    charguingItem.enemigosToCharge.load && enemigosToCharge.map((key, i) => {
-                        if ((!charguingItem.enemigosToCharge.restart) || (charguingItem.enemigosToCharge.restart && i === 0)) {
-                            const iI = charguingItem.enemigosToCharge.restart ? charguingItem.enemigosToCharge.key.i : i
-                            const Chargekey = charguingItem.enemigosToCharge.restart ? charguingItem.enemigosToCharge.key : key
-                            const nombreToCharge = charguingItem.enemigosToCharge.restart ? charguingItem.enemigosToCharge.key.key.nombre : key.nombre
-                            const tipoToCharge = charguingItem.enemigosToCharge.restart ? charguingItem.enemigosToCharge.key.key.tipo : key.tipo
-                            const theKey = charguingItem.enemigosToCharge.restart ? charguingItem.enemigosToCharge.key.key : key
-                            const estructura = charguingItem.enemigosToCharge.restart ? charguingItem.enemigosToCharge.key.key.estructura : key.estructura
-                            estructura.map((keyEst, iEst) => {
-                                if ((!charguingItem.enemigosToCharge.restart) || (charguingItem.enemigosToCharge.restart && iEst === 0)) {
-                                    const KeyEst = charguingItem.enemigosToCharge.restart ? charguingItem.enemigosToCharge.key.keyEst : keyEst
-                                    const IEst = charguingItem.enemigosToCharge.restart ? charguingItem.enemigosToCharge.key.iEst : iEst
-                                    let howIndex = charguingItem.enemigosToCharge.restart ? charguingItem.enemigosToCharge.key.index : 0
-                                    const howMuch = charguingItem.enemigosToCharge.restart ? howIndexAux + 1 : keyEst.sprites
-                                    const keyEstNombre = charguingItem.enemigosToCharge.restart ? charguingItem.enemigosToCharge.key.keyEst.nombre : keyEst.nombre
-                                    for (let howIndexAux = howIndex; howIndexAux < howMuch; howIndexAux++) {
-                                        let element = new Image
-                                        element.src = `/enemigos/${nombreToCharge}/${nombreToCharge}-${tipoToCharge}-${keyEstNombre}-${howIndexAux}.png`
-                                        element.onerror = ((error) => {
-                                            let esquema = charguingItemEstructuraFalse
-                                            esquema.Init.load = false
-                                            mapeadas = mapeadas - 1
-                                            esquema.enemigosToCharge.restart = true
-                                            esquema.enemigosToCharge.load = true
-                                            esquema.enemigosToCharge.key = { key: theKey, i: iI, keyEst: KeyEst, iEst: IEst, index: howIndexAux }
-                                            reTry({ msg: `${nombreToCharge}-${iI}-${keyEstNombre}-${IEst}`, error: error, esquema: esquema })
-                                        })
-                                        mapeadas = mapeadas + 1
-                                        element.onload = (() => {
-                                            charguingItem.enemigosToCharge.restart && console.log('mas una', `${nombreToCharge}-${keyEstNombre}-${IEst}`);
-                                            sumarMas()
-                                            allPhotos.push({ img: element, id: `${nombreToCharge}-${keyEstNombre}-${IEst}` })
-                                            malosImg.push({
-                                                direccion: `${tipoToCharge}_${keyEstNombre}_${howIndexAux}`,
-                                                imagen: element
-                                            })
-                                        })
-                                    }
-                                }
-                            })
-                        }
-                        if (charguingItem.enemigosToCharge.restart) {
-                            return
-                        }
+                        }, 3000);
+                    }
 
-                    })
-                    charguingItem.proyectilesToCharge.load && proyectilesToCharge.map((key, i) => {
-                        if ((!charguingItem.proyectilesToCharge.restart) || (charguingItem.proyectilesToCharge.restart && i === 0)) {
-                            const iI = charguingItem.proyectilesToCharge.restart ? charguingItem.proyectilesToCharge.key.i : i
-                            const Chargekey = charguingItem.proyectilesToCharge.restart ? charguingItem.proyectilesToCharge.key : key
-                            const nombreToCharge = charguingItem.proyectilesToCharge.restart ? charguingItem.proyectilesToCharge.key.key.nombre : key.nombre
-                            const tipoToCharge = charguingItem.proyectilesToCharge.restart ? charguingItem.proyectilesToCharge.key.key.tipo : key.tipo
-                            const theKey = charguingItem.proyectilesToCharge.restart ? charguingItem.proyectilesToCharge.key.key : key
-                            const estructura = charguingItem.proyectilesToCharge.restart ? charguingItem.proyectilesToCharge.key.key.estructura : key.estructura
-                            estructura.map((keyEst, iEst) => {
-                                if ((!charguingItem.proyectilesToCharge.restart) || (charguingItem.proyectilesToCharge.restart && iEst === 0)) {
-                                    const KeyEst = charguingItem.proyectilesToCharge.restart ? charguingItem.proyectilesToCharge.key.keyEst : keyEst
-                                    const IEst = charguingItem.proyectilesToCharge.restart ? charguingItem.proyectilesToCharge.key.iEst : iEst
-                                    let howIndex = charguingItem.proyectilesToCharge.restart ? charguingItem.proyectilesToCharge.key.index : 0
-                                    const howMuch = charguingItem.proyectilesToCharge.restart ? howIndexAux + 1 : keyEst.sprites
-                                    const keyEstNombre = charguingItem.proyectilesToCharge.restart ? charguingItem.proyectilesToCharge.key.keyEst.nombre : keyEst.nombre
-                                    for (let howIndexAux = howIndex; howIndexAux < howMuch; howIndexAux++) {
-                                        let element = new Image
-                                        element.src = `/proyectiles/${tipoToCharge}-${nombreToCharge}-${keyEstNombre}-${howIndexAux}.png`
-                                        element.onerror = ((error) => {
-                                            let esquema = charguingItemEstructuraFalse
-                                            esquema.Init.load = false
-                                            mapeadas = mapeadas - 1
-                                            esquema.proyectilesToCharge.restart = true
-                                            esquema.proyectilesToCharge.load = true
-                                            esquema.proyectilesToCharge.key = { key: theKey, i: iI, keyEst: KeyEst, iEst: IEst, index: howIndexAux }
-                                            reTry({ msg: `${nombreToCharge}-${iI}-${keyEstNombre}-${IEst}`, error: error, esquema: esquema })
-                                        })
-                                        mapeadas = mapeadas + 1
-                                        element.onload = (() => {
-                                            sumarMas()
-                                            allPhotos.push({ img: element, id: `${nombreToCharge}-${keyEstNombre}-${iI}` })
-                                            proyectilesImg[tipoToCharge].push(element)
-                                        })
-                                    }
-                                }
-                            })
-                        }
-                    })
-                    charguingItem.onHitToCharge.load && onHitToCharge.map((key, i) => {
-                        if ((!charguingItem.onHitToCharge.restart) || (charguingItem.onHitToCharge.restart && i === 0)) {
-                            const iI = charguingItem.onHitToCharge.restart ? charguingItem.onHitToCharge.key.i : i
-                            const Chargekey = charguingItem.onHitToCharge.restart ? charguingItem.onHitToCharge.key : key
-                            const nombreToCharge = charguingItem.onHitToCharge.restart ? charguingItem.onHitToCharge.key.key.nombre : key.nombre
-                            const tipoToCharge = charguingItem.onHitToCharge.restart ? charguingItem.onHitToCharge.key.key.tipo : key.tipo
-                            const theKey = charguingItem.onHitToCharge.restart ? charguingItem.onHitToCharge.key.key : key
-                            const estructura = charguingItem.onHitToCharge.restart ? charguingItem.onHitToCharge.key.key.estructura : key.estructura
-                            estructura.map((keyEst, iEst) => {
-                                if ((!charguingItem.onHitToCharge.restart) || (charguingItem.onHitToCharge.restart && iEst === 0)) {
-                                    const KeyEst = charguingItem.onHitToCharge.restart ? charguingItem.onHitToCharge.key.keyEst : keyEst
-                                    const IEst = charguingItem.onHitToCharge.restart ? charguingItem.onHitToCharge.key.iEst : iEst
-                                    let howIndex = charguingItem.onHitToCharge.restart ? charguingItem.onHitToCharge.key.index : 0
-                                    const howMuch = charguingItem.onHitToCharge.restart ? howIndexAux + 1 : keyEst.sprites
-                                    const keyEstNombre = charguingItem.onHitToCharge.restart ? charguingItem.onHitToCharge.key.keyEst.nombre : keyEst.nombre
-                                    for (let howIndexAux = howIndex; howIndexAux < howMuch; howIndexAux++) {
-                                        let element = new Image
-                                        element.src = `/onHit/${nombreToCharge}/${nombreToCharge}-${tipoToCharge}-${keyEstNombre}-${howIndexAux}.png`
-                                        element.onerror = ((error) => {
-                                            let esquema = charguingItemEstructuraFalse
-                                            esquema.Init.load = false
-                                            mapeadas = mapeadas - 1
-                                            esquema.onHitToCharge.restart = true
-                                            esquema.onHitToCharge.load = true
-                                            esquema.onHitToCharge.key = { key: theKey, i: iI, keyEst: KeyEst, iEst: IEst, index: howIndexAux }
-                                            reTry({ msg: `${nombreToCharge}-${iI}-${keyEstNombre}-${IEst}`, error: error, esquema: esquema })
-                                        })
-                                        mapeadas = mapeadas + 1
-                                        element.onload = (() => {
-                                            sumarMas()
-                                            allPhotos.push({ img: element, id: `${nombreToCharge}-${keyEstNombre}-${iI}` })
-                                            onHitImg.push({ imagen: element, id: howIndexAux, direccion: keyEstNombre })
-                                        })
-                                    }
-                                }
-                            })
-                        }
-                    })
-                    charguingItem.killsToCharge.load && killsToCharge.map((key, i) => {
-                        if ((!charguingItem.killsToCharge.restart) || (charguingItem.killsToCharge.restart && i === 0)) {
-                            const iI = charguingItem.killsToCharge.restart ? charguingItem.killsToCharge.key.i : i
-                            const Chargekey = charguingItem.killsToCharge.restart ? charguingItem.killsToCharge.key : key
-                            const nombreToCharge = charguingItem.killsToCharge.restart ? charguingItem.killsToCharge.key.key.nombre : key.nombre
-                            const tipoToCharge = charguingItem.killsToCharge.restart ? charguingItem.killsToCharge.key.key.tipo : key.tipo
-                            const theKey = charguingItem.killsToCharge.restart ? charguingItem.killsToCharge.key.key : key
-                            const estructura = charguingItem.killsToCharge.restart ? charguingItem.killsToCharge.key.key.estructura : key.estructura
-                            estructura.map((keyEst, iEst) => {
-                                if ((!charguingItem.killsToCharge.restart) || (charguingItem.killsToCharge.restart && iEst === 0)) {
-                                    const KeyEst = charguingItem.killsToCharge.restart ? charguingItem.killsToCharge.key.keyEst : keyEst
-                                    const IEst = charguingItem.killsToCharge.restart ? charguingItem.killsToCharge.key.iEst : iEst
-                                    let howIndex = charguingItem.killsToCharge.restart ? charguingItem.killsToCharge.key.index : 0
-                                    const howMuch = charguingItem.killsToCharge.restart ? howIndexAux + 1 : keyEst.sprites
-                                    const keyEstNombre = charguingItem.killsToCharge.restart ? charguingItem.killsToCharge.key.keyEst.nombre : keyEst.nombre
-                                    for (let howIndexAux = howIndex; howIndexAux < howMuch; howIndexAux++) {
-                                        let element = new Image
-                                        element.src = `/kills/${nombreToCharge}/${tipoToCharge}-${nombreToCharge}-${keyEstNombre}-${howIndexAux}.png`
-                                        element.onerror = ((error) => {
-                                            let esquema = charguingItemEstructuraFalse
-                                            esquema.Init.load = false
-                                            mapeadas = mapeadas - 1
-                                            esquema.killsToCharge.restart = true
-                                            esquema.killsToCharge.load = true
-                                            esquema.killsToCharge.key = { key: theKey, i: iI, keyEst: KeyEst, iEst: IEst, index: howIndexAux }
-                                            reTry({ msg: `${nombreToCharge}-${iI}-${keyEstNombre}-${IEst}`, error: error, esquema: esquema })
-                                        })
-                                        mapeadas = mapeadas + 1
-                                        element.onload = (() => {
-                                            sumarMas()
-                                            allPhotos.push({ img: element, id: `${nombreToCharge}-${keyEstNombre}-${iI}` })
-                                            killsImg = {
-                                                ...killsImg,
-                                                [`${tipoToCharge}_${keyEstNombre}_${howIndexAux}`]: element
-                                            }
-                                        })
-                                    }
-                                }
-                            })
-                        }
-                    })
-                    charguingItem.accionesToCharge.load && accionesToCharge.map((key, i) => {
-                        if ((!charguingItem.accionesToCharge.restart) || (charguingItem.accionesToCharge.restart && i === 0)) {
-                            const iI = charguingItem.accionesToCharge.restart ? charguingItem.accionesToCharge.key.i : i
-                            const Chargekey = charguingItem.accionesToCharge.restart ? charguingItem.accionesToCharge.key : key
-                            const nombreToCharge = charguingItem.accionesToCharge.restart ? charguingItem.accionesToCharge.key.key.nombre : key.nombre
-                            const theKey = charguingItem.accionesToCharge.restart ? charguingItem.accionesToCharge.key.key : key
-                            const estructura = charguingItem.accionesToCharge.restart ? charguingItem.accionesToCharge.key.key.estructura : key.estructura
-                            estructura.map((keyEst, iEst) => {
-                                if ((!charguingItem.accionesToCharge.restart) || (charguingItem.accionesToCharge.restart && iEst === 0)) {
-                                    const KeyEst = charguingItem.accionesToCharge.restart ? charguingItem.accionesToCharge.key.keyEst : keyEst
-                                    const IEst = charguingItem.accionesToCharge.restart ? charguingItem.accionesToCharge.key.iEst : iEst
-                                    let howIndex = charguingItem.accionesToCharge.restart ? charguingItem.accionesToCharge.key.index : 0
-                                    const howMuch = charguingItem.accionesToCharge.restart ? howIndexAux + 1 : keyEst.sprites
-                                    const keyEstNombre = charguingItem.accionesToCharge.restart ? charguingItem.accionesToCharge.key.keyEst.nombre : keyEst.nombre
-                                    for (let howIndexAux = howIndex; howIndexAux < howMuch; howIndexAux++) {
-                                        let element = new Image
-                                        element.src = `/img/body/body-${nombreToCharge}-${keyEstNombre}-${howIndexAux}.png`
-                                        element.onerror = ((error) => {
-                                            let esquema = charguingItemEstructuraFalse
-                                            esquema.Init.load = false
-                                            mapeadas = mapeadas - 1
-                                            esquema.accionesToCharge.restart = true
-                                            esquema.accionesToCharge.load = true
-                                            esquema.accionesToCharge.key = { key: theKey, i: iI, keyEst: KeyEst, iEst: IEst, index: howIndexAux }
-                                            reTry({ msg: `${nombreToCharge}-${iI}-${keyEstNombre}-${IEst}`, error: error, esquema: esquema })
-                                        })
-                                        mapeadas = mapeadas + 1
-                                        element.onload = (() => {
-                                            sumarMas()
-                                            allPhotos.push({ img: element, id: `${nombreToCharge}-${keyEstNombre}-${iI}` })
-                                            playerImg = {
-                                                ...playerImg,
-                                                [`${nombreToCharge}_${keyEstNombre}_${howIndexAux}`]: element
-                                            }
-                                        })
-                                    }
-                                }
-                            })
-                        }
-                    })
-                    charguingItem.powerUpsToCharge.load && powerUpsToCharge.map((key, i) => {
-                        if ((!charguingItem.powerUpsToCharge.restart) || (charguingItem.powerUpsToCharge.restart && i === 0)) {
-                            const iI = charguingItem.powerUpsToCharge.restart ? charguingItem.powerUpsToCharge.key.i : i
-                            const Chargekey = charguingItem.powerUpsToCharge.restart ? charguingItem.powerUpsToCharge.key : key
-                            const nombreToCharge = charguingItem.powerUpsToCharge.restart ? charguingItem.powerUpsToCharge.key.key.nombre : key.nombre
-                            const tipoToCharge = charguingItem.powerUpsToCharge.restart ? charguingItem.powerUpsToCharge.key.key.tipo : key.tipo
-                            const theKey = charguingItem.powerUpsToCharge.restart ? charguingItem.powerUpsToCharge.key.key : key
-                            const estructura = charguingItem.powerUpsToCharge.restart ? charguingItem.powerUpsToCharge.key.key.estructura : key.estructura
-                            estructura.map((keyEst, iEst) => {
-                                if ((!charguingItem.powerUpsToCharge.restart) || (charguingItem.powerUpsToCharge.restart && iEst === 0)) {
-                                    const KeyEst = charguingItem.powerUpsToCharge.restart ? charguingItem.powerUpsToCharge.key.keyEst : keyEst
-                                    const IEst = charguingItem.powerUpsToCharge.restart ? charguingItem.powerUpsToCharge.key.iEst : iEst
-                                    let howIndex = charguingItem.powerUpsToCharge.restart ? charguingItem.powerUpsToCharge.key.index : 0
-                                    const howMuch = charguingItem.powerUpsToCharge.restart ? howIndexAux + 1 : keyEst.sprites
-                                    const keyEstNombre = charguingItem.powerUpsToCharge.restart ? charguingItem.powerUpsToCharge.key.keyEst.nombre : keyEst.nombre
-                                    for (let howIndexAux = howIndex; howIndexAux < howMuch; howIndexAux++) {
-                                        let element = new Image
-                                        element.src = `/powerUps/${nombreToCharge}/img/${tipoToCharge}-${nombreToCharge}-${keyEstNombre}-${howIndexAux}.png`
-                                        element.onerror = ((error) => {
-                                            let esquema = charguingItemEstructuraFalse
-                                            esquema.Init.load = false
-                                            mapeadas = mapeadas - 1
-                                            esquema.powerUpsToCharge.restart = true
-                                            esquema.powerUpsToCharge.load = true
-                                            esquema.powerUpsToCharge.key = { key: theKey, i: iI, keyEst: KeyEst, iEst: IEst, index: howIndexAux }
-                                            reTry({ msg: `${nombreToCharge}-${iI}-${keyEstNombre}-${IEst}`, error: error, esquema: esquema })
-                                        })
-                                        mapeadas = mapeadas + 1
-                                        element.onload = (() => {
-                                            sumarMas()
-                                            allPhotos.push({ img: element, id: `${nombreToCharge}-${keyEstNombre}-${iI}` })
-                                            playerImg = {
-                                                ...playerImg,
-                                                [`${nombreToCharge}_${keyEstNombre}_${howIndexAux}`]: element
-                                            }
-                                        })
-                                    }
-                                }
-                            })
-                        }
-                    })
-                    charguingItem.itemsToCharge.load && itemsToCharge.map((key, i) => {
-                        charguingItem.Init.load ? itemsImg = {
-                            ...itemsImg,
-                            [key.nombre]: []
-                        } : null
+                }
+                const charges = (charguingItem, theItemNumber) => {
+                    if (!getOut && !getedOut) {
 
-                        if ((!charguingItem.itemsToCharge.restart) || (charguingItem.itemsToCharge.restart && i === 0)) {
-                            const iI = charguingItem.itemsToCharge.restart ? charguingItem.itemsToCharge.key.i : i
-                            const Chargekey = charguingItem.itemsToCharge.restart ? charguingItem.itemsToCharge.key : key
-                            const nombreToCharge = charguingItem.itemsToCharge.restart ? charguingItem.itemsToCharge.key.key.nombre : key.nombre
-                            const tipoToCharge = charguingItem.itemsToCharge.restart ? charguingItem.itemsToCharge.key.key.tipo : key.tipo
-                            const theKey = charguingItem.itemsToCharge.restart ? charguingItem.itemsToCharge.key.key : key
-                            const estructura = charguingItem.itemsToCharge.restart ? charguingItem.itemsToCharge.key.key.estructura : key.estructura
-                            estructura.map((keyEst, iEst) => {
-                                if ((!charguingItem.itemsToCharge.restart) || (charguingItem.itemsToCharge.restart && iEst === 0)) {
-                                    const KeyEst = charguingItem.itemsToCharge.restart ? charguingItem.itemsToCharge.key.keyEst : keyEst
-                                    const IEst = charguingItem.itemsToCharge.restart ? charguingItem.itemsToCharge.key.iEst : iEst
-                                    let howIndex = charguingItem.itemsToCharge.restart ? charguingItem.itemsToCharge.key.index : 0
-                                    const howMuch = charguingItem.itemsToCharge.restart ? howIndexAux + 1 : keyEst.sprites
-                                    const keyEstNombre = charguingItem.itemsToCharge.restart ? charguingItem.itemsToCharge.key.keyEst.nombre : keyEst.nombre
-                                    for (let howIndexAux = howIndex; howIndexAux < howMuch; howIndexAux++) {
-
-                                        let element = new Image
-                                        element.src = `/items/${nombreToCharge}/img/${nombreToCharge}-${tipoToCharge}-${keyEstNombre}-${howIndexAux}.png`
-                                        element.onerror = ((error) => {
-                                            let esquema = charguingItemEstructuraFalse
-                                            esquema.Init.load = false
-                                            mapeadas = mapeadas - 1
-                                            esquema.itemsToCharge.restart = true
-                                            esquema.itemsToCharge.load = true
-                                            esquema.itemsToCharge.key = { key: theKey, i: iI, keyEst: KeyEst, iEst: IEst, index: howIndexAux }
-                                            reTry({ msg: `${nombreToCharge}-${iI}-${keyEstNombre}-${IEst}`, error: error, esquema: esquema })
-                                        })
-                                        mapeadas = mapeadas + 1
-                                        element.onload = (() => {
-                                            sumarMas()
-                                            allPhotos.push({ img: element, id: `${nombreToCharge}-${keyEstNombre}-${iI}` })
-                                            itemsImg[nombreToCharge].push({ direccion: keyEstNombre, estado: tipoToCharge, layer: howIndexAux, nombre: `${nombreToCharge}-${tipoToCharge}-${keyEstNombre}-${howIndexAux}`, imagen: element })
-                                        })
+                        charguingItem.Init.load && objToCharge.armasToCharge.map((key, i) => {
+                            armas = {
+                                ...armas,
+                                [key.nombre]: ArmasEstInit()
+                            }
+                        })
+                        charguingItem.Init.load && objToCharge.itemsToCharge.map((key, i) => {
+                            itemsImg = {
+                                ...itemsImg,
+                                [key.nombre]: []
+                            }
+                        })
+                        willChargeSound.map((firstKey, FirstI) => {
+                            charguingItem[`${firstKey}ToCharge`].load && objToCharge[`${firstKey}ToCharge`].map((key, i) => {
+                                const theName = `${firstKey}ToCharge`
+                                const suId = AudioNumber + 1
+                                const nameis = `audio-${suId}`
+                                if (!charguingItem[theName].restart) {
+                                    AudioNumber = AudioNumber + 1
+                                    if (!checkObj[nameis].revisado) {
+                                        checkObj[nameis].revisado = true
+                                        loadAudio(key, suId)
                                     }
                                 }
                             })
-                        }
-                    })
-                    charguingItem.obstaculosToCharge.load && obstaculosToCharge.map((key, i) => {
-                        key.estructura.map((keyEst, iEst) => {
-                            let otraImagen = new Image()
-                            const keyEstNombre = keyEst.nombre;
-                            otraImagen.src = `/img/obstaculos/${keyEstNombre}.png`
-                            otraImagen.onerror = ((error) => {
-                                erroresCarga.push({ msg: `${key.nombre}-${i}-${keyEstNombre}-${iEst}`, error: error })
+                        })
+
+                        willChargeImg.map((firstKey, FirstI) => {
+                            const theName = `${firstKey}ToCharge`
+                            charguingItem[theName].load && objToCharge[theName].map((key, i) => {
+                                if ((!charguingItem[theName].restart) || (charguingItem[theName].restart && i === 0)) {
+                                    const iI = charguingItem[theName].restart ? charguingItem[theName].key.i : i
+                                    const Chargekey = charguingItem[theName].restart ? charguingItem[theName].key : key
+                                    const nombreToCharge = charguingItem[theName].restart ? charguingItem[theName].key.key.nombre : key.nombre
+                                    const theKey = charguingItem[theName].restart ? charguingItem[theName].key.key : key
+                                    const estructura = charguingItem[theName].restart ? charguingItem[theName].key.key.estructura : key.estructura
+                                    const tipoToCharge = charguingItem.bodyToCharge.restart ? charguingItem.bodyToCharge.key.key.tipo : key.tipo
+                                    estructura.map((keyEst, iEst) => {
+                                        if ((!charguingItem[theName].restart) || (charguingItem[theName].restart && iEst === 0)) {
+                                            const KeyEst = charguingItem[theName].restart ? charguingItem[theName].key.keyEst : keyEst
+                                            const IEst = charguingItem[theName].restart ? charguingItem[theName].key.iEst : iEst
+                                            const howIndex = charguingItem[theName].restart ? charguingItem[theName].key.index : 0
+                                            const howMuch = charguingItem[theName].restart ? howIndex + 1 : keyEst.sprites
+                                            const keyEstNombre = charguingItem[theName].restart ? charguingItem[theName].key.keyEst.nombre : keyEst.nombre
+                                            for (let howIndexAux = howIndex; howIndexAux < howMuch; howIndexAux++) {
+                                                const suId = charguingItem[theName].restart ? theItemNumber : itemNumber + 1
+                                                introImg(firstKey, theName, charguingItem, iI, Chargekey, nombreToCharge, theKey, estructura, KeyEst, IEst, howMuch, keyEstNombre, howIndex, howIndexAux, tipoToCharge, suId)
+                                            }
+                                        }
+                                    })
+                                }
                             })
-                            mapeadas = mapeadas + 1
-                            otraImagen.onload = (() => {
-                                sumarMas()
-                                allPhotos.push({ img: otraImagen, id: `${key.nombre}-${keyEstNombre}-${i}` })
-                                obst.push(otraImagen)
-                            })
-                        }
-                        )
-                    })
-                    if (charguingItem.Init.load) {
-                        setManyNeed(largoImgFinal + sfxToCharge.length)
+
+
+                        })
+
+
+                    }
+                    if (charguingItem.Init.load && !getedOut && !getOut) {
+                        setManyNeed(largoImgFinal + objToCharge.sfxToCharge.length)
                         setimgNeed(largoImgFinal)
                         const getBase64Image = (img) => {
                             let canvas = document.createElement("canvas");
@@ -586,99 +382,74 @@ const ChargeComponent = (props) => {
                         charguingItem.Init.load ? funciona = getBase64Image : null
                     }
                 }
+                if (!off && newEntry && !getedOut) {
+                    newEntry = false
+                    chargesCopy = charges
+                    chargesCopy(charguingItemEstructura)
+                    off = true
+
+                }
+                if ((parseInt((100 / (objToCharge.sfxToCharge.length + imgNeed)) * (manyImg + manyAudio)) === 100) && !notlog && !getedOut) {
+                    notlog = true
+                    setTimeout(() => {
+                        setTimeout(() => {
+                            let allSend = {
+                                sfx: allAudios, armas: armas, malosImg: malosImg, playerImg: playerImg, onHitImg: onHitImg, killsImg: killsImg, itemsImg: itemsImg, proyectilesImg: proyectilesImg, obst: obst
+                            }
+                            returnCharge(allSend)
+                            return () => { ac.abort(); inWork = false };
+                        }, 10);
+                        setCharged(true)
+                    }, 10);
+                }
+                if (allPhotos.length > 0 && !sinEmpezar && !getedOut) {
+                    sinEmpezar = true
+                    newImg()
+
+                }
             }
-            if (!off && newEntry && !getedOut) {
-                newEntry = false
-                chargesCopy = charges
-                chargesCopy(charguingItemEstructura)
-                off = true
-
-            }
-        }
-
-
-
-        if ((parseInt((100 / (sfxToCharge.length + imgNeed)) * (manyImg + manyAudio)) === 100) && !notlog) {
-            notlog = true
-            setTimeout(() => {
-                setTimeout(() => {
-                    let allSend = {
-                        sfx: allAudios, armas: armas, malosImg: malosImg, playerImg: playerImg, onHitImg: onHitImg, killsImg: killsImg, itemsImg: itemsImg, proyectilesImg: proyectilesImg, obst: obst
-                    }
-                    returnCharge(allSend)
-                }, 2000);
-                setCharged(true)
-            }, 1000);
-        }
-
-        if (allAudios.length > 0 && allPhotos.length > 0 && !sinEmpezar && !getedOut) {
-            sinEmpezar = true
-            newImg()
-
-        }
-    })
-    const reTry = (key) => {
-        setTimeout(() => {
-            if (key && key.esquema) {
-                chargesCopy(key.esquema)
-                console.log('entrando');
-            }
-        }, 2000)
-        console.log('trata');
+        })
     }
-  
 
-    /*         console.log(erroresCarga[notlog2 - 1], 'encarga');
-    */
-    /* if (off && !getedOut) {
-        setTimeout(() => {
-            if (!getedOut && !getOut && off && mapeadas > 0 && mapeadas >= largoImgFinal + sfxToCharge.length && (parseInt((100 / (sfxToCharge.length + largoImgFinal)) * (manyImg + manyAudio)) !== 100 && parseInt((100 / (sfxToCharge.length + largoImgFinal)) * (manyImg + manyAudio)) > 10)) {
-                off = false
-                console.log('eyyyy');
-                restart()
-            }
-        }, 10000);
-    } */
 
     return (
-        <>
-            {getOut ? <></>
-                :
-                <>{charged ? <>  <div className="IDiv-main column align-center justify-center">
-                    <h1>
-                        READY                </h1>
-                    <img
-                        src={randomImg}
-                        width='auto'
-                        height={'500px'}
-                        id={'randomImg'}
-                        alt={`loading`}
-                    />
-                </div> </> :
-                    <div className="IDiv-main column ">
-                        <h1>
-                            Total carga : {charged ? '100%' : parseInt((100 / (sfxToCharge.length + imgNeed)) * (manyImg + manyAudio)) > 0 ? parseInt((100 / (sfxToCharge.length + imgNeed)) * (manyImg + manyAudio)) : 0}%
-                            <br />
-                            Carga Imagenes:{parseInt((100 / imgNeed) * manyImg) > 0 ? parseInt((100 / imgNeed) * manyImg) : 0}% --- {manyImg} de {imgNeed}
 
-                            <br />
-                            Carga Audio:{parseInt((100 / sfxToCharge.length) * manyAudio) > 0 ? parseInt((100 / sfxToCharge.length) * manyAudio) : 0}%--- {manyAudio} de {sfxToCharge.length}
-                            <br />
-                        </h1>
-                        <img
-                            src={randomImg}
-                            width='auto'
-                            height={'500px'}
-                            id={'randomImg'}
-                            alt={`loading`}
-                        />
-                    </div>
-                }
+        <>{charged ? <>  <div className="IDiv-main column align-center justify-center">
+            <h1>
+                READY                </h1>
+            <ImageN
+                src={randomImg}
+                width={'500px'}
+                height={'500px'}
+                id={'randomImg'}
+                alt={`loading`}
 
-                </>
-            }
+            />
+        </div> </> :
+            <div className="IDiv-main column ">
+                <h1>
+                    Total carga : {charged ? '100%' : parseInt((100 / (objToCharge.sfxToCharge.length + imgNeed)) * (manyImg + manyAudio)) > 0 ? parseInt((100 / (objToCharge.sfxToCharge.length + imgNeed)) * (manyImg + manyAudio)) : 0}%
+                    <br />                            Carga Imagenes:{parseInt((100 / imgNeed) * manyImg) > 0 ? parseInt((100 / imgNeed) * manyImg) : 0}% --- {manyImg} de {imgNeed}
+
+                    <br />
+                    Carga Audio:{parseInt((100 / objToCharge.sfxToCharge.length) * manyAudio) > 0 ? parseInt((100 / objToCharge.sfxToCharge.length) * manyAudio) : 0}%--- {manyAudio} de {objToCharge.sfxToCharge.length}
+                    <br />
+                </h1>
+                <ImageN
+                    src={randomImg}
+                    width={'500px'}
+                    height={'500px'}
+                    id={'randomImg'}
+                    alt={`loading`}
+                />
+            </div>
+        }
+
         </>
 
     )
+
+
+
 }
 export default ChargeComponent

@@ -4,7 +4,7 @@ const InteractiveBotonCanvas = (props) => {
         <>
             <div className="interactivebtnCanvas">
                 <div className="btn-layer">
-                    <button className={`btn-interactivo btn-interactivo-x-${parseInt(drop.posX)} btn-interactivo-y-${parseInt(drop.posY)}`}
+                    <button className={`btn-interactivo btn-interactivo-x-${140} btn-interactivo-y-${parseInt(drop.posY)}`}
                         onClick={(e) => { e.preventDefault; comer() }
                         }>
                         COMER ?

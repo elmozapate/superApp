@@ -30,7 +30,6 @@ const devolver = () => {
         }
 
     })
-    console.log(aDevolver.length);
     return aDevolver
 
 }
@@ -48,7 +47,6 @@ export const aCargar2 = {
         proyectiles: [{ nombre: 'bebe', tipo: 'malos', estructura: [{ nombre: 'xb', sprites: 1 }, { nombre: 'xf', sprites: 1 }] }, { nombre: 'bala', tipo: 'balas', estructura: [{ nombre: 'xb', sprites: 1 }, { nombre: 'xf', sprites: 1 }] }],
         onHit: [{ nombre: 'rata', tipo: 'onHit', estructura: [{ nombre: 'xb', sprites: 5 }, { nombre: 'xf', sprites: 5 }] }],
         kills: [{ nombre: 'explocion', tipo: 'explocion', estructura: [{ nombre: 'xf', sprites: 1 }] }],
-        onHit: [{ nombre: 'rata', tipo: 'onHit', estructura: [{ nombre: 'xb', sprites: 5 }, { nombre: 'xf', sprites: 5 }] }],
         enemigos: [{ tipo: 'joshi', nombre: 'joshi', estructura: [{ nombre: 'xf', sprites: 1 }, { nombre: 'xb', sprites: 1 }, { nombre: 'xs', sprites: 1 }] }, { tipo: 'die', nombre: 'joshi', estructura: [{ nombre: 'xf', sprites: 1 }, { nombre: 'xb', sprites: 1 }] }, { tipo: 'spirit', nombre: 'joshi', estructura: [{ nombre: 'xf', sprites: 1 }, { nombre: 'xb', sprites: 1 }] }, { tipo: 'hit', nombre: 'joshi', estructura: [{ nombre: 'xf', sprites: 1 }, { nombre: 'xb', sprites: 1 }] }, { tipo: 'evil', nombre: 'joshi', estructura: [{ nombre: 'xf', sprites: 5 }, { nombre: 'xb', sprites: 5 }] }, { tipo: 'onHit', nombre: 'joshi', estructura: [{ nombre: 'xf', sprites: 5 }, { nombre: 'xb', sprites: 5 }] }],
         acciones: [{ nombre: 'die', estructura: [{ nombre: 'xf', sprites: 1 }, { nombre: 'xb', sprites: 1 }] }, { nombre: 'eat', estructura: [{ nombre: 'xf', sprites: 4 }, { nombre: 'xb', sprites: 4 }] }, { nombre: 'cuted', estructura: [{ nombre: 'xf', sprites: 4 }, { nombre: 'xb', sprites: 4 }] }],
         player: [{ nombre: 'body', tipo: 'body', estructura: [{ nombre: 'xs', sprites: 4 }, { nombre: 'ki', sprites: 2 }, { nombre: 'xf', sprites: 4 }, { nombre: 'xb', sprites: 4 }, { nombre: 'xj', sprites: 4 }, { nombre: 'xd', sprites: 4 }] }],

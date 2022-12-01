@@ -5,7 +5,7 @@ export const CrearItems = (newArray, posX, floor) => {
         layerOnDisplay: 'all',
         imagen: [],
         type: 'hpc',
-        posX: 0,
+        posX: 1,
         posY: 0,
         widthX: 0,
         heightY: 0,
@@ -44,14 +44,15 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
     }
     let array = []
     for (let index = 0; index < 11; index++) {
-        let objCant = index === 0 ? (3 > level ? 1 : 2) : level < 3 ? 1 : level < 5 ? 2 : 3
+        let objCant = index === 0 ? (3 > level ? 1 : 2) : level < 2 ? 1 : level < 5 ? 2 : 3
         const distanceRange = maxDistance()
         let ejeX = 0
         for (let index2 = 0; index2 < objCant; index2++) {
             const max = ((300) / (level < 3 ? 1 : level < 5 ? 2 : 3)) - 20;
             const min = 20;
             const range = max - min + 1;
-            const trys = (distanceRange * index2) + (Math.random() * range) + min;
+            const whiling = (distanceRange * index2) + (Math.random() * range) + min
+            const trys = whiling > 0 && whiling < 290 ? whiling : 290;
             ejeX = index === 0 ? trys + 60 : trys
             const randomNumber = parseInt(Math.floor(Math.random() * 2))
             const element = {
@@ -90,9 +91,12 @@ export const CrearItemsWorld = (newArray, level, imagen, floor) => {
                 }
             }
             let randomDireccion = parseInt(Math.random() * 2)
+            let returnId = () => {
+                return (parseInt(Math.random() * 988888888))
+            }
             if (index2 === 0 || index2 === 2) {
                 const malo = {
-                    id: `${parseInt(Math.random() * 988888888)}-malo`,
+                    id: `${index}${index2}${returnId()}-malo`,
                     hitDamage: 0,
                     state: 'live',
                     lazy: { state: false, counter: 0, fotograma: 0, layer: 0 },

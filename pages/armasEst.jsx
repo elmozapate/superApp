@@ -49,3 +49,20 @@ export const armasEst = (caso) => {
     }
 }
 export default armasEst
+export const ArmasEstInit = () => {
+    return (
+        {
+                onHit: false,
+                damage: 2,
+                sound: [],
+                type: 'strike',
+                speed: 1,
+                state: false,
+                fotograma: 0,
+                layer: 0,
+                onEnd: false,
+                kills: [],
+                body: [],
+                imagenes: []
+        })
+}

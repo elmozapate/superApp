@@ -163,7 +163,7 @@ const Colisonador = async (Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type, 
 
         } else {
             Objeto1.map((key, iss) => {
-                if (parseInt(key.layerOnDisplay)===parseInt(inLayer)) {
+                if (parseInt(key.layerOnDisplay) === parseInt(inLayer)) {
                     for (let i = 0; i < parseInt(key.heightY); i++) {
                         for (let index = 0; index < parseInt(key.widthX); index++) {
                             const element = {
@@ -174,41 +174,45 @@ const Colisonador = async (Objeto1, Objeto2, Objeto3, aux, comprobe, ctx, type, 
                             };
                             objeto1.push(element)
                         }
-                    } 
+                    }
                 }
-                
+
             })
         }
 
         if (comprobe) {
-            const puntosNulos = type === 'malo' ? (Objeto2[0].canMove.direccion === 'xf' ? JoshiXf() : JoshiXb()) : type === 'proy' ?
-                (Objeto2[0].direccion === 'xf' ? BebeXf() : BebeXb()) : SierraXf();
+          
             Objeto2.map((key, iss) => {
-                for (let i = 0; i < puntosNulos.length; i++) {
-                    const lugarNull = puntosNulos[i]
-                    for (let index = 0; index < parseInt(key.widthX); index++) {
-                        const element = {
-                            posX: parseInt(index + key.posX),
-                            posY: parseInt(key.posY + i),
-                            id: key.id,
-                            pos: iss
-                        };
-                        if (lugarNull.length === 3) {
-                            if (((index < lugarNull[2][1]) && (index > lugarNull[2][0])) || index < lugarNull[0] || index > parseInt(key.widthX) - lugarNull[1]) {
-                                regletaNull.push(element)
-                            } else {
-                                objeto2.push(element)
+                if ((type === 'malo' && key.state !== 'die') || type !== 'malo') {
+                    const puntosNulos = type === 'malo' ? (key.canMove.direccion === 'xf' ? JoshiXf() : JoshiXb()) : type === 'proy' ?
+                    (key.direccion === 'xf' ? BebeXf() : BebeXb()) : SierraXf();
+                    for (let i = 0; i < puntosNulos.length; i++) {
+                        const lugarNull = puntosNulos[i]
+                        for (let index = 0; index < parseInt(key.widthX); index++) {
+                            const element = {
+                                posX: parseInt(index + key.posX),
+                                posY: parseInt(key.posY + i),
+                                id: key.id,
+                                pos: iss
+                            };
+                            if (lugarNull.length === 3) {
+                                if (((index < lugarNull[2][1]) && (index > lugarNull[2][0])) || index < lugarNull[0] || index > parseInt(key.widthX) - lugarNull[1]) {
+                                    regletaNull.push(element)
+                                } else {
+                                    objeto2.push(element)
 
-                            }
-                        } else
-                            if (index < lugarNull[0] || index > parseInt(key.widthX) - lugarNull[1]) {
-                                regletaNull.push(element)
-                            } else {
-                                objeto2.push(element)
-                            }
+                                }
+                            } else
+                                if (index < lugarNull[0] || index > parseInt(key.widthX) - lugarNull[1]) {
+                                    regletaNull.push(element)
+                                } else {
+                                    objeto2.push(element)
+                                }
+                        }
                     }
                 }
             })
+
         } else {
             Objeto2.map((key, iss) => {
                 for (let i = 0; i < key.heightY; i++) {

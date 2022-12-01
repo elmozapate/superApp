@@ -26,16 +26,18 @@ const PowerUps = (props) => {
                         {itemsGet.array.map((key, i) => {
                             if (key.nombre !== 'ninguno') {
                                 return (<>
-                                    <div className="btn-game-menu-content">
-                                        <div className="info-game-box">
-                                            <h2 className="fontcolor-white">{key.nombre}</h2>
-                                            <button className={key.active ? 'bgcolorInedit-green' : ''} onClick={(e) => { e.preventDefault(); setObject(`items-${key.nombre}`, key.active ? false : true, 'powerUps') }}
+                                    <div  key={`itemsGcascaset-${i}`} className="btn-game-menu-content">
+                                        <div key={`dfdfdcscsaivs-${i}`} className="info-game-box">
+                                            <h2 key={`dfdacsacasaffh2s-${i}`} className="fontcolor-white">{key.nombre}</h2>
+                                            <button key={`dfcsacdffbtns-${i}`} className={key.active ? 'bgcolorInedit-green' : ''} onClick={(e) => { e.preventDefault(); setObject(`items-${key.nombre}`, key.active ? false : true, 'powerUps') }}
                                             >
                                                 Estado: {key.active ? 'Activado' : 'En espera'}
                                             </button>
                                         </div>
 
-                                        <img src={`/items/${key.nombre}/img/btn.png`}
+                                        <img 
+                                        key={`powcsacerUpsGesat-${i}`}
+                                        src={`/items/${key.nombre}/img/btn.png`}
                                             alt={`items-${key.nombre}-btn`}
                                             width={onMobil ? '60px' : '100px'}
                                             height={onMobil ? '60px' : '100px'} />
@@ -51,11 +53,11 @@ const PowerUps = (props) => {
                         {powerUpsGet.map((key, i) => {
                             return (
                                 <>
-                                    <div className="btn-game-menu-content">
+                                    <div key={`powerUcsaspsGet-${i}`} className="btn-game-menu-content">
 
-                                        <div className="info-game-box">
-                                            <h2 className="fontcolor-white">{key.nombre}</h2>
-                                            <button className={key.active ? 'bgcolorInedit-green' : ''}
+                                        <div key={`fdfdfv-${i}`} className="info-game-box">
+                                            <h2 key={`dfdfsfh1-${i}`} className="fontcolor-white">{key.nombre}</h2>
+                                            <button key={`dfdfcfbtn-${i}`}  className={key.active ? 'bgcolorInedit-green' : ''}
                                                 onClick={(e) => { e.preventDefault(); setObject(`powerUps-${key.nombre}`, key.active ? 'normal' : (key.nombre), 'powerUps') }}
                                             >
                                                 Estado: {key.active ? key.nombre === 'inmortal' ? 'Activado' : 'Fumadisimo' : key.nombre !== 'inmortal' ? 'Sin Fumar' : 'En espera'}
@@ -63,7 +65,9 @@ const PowerUps = (props) => {
                                             </button>
                                         </div>
 
-                                        <img src={`/powerUps/${key.nombre}/img/btn.png`}
+                                        <img 
+                                        key={`sadads-${i}`}
+                                        src={`/powerUps/${key.nombre}/img/btn.png`}
                                             alt={`powerUps-${key.nombre}-btn`}
                                             width={onMobil ? '60px' : '100px'}
                                             height={onMobil ? '60px' : '100px'} />

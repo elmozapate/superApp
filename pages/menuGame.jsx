@@ -12,7 +12,7 @@ const MenuGame = (props) => {
     }, armasGet = {
         enUso: 'ninguna',
         array: []
-    },gunsGet = {
+    }, gunsGet = {
         enUso: 'ninguna',
         array: []
     }, windowOpen = {
@@ -63,6 +63,7 @@ const MenuGame = (props) => {
                                     {powerUpsGet.map((key, i) => {
                                         return (
                                             <div
+                                                key={`idid${i}`}
                                                 className={key.active ? ' bgcolor-green' : 'bgcolor-red'}
                                                 onClick={(e) => {
                                                     e.preventDefault();
@@ -72,6 +73,8 @@ const MenuGame = (props) => {
                                                 }}
                                             >
                                                 <img src={`/powerUps/${key.nombre}/img/btn.png`}
+                                                    key={`adfs-${i}`}
+
                                                     alt={`powerUps-${key.nombre}-btn`}
                                                     width={onMobil ? '40px' : '70px'}
                                                     height={onMobil ? '40px' : '70px'} />
@@ -88,8 +91,12 @@ const MenuGame = (props) => {
                                     if (key.active) {
                                         return (
                                             <div
+                                                key={`labelClossffgfe-${i}`}
+
                                                 onClick={(e) => { e.preventDefault(); setPowerUpsLabel(!powerUpsLabel) }}>
                                                 <img src={`/powerUps/${key.nombre}/img/btn.png`}
+                                                    key={`adadda-${i}`}
+
                                                     alt={`powerUps-${key.nombre}-btn`}
                                                     width={onMobil ? '40px' : '70px'}
                                                     height={onMobil ? '40px' : '70px'} />
@@ -116,9 +123,10 @@ const MenuGame = (props) => {
                                 {!itemsLabel ?
                                     itemsGet.array.map((key, i) => {
                                         if (key.active) {
-                                            return (<div onClick={(e) => { e.preventDefault(); setItemsLabel(!itemsLabel) }}
+                                            return (<div key={`adssfsffsf-${i}`}
+                                                onClick={(e) => { e.preventDefault(); setItemsLabel(!itemsLabel) }}
                                             > <img
-                                                    id={`labelClose`}
+                                                    key={`labelClossffe-${i}`}
                                                     src={`/items/${key.nombre}/img/btn.png`}
                                                     alt={`items-${key.nombre}-btn`}
                                                     width={onMobil ? '40px' : '70px'}
@@ -127,17 +135,18 @@ const MenuGame = (props) => {
                                     })
                                     :
                                     <>{
-                                        <div className="label-armas"
+                                        <div  className="label-armas"
                                         >
                                             {itemsGet.array.map((key2, i2) => {
                                                 return (<div
+                                                    key={`labelClosfdfe-${i2}`} 
                                                     className={key2.active ? 'bgcolor-green' : 'bgcolor-red'}
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         setObject(`items-${key2.nombre}`, key2.active ? false : true, 'items', 'barra');
                                                     }}>
                                                     <img
-                                                        id={`label-${i2}`}
+                                                        key={`fssffff-${i2}`}
 
                                                         src={`/items/${key2.nombre}/img/btn.png`}
                                                         alt={`items-${key2.nombre}-btn`}
@@ -172,9 +181,10 @@ const MenuGame = (props) => {
                                 {!gunsLabel ?
                                     gunsGet.array.map((key, i) => {
                                         if (key.active) {
-                                            return (<div onClick={(e) => { e.preventDefault(); setGunsLabel(!gunsLabel) }}
+                                            return (<div key={`dfdfs-${i}`}
+                                                onClick={(e) => { e.preventDefault(); setGunsLabel(!gunsLabel) }}
                                             > <img
-                                                    id={`labelCloseGuns`}
+                                                    key={`labelClosegun-${i}`}
                                                     src={`/guns/${key.nombre}/img/btn.png`}
                                                     alt={`guns-${key.nombre}-btn`}
                                                     width={onMobil ? '40px' : '70px'}
@@ -187,13 +197,14 @@ const MenuGame = (props) => {
                                         >
                                             {gunsGet.array.map((key2, i2) => {
                                                 return (<div
+                                                    key={`sdsdsfsfc-${i2}`}
                                                     className={key2.active ? 'bgcolor-green' : 'bgcolor-red'}
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         setObject(`guns-${key2.nombre}`, key2.active ? false : true, 'guns', 'barra');
                                                     }}>
                                                     <img
-                                                        id={`label-${i2}`}
+                                                        key={`labdsssdel-${i2}`}
 
                                                         src={`/guns/${key2.nombre}/img/btn.png`}
                                                         alt={`guns-${key2.nombre}-btn`}
@@ -228,13 +239,14 @@ const MenuGame = (props) => {
                                 >
                                     {armasGet.array.map((key2, i2) => {
                                         return (<div
+                                            key={`adcacasdsadad-${i2}`}
                                             className={key2.active ? 'bgcolor-green' : 'bgcolor-red'}
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 setObject(`armas-${key2.nombre}`, key2.active ? false : true, 'armas', 'barra');
                                             }}>
                                             <img
-                                                id={`label-${i2}`}
+                                                key={`dfdsfsd-${i2}`}
 
                                                 src={`/armas/${key2.nombre}/img/btn.png`}
                                                 alt={`armas-${key2.nombre}-btn`}
@@ -251,13 +263,13 @@ const MenuGame = (props) => {
                                         <>{
 
                                             key.active ?
-                                                <div onClick={(e) => { e.preventDefault(); setArmasLabel(!armasLabel) }}
-                                                > <img
-                                                        id={`labelClose`}
-                                                        src={`/armas/${key.nombre}/img/btn.png`}
-                                                        alt={`armas-${key.nombre}-btn`}
-                                                        width={onMobil ? '40px' : '70px'}
-                                                        height={onMobil ? '40px' : '70px'} /></div> : <></>
+                                                <div key={`dsdsd-${i}`}
+                                                    onClick={(e) => { e.preventDefault(); setArmasLabel(!armasLabel) }}
+                                                > <img key={`ladsdsbelClose-${i}`}
+                                                    src={`/armas/${key.nombre}/img/btn.png`}
+                                                    alt={`armas-${key.nombre}-btn`}
+                                                    width={onMobil ? '40px' : '70px'}
+                                                    height={onMobil ? '40px' : '70px'} /></div> : <></>
                                         }
 
                                         </>
@@ -347,7 +359,7 @@ const MenuGame = (props) => {
                                             </div>
                                         </div> : <>
                                             {
-                                                windowOpen.selected ===  'mapa' ? <><Mapa volver={getBack} setFullScreen={setFullScreen} requestFullScreen={requestFullScreen} reboot={reboot} setGameStart={setGameStart} player={player} onMobil={onMobil} fullScreen={fullScreen} gameStart={gameStart} setProps={setProps} playerStage={playerStage} playerTime={playerTime} playerVidas={playerVidas} volumenSet={volumenSet} volumenLevel={volumenLevel} efectVolumen={efectVolumen} volumenEfectsLevel={volumenEfectsLevel} /></> : <></>
+                                                windowOpen.selected === 'mapa' ? <><Mapa volver={getBack} setFullScreen={setFullScreen} requestFullScreen={requestFullScreen} reboot={reboot} setGameStart={setGameStart} player={player} onMobil={onMobil} fullScreen={fullScreen} gameStart={gameStart} setProps={setProps} playerStage={playerStage} playerTime={playerTime} playerVidas={playerVidas} volumenSet={volumenSet} volumenLevel={volumenLevel} efectVolumen={efectVolumen} volumenEfectsLevel={volumenEfectsLevel} /></> : <></>
                                             }
                                             {
                                                 windowOpen.selected === 'armas' ? <><Armas gunsGet={gunsGet} armasGet={armasGet} setObject={setObject} volver={getBack} setFullScreen={setFullScreen} requestFullScreen={requestFullScreen} reboot={reboot} setGameStart={setGameStart} player={player} onMobil={onMobil} fullScreen={fullScreen} gameStart={gameStart} setProps={setProps} playerStage={playerStage} playerTime={playerTime} playerVidas={playerVidas} volumenSet={volumenSet} volumenLevel={volumenLevel} efectVolumen={efectVolumen} volumenEfectsLevel={volumenEfectsLevel} /></> : <></>

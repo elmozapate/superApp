@@ -28,15 +28,19 @@ const Armas = (props) => {
                                 if (key.nombre !== 'desArmados') {
                                     return (<>
 
-                                        <div className="btn-game-menu-content">
-                                            <div className="info-game-box">
-                                                <h2 className="fontcolor-white">{key.nombre}</h2>
-                                                <button className={key.active ? 'bgcolorInedit-green' : ''} onClick={(e) => { e.preventDefault(); setObject(`armas-${key.nombre}`, key.active ? false : true, 'armas') }}
+                                        <div
+                                            key={`armasGet-${i}`}
+                                            className="btn-game-menu-content">
+                                            <div key={`adfsdascsfdffh2s-${i}`} className="info-game-box">
+                                                <h2 key={`adfsacsdsdfdffh2s-${i}`} className="fontcolor-white">{key.nombre}</h2>
+                                                <button key={`adqwdwfsdfdffh2s-${i}`} className={key.active ? 'bgcolorInedit-green' : ''} onClick={(e) => { e.preventDefault(); setObject(`armas-${key.nombre}`, key.active ? false : true, 'armas') }}
                                                 >                                        Estado: {key.active ? 'Activado' : 'En espera'}
                                                 </button>
                                             </div>
 
-                                            <img src={`/armas/${key.nombre}/img/btn.png`}
+                                            <img 
+                                            key={`dasdasdcassaasas-${i}`}
+                                            src={`/armas/${key.nombre}/img/btn.png`}
                                                 alt={`armas-${key.nombre}-btn`}
                                                 width={onMobil ? '60px' : '100px'}
                                                 height={onMobil ? '60px' : '100px'} />
@@ -53,21 +57,23 @@ const Armas = (props) => {
                         {gunsGet.array.map((key, i) => {
                             if (key.nombre !== 'ninguna') {
                                 return (<>
-                                    <div className="btn-game-menu-content">
-                                        <div className="info-game-box">
-                                            <h2 className="fontcolor-white">{key.nombre}</h2>
-                                            <button className={key.active ? 'bgcolorInedit-green' : ''} onClick={(e) => { e.preventDefault(); setObject(`guns-${key.nombre}`, key.active ? false : true, 'armas') }}
+                                    <div                                              key={`gunsGet-${i}`}
+ className="btn-game-menu-content">
+                                        <div key={`btndfsacadffh2s-${i}`} className="info-game-box">
+                                            <h2  key={`btneevdcfdffh2s-${i}`}  className="fontcolor-white">{key.nombre}</h2>
+                                            <button  key={`btqcandfdffh2s-${i}`}className={key.active ? 'bgcolorInedit-green' : ''} onClick={(e) => { e.preventDefault(); setObject(`guns-${key.nombre}`, key.active ? false : true, 'armas') }}
                                             >
                                                 Estado: {key.active ? 'Activado' : 'En espera'}
                                             </button>
                                         </div>
                                         <Image
-                            src={`/guns/${key.nombre}/img/btn.png`}
-                            alt={`guns-${key.nombre}-btn`}
+                                        key={`powerasfsacUpsGet-${i}`}
+                                            src={`/guns/${key.nombre}/img/btn.png`}
+                                            alt={`guns-${key.nombre}-btn`}
                                             width={onMobil ? '60px' : '100px'}
                                             height={onMobil ? '60px' : '100px'}
-                        />
-                                        
+                                        />
+
 
                                     </div>
 

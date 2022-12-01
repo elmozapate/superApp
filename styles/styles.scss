@@ -1809,27 +1809,6 @@ h1 {
     }
 }
 
-@for $i from 1 through 10 {
-    .lienzo-#{$i} {
-        max-width: calc( (100vh * (16/9)));
-
-        user-select: none;
-        -webkit-user-select: none;
-        z-index: 10;
-        background: url("../public/img/canvasBg.png");
-        position: absolute;
-        top: 0px;
-        left:  (((-100vh *(16/9)) * ( $i / 1)));
-    }
-    .lienzo-#{"_"}#{$i} {
-        max-width: calc( (100vh * (16/9)));
-
-        background: url("../public/img/canvasBg.png");
-        position: absolute;
-        top: 0px;
-        left: (105px * ($i / 10));
-    }
-}
 .lienzo--1 {
     user-select: none;
     -webkit-user-select: none;
@@ -1838,31 +1817,22 @@ h1 {
     position: absolute;
     top: 0px;
     left: ((-10vw * (-1 / 1)));
-    max-width: calc( (100vh * (16/9)));
-
 }
 .lienzo-11 {
     z-index: 10;
     background: url("../public/img/canvasBg.png");
     position: absolute;
     top: 0px;
-    left: ((100vh * ((16/9) *  -11)));
+    left: (-1100vw);
     user-select: none;
     -webkit-user-select: none;
-    height: ((100vh * (1 / 1)));
-    max-width: calc( (100vh * (16/9)));
-
 }
 @for $r from 400 through 2000 {
     .lienzoW-#{$r} {
-        width: calc((100vh ) * ((16/9)* (11 / 1)) + 50vw);
-        max-width: calc((100vh )*( (16/9) * (11 / 1)) + 50vw);
-        height: ((100vh * (1 / 1)));
-
+        width: ((10vw * (100 / 1))+150vw);
     }
     .lienzoH-#{$r} {
         height: 100vh;
-
     }
 
     .lienzo-final-#{$r} {
@@ -1871,8 +1841,6 @@ h1 {
         position: absolute;
         left: 0;
         width: 100vw;
-                max-width: calc( (100vh * (16/9)));
-
         height: 100vh;
     }
 }
@@ -1887,25 +1855,14 @@ h1 {
     left: 0px;
     width: 100vw;
     height: 100vh;
-    max-width: calc( (100vh * (16/9)))!important;
-
-
 }
 .relativeCanvasContainer {
     user-select: none;
     -webkit-user-select: none;
     position: relative;
     height: 100vh;
+    width: 100vw;
     overflow: hidden;
-    max-width: calc( (100vh * (16/9)));
-    min-width: calc( (100vh * (16/9)));
-
-}
-.max-wiiii{
-    position: relative;
-    height: 100vh;
-    max-width: calc( (100vh * (16/9)))!important;
-    min-width: calc( (100vh * (16/9)))!important;
 }
 .botonesCanvas {
     user-select: none;
@@ -1918,9 +1875,7 @@ h1 {
 }
 
 .lienzoHM {
-    max-width: calc( (100vw * (16/9)))!important;
-
-    height: ((100vh * (1 / 1)));
+    height: ((100vh * (1 / 1))-15vh);
 }
 
 .action {
@@ -2011,10 +1966,11 @@ h1 {
     background: url("../public/img/bg/fondo-juego.png");
 }
 .bgGame-mobil {
+    min-width: 100vw;
     min-height: 100vh;
     width: 100vw;
     height: 100vh;
-    max-width: calc( (100vh * (16/9)));
+    max-width: 100vw;
     max-height: 100vh;
     .game-opt {
         transform: scale(0.8);
@@ -2071,7 +2027,6 @@ h1 {
     min-width: 100vw;
     height: 100vh;
     width: 100vw;
-    
     justify-content: center;
     align-items: center;
     background: rgb(238, 174, 202) !important;
@@ -2112,8 +2067,6 @@ h1 {
 
     position: absolute;
     width: 100vw;
-    max-width: calc( (100vh * (16/9)))!important;
-    min-width: calc( (100vh * (16/9)))!important;
     display: flex;
     top: 10vh;
     left: 0px;
@@ -2453,7 +2406,7 @@ h1 {
         }
     }
 }
-.labelBarra-mobil{
+.labelBarra-mobil {
     width: 60px !important;
     button {
         min-width: 60px !important;
@@ -2461,7 +2414,37 @@ h1 {
         max-width: 60px !important;
     }
 }
-@for $i from 1 through 300 {
+.lienzoBg {
+    background: url("../public/img/canvasBg.png");
+}
+@for $i from 0 through 310 {
+    @for $x from 0 through 10 {
+        .lienzo-#{$x}-#{$i} {
+            transition: 20ms;
+            user-select: none;
+            -webkit-user-select: none;
+            z-index: 10;
+            position: absolute;
+            top: 0px;
+            left: ((-1vw * (-10+(($x * 1) * 100)+ (($i * 1) / 3))));
+        }
+        .lienzo-#{$x}--#{$i} {
+            transition: 20ms;
+            user-select: none;
+            -webkit-user-select: none;
+            z-index: 10;
+            position: absolute;
+            top: 0px;
+            left: ((-1vw * (-10+(($x * 1) * 100)+ (($i * -1) / 3))));
+        }
+    }
+    .lienzo--1-#{$i} {
+        transition: 20ms;
+        position: absolute;
+        z-index: 10;
+        top: 0px;
+        left: ((-1vw * ((-10)+ (($i * 1) / 3))));
+    }
     .valor-#{$i} {
         border-radius: 10%;
         display: flex;
