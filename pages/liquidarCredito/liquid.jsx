@@ -43,7 +43,7 @@ const Liqui = (props) => {
                         <h2>Mes- {deuda.mes - (parseInt(deuda.mes / 12) * 12) + 1}</h2>
                         <h2> Interes Deuda : {`$ ${deuda.interesDeudaString}`} </h2>
                         <h3>Valor abono : {`$ ${deuda.valorAbonoString}`}</h3>
-                        {deuda.mes === -1 && <>DEUDA INICIAL<input type={'number'} placeHolder={'deuda'} value={deuda.deuda} step={inPesos.state ? 50 : 1} onChange={handle} id={'deuda'} /></>}
+                        {deuda.mes === -1 && <>DEUDA INICIAL<input min={0}  type={'number'} placeHolder={'deuda'} value={deuda.deuda} step={inPesos.state ? 50 : 1} onChange={handle} id={'deuda'} /></>}
                         <br />
                         {deuda.mes === -1 && <>PORCENTAJE DE INTERES<input type={'number'} placeHolder={'Interes prestamo'} step={0.1} value={deuda.interes} onChange={handle} id={'interes'} /></>}
                         {deuda.mes > -1 && <>VALOR DEL ABONO<input type={'number'} value={deuda.valorAbono} onChange={handle} id={'valorAbono'} min={deuda.interesDeuda > 0 ? deuda.interesDeuda : 0} defaultValue={deuda.interesDeuda}step={inPesos.state ? 50 : 1} max={deuda.actual} /></>}

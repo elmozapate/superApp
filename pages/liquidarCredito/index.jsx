@@ -117,7 +117,7 @@ const Liquidador = (props) => {
         if (id === 'deuda' || id === 'actual' || id === 'interesDeuda' || id === 'valorAbono') {
             setDeuda({
                 ...deuda,
-                [id]: !isNaN(parseFloat(value)) ? id === 'valorAbono' ? parseFloat(value).toFixed(inPesos.state ? 0 : 2) : parseFloat(value) >= (inPesos.state ? 49 : 1) ? parseFloat(value).toFixed(inPesos.state ? 0 : 2) : 0 : 0,
+                [id]: !isNaN(parseFloat(value)) ? id === 'valorAbono' ? parseFloat(value).toFixed(inPesos.state ? 0 : 2) :id === 'deuda'?parseFloat(value): parseFloat(value) >= (inPesos.state ? 49 : 1) ? parseFloat(value).toFixed(inPesos.state ? 0 : 2) : 0 : 0,
                 [`${id}String`]: !isNaN(parseFloat(value)) && parseFloat(value) >= (inPesos.state ? 0 : 0) ? formatoMiles(parseFloat(value)) : 0
             })
         } else {

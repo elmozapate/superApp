@@ -39,11 +39,10 @@ const LiquiM = (props) => {
                         <h4>Deuda Actual : {`$ ${deuda.actualString}`}</h4>
                         <h4>Interes prestamo : {(deuda.interes)} %</h4>
                         <h4>Año- {deuda.mes / 12 >= 1 ? parseInt(deuda.mes / 12) : 0}</h4>
-
                         <h4>Mes- {deuda.mes - (parseInt(deuda.mes / 12) * 12) + 1}</h4>
                         <h4> Interes Deuda : {`$ ${deuda.interesDeudaString}`} </h4>
                         <h4>Valor abono : {`$ ${deuda.valorAbonoString}`}</h4>
-                        {deuda.mes === -1 && <>DEUDA INICIAL<input type={'number'} placeHolder={'deuda'} value={deuda.deuda} step={inPesos.state ? 50 : 1} onChange={handle} id={'deuda'} /></>}
+                        {deuda.mes === -1 && <>DEUDA INICIAL<input min={0} type={'number'} placeHolder={'deuda'} value={deuda.deuda} step={inPesos.state ? 50 : 1} onChange={handle} id={'deuda'} /></>}
                         <br />
                         {deuda.mes === -1 && <>PORCENTAJE DE INTERES<input type={'number'} placeHolder={'Interes prestamo'} step={0.1} value={deuda.interes} onChange={handle} id={'interes'} /></>}
                         {deuda.mes > -1 && <>VALOR DEL ABONO<input type={'number'} value={deuda.valorAbono} onChange={handle} id={'valorAbono'} min={deuda.interesDeuda > 0 ? deuda.interesDeuda : 0} defaultValue={deuda.interesDeuda}step={inPesos.state ? 50 : 1} max={deuda.actual} /></>}
