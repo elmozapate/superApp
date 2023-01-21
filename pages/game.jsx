@@ -8,6 +8,7 @@ import ColisionBasica from "./colisionBasica";
 import CrearItems, { CrearItemsWorld, LosFondos, Plataforma, PropsImage } from "./crearItems";
 import GamePad from "./gamePad";
 import InteractiveBotonCanvas from "./InteractiveBtnCanvas";
+import KeyListener from "./keyListener";
 import MenuGame from "./menuGame";
 import ProtoPlataforma from "./prototiposSprites/protoPlataforma";
 import VolumenComponent from "./volumenComponente";
@@ -421,7 +422,7 @@ const Game = (props) => {
         hacer()
 
     }
-    const keyListener = () => {
+    const keyListener =()=> {
         document.addEventListener('keydown', async (event) => {
             event.preventDefault();
             let keyValue = event.key;
