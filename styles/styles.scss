@@ -2947,6 +2947,8 @@ h1 {
     height: calc(100vh - getRemSize(200px)) !important;
     max-height: calc(100vh - getRemSize(200px)) !important;
     min-height: calc(100vh - getRemSize(200px)) !important;
+    white-space: nowrap;
+    max-width: 100vw;
 
     .row-table {
         height: calc(100vh - getRemSize(250px)) !important;
