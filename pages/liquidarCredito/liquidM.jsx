@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const Liqui = (props) => {
+const LiquiM = (props) => {
     const { changeDen = console.log, inPesos = { state: true }, deuda = {
         deuda: 0,
         interes: 0,
@@ -33,16 +33,16 @@ const Liqui = (props) => {
             {deuda.mes === -1 && <button className="fixed-top" onClick={(e) => { e.preventDefault(); changeDen() }}
             >{inPesos.state ? 'pesos' : 'dollar'}</button>}
             <div className="fill ">
-                <div className="rowL">
+                <div className="rowLMobil">
                     <div className="liquidar">
-                        <h1>Deuda : {`$ ${deuda.deudaString}`}</h1>
-                        <h1>Deuda Actual : {`$ ${deuda.actualString}`}</h1>
-                        <h2>Interes prestamo : {(deuda.interes)} %</h2>
-                        <h2>Año- {deuda.mes / 12 >= 1 ? parseInt(deuda.mes / 12) : 0}</h2>
+                        <h4>Deuda : {`$ ${deuda.deudaString}`}</h4>
+                        <h4>Deuda Actual : {`$ ${deuda.actualString}`}</h4>
+                        <h4>Interes prestamo : {(deuda.interes)} %</h4>
+                        <h4>Año- {deuda.mes / 12 >= 1 ? parseInt(deuda.mes / 12) : 0}</h4>
 
-                        <h2>Mes- {deuda.mes - (parseInt(deuda.mes / 12) * 12) + 1}</h2>
-                        <h2> Interes Deuda : {`$ ${deuda.interesDeudaString}`} </h2>
-                        <h3>Valor abono : {`$ ${deuda.valorAbonoString}`}</h3>
+                        <h4>Mes- {deuda.mes - (parseInt(deuda.mes / 12) * 12) + 1}</h4>
+                        <h4> Interes Deuda : {`$ ${deuda.interesDeudaString}`} </h4>
+                        <h4>Valor abono : {`$ ${deuda.valorAbonoString}`}</h4>
                         {deuda.mes === -1 && <>DEUDA INICIAL<input type={'number'} placeHolder={'deuda'} value={deuda.deuda} step={inPesos.state ? 50 : 1} onChange={handle} id={'deuda'} /></>}
                         <br />
                         {deuda.mes === -1 && <>PORCENTAJE DE INTERES<input type={'number'} placeHolder={'Interes prestamo'} step={0.1} value={deuda.interes} onChange={handle} id={'interes'} /></>}
@@ -109,4 +109,4 @@ const Liqui = (props) => {
     )
 
 }
-export default Liqui
+export default LiquiM
