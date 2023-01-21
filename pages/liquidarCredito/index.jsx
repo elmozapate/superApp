@@ -42,7 +42,7 @@ const Liquidador = (props) => {
         const newDAta = {
             valorAbono: 0,
             tipo: 'Mes nuevo',
-            actual: newDeuda,
+            actual: newDeuda > 0 ? newDeuda : 0,
             mes: deuda.mes + 1,
             interesDeuda: (parseFloat(deuda.actual / 100) * parseFloat(deuda.interes)),
         }
@@ -50,13 +50,13 @@ const Liquidador = (props) => {
         newHstorial.push(newDAta)
         setDeuda({
             ...deuda,
-            actual: newDeuda,
+            actual: newDeuda > 0 ? newDeuda : 0,
             mes: deuda.mes + 1,
             interesDeuda: (parseFloat(deuda.actual / 100) * parseFloat(deuda.interes)),
             historial: newHstorial
         })
         if (deuda.simulacion) {
-             
+
             setTimeout(() => {
                 try {
                     elemto2.click()
@@ -64,7 +64,7 @@ const Liquidador = (props) => {
                 } catch (error) {
                     console.log('listo');
                 }
-            }, 300); 
+            }, 300);
         }
     }
     const handle = (e) => {
@@ -73,7 +73,7 @@ const Liquidador = (props) => {
         const value = e.target.value
         setDeuda({
             ...deuda,
-            [id]: parseFloat(value)
+            [id]: !isNaN(parseFloat(value)) ? value : 0
         })
     }
     const abonoCapital = () => {
@@ -102,19 +102,19 @@ const Liquidador = (props) => {
                 } catch (error) {
                     console.log('listo');
                 }
-            }, 300);  
+            }, 300);
         }
-        
+
 
 
     }
     const simulacion = () => {
         elemto2 = document.getElementById('elemto2')
-        let oldValue=deuda
+        let oldValue = deuda
         if (oldValue.simulacion) {
 
-        }else{
-            oldValue.simulacion=true
+        } else {
+            oldValue.simulacion = true
 
         }
         setDeuda(oldValue)
