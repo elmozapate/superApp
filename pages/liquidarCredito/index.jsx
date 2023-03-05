@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react"
+import { MesesDeuda } from "./deudatotal"
 import Liqui from "./liquid"
 import LiquiM from "./liquidM"
+let nownow = true
+
 const format = {
     deuda: 100,
     interes: 0,
@@ -117,7 +120,7 @@ const Liquidador = (props) => {
         if (id === 'deuda' || id === 'actual' || id === 'interesDeuda' || id === 'valorAbono') {
             setDeuda({
                 ...deuda,
-                [id]: !isNaN(parseFloat(value)) ? id === 'valorAbono' ? parseFloat(value).toFixed(inPesos.state ? 0 : 2) :id === 'deuda'?parseFloat(value): parseFloat(value) >= (inPesos.state ? 49 : 1) ? parseFloat(value).toFixed(inPesos.state ? 0 : 2) : 0 : 0,
+                [id]: !isNaN(parseFloat(value)) ? id === 'valorAbono' ? parseFloat(value).toFixed(inPesos.state ? 0 : 2) : id === 'deuda' ? parseFloat(value) : parseFloat(value) >= (inPesos.state ? 49 : 1) ? parseFloat(value).toFixed(inPesos.state ? 0 : 2) : 0 : 0,
                 [`${id}String`]: !isNaN(parseFloat(value)) && parseFloat(value) >= (inPesos.state ? 0 : 0) ? formatoMiles(parseFloat(value)) : 0
             })
         } else {
@@ -153,13 +156,16 @@ const Liquidador = (props) => {
             ...deuda,
             actual: parseFloat(deuda.actual - deuda.valorAbono),
             actualString: !isNaN(parseFloat(parseFloat(deuda.actual - deuda.valorAbono))) && parseFloat(parseFloat(deuda.actual - deuda.valorAbono)) >= 0 ? formatoMiles(parseFloat(parseFloat(deuda.actual - deuda.valorAbono))) : 0,
-            valorAbono: deuda.simulacion ? deuda.valorAbono : 0,
+            valorAbono: deuda.simulacion ? MesesDeuda[parseInt(deuda.mes / 12)][deuda.mes-parseInt(deuda.mes / 12)] : 0,
             historial: newHstorial
         })
         if (deuda.simulacion) {
             setTimeout(() => {
                 try {
-                    elemto1.click()
+                    if (nownow) {
+                        elemto1.click()
+                    }
+
 
                 } catch (error) {
                     console.log('listo');
@@ -237,16 +243,16 @@ const Liquidador = (props) => {
 
         }
         setDeuda(oldValue)
+        nownow = true
         elemto2.click()
     }
-    let nownow = true
     useEffect(() => {
-        if (deuda.actual > 0 && deuda.mes > -1 && nownow) {
+        if ((parseInt(deuda.mes / 12) * 12) === deuda.mes && nownow) {
 
 
             nownow = false
         }
-    }, [])
+    }, [deuda.mes])
     return (
         <>
             {props.page === 'mobil' ? <>            {!changing && <LiquiM deuda={deuda} setDeuda={setDeuda} changeDen={changeDen} inPesos={inPesos} setInPesos={setInPesos} abonoCapital={abonoCapital} mesSiguente={mesSiguente} simulacion={simulacion} crearCredito={crearCredito} handle={handle} />}
