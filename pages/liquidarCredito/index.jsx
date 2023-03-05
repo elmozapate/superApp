@@ -246,13 +246,13 @@ const Liquidador = (props) => {
         nownow = true
         elemto2.click()
     }
-   /*  useEffect(() => {
+    useEffect(() => {
         if ((parseInt(deuda.mes / 12) * 12) === deuda.mes && nownow) {
 
 
             nownow = false
         }
-    }, [deuda.mes]) */
+    }, [deuda.mes])
     return (
         <>
             {props.page === 'mobil' ? <>            {!changing && <LiquiM deuda={deuda} setDeuda={setDeuda} changeDen={changeDen} inPesos={inPesos} setInPesos={setInPesos} abonoCapital={abonoCapital} mesSiguente={mesSiguente} simulacion={simulacion} crearCredito={crearCredito} handle={handle} />}
