@@ -157,13 +157,13 @@ const Liquidador = (props) => {
             ...deuda,
             actual: parseFloat(deuda.actual - deuda.valorAbono),
             actualString: !isNaN(parseFloat(parseFloat(deuda.actual - deuda.valorAbono))) && parseFloat(parseFloat(deuda.actual - deuda.valorAbono)) >= 0 ? formatoMiles(parseFloat(parseFloat(deuda.actual - deuda.valorAbono))) : 0,
-            valorAbono: deuda.simulacion ? MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))] !== -1 ? MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))] : deuda.valorAbono : 0,
+            valorAbono: deuda.simulacion ? (((MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))]) !== 1) ? (MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))]) : deuda.valorAbono) : 0,
             historial: newHstorial
         })
         const deudaConst = deudaAcumuled
-        deuda.simulacion && MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))] === -1 && setdDeudaAcumuled({
-            valor: deudaConst.valor + deuda.valorAbono, mesesDeDeuda: deudaConst.mesesDeDeuda + 1
-        })
+            (deuda.simulacion && ((MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))]) === 1)) && setdDeudaAcumuled({
+                valor: deudaConst.valor + deuda.valorAbono, mesesDeDeuda: deudaConst.mesesDeDeuda + 1
+            })
         if (deuda.simulacion) {
             setTimeout(() => {
                 try {
