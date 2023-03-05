@@ -156,7 +156,7 @@ const Liquidador = (props) => {
             ...deuda,
             actual: parseFloat(deuda.actual - deuda.valorAbono),
             actualString: !isNaN(parseFloat(parseFloat(deuda.actual - deuda.valorAbono))) && parseFloat(parseFloat(deuda.actual - deuda.valorAbono)) >= 0 ? formatoMiles(parseFloat(parseFloat(deuda.actual - deuda.valorAbono))) : 0,
-            valorAbono: deuda.simulacion ? MesesDeuda[parseInt(deuda.mes / 12)][deuda.mes-parseInt(deuda.mes / 12)] : 0,
+            valorAbono: deuda.simulacion ? MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes-(parseInt(deuda.mes / 12)*12))] : 0,
             historial: newHstorial
         })
         if (deuda.simulacion) {
