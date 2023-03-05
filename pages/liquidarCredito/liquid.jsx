@@ -91,9 +91,9 @@ const Liqui = (props) => {
                             <tr id={`dataA1-${'1'}`}>
                                 <th id={`dataA2-${'2'}`}>{'tipo'}</th>
                                 <th id={`dataA2-${'2'}`}>{'mes'}</th>
-                                <th id={`dataA3-${'3'}`}>{'actual'}</th>
                                 <th id={`dataA4-${'4'}`}>{'interes cuota'}</th>
                                 <th id={`dataA4-${'4'}`}>{'Valor Abono'}</th>
+                                <th id={`dataA3-${'3'}`}>{'actual'}</th>
                             </tr>
                         </thead>
                         <tbody>
