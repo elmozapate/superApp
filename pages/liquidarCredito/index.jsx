@@ -239,6 +239,13 @@ const Liquidador = (props) => {
         }, 1);
     }
     const simulacion = () => {
+        setDeuda({
+            ...deuda,
+            valorAbono: deuda.simulacion ? parseInt(MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))])!== 1 ? MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))] : parseInt(deuda.interesDeudaString.replace(',','')) : 0,
+        })
+        parseInt(MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))]) === 1 && setdDeudaAcumuled({
+            valor: deudaConst.valor + parseInt(deuda.interesDeudaString.replace(',','')), mesesDeDeuda: deudaConst.mesesDeDeuda + 1
+        })
         elemto2 = document.getElementById('elemto2')
         let oldValue = deuda
         if (oldValue.simulacion) {
