@@ -161,12 +161,13 @@ const Liquidador = (props) => {
             historial: newHstorial
         })
         const deudaConst = deudaAcumuled
-        if(deuda.simulacion && parseInt(MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))]) === 1 ){
-            let newInv=deudaAcumuled.involucradas
-            newInv.push(deuda.mes)
+        if (deuda.simulacion && parseInt(MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))]) === 1) {
+            let newInv = deudaAcumuled.involucradas
+            newInv.push(deuda.mes + 1)
             setdDeudaAcumuled({
-            valor: deudaConst.valor + parseInt(deuda.interesDeudaString.replace(',', '')), mesesDeDeuda: deudaConst.mesesDeDeuda + 1, involucradas: newInv
-        })}
+                valor: deudaConst.valor + parseInt(deuda.interesDeudaString.replace(',', '')), mesesDeDeuda: deudaConst.mesesDeDeuda + 1, involucradas: newInv
+            })
+        }
         if (deuda.simulacion) {
             setTimeout(() => {
                 try {

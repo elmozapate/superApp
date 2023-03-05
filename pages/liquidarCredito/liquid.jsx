@@ -100,7 +100,7 @@ const Liqui = (props) => {
                             {deuda.historial.map((key, i) => {
                                 return (
                                     <>
-                                        <tr className={checkAcumled(key.mes) ? 'bgColor-red' : ''} id={`data1-${i}`}>
+                                        <tr className={checkAcumled(key.mes) ? 'bgcolor-red' : ''} id={`data1-${i}`}>
                                             <td id={`data2-${i}`}>{key.tipo}</td>
                                             <td id={`data2-${i}`}>{key.mes}</td>
                                             <td id={`data3-${i}`}>{`$ ${key.actualString}`}</td>
