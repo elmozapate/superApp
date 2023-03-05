@@ -161,7 +161,7 @@ const Liquidador = (props) => {
             historial: newHstorial
         })
         const deudaConst = deudaAcumuled
-        deuda.simulacion && MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))] !== -1 && setdDeudaAcumuled({
+        deuda.simulacion && MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))] === -1 && setdDeudaAcumuled({
             valor: deudaConst.valor + deuda.valorAbono, mesesDeDeuda: deudaConst.mesesDeDeuda + 1
         })
         if (deuda.simulacion) {
