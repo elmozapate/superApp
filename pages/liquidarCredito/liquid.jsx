@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const Liqui = (props) => {
-    const { deudaAcumuled = { valor: 0, mesesDeDeuda: 0 }, changeDen = console.log, inPesos = { state: true }, deuda = {
+    const { deudaAcumuled = { valor: 0, mesesDeDeuda: 0, involucradas: [] }, changeDen = console.log, inPesos = { state: true }, deuda = {
         deuda: 0,
         interes: 0,
         actual: 0,
@@ -28,6 +28,15 @@ const Liqui = (props) => {
                setTable({ ...table, array: deuda.historial.reverse() })
            }
        }, [deuda]) */
+    const checkAcumled = (queMes) => {
+        let tieneDeuda = false
+        deudaAcumuled.involucradas.map((key, i) => {
+            if (parseInt(queMes) === parseInt(key)) {
+                tieneDeuda = true
+            }
+        })
+        return tieneDeuda
+    }
     return (
         <>
             {deuda.mes === -1 && <button className="fixed-top" onClick={(e) => { e.preventDefault(); changeDen() }}
@@ -91,7 +100,7 @@ const Liqui = (props) => {
                             {deuda.historial.map((key, i) => {
                                 return (
                                     <>
-                                        <tr id={`data1-${i}`}>
+                                        <tr className={checkAcumled(key.mes) ? 'bgColor-red' : ''} id={`data1-${i}`}>
                                             <td id={`data2-${i}`}>{key.tipo}</td>
                                             <td id={`data2-${i}`}>{key.mes}</td>
                                             <td id={`data3-${i}`}>{`$ ${key.actualString}`}</td>

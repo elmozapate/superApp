@@ -28,7 +28,7 @@ const Liquidador = (props) => {
     const [deuda, setDeuda] = useState(format)
     const [changing, setChanging] = useState(false)
     const [inPesos, setInPesos] = useState({ state: true })
-    const [deudaAcumuled, setdDeudaAcumuled] = useState({ valor: 0, mesesDeDeuda: 0 })
+    const [deudaAcumuled, setdDeudaAcumuled] = useState({ valor: 0, mesesDeDeuda: 0, involucradas: [] })
 
     const crearCredito = () => {
         const newHstorial = [{
@@ -157,13 +157,16 @@ const Liquidador = (props) => {
             ...deuda,
             actual: parseFloat(deuda.actual - deuda.valorAbono),
             actualString: !isNaN(parseFloat(parseFloat(deuda.actual - deuda.valorAbono))) && parseFloat(parseFloat(deuda.actual - deuda.valorAbono)) >= 0 ? formatoMiles(parseFloat(parseFloat(deuda.actual - deuda.valorAbono))) : 0,
-            valorAbono: deuda.simulacion ? parseInt(MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))])!== 1 ? MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))] : parseInt(deuda.interesDeudaString.replace(',','')) : 0,
+            valorAbono: deuda.simulacion ? parseInt(MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))]) !== 1 ? MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))] : parseInt(deuda.interesDeudaString.replace(',', '')) : 0,
             historial: newHstorial
         })
         const deudaConst = deudaAcumuled
-            deuda.simulacion && parseInt(MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))]) === 1 && setdDeudaAcumuled({
-                valor: deudaConst.valor + parseInt(deuda.interesDeudaString.replace(',','')), mesesDeDeuda: deudaConst.mesesDeDeuda + 1
-            })
+        if(deuda.simulacion && parseInt(MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))]) === 1 ){
+            let newInv=deudaAcumuled.involucradas
+            newInv.push(deuda.mes)
+            setdDeudaAcumuled({
+            valor: deudaConst.valor + parseInt(deuda.interesDeudaString.replace(',', '')), mesesDeDeuda: deudaConst.mesesDeDeuda + 1, involucradas: newInv
+        })}
         if (deuda.simulacion) {
             setTimeout(() => {
                 try {
