@@ -28,6 +28,7 @@ const Liquidador = (props) => {
     const [deuda, setDeuda] = useState(format)
     const [changing, setChanging] = useState(false)
     const [inPesos, setInPesos] = useState({ state: true })
+    const [deudaAcumuled, setdDeudaAcumuled] = useState({ valor: 0, mesesDeDeuda: 0 })
 
     const crearCredito = () => {
         const newHstorial = [{
@@ -156,8 +157,12 @@ const Liquidador = (props) => {
             ...deuda,
             actual: parseFloat(deuda.actual - deuda.valorAbono),
             actualString: !isNaN(parseFloat(parseFloat(deuda.actual - deuda.valorAbono))) && parseFloat(parseFloat(deuda.actual - deuda.valorAbono)) >= 0 ? formatoMiles(parseFloat(parseFloat(deuda.actual - deuda.valorAbono))) : 0,
-            valorAbono: deuda.simulacion ? MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes-(parseInt(deuda.mes / 12)*12))] : 0,
+            valorAbono: deuda.simulacion ? MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))] !== -1 ? MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))] : deuda.valorAbono : 0,
             historial: newHstorial
+        })
+        const deudaConst = deudaAcumuled
+        deuda.simulacion && MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))] !== -1 && setdDeudaAcumuled({
+            valor: deudaConst.valor + deuda.valorAbono, mesesDeDeuda: deudaConst.mesesDeDeuda + 1
         })
         if (deuda.simulacion) {
             setTimeout(() => {
@@ -246,17 +251,17 @@ const Liquidador = (props) => {
         nownow = true
         elemto2.click()
     }
-/*     useEffect(() => {
-        if ((parseInt(deuda.mes / 12) * 12) === deuda.mes && nownow) {
-
-
-            nownow = false
-        }
-    }, [deuda.mes]) */
+    /*     useEffect(() => {
+            if ((parseInt(deuda.mes / 12) * 12) === deuda.mes && nownow) {
+    
+    
+                nownow = false
+            }
+        }, [deuda.mes]) */
     return (
         <>
             {props.page === 'mobil' ? <>            {!changing && <LiquiM deuda={deuda} setDeuda={setDeuda} changeDen={changeDen} inPesos={inPesos} setInPesos={setInPesos} abonoCapital={abonoCapital} mesSiguente={mesSiguente} simulacion={simulacion} crearCredito={crearCredito} handle={handle} />}
-            </> : <>            {!changing && <Liqui deuda={deuda} setDeuda={setDeuda} changeDen={changeDen} inPesos={inPesos} setInPesos={setInPesos} abonoCapital={abonoCapital} mesSiguente={mesSiguente} simulacion={simulacion} crearCredito={crearCredito} handle={handle} />}
+            </> : <>            {!changing && <Liqui deudaAcumuled={deudaAcumuled} deuda={deuda} setDeuda={setDeuda} changeDen={changeDen} inPesos={inPesos} setInPesos={setInPesos} abonoCapital={abonoCapital} mesSiguente={mesSiguente} simulacion={simulacion} crearCredito={crearCredito} handle={handle} />}
             </>}
         </>
     )

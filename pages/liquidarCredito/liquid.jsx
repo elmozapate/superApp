@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const Liqui = (props) => {
-    const { changeDen = console.log, inPesos = { state: true }, deuda = {
+    const { deudaAcumuled = { valor: 0, mesesDeDeuda: 0 }, changeDen = console.log, inPesos = { state: true }, deuda = {
         deuda: 0,
         interes: 0,
         actual: 0,
@@ -43,10 +43,14 @@ const Liqui = (props) => {
                         <h2>Mes- {deuda.mes - (parseInt(deuda.mes / 12) * 12) + 1}</h2>
                         <h2> Interes Deuda : {`$ ${deuda.interesDeudaString}`} </h2>
                         <h3>Valor abono : {`$ ${deuda.valorAbonoString}`}</h3>
-                        {deuda.mes === -1 && <>DEUDA INICIAL<input min={0}  type={'number'} placeHolder={'deuda'} value={deuda.deuda} step={inPesos.state ? 50 : 1} onChange={handle} id={'deuda'} /></>}
+                        {deudaAcumuled.valor !== 0 && <>
+                            <h2>MESES SIN ABONO : {deudaAcumuled.mesesDeDeuda}</h2>
+                            <h2>DEUDA ACUMULADA{deudaAcumuled.valor}</h2>
+                        </>}
+                        {deuda.mes === -1 && <>DEUDA INICIAL<input min={0} type={'number'} placeHolder={'deuda'} value={deuda.deuda} step={inPesos.state ? 50 : 1} onChange={handle} id={'deuda'} /></>}
                         <br />
                         {deuda.mes === -1 && <>PORCENTAJE DE INTERES<input type={'number'} placeHolder={'Interes prestamo'} step={0.1} value={deuda.interes} onChange={handle} id={'interes'} /></>}
-                        {deuda.mes > -1 && <>VALOR DEL ABONO<input type={'number'} value={deuda.valorAbono} onChange={handle} id={'valorAbono'} min={deuda.interesDeuda > 0 ? deuda.interesDeuda : 0} defaultValue={deuda.interesDeuda}step={inPesos.state ? 50 : 1} max={deuda.actual} /></>}
+                        {deuda.mes > -1 && <>VALOR DEL ABONO<input type={'number'} value={deuda.valorAbono} onChange={handle} id={'valorAbono'} min={deuda.interesDeuda > 0 ? deuda.interesDeuda : 0} defaultValue={deuda.interesDeuda} step={inPesos.state ? 50 : 1} max={deuda.actual} /></>}
                         {deuda.actual > 0 && deuda.mes > -1 && <button id={'elemto2'} onClick={(e) => { e.preventDefault(); abonoCapital() }}>ABONO</button>}
                         {deuda.actual > 0 && deuda.mes > -1 && <button onClick={(e) => {
                             e.preventDefault(); simulacion()
