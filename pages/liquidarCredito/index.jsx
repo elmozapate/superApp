@@ -160,6 +160,7 @@ const Liquidador = (props) => {
             valorAbono: deuda.simulacion ? parseInt((MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))]) !== 1) ? MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))] : deuda.valorAbono : 0,
             historial: newHstorial
         })
+        console.log(deuda.interesDeudaString.replace(',',''));
         const deudaConst = deudaAcumuled
             deuda.simulacion && parseInt(MesesDeuda[parseInt(deuda.mes / 12)][(deuda.mes - (parseInt(deuda.mes / 12) * 12))]) === 1 && setdDeudaAcumuled({
                 valor: deudaConst.valor + deuda.valorAbono, mesesDeDeuda: deudaConst.mesesDeDeuda + 1
